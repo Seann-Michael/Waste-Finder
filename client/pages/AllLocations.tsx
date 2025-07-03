@@ -551,165 +551,174 @@ export default function AllLocations() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background flex flex-col">
         <Header />
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <div className="flex items-center justify-center py-16">
-            <div className="text-center">
-              <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
-              <h2 className="text-lg font-semibold mb-2">
-                Loading facilities...
-              </h2>
-              <p className="text-muted-foreground">
-                Fetching all waste disposal facilities
-              </p>
+        <main className="flex-1">
+          <div className="max-w-7xl mx-auto px-4 py-8">
+            <div className="flex items-center justify-center py-16">
+              <div className="text-center">
+                <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
+                <h2 className="text-lg font-semibold mb-2">
+                  Loading facilities...
+                </h2>
+                <p className="text-muted-foreground">
+                  Fetching all waste disposal facilities
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+        </main>
+        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <Header />
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-4">All Facilities</h1>
-          <p className="text-muted-foreground">
-            Browse our complete database of {locations.length} waste disposal
-            facilities across the United States
-            {searchQuery && ` • Showing results for "${searchQuery}"`}
-          </p>
-        </div>
+      <main className="flex-1">
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold mb-4">All Facilities</h1>
+            <p className="text-muted-foreground">
+              Browse our complete database of {locations.length} waste disposal
+              facilities across the United States
+              {searchQuery && ` • Showing results for "${searchQuery}"`}
+            </p>
+          </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Sidebar Filters */}
-          <div className="lg:col-span-1">
-            <Card className="sticky top-24">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <SlidersHorizontal className="w-5 h-5" />
-                  Filters & Search
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {/* Search */}
-                <div>
-                  <label className="text-sm font-medium mb-2 block">
-                    Search
-                  </label>
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input
-                      placeholder="Name, city, or ZIP code"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10"
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            {/* Sidebar Filters */}
+            <div className="lg:col-span-1">
+              <Card className="sticky top-24">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <SlidersHorizontal className="w-5 h-5" />
+                    Filters & Search
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* Search */}
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">
+                      Search
+                    </label>
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Input
+                        placeholder="Name, city, or ZIP code"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="pl-10"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Sort */}
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">
+                      Sort by
+                    </label>
+                    <Select value={sortBy} onValueChange={setSortBy}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="name">Name A-Z</SelectItem>
+                        <SelectItem value="rating">Highest Rating</SelectItem>
+                        <SelectItem value="distance">
+                          Closest Distance
+                        </SelectItem>
+                        <SelectItem value="city">City A-Z</SelectItem>
+                        <SelectItem value="state">State A-Z</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Debris Type Filter */}
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">
+                      Debris Types
+                    </label>
+                    <MultiSelectInput
+                      options={availableDebrisTypes}
+                      selectedValues={selectedDebrisTypes}
+                      onSelectionChange={setSelectedDebrisTypes}
+                      placeholder="Search debris types..."
                     />
                   </div>
-                </div>
 
-                {/* Sort */}
-                <div>
-                  <label className="text-sm font-medium mb-2 block">
-                    Sort by
-                  </label>
-                  <Select value={sortBy} onValueChange={setSortBy}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="name">Name A-Z</SelectItem>
-                      <SelectItem value="rating">Highest Rating</SelectItem>
-                      <SelectItem value="distance">Closest Distance</SelectItem>
-                      <SelectItem value="city">City A-Z</SelectItem>
-                      <SelectItem value="state">State A-Z</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Debris Type Filter */}
-                <div>
-                  <label className="text-sm font-medium mb-2 block">
-                    Debris Types
-                  </label>
-                  <MultiSelectInput
-                    options={availableDebrisTypes}
-                    selectedValues={selectedDebrisTypes}
-                    onSelectionChange={setSelectedDebrisTypes}
-                    placeholder="Search debris types..."
-                  />
-                </div>
-
-                {/* Facility Type Filter */}
-                <div>
-                  <label className="text-sm font-medium mb-2 block">
-                    Facility Type
-                  </label>
-                  <Select value={filterType} onValueChange={setFilterType}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Types</SelectItem>
-                      <SelectItem value="landfill">Landfills</SelectItem>
-                      <SelectItem value="transfer_station">
-                        Transfer Stations
-                      </SelectItem>
-                      <SelectItem value="construction_landfill">
-                        Construction Landfills
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Results Count */}
-                <div className="pt-4 border-t">
-                  <div className="text-sm text-muted-foreground">
-                    Showing {filteredLocations.length} of {locations.length}{" "}
-                    facilities
+                  {/* Facility Type Filter */}
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">
+                      Facility Type
+                    </label>
+                    <Select value={filterType} onValueChange={setFilterType}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Types</SelectItem>
+                        <SelectItem value="landfill">Landfills</SelectItem>
+                        <SelectItem value="transfer_station">
+                          Transfer Stations
+                        </SelectItem>
+                        <SelectItem value="construction_landfill">
+                          Construction Landfills
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
 
-          {/* Results */}
-          <div className="lg:col-span-3">
-            {filteredLocations.length === 0 ? (
-              <Card>
-                <CardContent className="py-16 text-center">
-                  <MapPin className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">
-                    No facilities found
-                  </h3>
-                  <p className="text-muted-foreground mb-4">
-                    Try adjusting your search criteria or filters
-                  </p>
-                  <Button
-                    onClick={() => {
-                      setSearchQuery("");
-                      setFilterType("all");
-                      setSelectedDebrisTypes([]);
-                    }}
-                  >
-                    Clear Filters
-                  </Button>
+                  {/* Results Count */}
+                  <div className="pt-4 border-t">
+                    <div className="text-sm text-muted-foreground">
+                      Showing {filteredLocations.length} of {locations.length}{" "}
+                      facilities
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
-            ) : (
-              <div className="space-y-6">
-                {filteredLocations.map((location) => (
-                  <LocationCard key={location.id} location={location} />
-                ))}
-              </div>
-            )}
+            </div>
+
+            {/* Results */}
+            <div className="lg:col-span-3">
+              {filteredLocations.length === 0 ? (
+                <Card>
+                  <CardContent className="py-16 text-center">
+                    <MapPin className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold mb-2">
+                      No facilities found
+                    </h3>
+                    <p className="text-muted-foreground mb-4">
+                      Try adjusting your search criteria or filters
+                    </p>
+                    <Button
+                      onClick={() => {
+                        setSearchQuery("");
+                        setFilterType("all");
+                        setSelectedDebrisTypes([]);
+                      }}
+                    >
+                      Clear Filters
+                    </Button>
+                  </CardContent>
+                </Card>
+              ) : (
+                <div className="space-y-6">
+                  {filteredLocations.map((location) => (
+                    <LocationCard key={location.id} location={location} />
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      </main>
+
+      <Footer />
     </div>
   );
 }

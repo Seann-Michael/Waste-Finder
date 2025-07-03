@@ -1,6 +1,8 @@
 import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import SuggestEdit from "@/components/SuggestEdit";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -90,25 +92,10 @@ export default function LocationDetail() {
           { id: "3", name: "Check" },
         ],
         debrisTypes: [
-          {
-            id: "1",
-            name: "General Household Waste",
-            category: "general",
-            pricePerTon: 65,
-          },
+          { id: "1", name: "General Household Waste", category: "general", pricePerTon: 65 },
           { id: "2", name: "Yard Waste", category: "general", pricePerTon: 35 },
-          {
-            id: "3",
-            name: "Appliances",
-            category: "general",
-            pricePerLoad: 25,
-          },
-          {
-            id: "4",
-            name: "Electronics",
-            category: "recyclable",
-            priceNote: "Free drop-off",
-          },
+          { id: "3", name: "Appliances", category: "general", pricePerLoad: 25 },
+          { id: "4", name: "Electronics", category: "recyclable", priceNote: "Free drop-off" },
           { id: "5", name: "Tires", category: "general", pricePerLoad: 15 },
         ],
         operatingHours: [
@@ -518,10 +505,7 @@ export default function LocationDetail() {
               <CardContent>
                 <div className="space-y-4">
                   {location.debrisTypes.map((debris) => (
-                    <div
-                      key={debris.id}
-                      className="flex justify-between items-center p-3 border rounded-lg"
-                    >
+                    <div key={debris.id} className="flex justify-between items-center p-3 border rounded-lg">
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 bg-success rounded-full"></div>
                         <span className="font-medium">{debris.name}</span>
@@ -531,8 +515,9 @@ export default function LocationDetail() {
                           {debris.pricePerTon
                             ? `$${debris.pricePerTon}/ton`
                             : debris.pricePerLoad
-                              ? `$${debris.pricePerLoad}/load`
-                              : debris.priceNote || "Call for pricing"}
+                            ? `$${debris.pricePerLoad}/load`
+                            : debris.priceNote || "Call for pricing"
+                          }
                         </span>
                       </div>
                     </div>
@@ -540,12 +525,10 @@ export default function LocationDetail() {
                 </div>
                 <div className="mt-4 p-3 bg-muted/50 rounded-lg">
                   <p className="text-sm text-muted-foreground mb-2">
-                    * Prices may vary based on quantity and material condition.
-                    Contact facility for current rates and minimum requirements.
+                    * Prices may vary based on quantity and material condition. Contact facility for current rates and minimum requirements.
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    Price table last updated:{" "}
-                    {new Date(location.updatedAt).toLocaleDateString()}
+                    Price table last updated: {new Date(location.updatedAt).toLocaleDateString()}
                   </p>
                 </div>
               </CardContent>
@@ -758,73 +741,20 @@ export default function LocationDetail() {
         </DialogContent>
       </Dialog>
 
-      {/* Suggestion Form Dialog */}
-      <Dialog open={showSuggestionForm} onOpenChange={setShowSuggestionForm}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Suggest an Edit</DialogTitle>
-            <DialogDescription>
-              Help us keep information about {location.name} accurate and
-              up-to-date
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="suggestion-type">What needs to be updated?</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="hours">Operating Hours</SelectItem>
-                  <SelectItem value="contact">Contact Information</SelectItem>
-                  <SelectItem value="services">Services/Materials</SelectItem>
-                  <SelectItem value="pricing">Pricing Information</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label htmlFor="suggestion-details">Details</Label>
-              <Textarea
-                id="suggestion-details"
-                placeholder="Describe what should be changed and provide the correct information..."
-                rows={4}
-              />
-            </div>
-            <div>
-              <Label htmlFor="suggestion-contact">
-                Your Contact (Optional)
-              </Label>
-              <Input
-                id="suggestion-contact"
-                placeholder="Email or phone in case we need to verify"
-              />
-            </div>
+      {/* Suggestion Edit Component */}
+      <SuggestEdit
+        location={location}
+        isOpen={showSuggestionForm}
+        onClose={() => setShowSuggestionForm(false)}
+        onSubmit={(suggestion) => {
+          console.log("Suggestion submitted:", suggestion);
+          // In real app, send to API
+        }}
+      />
+        </div>
+      </main>
 
-            {/* Google reCAPTCHA Placeholder */}
-            <div className="p-4 border rounded-lg bg-muted/30">
-              <p className="text-sm text-muted-foreground text-center">
-                reCAPTCHA verification will appear here
-              </p>
-              <div className="mt-2 text-xs text-center text-muted-foreground">
-                (Google reCAPTCHA integration required)
-              </div>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setShowSuggestionForm(false)}
-            >
-              Cancel
-            </Button>
-            <Button onClick={() => setShowSuggestionForm(false)}>
-              Submit Suggestion
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <Footer />
     </div>
   );
 }
