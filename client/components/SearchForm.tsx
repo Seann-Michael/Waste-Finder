@@ -49,7 +49,7 @@ export default function SearchForm({
 }: SearchFormProps) {
   const navigate = useNavigate();
   const [zipCode, setZipCode] = useState("");
-  const [radius, setRadius] = useState(25);
+  const [radius, setRadius] = useState(50);
   const [facilityTypes, setFacilityTypes] = useState<string[]>([
     "landfill",
     "transfer_station",
@@ -73,12 +73,15 @@ export default function SearchForm({
       onSearch(searchParams);
     } else {
       // Navigate to results page with search params
-      const params = new URLSearchParams({
-        zipCode: searchParams.zipCode,
-        radius: searchParams.radius.toString(),
-        facilityTypes: searchParams.facilityTypes.join(","),
-        debrisTypes: searchParams.debrisTypes.join(","),
-      });
+      const params = new URLSearchParams();
+      params.set("zipCode", searchParams.zipCode);
+      params.set("radius", searchParams.radius.toString());
+      if (searchParams.facilityTypes.length > 0) {
+        params.set("facilityTypes", searchParams.facilityTypes.join(","));
+      }
+      if (searchParams.debrisTypes.length > 0) {
+        params.set("debrisTypes", searchParams.debrisTypes.join(","));
+      }
       navigate(`/locations?${params.toString()}`);
     }
   };
@@ -123,25 +126,6 @@ export default function SearchForm({
               required
               className="text-lg"
             />
-          </div>
-
-          {/* Search Radius */}
-          <div className="space-y-2">
-            <Label htmlFor="radius">Search Radius</Label>
-            <Select
-              value={radius.toString()}
-              onValueChange={(value) => setRadius(parseInt(value))}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="10">10 miles</SelectItem>
-                <SelectItem value="25">25 miles</SelectItem>
-                <SelectItem value="50">50 miles</SelectItem>
-                <SelectItem value="100">100 miles</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
 
           {/* Advanced Options Toggle */}

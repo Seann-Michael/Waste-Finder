@@ -283,11 +283,11 @@ export default function Index() {
       <section className="py-16 px-4 bg-accent/10">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4">
-            Are You a Waste Facility Owner?
+            Dumpster Rental & Junk Removal Business?
           </h2>
           <p className="text-xl text-muted-foreground mb-8">
             Get more customers with our digital marketing services designed
-            specifically for waste management businesses
+            specifically for dumpster rental and junk removal companies
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild className="text-lg px-8">
@@ -305,8 +305,8 @@ export default function Index() {
             </Button>
           </div>
           <p className="text-sm text-muted-foreground mt-4">
-            Specialized SEO, local marketing, and lead generation for waste
-            management companies
+            Specialized SEO, local marketing, and lead generation for dumpster
+            rental and junk removal services
           </p>
         </div>
       </section>

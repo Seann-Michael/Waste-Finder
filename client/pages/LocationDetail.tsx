@@ -336,17 +336,23 @@ export default function LocationDetail() {
       <Header />
 
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
-          <Link to="/" className="hover:text-primary">
-            Home
-          </Link>
-          <span>/</span>
-          <Link to="/locations" className="hover:text-primary">
-            Locations
-          </Link>
-          <span>/</span>
-          <span>{location.name}</span>
+        {/* Back to Results & Breadcrumb */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Link to="/" className="hover:text-primary">
+              Home
+            </Link>
+            <span>/</span>
+            <Link to="/all-locations" className="hover:text-primary">
+              Locations
+            </Link>
+            <span>/</span>
+            <span>{location.name}</span>
+          </div>
+          <Button variant="outline" onClick={() => window.history.back()}>
+            <ChevronLeft className="w-4 h-4 mr-2" />
+            Back to Results
+          </Button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -374,16 +380,6 @@ export default function LocationDetail() {
               </div>
 
               <div className="flex flex-wrap gap-3">
-                <Button asChild>
-                  <a
-                    href={getDirectionsUrl()}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Navigation className="w-4 h-4 mr-2" />
-                    Get Directions
-                  </a>
-                </Button>
                 <Button
                   variant="outline"
                   onClick={() => setShowReviewForm(true)}
@@ -412,12 +408,17 @@ export default function LocationDetail() {
               <CardContent className="space-y-4">
                 <div className="flex items-start gap-3">
                   <MapPin className="w-5 h-5 text-muted-foreground mt-0.5" />
-                  <div>
+                  <a
+                    href={getDirectionsUrl()}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline"
+                  >
                     <div>{location.address}</div>
                     <div>
                       {location.city}, {location.state} {location.zipCode}
                     </div>
-                  </div>
+                  </a>
                 </div>
 
                 <div className="flex items-center gap-3">
@@ -491,19 +492,42 @@ export default function LocationDetail() {
               </CardContent>
             </Card>
 
-            {/* Accepted Materials */}
+            {/* Accepted Materials with Pricing */}
             <Card>
               <CardHeader>
-                <CardTitle>Accepted Materials</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <DollarSign className="w-5 h-5" />
+                  Accepted Materials & Pricing
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-4">
                   {location.debrisTypes.map((debris) => (
-                    <div key={debris.id} className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-success rounded-full"></div>
-                      <span>{debris.name}</span>
+                    <div
+                      key={debris.id}
+                      className="flex justify-between items-center p-3 border rounded-lg"
+                    >
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-success rounded-full"></div>
+                        <span className="font-medium">{debris.name}</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="font-semibold text-primary">
+                          {debris.pricePerTon
+                            ? `$${debris.pricePerTon}/ton`
+                            : debris.pricePerLoad
+                              ? `$${debris.pricePerLoad}/load`
+                              : debris.priceNote || "Call for pricing"}
+                        </span>
+                      </div>
                     </div>
                   ))}
+                </div>
+                <div className="mt-4 p-3 bg-muted/50 rounded-lg">
+                  <p className="text-sm text-muted-foreground">
+                    * Prices may vary based on quantity and material condition.
+                    Contact facility for current rates and minimum requirements.
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -625,16 +649,9 @@ export default function LocationDetail() {
                     <p className="text-xs text-muted-foreground">Coming Soon</p>
                   </div>
                 </div>
-                <Button asChild className="w-full mt-4">
-                  <a
-                    href={getDirectionsUrl()}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Navigation className="w-4 h-4 mr-2" />
-                    Get Directions
-                  </a>
-                </Button>
+                <div className="mt-4 text-center text-sm text-muted-foreground">
+                  <p>Click address above for directions</p>
+                </div>
               </CardContent>
             </Card>
           </div>

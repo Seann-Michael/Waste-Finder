@@ -399,52 +399,30 @@ export default function SuggestLocation() {
               <CardTitle>Your Information</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="submitterName">Your Name *</Label>
-                  <Input
-                    id="submitterName"
-                    value={formData.submitterName}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        submitterName: e.target.value,
-                      }))
-                    }
-                    required
-                    placeholder="Your full name"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="submitterEmail">Your Email *</Label>
-                  <Input
-                    id="submitterEmail"
-                    type="email"
-                    value={formData.submitterEmail}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        submitterEmail: e.target.value,
-                      }))
-                    }
-                    required
-                    placeholder="your@email.com"
-                  />
-                </div>
-              </div>
               <div>
-                <Label htmlFor="submitterPhone">Your Phone (Optional)</Label>
+                <Label htmlFor="submitterName">Your Name *</Label>
                 <Input
-                  id="submitterPhone"
-                  value={formData.submitterPhone}
+                  id="submitterName"
+                  value={formData.submitterName}
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
-                      submitterPhone: e.target.value,
+                      submitterName: e.target.value,
                     }))
                   }
-                  placeholder="In case we need to verify information"
+                  required
+                  placeholder="Your full name"
                 />
+              </div>
+
+              {/* Google reCAPTCHA Placeholder */}
+              <div className="p-4 border rounded-lg bg-muted/30">
+                <p className="text-sm text-muted-foreground text-center">
+                  reCAPTCHA verification will appear here
+                </p>
+                <div className="mt-2 text-xs text-center text-muted-foreground">
+                  (Google reCAPTCHA integration required)
+                </div>
               </div>
             </CardContent>
           </Card>
