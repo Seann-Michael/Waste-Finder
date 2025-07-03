@@ -42,6 +42,7 @@ export default function Admin() {
     localStorage.removeItem("adminLoggedIn");
     navigate("/");
   };
+
   const stats = [
     {
       label: "Total Facilities",
@@ -107,8 +108,8 @@ export default function Admin() {
         debrisTypes: ["General Waste", "Recyclables", "Electronics"],
         operatingHours: "Mon-Fri 7AM-6PM, Sat 8AM-4PM",
         notes: "New eco-friendly facility with advanced recycling capabilities",
-        submitterEmail: "lisa.k@email.com"
-      }
+        submitterEmail: "lisa.k@email.com",
+      },
     },
     {
       id: "2",
@@ -119,9 +120,10 @@ export default function Admin() {
       details: {
         originalData: "Phone: (555) 123-4567",
         suggestedChange: "Phone: (555) 987-6543",
-        reason: "Phone number has changed - I called and confirmed the new number",
-        submitterEmail: "tom.builder@email.com"
-      }
+        reason:
+          "Phone number has changed - I called and confirmed the new number",
+        submitterEmail: "tom.builder@email.com",
+      },
     },
   ];
 
@@ -133,208 +135,211 @@ export default function Admin() {
         <div className="max-w-7xl mx-auto px-4 py-8">
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-              <Shield className="w-6 h-6 text-primary-foreground" />
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+                <Shield className="w-6 h-6 text-primary-foreground" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+                <p className="text-muted-foreground">
+                  Manage facilities, reviews, and user suggestions
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-              <p className="text-muted-foreground">
-                Manage facilities, reviews, and user suggestions
-              </p>
+            <Button variant="outline" onClick={handleLogout}>
+              <LogOut className="w-4 h-4 mr-2" />
+              Logout
+            </Button>
+          </div>
+
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {stats.map((stat, index) => (
+              <Card key={index}>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-muted-foreground">
+                        {stat.label}
+                      </p>
+                      <p className="text-2xl font-bold">{stat.value}</p>
+                    </div>
+                    <div className="text-primary">{stat.icon}</div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Main Actions */}
+            <div className="lg:col-span-1">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Quick Actions</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <Button className="w-full justify-start" variant="outline">
+                    <Upload className="w-4 h-4 mr-2" />
+                    Bulk Upload Facilities
+                  </Button>
+                  <Button className="w-full justify-start" variant="outline">
+                    <Download className="w-4 h-4 mr-2" />
+                    Export Database
+                  </Button>
+                  <Button className="w-full justify-start" variant="outline">
+                    <MapPin className="w-4 h-4 mr-2" />
+                    Add New Facility
+                  </Button>
+                  <Button className="w-full justify-start" variant="outline">
+                    <Edit className="w-4 h-4 mr-2" />
+                    Edit Facility
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Pending Reviews */}
+            <div className="lg:col-span-1">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <MessageSquare className="w-5 h-5" />
+                    Pending Reviews
+                  </CardTitle>
+                  <Badge variant="secondary">{pendingReviews.length}</Badge>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {pendingReviews.map((review) => (
+                    <div
+                      key={review.id}
+                      className="border rounded-lg p-3 space-y-2"
+                    >
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-medium text-sm">
+                          {review.location}
+                        </h4>
+                        <span className="text-xs text-muted-foreground">
+                          {review.date}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium">
+                          {review.author}
+                        </span>
+                        <div className="flex">
+                          {Array.from({ length: review.rating }, (_, i) => (
+                            <div
+                              key={i}
+                              className="w-3 h-3 bg-yellow-400 rounded-full"
+                            ></div>
+                          ))}
+                        </div>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        {review.preview}
+                      </p>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-7 text-xs"
+                        >
+                          <CheckCircle className="w-3 h-3 mr-1" />
+                          Approve
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-7 text-xs"
+                        >
+                          <AlertTriangle className="w-3 h-3 mr-1" />
+                          Reject
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                  <Button variant="outline" className="w-full" size="sm">
+                    View All Reviews
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Pending Suggestions */}
+            <div className="lg:col-span-1">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <Edit className="w-5 h-5" />
+                    Pending Suggestions
+                  </CardTitle>
+                  <Badge variant="secondary">{pendingSuggestions.length}</Badge>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {pendingSuggestions.map((suggestion) => (
+                    <div
+                      key={suggestion.id}
+                      className="border rounded-lg p-3 space-y-2 cursor-pointer hover:bg-muted/50 transition-colors"
+                      onClick={() => setSelectedSuggestion(suggestion)}
+                    >
+                      <div className="flex items-center justify-between">
+                        <Badge variant="outline" className="text-xs">
+                          {suggestion.type}
+                        </Badge>
+                        <span className="text-xs text-muted-foreground">
+                          {suggestion.date}
+                        </span>
+                      </div>
+                      <h4 className="font-medium text-sm">{suggestion.name}</h4>
+                      <p className="text-xs text-muted-foreground">
+                        Submitted by {suggestion.submitter}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Click to view details and approve/reject
+                      </p>
+                    </div>
+                  ))}
+                  <Button variant="outline" className="w-full" size="sm">
+                    View All Suggestions
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
           </div>
-          <Button variant="outline" onClick={handleLogout}>
-            <LogOut className="w-4 h-4 mr-2" />
-            Logout
-          </Button>
-        </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {stats.map((stat, index) => (
-            <Card key={index}>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-muted-foreground">
-                      {stat.label}
-                    </p>
-                    <p className="text-2xl font-bold">{stat.value}</p>
-                  </div>
-                  <div className="text-primary">{stat.icon}</div>
+          {/* Full-width placeholder sections */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+            <Card>
+              <CardHeader>
+                <CardTitle>Recent Activity</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-8 text-muted-foreground">
+                  <p>Activity feed will be implemented here</p>
+                  <p className="text-sm">
+                    Track facility updates, user actions, and system events
+                  </p>
                 </div>
               </CardContent>
             </Card>
-          ))}
-        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Actions */}
-          <div className="lg:col-span-1">
             <Card>
               <CardHeader>
-                <CardTitle>Quick Actions</CardTitle>
+                <CardTitle>System Analytics</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
-                <Button className="w-full justify-start" variant="outline">
-                  <Upload className="w-4 h-4 mr-2" />
-                  Bulk Upload Facilities
-                </Button>
-                <Button className="w-full justify-start" variant="outline">
-                  <Download className="w-4 h-4 mr-2" />
-                  Export Database
-                </Button>
-                <Button className="w-full justify-start" variant="outline">
-                  <MapPin className="w-4 h-4 mr-2" />
-                  Add New Facility
-                </Button>
-                <Button className="w-full justify-start" variant="outline">
-                  <Edit className="w-4 h-4 mr-2" />
-                  Edit Facility
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Pending Reviews */}
-          <div className="lg:col-span-1">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="flex items-center gap-2">
-                  <MessageSquare className="w-5 h-5" />
-                  Pending Reviews
-                </CardTitle>
-                <Badge variant="secondary">{pendingReviews.length}</Badge>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {pendingReviews.map((review) => (
-                  <div
-                    key={review.id}
-                    className="border rounded-lg p-3 space-y-2"
-                  >
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-medium text-sm">{review.location}</h4>
-                      <span className="text-xs text-muted-foreground">
-                        {review.date}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium">
-                        {review.author}
-                      </span>
-                      <div className="flex">
-                        {Array.from({ length: review.rating }, (_, i) => (
-                          <div
-                            key={i}
-                            className="w-3 h-3 bg-yellow-400 rounded-full"
-                          ></div>
-                        ))}
-                      </div>
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      {review.preview}
-                    </p>
-                    <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="h-7 text-xs"
-                      >
-                        <CheckCircle className="w-3 h-3 mr-1" />
-                        Approve
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="h-7 text-xs"
-                      >
-                        <AlertTriangle className="w-3 h-3 mr-1" />
-                        Reject
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-                <Button variant="outline" className="w-full" size="sm">
-                  View All Reviews
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Pending Suggestions */}
-          <div className="lg:col-span-1">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="flex items-center gap-2">
-                  <Edit className="w-5 h-5" />
-                  Pending Suggestions
-                </CardTitle>
-                <Badge variant="secondary">{pendingSuggestions.length}</Badge>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {pendingSuggestions.map((suggestion) => (
-                  <div
-                    key={suggestion.id}
-                    className="border rounded-lg p-3 space-y-2 cursor-pointer hover:bg-muted/50 transition-colors"
-                    onClick={() => setSelectedSuggestion(suggestion)}
-                  >
-                    <div className="flex items-center justify-between">
-                      <Badge variant="outline" className="text-xs">
-                        {suggestion.type}
-                      </Badge>
-                      <span className="text-xs text-muted-foreground">
-                        {suggestion.date}
-                      </span>
-                    </div>
-                    <h4 className="font-medium text-sm">{suggestion.name}</h4>
-                    <p className="text-xs text-muted-foreground">
-                      Submitted by {suggestion.submitter}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Click to view details and approve/reject
-                    </p>
-                  </div>
-                ))}
-                <Button variant="outline" className="w-full" size="sm">
-                  View All Suggestions
-                </Button>
+              <CardContent>
+                <div className="text-center py-8 text-muted-foreground">
+                  <p>Analytics dashboard will be implemented here</p>
+                  <p className="text-sm">
+                    User engagement, search patterns, and facility usage
+                  </p>
+                </div>
               </CardContent>
             </Card>
           </div>
         </div>
-
-        {/* Full-width placeholder sections */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-8 text-muted-foreground">
-                <p>Activity feed will be implemented here</p>
-                <p className="text-sm">
-                  Track facility updates, user actions, and system events
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>System Analytics</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-8 text-muted-foreground">
-                <p>Analytics dashboard will be implemented here</p>
-                <p className="text-sm">
-                  User engagement, search patterns, and facility usage
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+      </main>
 
       {/* Suggestion Detail Dialog */}
       <Dialog
@@ -347,7 +352,8 @@ export default function Admin() {
               {selectedSuggestion?.type}: {selectedSuggestion?.name}
             </DialogTitle>
             <DialogDescription>
-              Submitted by {selectedSuggestion?.submitter} • {selectedSuggestion?.date}
+              Submitted by {selectedSuggestion?.submitter} •{" "}
+              {selectedSuggestion?.date}
             </DialogDescription>
           </DialogHeader>
 
@@ -374,7 +380,10 @@ export default function Admin() {
                   <div>
                     <h4 className="font-medium">Facility Type</h4>
                     <p className="text-sm text-muted-foreground">
-                      {selectedSuggestion.details.facilityType.replace('_', ' ')}
+                      {selectedSuggestion.details.facilityType.replace(
+                        "_",
+                        " ",
+                      )}
                     </p>
                   </div>
                   <div>
@@ -435,7 +444,10 @@ export default function Admin() {
           )}
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => setSelectedSuggestion(null)}>
+            <Button
+              variant="outline"
+              onClick={() => setSelectedSuggestion(null)}
+            >
               Close
             </Button>
             <Button
@@ -460,8 +472,6 @@ export default function Admin() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-        </div>
-      </main>
 
       <Footer />
     </div>
