@@ -151,6 +151,29 @@ export default function LocationCard({ location }: LocationCardProps) {
                 ({location.reviewCount} reviews)
               </span>
             </div>
+
+            {/* Prominent Debris Types */}
+            <div className="mb-3">
+              <div className="flex flex-wrap gap-1">
+                {location.debrisTypes.slice(0, 2).map((debris) => (
+                  <Badge
+                    key={debris.id}
+                    variant="default"
+                    className="text-xs bg-primary/10 text-primary border-primary/20"
+                  >
+                    {debris.name}
+                  </Badge>
+                ))}
+                {location.debrisTypes.length > 2 && (
+                  <Badge
+                    variant="outline"
+                    className="text-xs text-muted-foreground"
+                  >
+                    +{location.debrisTypes.length - 2} more
+                  </Badge>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </CardHeader>

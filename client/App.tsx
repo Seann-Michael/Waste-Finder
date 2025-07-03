@@ -14,6 +14,7 @@ import AdminLogin from "./pages/AdminLogin";
 import About from "./pages/About";
 import LocationDetail from "./pages/LocationDetail";
 import SuggestLocation from "./pages/SuggestLocation";
+import Resources from "./pages/Resources";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/locations" element={<Locations />} />
           <Route path="/all-locations" element={<AllLocations />} />
           <Route path="/suggest-location" element={<SuggestLocation />} />
+          <Route path="/resources" element={<Resources />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/location/:id" element={<LocationDetail />} />

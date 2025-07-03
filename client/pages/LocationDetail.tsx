@@ -539,9 +539,13 @@ export default function LocationDetail() {
                   ))}
                 </div>
                 <div className="mt-4 p-3 bg-muted/50 rounded-lg">
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground mb-2">
                     * Prices may vary based on quantity and material condition.
                     Contact facility for current rates and minimum requirements.
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Price table last updated:{" "}
+                    {new Date(location.updatedAt).toLocaleDateString()}
                   </p>
                 </div>
               </CardContent>

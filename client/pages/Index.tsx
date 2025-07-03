@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import SearchForm from "@/components/SearchForm";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -279,118 +280,7 @@ export default function Index() {
         </div>
       </section>
 
-      {/* Business Owner CTA Section */}
-      <section className="py-16 px-4 bg-accent/10">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-4">
-            Dumpster Rental & Junk Removal Business?
-          </h2>
-          <p className="text-xl text-muted-foreground mb-8">
-            Get more customers with our digital marketing services designed
-            specifically for dumpster rental and junk removal companies
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" asChild className="text-lg px-8">
-              <a
-                href="https://yourmarketingagency.com"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Grow Your Business
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </a>
-            </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8">
-              Learn More
-            </Button>
-          </div>
-          <p className="text-sm text-muted-foreground mt-4">
-            Specialized SEO, local marketing, and lead generation for dumpster
-            rental and junk removal services
-          </p>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-muted py-12 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                  <MapPin className="w-5 h-5 text-primary-foreground" />
-                </div>
-                <span className="text-xl font-bold">WasteFinder</span>
-              </div>
-              <p className="text-muted-foreground text-sm">
-                The most comprehensive database of waste disposal facilities in
-                the United States.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-3">Services</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>Facility Search</li>
-                <li>Location Reviews</li>
-                <li>Facility Suggestions</li>
-                <li>Contact Information</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-3">
-                For Dumpster & Junk Removal
-              </h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>
-                  <a
-                    href="https://yourmarketingagency.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-primary"
-                  >
-                    Digital Marketing
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://yourmarketingagency.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-primary"
-                  >
-                    Local SEO Services
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://yourmarketingagency.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-primary"
-                  >
-                    Lead Generation
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-3">Admin</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>
-                  <a href="/admin-login" className="hover:text-primary">
-                    Admin Login
-                  </a>
-                </li>
-                <li>Privacy Policy</li>
-                <li>Terms of Service</li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
-            © 2024 WasteFinder. All rights reserved.
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
