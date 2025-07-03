@@ -580,6 +580,7 @@ export default function AllLocations() {
           <p className="text-muted-foreground">
             Browse our complete database of {locations.length} waste disposal
             facilities across the United States
+            {searchQuery && ` • Showing results for "${searchQuery}"`}
           </p>
         </div>
 
