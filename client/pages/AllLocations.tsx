@@ -59,10 +59,30 @@ export default function AllLocations() {
             { id: "3", name: "Check" },
           ],
           debrisTypes: [
-            { id: "1", name: "General Household Waste", category: "general" },
-            { id: "2", name: "Yard Waste", category: "general" },
-            { id: "3", name: "Appliances", category: "general" },
-            { id: "4", name: "Electronics", category: "recyclable" },
+            {
+              id: "1",
+              name: "General Household Waste",
+              category: "general",
+              pricePerTon: 65,
+            },
+            {
+              id: "2",
+              name: "Yard Waste",
+              category: "general",
+              pricePerTon: 35,
+            },
+            {
+              id: "3",
+              name: "Appliances",
+              category: "general",
+              pricePerLoad: 25,
+            },
+            {
+              id: "4",
+              name: "Electronics",
+              category: "recyclable",
+              priceNote: "Free drop-off",
+            },
           ],
           operatingHours: [
             {
@@ -132,8 +152,18 @@ export default function AllLocations() {
             { id: "2", name: "Credit Card" },
           ],
           debrisTypes: [
-            { id: "1", name: "General Waste", category: "general" },
-            { id: "5", name: "Construction Debris", category: "construction" },
+            {
+              id: "1",
+              name: "General Waste",
+              category: "general",
+              pricePerTon: 55,
+            },
+            {
+              id: "5",
+              name: "Construction Debris",
+              category: "construction",
+              pricePerTon: 85,
+            },
           ],
           operatingHours: [
             {
@@ -181,6 +211,7 @@ export default function AllLocations() {
           ],
           rating: 3.8,
           reviewCount: 67,
+          distance: 8.4,
           isActive: true,
           createdAt: "2024-01-01T00:00:00Z",
           updatedAt: "2024-01-10T00:00:00Z",
@@ -440,6 +471,8 @@ export default function AllLocations() {
           return a.name.localeCompare(b.name);
         case "rating":
           return b.rating - a.rating;
+        case "distance":
+          return (a.distance || 999) - (b.distance || 999);
         case "city":
           return a.city.localeCompare(b.city);
         case "state":
@@ -528,6 +561,7 @@ export default function AllLocations() {
                     <SelectContent>
                       <SelectItem value="name">Name A-Z</SelectItem>
                       <SelectItem value="rating">Highest Rating</SelectItem>
+                      <SelectItem value="distance">Closest Distance</SelectItem>
                       <SelectItem value="city">City A-Z</SelectItem>
                       <SelectItem value="state">State A-Z</SelectItem>
                     </SelectContent>

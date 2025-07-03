@@ -15,11 +15,10 @@ export default function Header() {
       href: "/all-locations",
       active: location.pathname === "/all-locations",
     },
-    { name: "About", href: "/about", active: location.pathname === "/about" },
     {
-      name: "Contact",
-      href: "/contact",
-      active: location.pathname === "/contact",
+      name: "Suggest Location",
+      href: "/suggest-location",
+      active: location.pathname === "/suggest-location",
     },
   ];
 
