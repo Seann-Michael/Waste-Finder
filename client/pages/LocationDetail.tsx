@@ -322,15 +322,16 @@ export default function LocationDetail() {
         <Header />
         <main className="flex-1">
           <div className="max-w-7xl mx-auto px-4 py-8">
-          <div className="text-center py-16">
-            <AlertCircle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-            <h1 className="text-2xl font-bold mb-2">Facility Not Found</h1>
-            <p className="text-muted-foreground mb-4">
-              The facility you're looking for doesn't exist or has been removed.
-            </p>
-            <Button asChild>
-              <Link to="/">Search Facilities</Link>
-            </Button>
+            <div className="text-center py-16">
+              <AlertCircle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+              <h1 className="text-2xl font-bold mb-2">Facility Not Found</h1>
+              <p className="text-muted-foreground mb-4">
+                The facility you're looking for doesn't exist or has been removed.
+              </p>
+              <Button asChild>
+                <Link to="/">Search Facilities</Link>
+              </Button>
+            </div>
           </div>
         </main>
         <Footer />
