@@ -8,6 +8,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Locations from "./pages/Locations";
+import AllLocations from "./pages/AllLocations";
 import Admin from "./pages/Admin";
 import About from "./pages/About";
 import LocationDetail from "./pages/LocationDetail";
@@ -24,6 +25,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/locations" element={<Locations />} />
+          <Route path="/all-locations" element={<AllLocations />} />
           <Route path="/admin" element={<Admin />} />
           {/* Placeholder routes for future implementation */}
           <Route path="/location/:id" element={<LocationDetail />} />

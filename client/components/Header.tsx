@@ -9,7 +9,12 @@ export default function Header() {
   const location = useLocation();
 
   const navigation = [
-    { name: "Find Locations", href: "/", active: location.pathname === "/" },
+    { name: "Search", href: "/", active: location.pathname === "/" },
+    {
+      name: "All Locations",
+      href: "/all-locations",
+      active: location.pathname === "/all-locations",
+    },
     { name: "About", href: "/about", active: location.pathname === "/about" },
     {
       name: "Contact",
