@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -106,8 +107,8 @@ export default function Admin() {
         debrisTypes: ["General Waste", "Recyclables", "Electronics"],
         operatingHours: "Mon-Fri 7AM-6PM, Sat 8AM-4PM",
         notes: "New eco-friendly facility with advanced recycling capabilities",
-        submitterEmail: "lisa.k@email.com",
-      },
+        submitterEmail: "lisa.k@email.com"
+      }
     },
     {
       id: "2",
@@ -118,18 +119,18 @@ export default function Admin() {
       details: {
         originalData: "Phone: (555) 123-4567",
         suggestedChange: "Phone: (555) 987-6543",
-        reason:
-          "Phone number has changed - I called and confirmed the new number",
-        submitterEmail: "tom.builder@email.com",
-      },
+        reason: "Phone number has changed - I called and confirmed the new number",
+        submitterEmail: "tom.builder@email.com"
+      }
     },
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <Header />
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <main className="flex-1">
+        <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
@@ -346,8 +347,7 @@ export default function Admin() {
               {selectedSuggestion?.type}: {selectedSuggestion?.name}
             </DialogTitle>
             <DialogDescription>
-              Submitted by {selectedSuggestion?.submitter} •{" "}
-              {selectedSuggestion?.date}
+              Submitted by {selectedSuggestion?.submitter} • {selectedSuggestion?.date}
             </DialogDescription>
           </DialogHeader>
 
@@ -374,10 +374,7 @@ export default function Admin() {
                   <div>
                     <h4 className="font-medium">Facility Type</h4>
                     <p className="text-sm text-muted-foreground">
-                      {selectedSuggestion.details.facilityType.replace(
-                        "_",
-                        " ",
-                      )}
+                      {selectedSuggestion.details.facilityType.replace('_', ' ')}
                     </p>
                   </div>
                   <div>
@@ -438,10 +435,7 @@ export default function Admin() {
           )}
 
           <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setSelectedSuggestion(null)}
-            >
+            <Button variant="outline" onClick={() => setSelectedSuggestion(null)}>
               Close
             </Button>
             <Button
@@ -466,6 +460,10 @@ export default function Admin() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+        </div>
+      </main>
+
+      <Footer />
     </div>
   );
 }
