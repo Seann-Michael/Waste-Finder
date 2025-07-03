@@ -101,13 +101,15 @@ export default function Header() {
                   {item.name}
                 </Link>
               ))}
-              <Button variant="outline" asChild className="w-fit">
+              <Button
+                asChild
+                className="w-fit bg-accent text-accent-foreground hover:bg-accent/90"
+              >
                 <a
                   href="https://yourmarketingagency.com"
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="bg-accent text-accent-foreground hover:bg-accent/90"
                 >
                   Marketing for Dumpster Rentals
                 </a>

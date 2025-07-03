@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import Header from "@/components/Header";
 import LocationCard from "@/components/LocationCard";
+import MultiSelectInput from "@/components/MultiSelectInput";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -16,13 +18,16 @@ import { Location } from "@shared/api";
 import { Search, SlidersHorizontal, MapPin, Loader2 } from "lucide-react";
 
 export default function AllLocations() {
+  const [searchParams] = useSearchParams();
   const [locations, setLocations] = useState<Location[]>([]);
   const [filteredLocations, setFilteredLocations] = useState<Location[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState("name");
-  const [filterState, setFilterState] = useState("all");
+  const [searchQuery, setSearchQuery] = useState(
+    searchParams.get("zipCode") || "",
+  );
+  const [sortBy, setSortBy] = useState("distance");
   const [filterType, setFilterType] = useState("all");
+  const [selectedDebrisTypes, setSelectedDebrisTypes] = useState<string[]>([]);
 
   useEffect(() => {
     loadAllLocations();
@@ -30,7 +35,7 @@ export default function AllLocations() {
 
   useEffect(() => {
     filterAndSortLocations();
-  }, [locations, searchQuery, sortBy, filterState, filterType]);
+  }, [locations, searchQuery, sortBy, filterType, selectedDebrisTypes]);
 
   const loadAllLocations = async () => {
     setIsLoading(true);
@@ -484,15 +489,21 @@ export default function AllLocations() {
       );
     }
 
-    // Filter by state
-    if (filterState !== "all") {
-      filtered = filtered.filter((location) => location.state === filterState);
-    }
-
     // Filter by facility type
     if (filterType !== "all") {
       filtered = filtered.filter(
         (location) => location.facilityType === filterType,
+      );
+    }
+
+    // Filter by debris types
+    if (selectedDebrisTypes.length > 0) {
+      filtered = filtered.filter((location) =>
+        selectedDebrisTypes.some((selectedType) =>
+          location.debrisTypes.some((debris) =>
+            debris.name.toLowerCase().includes(selectedType.toLowerCase()),
+          ),
+        ),
       );
     }
 
@@ -517,7 +528,19 @@ export default function AllLocations() {
     setFilteredLocations(filtered);
   };
 
-  const uniqueStates = [...new Set(locations.map((loc) => loc.state))].sort();
+  const availableDebrisTypes = [
+    "General Household Waste",
+    "Yard Waste",
+    "Construction Debris",
+    "Appliances",
+    "Electronics",
+    "Tires",
+    "Concrete",
+    "Asphalt",
+    "Metal",
+    "Wood",
+    "Hazardous Materials",
+  ];
 
   if (isLoading) {
     return (
@@ -600,24 +623,17 @@ export default function AllLocations() {
                   </Select>
                 </div>
 
-                {/* State Filter */}
+                {/* Debris Type Filter */}
                 <div>
                   <label className="text-sm font-medium mb-2 block">
-                    State
+                    Debris Types
                   </label>
-                  <Select value={filterState} onValueChange={setFilterState}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All States</SelectItem>
-                      {uniqueStates.map((state) => (
-                        <SelectItem key={state} value={state}>
-                          {state}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <MultiSelectInput
+                    options={availableDebrisTypes}
+                    selectedValues={selectedDebrisTypes}
+                    onSelectionChange={setSelectedDebrisTypes}
+                    placeholder="Search debris types..."
+                  />
                 </div>
 
                 {/* Facility Type Filter */}
@@ -668,8 +684,8 @@ export default function AllLocations() {
                   <Button
                     onClick={() => {
                       setSearchQuery("");
-                      setFilterState("all");
                       setFilterType("all");
+                      setSelectedDebrisTypes([]);
                     }}
                   >
                     Clear Filters

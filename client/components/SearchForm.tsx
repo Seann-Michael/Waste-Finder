@@ -72,7 +72,7 @@ export default function SearchForm({
     if (onSearch) {
       onSearch(searchParams);
     } else {
-      // Navigate to results page with search params
+      // Navigate to all-locations page with zip code search populated
       const params = new URLSearchParams();
       params.set("zipCode", searchParams.zipCode);
       params.set("radius", searchParams.radius.toString());
@@ -82,7 +82,7 @@ export default function SearchForm({
       if (searchParams.debrisTypes.length > 0) {
         params.set("debrisTypes", searchParams.debrisTypes.join(","));
       }
-      navigate(`/locations?${params.toString()}`);
+      navigate(`/all-locations?${params.toString()}`);
     }
   };
 
