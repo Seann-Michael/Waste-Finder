@@ -22,9 +22,7 @@ export default function AllLocations() {
   const [locations, setLocations] = useState<Location[]>([]);
   const [filteredLocations, setFilteredLocations] = useState<Location[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState(
-    searchParams.get("zipCode") || "",
-  );
+  const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("distance");
   const [filterType, setFilterType] = useState("all");
   const [selectedDebrisTypes, setSelectedDebrisTypes] = useState<string[]>([]);
@@ -32,6 +30,14 @@ export default function AllLocations() {
   useEffect(() => {
     loadAllLocations();
   }, []);
+
+  useEffect(() => {
+    // Populate search query from URL params if present
+    const zipFromParams = searchParams.get("zipCode");
+    if (zipFromParams) {
+      setSearchQuery(zipFromParams);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     filterAndSortLocations();
