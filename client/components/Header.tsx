@@ -55,10 +55,17 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* Admin Button */}
+          {/* Business Owner CTA */}
           <div className="hidden md:flex items-center space-x-4">
             <Button variant="outline" asChild>
-              <Link to="/admin">Admin Portal</Link>
+              <a
+                href="https://yourmarketingagency.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-accent text-accent-foreground hover:bg-accent/90"
+              >
+                Get More Customers
+              </a>
             </Button>
           </div>
 
@@ -96,9 +103,15 @@ export default function Header() {
                 </Link>
               ))}
               <Button variant="outline" asChild className="w-fit">
-                <Link to="/admin" onClick={() => setIsMobileMenuOpen(false)}>
-                  Admin Portal
-                </Link>
+                <a
+                  href="https://yourmarketingagency.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="bg-accent text-accent-foreground hover:bg-accent/90"
+                >
+                  Get More Customers
+                </a>
               </Button>
             </nav>
           </div>

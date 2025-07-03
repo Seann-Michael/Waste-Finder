@@ -46,6 +46,9 @@ export interface DebrisType {
   name: string;
   description?: string;
   category: "general" | "construction" | "hazardous" | "recyclable";
+  pricePerTon?: number;
+  pricePerLoad?: number;
+  priceNote?: string; // e.g., "Minimum 2 tons", "Price varies by size"
 }
 
 export interface Review {

@@ -64,6 +64,68 @@ export default function LocationCard({ location }: LocationCardProps) {
     )}`;
   };
 
+  const formatTo12Hour = (time: string) => {
+    if (!time || time === "00:00") return "";
+    const [hours, minutes] = time.split(":");
+    const hour24 = parseInt(hours);
+    const hour12 = hour24 === 0 ? 12 : hour24 > 12 ? hour24 - 12 : hour24;
+    const ampm = hour24 >= 12 ? "PM" : "AM";
+    return `${hour12}:${minutes} ${ampm}`;
+  };
+
+  const getTimezone = (state: string) => {
+    // Simplified timezone mapping - in real app, use proper timezone detection
+    const easternStates = [
+      "NY",
+      "FL",
+      "GA",
+      "NC",
+      "SC",
+      "VA",
+      "WV",
+      "OH",
+      "PA",
+      "NJ",
+      "CT",
+      "RI",
+      "MA",
+      "VT",
+      "NH",
+      "ME",
+      "DE",
+      "MD",
+    ];
+    const centralStates = [
+      "IL",
+      "IN",
+      "MI",
+      "WI",
+      "MN",
+      "IA",
+      "MO",
+      "AR",
+      "LA",
+      "MS",
+      "AL",
+      "TN",
+      "KY",
+      "TX",
+      "OK",
+      "KS",
+      "NE",
+      "SD",
+      "ND",
+    ];
+    const mountainStates = ["MT", "WY", "CO", "NM", "ID", "UT", "AZ"];
+    const pacificStates = ["CA", "OR", "WA", "NV"];
+
+    if (easternStates.includes(state)) return "ET";
+    if (centralStates.includes(state)) return "CT";
+    if (mountainStates.includes(state)) return "MT";
+    if (pacificStates.includes(state)) return "PT";
+    return "Local";
+  };
+
   return (
     <Card className="hover:shadow-lg transition-shadow duration-200">
       <CardHeader className="pb-3">
@@ -94,15 +156,20 @@ export default function LocationCard({ location }: LocationCardProps) {
       </CardHeader>
 
       <CardContent className="space-y-4">
-        {/* Address */}
+        {/* Address - Clickable for directions */}
         <div className="flex items-start gap-2">
           <MapPin className="w-4 h-4 text-muted-foreground mt-0.5" />
-          <div className="text-sm">
+          <a
+            href={getDirectionsUrl()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-primary hover:underline"
+          >
             <div>{location.address}</div>
             <div>
               {location.city}, {location.state} {location.zipCode}
             </div>
-          </div>
+          </a>
         </div>
 
         {/* Phone */}
@@ -127,9 +194,13 @@ export default function LocationCard({ location }: LocationCardProps) {
                     (h) => h.dayOfWeek === today,
                   );
                   if (todayHours) {
-                    return todayHours.isClosed
-                      ? "Closed today"
-                      : `Open ${todayHours.openTime} - ${todayHours.closeTime}`;
+                    if (todayHours.isClosed) {
+                      return "Closed today";
+                    }
+                    const openTime = formatTo12Hour(todayHours.openTime);
+                    const closeTime = formatTo12Hour(todayHours.closeTime);
+                    const timezone = getTimezone(location.state);
+                    return `Open ${openTime} - ${closeTime} ${timezone}`;
                   }
                   return "Hours vary";
                 })()
@@ -137,20 +208,44 @@ export default function LocationCard({ location }: LocationCardProps) {
           </div>
         </div>
 
-        {/* Debris Types */}
+        {/* Debris Types with Pricing */}
         <div className="space-y-2">
           <div className="text-sm font-medium">Accepts:</div>
-          <div className="flex flex-wrap gap-1">
+          <div className="space-y-1">
             {location.debrisTypes.slice(0, 3).map((debris) => (
-              <Badge key={debris.id} variant="outline" className="text-xs">
-                {debris.name}
-              </Badge>
+              <div
+                key={debris.id}
+                className="flex justify-between items-center text-xs"
+              >
+                <Badge variant="outline" className="text-xs">
+                  {debris.name}
+                </Badge>
+                <span className="text-muted-foreground">
+                  {debris.pricePerTon
+                    ? `$${debris.pricePerTon}/ton`
+                    : debris.pricePerLoad
+                      ? `$${debris.pricePerLoad}/load`
+                      : debris.priceNote || "Call for pricing"}
+                </span>
+              </div>
             ))}
             {location.debrisTypes.length > 3 && (
               <Badge variant="outline" className="text-xs">
-                +{location.debrisTypes.length - 3} more
+                +{location.debrisTypes.length - 3} more types
               </Badge>
             )}
+          </div>
+        </div>
+
+        {/* Payment Methods */}
+        <div className="space-y-2">
+          <div className="text-sm font-medium">Payment Methods:</div>
+          <div className="flex flex-wrap gap-1">
+            {location.paymentTypes.map((payment) => (
+              <Badge key={payment.id} variant="secondary" className="text-xs">
+                {payment.name}
+              </Badge>
+            ))}
           </div>
         </div>
 
@@ -158,17 +253,6 @@ export default function LocationCard({ location }: LocationCardProps) {
         <div className="flex gap-2 pt-2">
           <Button asChild className="flex-1">
             <Link to={`/location/${location.id}`}>View Details</Link>
-          </Button>
-          <Button variant="outline" asChild>
-            <a
-              href={getDirectionsUrl()}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1"
-            >
-              <Navigation className="w-4 h-4" />
-              Directions
-            </a>
           </Button>
         </div>
       </CardContent>
