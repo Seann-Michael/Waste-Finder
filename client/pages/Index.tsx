@@ -337,7 +337,9 @@ export default function Index() {
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-3">For Business Owners</h4>
+              <h4 className="font-semibold mb-3">
+                For Dumpster & Junk Removal
+              </h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>
                   <a
@@ -356,7 +358,7 @@ export default function Index() {
                     rel="noopener noreferrer"
                     className="hover:text-primary"
                   >
-                    SEO Services
+                    Local SEO Services
                   </a>
                 </li>
                 <li>

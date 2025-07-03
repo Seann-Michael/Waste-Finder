@@ -90,11 +90,26 @@ export default function LocationDetail() {
           { id: "3", name: "Check" },
         ],
         debrisTypes: [
-          { id: "1", name: "General Household Waste", category: "general" },
-          { id: "2", name: "Yard Waste", category: "general" },
-          { id: "3", name: "Appliances", category: "general" },
-          { id: "4", name: "Electronics", category: "recyclable" },
-          { id: "5", name: "Tires", category: "general" },
+          {
+            id: "1",
+            name: "General Household Waste",
+            category: "general",
+            pricePerTon: 65,
+          },
+          { id: "2", name: "Yard Waste", category: "general", pricePerTon: 35 },
+          {
+            id: "3",
+            name: "Appliances",
+            category: "general",
+            pricePerLoad: 25,
+          },
+          {
+            id: "4",
+            name: "Electronics",
+            category: "recyclable",
+            priceNote: "Free drop-off",
+          },
+          { id: "5", name: "Tires", category: "general", pricePerLoad: 15 },
         ],
         operatingHours: [
           {
@@ -714,6 +729,16 @@ export default function LocationDetail() {
                 placeholder="How should we display your name?"
               />
             </div>
+
+            {/* Google reCAPTCHA Placeholder */}
+            <div className="p-4 border rounded-lg bg-muted/30">
+              <p className="text-sm text-muted-foreground text-center">
+                reCAPTCHA verification will appear here
+              </p>
+              <div className="mt-2 text-xs text-center text-muted-foreground">
+                (Google reCAPTCHA integration required)
+              </div>
+            </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowReviewForm(false)}>
@@ -771,6 +796,16 @@ export default function LocationDetail() {
                 id="suggestion-contact"
                 placeholder="Email or phone in case we need to verify"
               />
+            </div>
+
+            {/* Google reCAPTCHA Placeholder */}
+            <div className="p-4 border rounded-lg bg-muted/30">
+              <p className="text-sm text-muted-foreground text-center">
+                reCAPTCHA verification will appear here
+              </p>
+              <div className="mt-2 text-xs text-center text-muted-foreground">
+                (Google reCAPTCHA integration required)
+              </div>
             </div>
           </div>
           <DialogFooter>

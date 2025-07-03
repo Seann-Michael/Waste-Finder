@@ -63,7 +63,7 @@ export default function Header() {
                 rel="noopener noreferrer"
                 className="bg-accent text-accent-foreground hover:bg-accent/90"
               >
-                Get More Customers
+                Marketing for Dumpster Rentals
               </a>
             </Button>
           </div>
@@ -109,7 +109,7 @@ export default function Header() {
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="bg-accent text-accent-foreground hover:bg-accent/90"
                 >
-                  Get More Customers
+                  Marketing for Dumpster Rentals
                 </a>
               </Button>
             </nav>
