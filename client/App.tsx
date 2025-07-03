@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import Locations from "./pages/Locations";
 import Admin from "./pages/Admin";
 import About from "./pages/About";
+import LocationDetail from "./pages/LocationDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,7 +26,7 @@ const App = () => (
           <Route path="/locations" element={<Locations />} />
           <Route path="/admin" element={<Admin />} />
           {/* Placeholder routes for future implementation */}
-          <Route path="/location/:id" element={<NotFound />} />
+          <Route path="/location/:id" element={<LocationDetail />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<NotFound />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
