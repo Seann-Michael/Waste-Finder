@@ -345,7 +345,7 @@ export default function LocationDetail() {
 
       <main className="flex-1">
         <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Back to Results & Breadcrumb */}
+          {/* Back to Results & Breadcrumb */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Link to="/" className="hover:text-primary">
