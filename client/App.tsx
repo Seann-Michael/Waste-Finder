@@ -10,8 +10,10 @@ import Index from "./pages/Index";
 import Locations from "./pages/Locations";
 import AllLocations from "./pages/AllLocations";
 import Admin from "./pages/Admin";
+import AdminLogin from "./pages/AdminLogin";
 import About from "./pages/About";
 import LocationDetail from "./pages/LocationDetail";
+import SuggestLocation from "./pages/SuggestLocation";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,11 +28,11 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/locations" element={<Locations />} />
           <Route path="/all-locations" element={<AllLocations />} />
+          <Route path="/suggest-location" element={<SuggestLocation />} />
           <Route path="/admin" element={<Admin />} />
-          {/* Placeholder routes for future implementation */}
+          <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/location/:id" element={<LocationDetail />} />
           <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<NotFound />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

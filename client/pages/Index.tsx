@@ -279,6 +279,38 @@ export default function Index() {
         </div>
       </section>
 
+      {/* Business Owner CTA Section */}
+      <section className="py-16 px-4 bg-accent/10">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-4">
+            Are You a Waste Facility Owner?
+          </h2>
+          <p className="text-xl text-muted-foreground mb-8">
+            Get more customers with our digital marketing services designed
+            specifically for waste management businesses
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" asChild className="text-lg px-8">
+              <a
+                href="https://yourmarketingagency.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Grow Your Business
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </a>
+            </Button>
+            <Button size="lg" variant="outline" className="text-lg px-8">
+              Learn More
+            </Button>
+          </div>
+          <p className="text-sm text-muted-foreground mt-4">
+            Specialized SEO, local marketing, and lead generation for waste
+            management companies
+          </p>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="bg-muted py-12 px-4">
         <div className="max-w-7xl mx-auto">
@@ -305,21 +337,50 @@ export default function Index() {
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-3">Support</h4>
+              <h4 className="font-semibold mb-3">For Business Owners</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>Help Center</li>
-                <li>Contact Us</li>
-                <li>Report an Issue</li>
-                <li>Privacy Policy</li>
+                <li>
+                  <a
+                    href="https://yourmarketingagency.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-primary"
+                  >
+                    Digital Marketing
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://yourmarketingagency.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-primary"
+                  >
+                    SEO Services
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://yourmarketingagency.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-primary"
+                  >
+                    Lead Generation
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-3">Company</h4>
+              <h4 className="font-semibold mb-3">Admin</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>About Us</li>
-                <li>Our Mission</li>
-                <li>Careers</li>
-                <li>Admin Portal</li>
+                <li>
+                  <a href="/admin-login" className="hover:text-primary">
+                    Admin Login
+                  </a>
+                </li>
+                <li>Privacy Policy</li>
+                <li>Terms of Service</li>
               </ul>
             </div>
           </div>
