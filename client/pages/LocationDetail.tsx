@@ -292,9 +292,10 @@ export default function LocationDetail() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background flex flex-col">
         <Header />
-        <div className="max-w-7xl mx-auto px-4 py-8">
+        <main className="flex-1">
+          <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="animate-pulse space-y-8">
             <div className="h-8 bg-muted rounded w-1/4"></div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -308,16 +309,18 @@ export default function LocationDetail() {
               </div>
             </div>
           </div>
-        </div>
+        </main>
+        <Footer />
       </div>
     );
   }
 
   if (!location) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background flex flex-col">
         <Header />
-        <div className="max-w-7xl mx-auto px-4 py-8">
+        <main className="flex-1">
+          <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="text-center py-16">
             <AlertCircle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
             <h1 className="text-2xl font-bold mb-2">Facility Not Found</h1>
@@ -328,16 +331,18 @@ export default function LocationDetail() {
               <Link to="/">Search Facilities</Link>
             </Button>
           </div>
-        </div>
+        </main>
+        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <Header />
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <main className="flex-1">
+        <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Back to Results & Breadcrumb */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -751,7 +756,7 @@ export default function LocationDetail() {
           // In real app, send to API
         }}
       />
-        </div>
+      </div>
       </main>
 
       <Footer />

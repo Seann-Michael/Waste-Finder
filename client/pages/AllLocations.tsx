@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import LocationCard from "@/components/LocationCard";
 import MultiSelectInput from "@/components/MultiSelectInput";
+import MapPlaceholder from "@/components/MapPlaceholder";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -587,6 +588,11 @@ export default function AllLocations() {
               facilities across the United States
               {searchQuery && ` • Showing results for "${searchQuery}"`}
             </p>
+          </div>
+
+          {/* Map Section */}
+          <div className="mb-8">
+            <MapPlaceholder locations={filteredLocations} />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
