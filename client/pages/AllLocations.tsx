@@ -132,6 +132,7 @@ export default function AllLocations() {
             "Cleveland's primary municipal waste facility. Accepts most household waste and recycling. Special drop-off events for hazardous materials.",
           rating: 4.2,
           reviewCount: 89,
+          distance: 2.1,
           isActive: true,
           createdAt: "2024-01-01T00:00:00Z",
           updatedAt: "2024-01-15T00:00:00Z",
@@ -235,8 +236,18 @@ export default function AllLocations() {
             { id: "2", name: "Credit Card" },
           ],
           debrisTypes: [
-            { id: "1", name: "General Waste", category: "general" },
-            { id: "2", name: "Yard Waste", category: "general" },
+            {
+              id: "1",
+              name: "General Waste",
+              category: "general",
+              pricePerTon: 60,
+            },
+            {
+              id: "2",
+              name: "Yard Waste",
+              category: "general",
+              pricePerTon: 30,
+            },
           ],
           operatingHours: [
             {
@@ -306,8 +317,18 @@ export default function AllLocations() {
             { id: "3", name: "Check" },
           ],
           debrisTypes: [
-            { id: "1", name: "General Waste", category: "general" },
-            { id: "3", name: "Electronics", category: "recyclable" },
+            {
+              id: "1",
+              name: "General Waste",
+              category: "general",
+              pricePerTon: 55,
+            },
+            {
+              id: "3",
+              name: "Electronics",
+              category: "recyclable",
+              priceNote: "Free drop-off",
+            },
           ],
           operatingHours: [
             {
@@ -355,6 +376,7 @@ export default function AllLocations() {
           ],
           rating: 4.2,
           reviewCount: 89,
+          distance: 5.7,
           isActive: true,
           createdAt: "2024-01-01T00:00:00Z",
           updatedAt: "2024-01-10T00:00:00Z",
@@ -376,8 +398,18 @@ export default function AllLocations() {
             { id: "3", name: "Check" },
           ],
           debrisTypes: [
-            { id: "4", name: "Construction Debris", category: "construction" },
-            { id: "5", name: "Concrete", category: "construction" },
+            {
+              id: "4",
+              name: "Construction Debris",
+              category: "construction",
+              pricePerTon: 95,
+            },
+            {
+              id: "5",
+              name: "Concrete",
+              category: "construction",
+              pricePerTon: 45,
+            },
           ],
           operatingHours: [
             {
