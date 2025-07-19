@@ -181,7 +181,7 @@ export default function RecentActivity() {
   };
 
   // Apply filters when search/filter values change
-  React.useEffect(() => {
+  useEffect(() => {
     filterActivities();
   }, [searchQuery, typeFilter, statusFilter, activities]);
 
