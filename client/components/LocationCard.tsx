@@ -12,6 +12,7 @@ import {
   Trash2,
   Building2,
   HardHat,
+  Edit,
 } from "lucide-react";
 
 interface LocationCardProps {
@@ -277,6 +278,14 @@ export default function LocationCard({ location }: LocationCardProps) {
           <Button asChild className="flex-1">
             <Link to={`/location/${location.id}`}>View Details</Link>
           </Button>
+          {/* Show edit button if user is admin (check localStorage) */}
+          {localStorage.getItem("adminLoggedIn") && (
+            <Button variant="outline" size="sm" asChild>
+              <Link to={`/admin/edit-facility/${location.id}`}>
+                <Edit className="w-4 h-4" />
+              </Link>
+            </Button>
+          )}
         </div>
       </CardContent>
     </Card>

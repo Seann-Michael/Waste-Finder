@@ -11,6 +11,9 @@ import Locations from "./pages/Locations";
 import AllLocations from "./pages/AllLocations";
 import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
+import BulkUploadFacilities from "./pages/admin/BulkUploadFacilities";
+import AddFacility from "./pages/admin/AddFacility";
+import EditFacility from "./pages/admin/EditFacility";
 import About from "./pages/About";
 import LocationDetail from "./pages/LocationDetail";
 import SuggestLocation from "./pages/SuggestLocation";
@@ -33,6 +36,9 @@ const App = () => (
           <Route path="/resources" element={<Resources />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin-login" element={<AdminLogin />} />
+          <Route path="/admin/bulk-upload" element={<BulkUploadFacilities />} />
+          <Route path="/admin/add-facility" element={<AddFacility />} />
+          <Route path="/admin/edit-facility/:id" element={<EditFacility />} />
           <Route path="/location/:id" element={<LocationDetail />} />
           <Route path="/about" element={<About />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
