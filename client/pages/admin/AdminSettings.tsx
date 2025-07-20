@@ -185,6 +185,55 @@ export default function AdminSettings() {
     twitterImage: "",
   });
 
+  const [seoSettings, setSeoSettings] = useState({
+    // Homepage SEO
+    homeTitle: "WasteFinder - Find Waste Disposal Facilities Near You",
+    homeDescription: "Search our comprehensive database of landfills, transfer stations, and construction facilities across the United States.",
+    homeKeywords: "waste disposal, landfill, transfer station, construction debris, recycling",
+    homeOgImage: "",
+
+    // All Locations Page SEO
+    allLocationsTitle: "All Waste Disposal Facilities | WasteFinder Directory",
+    allLocationsDescription: "Browse our complete directory of waste disposal facilities including landfills, transfer stations, and construction debris sites.",
+    allLocationsKeywords: "waste disposal directory, landfill locations, transfer stations, construction landfills",
+    allLocationsOgImage: "",
+
+    // Location Detail Page SEO Templates
+    locationTitleTemplate: "{location_name} - Waste Disposal | {city}, {state}",
+    locationDescriptionTemplate: "Find details for {location_name} in {city}, {state}. Get hours, pricing, contact info and accepted waste types.",
+    locationKeywordsTemplate: "{location_type}, waste disposal {city}, landfill {state}, debris disposal {zipcode}",
+    locationOgImageTemplate: "",
+
+    // Search Results SEO Templates
+    searchTitleTemplate: "Waste Disposal Facilities near {search_term} | WasteFinder",
+    searchDescriptionTemplate: "Find waste disposal facilities near {search_term}. Compare prices, hours, and services for landfills and transfer stations.",
+    searchKeywordsTemplate: "waste disposal {search_term}, landfill near {search_term}, transfer station {search_term}",
+
+    // Blog SEO Templates
+    blogTitleTemplate: "{post_title} | WasteFinder Blog",
+    blogDescriptionTemplate: "{post_excerpt}",
+    blogKeywordsTemplate: "waste management, {post_tags}, environmental blog",
+
+    // Schema Markup Settings
+    enableSchemaMarkup: true,
+    businessType: "Waste Management Service",
+    businessName: "WasteFinder",
+    businessDescription: "Comprehensive directory of waste disposal facilities",
+
+    // Technical SEO
+    robotsTxt: `User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+Sitemap: https://wastefinder.com/sitemap.xml`,
+
+    enableSitemap: true,
+    sitemapUpdateFrequency: "weekly",
+    canonicalUrlsEnabled: true,
+    enableBreadcrumbs: true,
+  });
+
   const [newUser, setNewUser] = useState({
     name: "",
     email: "",
@@ -197,6 +246,7 @@ export default function AdminSettings() {
     { id: "profile", label: "Profile & Password", icon: User },
     { id: "users", label: "Admin Users", icon: Users },
     { id: "website", label: "Website Settings", icon: Globe },
+    { id: "seo", label: "Technical SEO", icon: Tag },
     { id: "marketing", label: "Marketing", icon: MessageSquare },
     { id: "system", label: "System Settings", icon: Settings },
     { id: "api", label: "API & Webhooks", icon: Key },

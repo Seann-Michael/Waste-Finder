@@ -21,6 +21,7 @@ import SuggestionsTable from "./pages/admin/SuggestionsTable";
 import PreviewLocation from "./pages/admin/PreviewLocation";
 import Marketing from "./pages/admin/Marketing";
 import BlogAdmin from "./pages/admin/BlogAdmin";
+import BlogDataTable from "./pages/admin/BlogDataTable";
 import AdminRoute from "./components/admin/AdminRoute";
 import About from "./pages/About";
 import LocationDetail from "./pages/LocationDetail";
@@ -115,6 +116,14 @@ const App = () => (
             element={
               <AdminRoute>
                 <BlogAdmin />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/blog-data-table"
+            element={
+              <AdminRoute>
+                <BlogDataTable />
               </AdminRoute>
             }
           />
