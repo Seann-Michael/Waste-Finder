@@ -182,14 +182,16 @@ export default function LocationDataTable() {
 
     // Type filter
     if (typeFilter !== "all") {
-      filtered = filtered.filter((location) => location.type === typeFilter);
+      filtered = filtered.filter((location) => location.locationType === typeFilter);
     }
 
     // Status filter
     if (statusFilter !== "all") {
-      filtered = filtered.filter(
-        (location) => location.status === statusFilter,
-      );
+      if (statusFilter === "active") {
+        filtered = filtered.filter((location) => location.isActive);
+      } else if (statusFilter === "inactive") {
+        filtered = filtered.filter((location) => !location.isActive);
+      }
     }
 
     // State filter
