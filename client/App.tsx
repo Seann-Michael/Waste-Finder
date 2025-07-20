@@ -12,8 +12,8 @@ import AllLocations from "./pages/AllLocations";
 import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
 import BulkUploadFacilities from "./pages/admin/BulkUploadFacilities";
-import AddFacility from "./pages/admin/AddFacility";
-import EditFacility from "./pages/admin/EditFacility";
+import AddLocation from "./pages/admin/AddLocation";
+import EditLocation from "./pages/admin/EditLocation";
 import LocationDataTable from "./pages/admin/LocationDataTable";
 import AdminSettings from "./pages/admin/AdminSettings";
 import ReviewsTable from "./pages/admin/ReviewsTable";
@@ -62,7 +62,7 @@ const App = () => (
             path="/admin/add-location"
             element={
               <AdminRoute>
-                <AddFacility />
+                <AddLocation />
               </AdminRoute>
             }
           />
@@ -70,7 +70,7 @@ const App = () => (
             path="/admin/edit-location/:id"
             element={
               <AdminRoute>
-                <EditFacility />
+                <EditLocation />
               </AdminRoute>
             }
           />
