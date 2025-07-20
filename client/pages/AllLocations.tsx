@@ -45,13 +45,42 @@ const fetchLocations = async (query?: string): Promise<Location[]> => {
     );
 
     if (!response.ok) {
+      // If API is not available (404), fallback to localStorage
+      if (response.status === 404) {
+        throw new Error("API_NOT_FOUND");
+      }
       throw new Error("Failed to fetch locations");
     }
 
     const data = await response.json();
     return data.data || [];
   } catch (error) {
-    console.error("Error fetching locations:", error);
+    console.error("Error fetching locations from API:", error);
+
+    // Fallback to localStorage if API is not available
+    try {
+      const savedLocations = localStorage.getItem("locations");
+      if (savedLocations) {
+        let locations = JSON.parse(savedLocations);
+
+        // Filter by search query if provided
+        if (query && Array.isArray(locations)) {
+          const searchTerm = query.toLowerCase();
+          locations = locations.filter((location: Location) =>
+            location.name.toLowerCase().includes(searchTerm) ||
+            location.address.toLowerCase().includes(searchTerm) ||
+            location.city.toLowerCase().includes(searchTerm) ||
+            location.zipCode.includes(searchTerm)
+          );
+        }
+
+        console.log("Loaded locations from localStorage:", locations.length, "locations");
+        return Array.isArray(locations) ? locations : [];
+      }
+    } catch (localStorageError) {
+      console.error("Error loading from localStorage:", localStorageError);
+    }
+
     return [];
   }
 };
