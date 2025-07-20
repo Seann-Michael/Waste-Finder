@@ -581,7 +581,7 @@ export default function PreviewLocation() {
                   </div>
                 )}
 
-                {currentLocation.details.phone && (
+                {currentLocation.details?.phone && (
                   <div>
                     <Label className="text-sm font-medium flex items-center gap-2">
                       <Phone className="w-4 h-4" />
@@ -589,7 +589,7 @@ export default function PreviewLocation() {
                     </Label>
                     {isEditing ? (
                       <Input
-                        value={currentLocation.details.phone}
+                        value={currentLocation.details?.phone || ""}
                         onChange={(e) =>
                           handleFieldChange("details.phone", e.target.value)
                         }
@@ -597,7 +597,9 @@ export default function PreviewLocation() {
                         className="mt-1"
                       />
                     ) : (
-                      <p className="text-sm">{currentLocation.details.phone}</p>
+                      <p className="text-sm">
+                        {currentLocation.details?.phone}
+                      </p>
                     )}
                   </div>
                 )}
