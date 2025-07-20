@@ -880,6 +880,42 @@ export default function ReviewsTable() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
+        {/* Bulk Action Confirmation Dialog */}
+        <Dialog
+          open={bulkActionDialogOpen}
+          onOpenChange={setBulkActionDialogOpen}
+        >
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Confirm Bulk Action</DialogTitle>
+              <DialogDescription>
+                {bulkAction === "approve" &&
+                  `Are you sure you want to approve ${selectedReviews.length} reviews?`}
+                {bulkAction === "reject" &&
+                  `Are you sure you want to reject ${selectedReviews.length} reviews?`}
+                {bulkAction === "delete" &&
+                  `Are you sure you want to permanently delete ${selectedReviews.length} reviews? This action cannot be undone.`}
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setBulkActionDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant={bulkAction === "delete" ? "destructive" : "default"}
+                onClick={executeBulkAction}
+              >
+                {bulkAction === "approve" && "Approve Reviews"}
+                {bulkAction === "reject" && "Reject Reviews"}
+                {bulkAction === "delete" && "Delete Reviews"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </AdminLayout>
   );
