@@ -103,10 +103,37 @@ export default function Admin() {
     alert("Review rejected successfully!");
   };
 
+  // Real metrics calculations
+  const getTotalLocations = () => {
+    // In real app, this would be from API. For now, get from localStorage or default
+    const savedLocations = localStorage.getItem("locations");
+    if (savedLocations) {
+      return JSON.parse(savedLocations).length;
+    }
+    return 0; // No locations loaded yet
+  };
+
+  const getPendingSuggestions = () => {
+    // Get from localStorage or default
+    const savedSuggestions = localStorage.getItem("pendingSuggestions");
+    if (savedSuggestions) {
+      return JSON.parse(savedSuggestions).length;
+    }
+    return pendingSuggestions.length; // Use mock data
+  };
+
+  const getMonthlySearches = () => {
+    // Get from localStorage or default
+    const currentMonth = new Date().getMonth();
+    const currentYear = new Date().getFullYear();
+    const searchKey = `searches_${currentYear}_${currentMonth}`;
+    return parseInt(localStorage.getItem(searchKey) || "0");
+  };
+
   const stats = [
     {
       label: "Total Locations",
-      value: "2,647",
+      value: getTotalLocations().toLocaleString(),
       icon: <MapPin className="w-5 h-5" />,
     },
     {
@@ -116,12 +143,12 @@ export default function Admin() {
     },
     {
       label: "Pending Suggestions",
-      value: "8",
+      value: getPendingSuggestions().toString(),
       icon: <Edit className="w-5 h-5" />,
     },
     {
       label: "Monthly Searches",
-      value: "1,892",
+      value: getMonthlySearches().toLocaleString(),
       icon: <Users className="w-5 h-5" />,
     },
   ];

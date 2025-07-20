@@ -179,35 +179,35 @@ export default function AdminSettings() {
     homeDescription: "Search our comprehensive database of landfills, transfer stations, and construction facilities across the United States.",
     homeKeywords: "waste disposal, landfill, transfer station, construction debris, recycling",
     homeOgImage: "",
-    
+
     // All Locations Page SEO
     allLocationsTitle: "All Waste Disposal Facilities | WasteFinder Directory",
     allLocationsDescription: "Browse our complete directory of waste disposal facilities including landfills, transfer stations, and construction debris sites.",
     allLocationsKeywords: "waste disposal directory, landfill locations, transfer stations, construction landfills",
     allLocationsOgImage: "",
-    
+
     // Location Detail Page SEO Templates
     locationTitleTemplate: "{location_name} - Waste Disposal | {city}, {state}",
     locationDescriptionTemplate: "Find details for {location_name} in {city}, {state}. Get hours, pricing, contact info and accepted waste types.",
     locationKeywordsTemplate: "{location_type}, waste disposal {city}, landfill {state}, debris disposal {zipcode}",
     locationOgImageTemplate: "",
-    
+
     // Search Results SEO Templates
     searchTitleTemplate: "Waste Disposal Facilities near {search_term} | WasteFinder",
     searchDescriptionTemplate: "Find waste disposal facilities near {search_term}. Compare prices, hours, and services for landfills and transfer stations.",
     searchKeywordsTemplate: "waste disposal {search_term}, landfill near {search_term}, transfer station {search_term}",
-    
+
     // Blog SEO Templates
     blogTitleTemplate: "{post_title} | WasteFinder Blog",
     blogDescriptionTemplate: "{post_excerpt}",
     blogKeywordsTemplate: "waste management, {post_tags}, environmental blog",
-    
+
     // Schema Markup Settings
     enableSchemaMarkup: true,
     businessType: "Waste Management Service",
     businessName: "WasteFinder",
     businessDescription: "Comprehensive directory of waste disposal facilities",
-    
+
     // Technical SEO
     robotsTxt: `User-agent: *
 Allow: /
@@ -215,11 +215,45 @@ Disallow: /admin/
 Disallow: /api/
 
 Sitemap: https://wastefinder.com/sitemap.xml`,
-    
+
     enableSitemap: true,
     sitemapUpdateFrequency: "weekly",
     canonicalUrlsEnabled: true,
     enableBreadcrumbs: true,
+  });
+
+  const [blogSettings, setBlogSettings] = useState({
+    // Blog SEO Templates
+    blogIndexTitle: "Learn - Expert Insights on Waste Management | WasteFinder",
+    blogIndexDescription: "Discover expert insights, tips, and guides for waste management and environmental sustainability from industry professionals.",
+    blogIndexKeywords: "waste management blog, environmental insights, sustainability tips, disposal guides",
+
+    // Individual Blog Post SEO Templates
+    blogPostTitleTemplate: "{post_title} | WasteFinder Learn",
+    blogPostDescriptionTemplate: "{post_excerpt}",
+    blogPostKeywordsTemplate: "waste management, {post_tags}, environmental blog",
+
+    // Blog Category SEO Templates
+    blogCategoryTitleTemplate: "{category_name} Articles | WasteFinder Learn",
+    blogCategoryDescriptionTemplate: "Read the latest articles about {category_name} on WasteFinder Learn. Expert insights and practical tips.",
+    blogCategoryKeywordsTemplate: "{category_name}, waste management, environmental articles",
+
+    // Blog Settings
+    postsPerPage: 10,
+    showAuthorBio: true,
+    showRelatedPosts: true,
+    enableComments: false,
+    enableSocialSharing: true,
+    enableNewsletterSignup: true,
+
+    // Reading Time
+    enableReadingTime: true,
+    wordsPerMinute: 200,
+
+    // RSS Feed
+    enableRssFeed: true,
+    rssTitle: "WasteFinder Learn - Latest Articles",
+    rssDescription: "Stay updated with the latest waste management insights and environmental tips.",
   });
 
   const [newUser, setNewUser] = useState({
@@ -235,6 +269,7 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
     { id: "users", label: "Admin Users", icon: Users },
     { id: "website", label: "Website Settings", icon: Globe },
     { id: "seo", label: "Technical SEO", icon: Tag },
+    { id: "blog", label: "Blog Settings", icon: FileText },
     { id: "content", label: "Content Management", icon: FileText },
     { id: "marketing", label: "Marketing", icon: MessageSquare },
     { id: "system", label: "System Settings", icon: Settings },
@@ -265,6 +300,12 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
   const handleSaveSeoSettings = () => {
     console.log("Saving SEO settings:", seoSettings);
     alert("SEO settings updated successfully!");
+  };
+
+  const handleSaveBlogSettings = () => {
+    console.log("Saving blog settings:", blogSettings);
+    localStorage.setItem("blogSettings", JSON.stringify(blogSettings));
+    alert("Blog settings updated successfully!");
   };
 
   const handleDeletePendingLocation = (locationId: string) => {
@@ -998,6 +1039,294 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
             </Card>
           )}
 
+          {/* Blog Settings Tab */}
+          {activeTab === "blog" && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="w-5 h-5" />
+                  Blog Settings & SEO
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-8">
+                {/* Blog Index SEO */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium border-b pb-2">Blog Index Page SEO</h3>
+                  <div className="grid grid-cols-1 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="blogIndexTitle">Blog Index Title</Label>
+                      <Input
+                        id="blogIndexTitle"
+                        value={blogSettings.blogIndexTitle}
+                        onChange={(e) =>
+                          setBlogSettings({
+                            ...blogSettings,
+                            blogIndexTitle: e.target.value,
+                          })
+                        }
+                        placeholder="Learn - Expert Insights | WasteFinder"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="blogIndexDescription">Blog Index Meta Description</Label>
+                      <Textarea
+                        id="blogIndexDescription"
+                        value={blogSettings.blogIndexDescription}
+                        onChange={(e) =>
+                          setBlogSettings({
+                            ...blogSettings,
+                            blogIndexDescription: e.target.value,
+                          })
+                        }
+                        placeholder="Discover expert insights and tips..."
+                        rows={3}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="blogIndexKeywords">Blog Index Keywords</Label>
+                      <Input
+                        id="blogIndexKeywords"
+                        value={blogSettings.blogIndexKeywords}
+                        onChange={(e) =>
+                          setBlogSettings({
+                            ...blogSettings,
+                            blogIndexKeywords: e.target.value,
+                          })
+                        }
+                        placeholder="waste management blog, environmental insights, sustainability tips"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Blog Post SEO Templates */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium border-b pb-2">Individual Blog Post SEO Templates</h3>
+                  <div className="bg-blue-50 p-4 rounded-lg">
+                    <p className="text-sm text-blue-800 mb-2">
+                      Use template variables: {"{post_title}"}, {"{post_excerpt}"}, {"{post_tags}"}, {"{author_name}"}
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="blogPostTitleTemplate">Post Title Template</Label>
+                      <Input
+                        id="blogPostTitleTemplate"
+                        value={blogSettings.blogPostTitleTemplate}
+                        onChange={(e) =>
+                          setBlogSettings({
+                            ...blogSettings,
+                            blogPostTitleTemplate: e.target.value,
+                          })
+                        }
+                        placeholder="{post_title} | WasteFinder Learn"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="blogPostDescriptionTemplate">Post Description Template</Label>
+                      <Textarea
+                        id="blogPostDescriptionTemplate"
+                        value={blogSettings.blogPostDescriptionTemplate}
+                        onChange={(e) =>
+                          setBlogSettings({
+                            ...blogSettings,
+                            blogPostDescriptionTemplate: e.target.value,
+                          })
+                        }
+                        placeholder="{post_excerpt}"
+                        rows={2}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="blogPostKeywordsTemplate">Post Keywords Template</Label>
+                      <Input
+                        id="blogPostKeywordsTemplate"
+                        value={blogSettings.blogPostKeywordsTemplate}
+                        onChange={(e) =>
+                          setBlogSettings({
+                            ...blogSettings,
+                            blogPostKeywordsTemplate: e.target.value,
+                          })
+                        }
+                        placeholder="waste management, {post_tags}, environmental blog"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Blog Category SEO Templates */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium border-b pb-2">Blog Category SEO Templates</h3>
+                  <div className="bg-green-50 p-4 rounded-lg">
+                    <p className="text-sm text-green-800 mb-2">
+                      Use template variable: {"{category_name}"}
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="blogCategoryTitleTemplate">Category Title Template</Label>
+                      <Input
+                        id="blogCategoryTitleTemplate"
+                        value={blogSettings.blogCategoryTitleTemplate}
+                        onChange={(e) =>
+                          setBlogSettings({
+                            ...blogSettings,
+                            blogCategoryTitleTemplate: e.target.value,
+                          })
+                        }
+                        placeholder="{category_name} Articles | WasteFinder Learn"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="blogCategoryDescriptionTemplate">Category Description Template</Label>
+                      <Textarea
+                        id="blogCategoryDescriptionTemplate"
+                        value={blogSettings.blogCategoryDescriptionTemplate}
+                        onChange={(e) =>
+                          setBlogSettings({
+                            ...blogSettings,
+                            blogCategoryDescriptionTemplate: e.target.value,
+                          })
+                        }
+                        placeholder="Read the latest articles about {category_name}..."
+                        rows={2}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Blog Features */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium border-b pb-2">Blog Features</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="postsPerPage">Posts Per Page</Label>
+                        <Input
+                          id="postsPerPage"
+                          type="number"
+                          value={blogSettings.postsPerPage}
+                          onChange={(e) =>
+                            setBlogSettings({
+                              ...blogSettings,
+                              postsPerPage: parseInt(e.target.value) || 10,
+                            })
+                          }
+                          min="1"
+                          max="50"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="wordsPerMinute">Reading Speed (words per minute)</Label>
+                        <Input
+                          id="wordsPerMinute"
+                          type="number"
+                          value={blogSettings.wordsPerMinute}
+                          onChange={(e) =>
+                            setBlogSettings({
+                              ...blogSettings,
+                              wordsPerMinute: parseInt(e.target.value) || 200,
+                            })
+                          }
+                          min="100"
+                          max="400"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-4">
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="showAuthorBio"
+                          checked={blogSettings.showAuthorBio}
+                          onCheckedChange={(checked) =>
+                            setBlogSettings({
+                              ...blogSettings,
+                              showAuthorBio: checked as boolean,
+                            })
+                          }
+                        />
+                        <Label htmlFor="showAuthorBio">Show Author Bio</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="showRelatedPosts"
+                          checked={blogSettings.showRelatedPosts}
+                          onCheckedChange={(checked) =>
+                            setBlogSettings({
+                              ...blogSettings,
+                              showRelatedPosts: checked as boolean,
+                            })
+                          }
+                        />
+                        <Label htmlFor="showRelatedPosts">Show Related Posts</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="enableReadingTime"
+                          checked={blogSettings.enableReadingTime}
+                          onCheckedChange={(checked) =>
+                            setBlogSettings({
+                              ...blogSettings,
+                              enableReadingTime: checked as boolean,
+                            })
+                          }
+                        />
+                        <Label htmlFor="enableReadingTime">Show Reading Time</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="enableSocialSharing"
+                          checked={blogSettings.enableSocialSharing}
+                          onCheckedChange={(checked) =>
+                            setBlogSettings({
+                              ...blogSettings,
+                              enableSocialSharing: checked as boolean,
+                            })
+                          }
+                        />
+                        <Label htmlFor="enableSocialSharing">Enable Social Sharing</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="enableNewsletterSignup"
+                          checked={blogSettings.enableNewsletterSignup}
+                          onCheckedChange={(checked) =>
+                            setBlogSettings({
+                              ...blogSettings,
+                              enableNewsletterSignup: checked as boolean,
+                            })
+                          }
+                        />
+                        <Label htmlFor="enableNewsletterSignup">Enable Newsletter Signup</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="enableRssFeed"
+                          checked={blogSettings.enableRssFeed}
+                          onCheckedChange={(checked) =>
+                            setBlogSettings({
+                              ...blogSettings,
+                              enableRssFeed: checked as boolean,
+                            })
+                          }
+                        />
+                        <Label htmlFor="enableRssFeed">Enable RSS Feed</Label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <Button
+                  onClick={handleSaveBlogSettings}
+                  className="w-full"
+                >
+                  <Save className="w-4 h-4 mr-2" />
+                  Save Blog Settings
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Content Management Tab */}
           {activeTab === "content" && (
             <Card>
@@ -1248,7 +1577,7 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
               <CardContent className="space-y-6">
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                   <p className="text-sm text-yellow-800">
-                    <strong>Important:</strong> Custom code changes will be applied system-wide. 
+                    <strong>Important:</strong> Custom code changes will be applied system-wide.
                     Make sure to test thoroughly and only include trusted code to maintain security.
                   </p>
                 </div>
