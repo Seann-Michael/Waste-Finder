@@ -1,7 +1,11 @@
 import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
-import { handleLocationsSearch, handleLocationById } from "./routes/locations";
+import {
+  handleLocationsSearch,
+  handleLocationById,
+  handleAllLocations,
+} from "./routes/locations";
 
 export function createServer() {
   const app = express();
@@ -19,6 +23,7 @@ export function createServer() {
   app.get("/api/demo", handleDemo);
 
   // Locations API routes
+  app.get("/api/locations/all", handleAllLocations);
   app.get("/api/locations", handleLocationsSearch);
   app.get("/api/locations/:id", handleLocationById);
 
