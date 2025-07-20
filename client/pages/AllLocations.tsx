@@ -396,9 +396,30 @@ export default function AllLocations() {
       }
     } catch (error) {
       console.error("Error loading locations:", error);
-      setLocations([]);
-      setSearchLocation(null);
-      setSearchMessage("Error connecting to server. Please try again.");
+
+      // Fallback to mock data for development
+      console.log("Using fallback mock data");
+      const mockData = getMockData(searchQuery);
+      setLocations(mockData);
+
+      if (searchQuery && /^\d{5}$/.test(searchQuery)) {
+        setSearchLocation({
+          zipCode: searchQuery,
+          lat: 41.2367,
+          lng: -81.8552,
+          city: "Elyria",
+          state: "OH",
+          radius: searchRadius,
+        });
+        setSearchMessage(
+          `Found ${mockData.length} facilities within ${searchRadius} miles of ${searchQuery} (using offline data)`,
+        );
+      } else {
+        setSearchLocation(null);
+        setSearchMessage(
+          `Showing ${mockData.length} facilities${searchQuery ? ` for "${searchQuery}"` : ""} (offline mode)`,
+        );
+      }
     } finally {
       setIsLoading(false);
     }
