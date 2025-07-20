@@ -462,33 +462,279 @@ export function handleLocationsSearch(req: Request, res: Response) {
   }
 }
 
-// GET /api/locations/all - Get all locations with optional search
+/**
+ * GET /api/locations/all - Get all locations with pagination and search
+ * Public endpoint with rate limiting
+ */
 export function handleAllLocations(req: Request, res: Response) {
   try {
-    const { search } = req.query;
+    const {
+      search,
+      page = "1",
+      limit = "50",
+      status = "active",
+      sortBy = "name",
+      sortOrder = "asc",
+    } = req.query;
 
     let filteredLocations = [...mockLocations];
 
-    if (search && typeof search === "string") {
-      const searchTerm = search.toLowerCase();
-      filteredLocations = mockLocations.filter(
-        (location) =>
-          location.name.toLowerCase().includes(searchTerm) ||
-          location.city.toLowerCase().includes(searchTerm) ||
-          location.zipCode.includes(searchTerm),
-      );
+    // Filter by status
+    if (status === "active") {
+      filteredLocations = filteredLocations.filter((loc) => loc.isActive);
+    } else if (status === "inactive") {
+      filteredLocations = filteredLocations.filter((loc) => !loc.isActive);
     }
+
+    // Apply search filter
+    if (search && typeof search === "string") {
+      const searchTerm = search.toLowerCase().trim();
+      if (searchTerm.length > 0) {
+        filteredLocations = filteredLocations.filter(
+          (location) =>
+            location.name.toLowerCase().includes(searchTerm) ||
+            location.city.toLowerCase().includes(searchTerm) ||
+            location.state.toLowerCase().includes(searchTerm) ||
+            location.zipCode.includes(searchTerm) ||
+            location.locationType.toLowerCase().includes(searchTerm),
+        );
+      }
+    }
+
+    // Apply sorting
+    filteredLocations.sort((a, b) => {
+      const aValue = (a as any)[sortBy as string];
+      const bValue = (b as any)[sortBy as string];
+
+      if (typeof aValue === "string" && typeof bValue === "string") {
+        const result = aValue.localeCompare(bValue);
+        return sortOrder === "desc" ? -result : result;
+      }
+
+      if (typeof aValue === "number" && typeof bValue === "number") {
+        const result = aValue - bValue;
+        return sortOrder === "desc" ? -result : result;
+      }
+
+      return 0;
+    });
+
+    // Apply pagination
+    const pageNum = Math.max(1, parseInt(page as string) || 1);
+    const limitNum = Math.min(
+      100,
+      Math.max(1, parseInt(limit as string) || 50),
+    );
+    const startIndex = (pageNum - 1) * limitNum;
+    const endIndex = startIndex + limitNum;
+
+    const paginatedLocations = filteredLocations.slice(startIndex, endIndex);
 
     res.json({
       success: true,
-      data: filteredLocations,
-      total: filteredLocations.length,
+      data: paginatedLocations,
+      pagination: {
+        currentPage: pageNum,
+        totalPages: Math.ceil(filteredLocations.length / limitNum),
+        totalItems: filteredLocations.length,
+        itemsPerPage: limitNum,
+        hasNextPage: endIndex < filteredLocations.length,
+        hasPreviousPage: pageNum > 1,
+      },
+      meta: {
+        searchTerm: search || null,
+        sortBy,
+        sortOrder,
+        status,
+      },
     });
   } catch (error) {
     console.error("Error fetching all locations:", error);
     res.status(500).json({
       success: false,
       error: "Failed to fetch locations",
+      details: process.env.NODE_ENV === "development" ? error : undefined,
+    });
+  }
+}
+
+/**
+ * POST /api/locations - Create new location
+ * Requires authentication and locations.write permission
+ */
+export function handleCreateLocation(req: Request, res: Response) {
+  try {
+    const validation = validateLocationData(req.body);
+
+    if (!validation.isValid) {
+      return res.status(400).json({
+        success: false,
+        error: "Validation failed",
+        details: validation.errors,
+      });
+    }
+
+    const sanitizedData = sanitizeLocationData(req.body);
+
+    // Generate new ID
+    const newId = `location_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+    const newLocation = {
+      id: newId,
+      ...sanitizedData,
+      latitude: parseFloat(sanitizedData.latitude),
+      longitude: parseFloat(sanitizedData.longitude),
+      rating: 0,
+      reviewCount: 0,
+      isActive: sanitizedData.isActive !== false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    // Add to mock database
+    mockLocations.push(newLocation);
+
+    res.status(201).json({
+      success: true,
+      data: newLocation,
+      message: "Location created successfully",
+    });
+  } catch (error) {
+    console.error("Error creating location:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to create location",
+      details: process.env.NODE_ENV === "development" ? error : undefined,
+    });
+  }
+}
+
+/**
+ * PUT /api/locations/:id - Update existing location
+ * Requires authentication and locations.write permission
+ */
+export function handleUpdateLocation(req: Request, res: Response) {
+  try {
+    const { id } = req.params;
+    const locationIndex = mockLocations.findIndex((loc) => loc.id === id);
+
+    if (locationIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        error: "Location not found",
+      });
+    }
+
+    const validation = validateLocationData(req.body);
+
+    if (!validation.isValid) {
+      return res.status(400).json({
+        success: false,
+        error: "Validation failed",
+        details: validation.errors,
+      });
+    }
+
+    const sanitizedData = sanitizeLocationData(req.body);
+    const existingLocation = mockLocations[locationIndex];
+
+    const updatedLocation = {
+      ...existingLocation,
+      ...sanitizedData,
+      latitude: parseFloat(sanitizedData.latitude),
+      longitude: parseFloat(sanitizedData.longitude),
+      updatedAt: new Date().toISOString(),
+    };
+
+    mockLocations[locationIndex] = updatedLocation;
+
+    res.json({
+      success: true,
+      data: updatedLocation,
+      message: "Location updated successfully",
+    });
+  } catch (error) {
+    console.error("Error updating location:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to update location",
+      details: process.env.NODE_ENV === "development" ? error : undefined,
+    });
+  }
+}
+
+/**
+ * DELETE /api/locations/:id - Delete location
+ * Requires authentication and locations.delete permission (super admin only)
+ */
+export function handleDeleteLocation(req: Request, res: Response) {
+  try {
+    const { id } = req.params;
+    const locationIndex = mockLocations.findIndex((loc) => loc.id === id);
+
+    if (locationIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        error: "Location not found",
+      });
+    }
+
+    const deletedLocation = mockLocations[locationIndex];
+    mockLocations.splice(locationIndex, 1);
+
+    res.json({
+      success: true,
+      message: "Location deleted successfully",
+      deletedLocation: {
+        id: deletedLocation.id,
+        name: deletedLocation.name,
+      },
+    });
+  } catch (error) {
+    console.error("Error deleting location:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to delete location",
+      details: process.env.NODE_ENV === "development" ? error : undefined,
+    });
+  }
+}
+
+/**
+ * PATCH /api/locations/:id/status - Toggle location active status
+ * Requires authentication and locations.write permission
+ */
+export function handleToggleLocationStatus(req: Request, res: Response) {
+  try {
+    const { id } = req.params;
+    const { isActive } = req.body;
+
+    const locationIndex = mockLocations.findIndex((loc) => loc.id === id);
+
+    if (locationIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        error: "Location not found",
+      });
+    }
+
+    mockLocations[locationIndex].isActive = Boolean(isActive);
+    mockLocations[locationIndex].updatedAt = new Date().toISOString();
+
+    res.json({
+      success: true,
+      data: {
+        id: mockLocations[locationIndex].id,
+        isActive: mockLocations[locationIndex].isActive,
+      },
+      message: `Location ${isActive ? "activated" : "deactivated"} successfully`,
+    });
+  } catch (error) {
+    console.error("Error toggling location status:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to update location status",
+      details: process.env.NODE_ENV === "development" ? error : undefined,
     });
   }
 }
