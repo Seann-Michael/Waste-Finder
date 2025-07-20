@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import SearchForm from "@/components/SearchForm";
+import SearchForm, { SearchParams } from "@/components/SearchForm";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -19,14 +20,28 @@ import {
 } from "lucide-react";
 
 export default function Index() {
+  const navigate = useNavigate();
   const [isSearching, setIsSearching] = useState(false);
 
-  const handleSearch = async () => {
+  const handleSearch = async (searchParams: SearchParams) => {
     setIsSearching(true);
-    // Simulate search delay
+
+    // Build URL parameters
+    const params = new URLSearchParams();
+    params.set("zipCode", searchParams.zipCode);
+    params.set("radius", searchParams.radius.toString());
+    if (searchParams.facilityTypes.length > 0) {
+      params.set("facilityTypes", searchParams.facilityTypes.join(","));
+    }
+    if (searchParams.debrisTypes.length > 0) {
+      params.set("debrisTypes", searchParams.debrisTypes.join(","));
+    }
+
+    // Simulate brief loading time for better UX
     setTimeout(() => {
+      navigate(`/all-locations?${params.toString()}`);
       setIsSearching(false);
-    }, 2000);
+    }, 500);
   };
 
   const features = [
