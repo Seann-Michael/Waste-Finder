@@ -515,6 +515,11 @@ export default function LocationDataTable() {
                         onCheckedChange={handleSelectAll}
                       />
                     </TableHead>
+                    {visibleColumns.name && (
+                      <TableHead
+                        className="cursor-pointer hover:bg-muted/50"
+                        onClick={() => handleSort("name")}
+                      >
                         <div className="flex items-center">
                           Name
                           {getSortIcon("name")}
