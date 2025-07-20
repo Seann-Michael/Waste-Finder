@@ -137,7 +137,7 @@ export default function Admin() {
         address: "456 River Road, Portland, OR 97202",
         phone: "(503) 555-0123",
         facilityType: "transfer_station",
-        paymentTypes: ["Cash", "Credit Card"],
+        paymentTypes: ["Cash", "Credit/Debit"],
         debrisTypes: ["General Waste", "Recyclables", "Electronics"],
         operatingHours: "Mon-Fri 7AM-6PM, Sat 8AM-4PM",
         notes: "New eco-friendly facility with advanced recycling capabilities",
