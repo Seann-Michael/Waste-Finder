@@ -28,6 +28,8 @@ import SuggestLocation from "./pages/SuggestLocation";
 import Resources from "./pages/Resources";
 import SearchTest from "./pages/SearchTest";
 import NotFound from "./pages/NotFound";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 
 const queryClient = new QueryClient();
 
@@ -133,6 +135,8 @@ const App = () => (
             }
           />
           <Route path="/location/:id" element={<LocationDetail />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/about" element={<About />} />
           <Route path="/search-test" element={<SearchTest />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
