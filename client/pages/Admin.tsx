@@ -275,14 +275,15 @@ export default function Admin() {
                   {pendingReviews.map((review) => (
                     <div
                       key={review.id}
-                      className="border rounded-lg p-3 space-y-2"
+                      className="border rounded-lg p-3 space-y-2 cursor-pointer hover:bg-muted/50 transition-colors"
+                      onClick={() => setSelectedReview(review)}
                     >
                       <div className="flex items-center justify-between">
                         <h4 className="font-medium text-sm">
                           {review.location}
                         </h4>
                         <span className="text-xs text-muted-foreground">
-                          {review.date}
+                          {new Date(review.date).toLocaleDateString()}
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
@@ -298,27 +299,13 @@ export default function Admin() {
                           ))}
                         </div>
                       </div>
-                      <p className="text-xs text-muted-foreground">
-                        {review.preview}
+                      <p className="text-xs font-medium">{review.title}</p>
+                      <p className="text-xs text-muted-foreground line-clamp-2">
+                        {review.content}
                       </p>
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="h-7 text-xs"
-                        >
-                          <CheckCircle className="w-3 h-3 mr-1" />
-                          Approve
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="h-7 text-xs"
-                        >
-                          <AlertTriangle className="w-3 h-3 mr-1" />
-                          Reject
-                        </Button>
-                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Click to view full review and approve/reject
+                      </p>
                     </div>
                   ))}
                   <Button variant="outline" className="w-full" size="sm">
