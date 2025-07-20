@@ -54,6 +54,7 @@ export default function EditFacility() {
     phone: "",
     email: "",
     website: "",
+    googleBusinessUrl: "",
     facilityType: "",
     paymentTypes: [] as string[],
     debrisTypes: [] as string[],
@@ -62,6 +63,17 @@ export default function EditFacility() {
     longitude: "",
     isActive: true,
   });
+
+  const [debrisPricing, setDebrisPricing] = useState<
+    Record<
+      string,
+      {
+        pricePerTon?: number;
+        pricePerLoad?: number;
+        priceNote?: string;
+      }
+    >
+  >({});
 
   const [operatingHours, setOperatingHours] = useState([
     { day: 0, dayName: "Sunday", openTime: "", closeTime: "", isClosed: true },
