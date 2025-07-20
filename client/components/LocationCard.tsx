@@ -134,8 +134,8 @@ export default function LocationCard({ location }: LocationCardProps) {
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
               <Badge variant="secondary" className="flex items-center gap-1">
-                {getFacilityIcon(location.facilityType)}
-                {getFacilityLabel(location.facilityType)}
+                {getLocationIcon(location.locationType)}
+                {getLocationLabel(location.locationType)}
               </Badge>
               {location.distance && (
                 <span className="text-sm text-muted-foreground">
