@@ -216,9 +216,9 @@ export default function Admin() {
                     variant="outline"
                     asChild
                   >
-                    <Link to="/admin/add-facility">
+                    <Link to="/admin/add-location">
                       <MapPin className="w-4 h-4 mr-2" />
-                      Add New Facility
+                      Add New Location
                     </Link>
                   </Button>
                   <Button
@@ -228,7 +228,7 @@ export default function Admin() {
                   >
                     <Link to="/all-locations">
                       <Edit className="w-4 h-4 mr-2" />
-                      Browse & Edit Facilities
+                      Browse & Edit Locations
                     </Link>
                   </Button>
                 </CardContent>
