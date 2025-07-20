@@ -143,7 +143,7 @@ export default function BulkUploadFacilities() {
       description: "notes",
     };
 
-    return mappings[header] || "";
+    return mappings[header] || "skip";
   };
 
   const updateColumnMapping = (index: number, systemField: string) => {
