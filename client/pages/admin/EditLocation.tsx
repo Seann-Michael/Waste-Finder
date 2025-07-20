@@ -816,7 +816,7 @@ export default function EditFacility() {
                   Payment Methods
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {paymentOptions.map((payment) => (
                     <div key={payment} className="flex items-center space-x-2">
@@ -832,6 +832,22 @@ export default function EditFacility() {
                       </Label>
                     </div>
                   ))}
+                </div>
+
+                <div>
+                  <Label htmlFor="additionalPaymentDetails">Additional Payment Details</Label>
+                  <Textarea
+                    id="additionalPaymentDetails"
+                    value={formData.additionalPaymentDetails}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        additionalPaymentDetails: e.target.value,
+                      }))
+                    }
+                    placeholder="Any additional payment information, terms, or special arrangements..."
+                    rows={3}
+                  />
                 </div>
               </CardContent>
             </Card>
