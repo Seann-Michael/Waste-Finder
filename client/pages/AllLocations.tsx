@@ -117,14 +117,15 @@ const getZipCodeCoordinates = (
   const regionInfo = zipPrefixToRegion[prefix];
 
   if (regionInfo) {
-    // Add some variation within the region based on the full ZIP code
+    // Add reasonable variation within the region based on the full ZIP code
     const zipNum = parseInt(zipCode);
-    const latVariation = ((zipNum % 1000) - 500) * 0.01; // ±5 degrees variation
-    const lngVariation = ((zipNum % 10000) - 5000) * 0.01; // ±50 degrees variation
+    // More conservative variations to stay within realistic bounds
+    const latVariation = ((zipNum % 1000) - 500) * 0.002; // ±1 degree variation (about 70 miles)
+    const lngVariation = ((zipNum % 1000) - 500) * 0.003; // ±1.5 degree variation (about 85 miles)
 
     return {
-      lat: regionInfo.lat + latVariation,
-      lng: regionInfo.lng + lngVariation,
+      lat: Math.max(-90, Math.min(90, regionInfo.lat + latVariation)), // Clamp to valid lat range
+      lng: Math.max(-180, Math.min(180, regionInfo.lng + lngVariation)), // Clamp to valid lng range
     };
   }
 
