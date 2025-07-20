@@ -105,8 +105,6 @@ const mockPendingLocations: PendingLocation[] = [
   },
 ];
 
-
-
 export default function AdminSettings() {
   const [activeTab, setActiveTab] = useState("profile");
 
@@ -181,35 +179,35 @@ export default function AdminSettings() {
     homeDescription: "Search our comprehensive database of landfills, transfer stations, and construction facilities across the United States.",
     homeKeywords: "waste disposal, landfill, transfer station, construction debris, recycling",
     homeOgImage: "",
-
+    
     // All Locations Page SEO
     allLocationsTitle: "All Waste Disposal Facilities | WasteFinder Directory",
     allLocationsDescription: "Browse our complete directory of waste disposal facilities including landfills, transfer stations, and construction debris sites.",
     allLocationsKeywords: "waste disposal directory, landfill locations, transfer stations, construction landfills",
     allLocationsOgImage: "",
-
+    
     // Location Detail Page SEO Templates
     locationTitleTemplate: "{location_name} - Waste Disposal | {city}, {state}",
     locationDescriptionTemplate: "Find details for {location_name} in {city}, {state}. Get hours, pricing, contact info and accepted waste types.",
     locationKeywordsTemplate: "{location_type}, waste disposal {city}, landfill {state}, debris disposal {zipcode}",
     locationOgImageTemplate: "",
-
+    
     // Search Results SEO Templates
     searchTitleTemplate: "Waste Disposal Facilities near {search_term} | WasteFinder",
     searchDescriptionTemplate: "Find waste disposal facilities near {search_term}. Compare prices, hours, and services for landfills and transfer stations.",
     searchKeywordsTemplate: "waste disposal {search_term}, landfill near {search_term}, transfer station {search_term}",
-
+    
     // Blog SEO Templates
     blogTitleTemplate: "{post_title} | WasteFinder Blog",
     blogDescriptionTemplate: "{post_excerpt}",
     blogKeywordsTemplate: "waste management, {post_tags}, environmental blog",
-
+    
     // Schema Markup Settings
     enableSchemaMarkup: true,
     businessType: "Waste Management Service",
     businessName: "WasteFinder",
     businessDescription: "Comprehensive directory of waste disposal facilities",
-
+    
     // Technical SEO
     robotsTxt: `User-agent: *
 Allow: /
@@ -217,7 +215,7 @@ Disallow: /admin/
 Disallow: /api/
 
 Sitemap: https://wastefinder.com/sitemap.xml`,
-
+    
     enableSitemap: true,
     sitemapUpdateFrequency: "weekly",
     canonicalUrlsEnabled: true,
@@ -237,10 +235,10 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
     { id: "users", label: "Admin Users", icon: Users },
     { id: "website", label: "Website Settings", icon: Globe },
     { id: "seo", label: "Technical SEO", icon: Tag },
+    { id: "content", label: "Content Management", icon: FileText },
     { id: "marketing", label: "Marketing", icon: MessageSquare },
     { id: "system", label: "System Settings", icon: Settings },
-    { id: "api", label: "API & Webhooks", icon: Key },
-    { id: "content", label: "Content Management", icon: FileText },
+    { id: "api", label: "API Keys", icon: Key },
     { id: "code", label: "Custom Code", icon: Code },
   ];
 
@@ -262,6 +260,11 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
   const handleSaveMarketingSettings = () => {
     console.log("Saving marketing settings:", marketingSettings);
     alert("Marketing settings updated successfully!");
+  };
+
+  const handleSaveSeoSettings = () => {
+    console.log("Saving SEO settings:", seoSettings);
+    alert("SEO settings updated successfully!");
   };
 
   const handleDeletePendingLocation = (locationId: string) => {
@@ -295,16 +298,12 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
   };
 
   const handleFileUpload = async (file: File, type: "logo" | "favicon") => {
-    // Mock file upload - in real app, upload to your storage service
     const formData = new FormData();
     formData.append("file", file);
     formData.append("type", type);
 
     try {
-      // Simulate upload
       await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Generate mock URL (in real app, this would come from your upload service)
       const mockUrl = `https://your-cdn.com/${type}/${file.name}`;
 
       if (type === "logo") {
@@ -327,7 +326,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
 
   const handleSaveCodeSettings = () => {
     console.log("Saving code settings:", codeSettings);
-    alert("Code settings updated successfully!");
+    // Here you would implement the actual functionality to inject the custom code
+    // For security, this should be handled server-side with proper validation
+    alert("Custom code settings saved successfully! Changes may take a few minutes to appear.");
   };
 
   const handleSaveWebsiteSettings = () => {
@@ -338,54 +339,6 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
   const handleSaveSystemSettings = () => {
     console.log("Saving system settings:", systemSettings);
     alert("System settings updated successfully!");
-  };
-
-  const handleAddUser = () => {
-    if (newUser.password !== newUser.confirmPassword) {
-      alert("Passwords do not match!");
-      return;
-    }
-
-    const user: AdminUser = {
-      id: Date.now().toString(),
-      name: newUser.name,
-      email: newUser.email,
-      role: newUser.role as "super_admin" | "admin" | "editor",
-      status: "active",
-      lastLogin: "Never",
-      createdAt: new Date().toISOString(),
-    };
-
-    setAdminUsers([...adminUsers, user]);
-    setNewUser({
-      name: "",
-      email: "",
-      role: "admin",
-      password: "",
-      confirmPassword: "",
-    });
-    setNewUserDialog(false);
-    alert("User added successfully!");
-  };
-
-  const handleEditUser = (user: AdminUser) => {
-    setSelectedUser(user);
-    setEditUserDialog(true);
-  };
-
-  const handleDeleteUser = (userId: string) => {
-    if (confirm("Are you sure you want to delete this user?")) {
-      setAdminUsers(adminUsers.filter((user) => user.id !== userId));
-    }
-  };
-
-  const handleWebhookEventToggle = (event: string, checked: boolean) => {
-    setApiSettings((prev) => ({
-      ...prev,
-      webhookEvents: checked
-        ? [...prev.webhookEvents, event]
-        : prev.webhookEvents.filter((e) => e !== event),
-    }));
   };
 
   const getRoleBadge = (role: AdminUser["role"]) => {
@@ -414,377 +367,335 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
 
   return (
     <AdminLayout>
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Settings className="w-8 h-8 text-primary" />
-            <div>
-              <h1 className="text-3xl font-bold">Admin Settings</h1>
-              <p className="text-muted-foreground">
-                Manage your profile, users, and system configuration
-              </p>
-            </div>
+      <div className="space-y-8">
+        {/* Header */}
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+            <Settings className="w-6 h-6 text-primary-foreground" />
           </div>
-          <Button variant="outline" asChild>
-            <Link to="/admin">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Dashboard
-            </Link>
-          </Button>
+          <div>
+            <h1 className="text-3xl font-bold">Admin Settings</h1>
+            <p className="text-muted-foreground">
+              Configure system settings and preferences
+            </p>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Sidebar Navigation */}
-          <div className="lg:col-span-1">
+        {/* Navigation Tabs */}
+        <div className="border-b border-border">
+          <nav className="flex space-x-8">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+                    activeTab === tab.id
+                      ? "border-primary text-primary"
+                      : "border-transparent text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  {tab.label}
+                </button>
+              );
+            })}
+          </nav>
+        </div>
+
+        {/* Tab Content */}
+        <div className="mt-8">
+          {/* Profile & Password Tab */}
+          {activeTab === "profile" && (
             <Card>
-              <CardContent className="p-6">
-                <nav className="space-y-2">
-                  {tabs.map((tab) => (
-                    <button
-                      key={tab.id}
-                      onClick={() => setActiveTab(tab.id)}
-                      className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg transition-colors ${
-                        activeTab === tab.id
-                          ? "bg-primary text-primary-foreground"
-                          : "hover:bg-muted"
-                      }`}
-                    >
-                      <tab.icon className="w-4 h-4" />
-                      {tab.label}
-                    </button>
-                  ))}
-                </nav>
+              <CardHeader>
+                <CardTitle>Profile & Password</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Full Name</Label>
+                    <Input
+                      id="name"
+                      value={profileData.name}
+                      onChange={(e) =>
+                        setProfileData({ ...profileData, name: e.target.value })
+                      }
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email Address</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={profileData.email}
+                      onChange={(e) =>
+                        setProfileData({ ...profileData, email: e.target.value })
+                      }
+                    />
+                  </div>
+                </div>
+
+                <Separator />
+
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium">Change Password</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="currentPassword">Current Password</Label>
+                      <Input
+                        id="currentPassword"
+                        type="password"
+                        value={profileData.currentPassword}
+                        onChange={(e) =>
+                          setProfileData({
+                            ...profileData,
+                            currentPassword: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="newPassword">New Password</Label>
+                      <Input
+                        id="newPassword"
+                        type="password"
+                        value={profileData.newPassword}
+                        onChange={(e) =>
+                          setProfileData({
+                            ...profileData,
+                            newPassword: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="confirmPassword">Confirm Password</Label>
+                      <Input
+                        id="confirmPassword"
+                        type="password"
+                        value={profileData.confirmPassword}
+                        onChange={(e) =>
+                          setProfileData({
+                            ...profileData,
+                            confirmPassword: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <Button onClick={handleSaveProfile}>
+                  <Save className="w-4 h-4 mr-2" />
+                  Save Profile
+                </Button>
               </CardContent>
             </Card>
-          </div>
+          )}
 
-          {/* Main Content */}
-          <div className="lg:col-span-3">
-            {activeTab === "profile" && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Profile & Password</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Full Name</Label>
-                      <Input
-                        id="name"
-                        value={profileData.name}
-                        onChange={(e) =>
-                          setProfileData({
-                            ...profileData,
-                            name: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email Address</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={profileData.email}
-                        onChange={(e) =>
-                          setProfileData({
-                            ...profileData,
-                            email: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                  </div>
-
-                  <hr />
-
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-semibold">Change Password</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="currentPassword">
-                          Current Password
-                        </Label>
-                        <Input
-                          id="currentPassword"
-                          type="password"
-                          value={profileData.currentPassword}
-                          onChange={(e) =>
-                            setProfileData({
-                              ...profileData,
-                              currentPassword: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="newPassword">New Password</Label>
-                        <Input
-                          id="newPassword"
-                          type="password"
-                          value={profileData.newPassword}
-                          onChange={(e) =>
-                            setProfileData({
-                              ...profileData,
-                              newPassword: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="confirmPassword">
-                          Confirm Password
-                        </Label>
-                        <Input
-                          id="confirmPassword"
-                          type="password"
-                          value={profileData.confirmPassword}
-                          onChange={(e) =>
-                            setProfileData({
-                              ...profileData,
-                              confirmPassword: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <Button onClick={handleSaveProfile}>
-                    <Save className="w-4 h-4 mr-2" />
-                    Save Changes
-                  </Button>
-                </CardContent>
-              </Card>
-            )}
-
-            {activeTab === "users" && (
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle>Admin Users</CardTitle>
-                    <Dialog
-                      open={newUserDialog}
-                      onOpenChange={setNewUserDialog}
-                    >
-                      <DialogTrigger asChild>
-                        <Button>
-                          <Plus className="w-4 h-4 mr-2" />
-                          Add User
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>Add New Admin User</DialogTitle>
-                          <DialogDescription>
-                            Create a new admin user account
-                          </DialogDescription>
-                        </DialogHeader>
-                        <div className="space-y-4">
-                          <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                              <Label htmlFor="newUserName">Full Name</Label>
-                              <Input
-                                id="newUserName"
-                                value={newUser.name}
-                                onChange={(e) =>
-                                  setNewUser({
-                                    ...newUser,
-                                    name: e.target.value,
-                                  })
-                                }
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="newUserEmail">Email</Label>
-                              <Input
-                                id="newUserEmail"
-                                type="email"
-                                value={newUser.email}
-                                onChange={(e) =>
-                                  setNewUser({
-                                    ...newUser,
-                                    email: e.target.value,
-                                  })
-                                }
-                              />
-                            </div>
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="newUserRole">Role</Label>
-                            <Select
-                              value={newUser.role}
-                              onValueChange={(value) =>
-                                setNewUser({ ...newUser, role: value })
-                              }
-                            >
-                              <SelectTrigger>
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="admin">Admin</SelectItem>
-                                <SelectItem value="editor">Editor</SelectItem>
-                                <SelectItem value="super_admin">
-                                  Super Admin
-                                </SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                              <Label htmlFor="newUserPassword">Password</Label>
-                              <Input
-                                id="newUserPassword"
-                                type="password"
-                                value={newUser.password}
-                                onChange={(e) =>
-                                  setNewUser({
-                                    ...newUser,
-                                    password: e.target.value,
-                                  })
-                                }
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="newUserConfirmPassword">
-                                Confirm Password
-                              </Label>
-                              <Input
-                                id="newUserConfirmPassword"
-                                type="password"
-                                value={newUser.confirmPassword}
-                                onChange={(e) =>
-                                  setNewUser({
-                                    ...newUser,
-                                    confirmPassword: e.target.value,
-                                  })
-                                }
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <DialogFooter>
-                          <Button
-                            variant="outline"
-                            onClick={() => setNewUserDialog(false)}
-                          >
-                            Cancel
-                          </Button>
-                          <Button onClick={handleAddUser}>Add User</Button>
-                        </DialogFooter>
-                      </DialogContent>
-                    </Dialog>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Role</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Last Login</TableHead>
-                        <TableHead>Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {adminUsers.map((user) => (
-                        <TableRow key={user.id}>
-                          <TableCell className="font-medium">
-                            {user.name}
-                          </TableCell>
-                          <TableCell>{user.email}</TableCell>
-                          <TableCell>{getRoleBadge(user.role)}</TableCell>
-                          <TableCell>{getStatusBadge(user.status)}</TableCell>
-                          <TableCell>
-                            {user.lastLogin === "Never"
-                              ? "Never"
-                              : new Date(user.lastLogin).toLocaleDateString()}
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-2">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => handleEditUser(user)}
-                              >
-                                <Edit className="w-4 h-4" />
-                              </Button>
-                              {user.role !== "super_admin" && (
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => handleDeleteUser(user.id)}
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
-                              )}
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </CardContent>
-              </Card>
-            )}
-
-            {activeTab === "website" && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Website Settings</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  {/* Basic Website Settings */}
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium flex items-center gap-2">
-                      <Globe className="w-5 h-5" />
-                      Basic Settings
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="siteUrl">Site URL</Label>
-                        <Input
-                          id="siteUrl"
-                          value={websiteSettings.siteUrl}
-                          onChange={(e) =>
-                            setWebsiteSettings({
-                              ...websiteSettings,
-                              siteUrl: e.target.value,
-                            })
-                          }
-                          placeholder="https://yoursite.com"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="siteLogo">Site Logo</Label>
+          {/* Admin Users Tab */}
+          {activeTab === "users" && (
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle>Admin Users</CardTitle>
+                <Dialog open={newUserDialog} onOpenChange={setNewUserDialog}>
+                  <DialogTrigger asChild>
+                    <Button>
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add User
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Add New Admin User</DialogTitle>
+                      <DialogDescription>
+                        Create a new administrator account
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
+                          <Label htmlFor="newUserName">Full Name</Label>
                           <Input
-                            id="siteLogo"
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => {
-                              const file = e.target.files?.[0];
-                              if (file) {
-                                handleFileUpload(file, "logo");
-                              }
-                            }}
+                            id="newUserName"
+                            value={newUser.name}
+                            onChange={(e) =>
+                              setNewUser({ ...newUser, name: e.target.value })
+                            }
                           />
-                          {websiteSettings.siteLogo && (
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                              <span>Current: </span>
-                              <a
-                                href={websiteSettings.siteLogo}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-primary hover:underline"
-                              >
-                                View Logo
-                              </a>
-                            </div>
-                          )}
                         </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="newUserEmail">Email</Label>
+                          <Input
+                            id="newUserEmail"
+                            type="email"
+                            value={newUser.email}
+                            onChange={(e) =>
+                              setNewUser({ ...newUser, email: e.target.value })
+                            }
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="newUserRole">Role</Label>
+                        <Select
+                          value={newUser.role}
+                          onValueChange={(value) =>
+                            setNewUser({ ...newUser, role: value })
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="admin">Admin</SelectItem>
+                            <SelectItem value="editor">Editor</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="newUserPassword">Password</Label>
+                          <Input
+                            id="newUserPassword"
+                            type="password"
+                            value={newUser.password}
+                            onChange={(e) =>
+                              setNewUser({ ...newUser, password: e.target.value })
+                            }
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="newUserConfirmPassword">
+                            Confirm Password
+                          </Label>
+                          <Input
+                            id="newUserConfirmPassword"
+                            type="password"
+                            value={newUser.confirmPassword}
+                            onChange={(e) =>
+                              setNewUser({
+                                ...newUser,
+                                confirmPassword: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <Button
+                        variant="outline"
+                        onClick={() => setNewUserDialog(false)}
+                      >
+                        Cancel
+                      </Button>
+                      <Button onClick={() => setNewUserDialog(false)}>
+                        Create User
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Email</TableHead>
+                      <TableHead>Role</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Last Login</TableHead>
+                      <TableHead>Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {adminUsers.map((user) => (
+                      <TableRow key={user.id}>
+                        <TableCell className="font-medium">
+                          {user.name}
+                        </TableCell>
+                        <TableCell>{user.email}</TableCell>
+                        <TableCell>{getRoleBadge(user.role)}</TableCell>
+                        <TableCell>{getStatusBadge(user.status)}</TableCell>
+                        <TableCell>
+                          {new Date(user.lastLogin).toLocaleDateString()}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex gap-2">
+                            <Button variant="outline" size="sm">
+                              <Edit className="w-3 h-3" />
+                            </Button>
+                            <Button variant="outline" size="sm">
+                              <Trash2 className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Website Settings Tab */}
+          {activeTab === "website" && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Website Settings</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Basic Website Information */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium flex items-center gap-2">
+                    <Globe className="w-5 h-5" />
+                    Basic Information
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="siteUrl">Site URL</Label>
+                      <Input
+                        id="siteUrl"
+                        value={websiteSettings.siteUrl}
+                        onChange={(e) =>
+                          setWebsiteSettings({
+                            ...websiteSettings,
+                            siteUrl: e.target.value,
+                          })
+                        }
+                        placeholder="https://yoursite.com"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="siteLogo">Site Logo</Label>
+                      <div className="space-y-2">
+                        <Input
+                          id="siteLogo"
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              handleFileUpload(file, "logo");
+                            }
+                          }}
+                        />
+                        {websiteSettings.siteLogo && (
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <span>Current: </span>
+                            <a
+                              href={websiteSettings.siteLogo}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-primary hover:underline"
+                            >
+                              View Logo
+                            </a>
+                          </div>
+                        )}
                       </div>
                     </div>
                     <div className="space-y-2">
@@ -817,704 +728,634 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                       </div>
                     </div>
                   </div>
+                </div>
 
-                  {/* SEO Meta Tags */}
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium flex items-center gap-2">
-                      <Tag className="w-5 h-5" />
-                      SEO Meta Tags
-                    </h3>
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="metaTitle">Meta Title</Label>
-                        <Input
-                          id="metaTitle"
-                          value={websiteSettings.metaTitle}
-                          onChange={(e) =>
-                            setWebsiteSettings({
-                              ...websiteSettings,
-                              metaTitle: e.target.value,
-                            })
-                          }
-                          placeholder="Page title for search engines"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="metaDescription">
-                          Meta Description
-                        </Label>
-                        <Textarea
-                          id="metaDescription"
-                          value={websiteSettings.metaDescription}
-                          onChange={(e) =>
-                            setWebsiteSettings({
-                              ...websiteSettings,
-                              metaDescription: e.target.value,
-                            })
-                          }
-                          placeholder="Brief description for search engines (150-160 characters)"
-                          rows={3}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="metaKeywords">Meta Keywords</Label>
-                        <Input
-                          id="metaKeywords"
-                          value={websiteSettings.metaKeywords}
-                          onChange={(e) =>
-                            setWebsiteSettings({
-                              ...websiteSettings,
-                              metaKeywords: e.target.value,
-                            })
-                          }
-                          placeholder="keyword1, keyword2, keyword3"
-                        />
-                      </div>
-                    </div>
-                  </div>
+                <Button
+                  onClick={handleSaveWebsiteSettings}
+                  className="w-full"
+                >
+                  <Save className="w-4 h-4 mr-2" />
+                  Save Website Settings
+                </Button>
+              </CardContent>
+            </Card>
+          )}
 
-                  {/* Open Graph Tags */}
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium">
-                      Open Graph Tags (Facebook)
-                    </h3>
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="ogTitle">OG Title</Label>
-                        <Input
-                          id="ogTitle"
-                          value={websiteSettings.ogTitle}
-                          onChange={(e) =>
-                            setWebsiteSettings({
-                              ...websiteSettings,
-                              ogTitle: e.target.value,
-                            })
-                          }
-                          placeholder="Title when shared on social media"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="ogDescription">OG Description</Label>
-                        <Textarea
-                          id="ogDescription"
-                          value={websiteSettings.ogDescription}
-                          onChange={(e) =>
-                            setWebsiteSettings({
-                              ...websiteSettings,
-                              ogDescription: e.target.value,
-                            })
-                          }
-                          placeholder="Description when shared on social media"
-                          rows={2}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="ogImage">OG Image URL</Label>
-                        <Input
-                          id="ogImage"
-                          value={websiteSettings.ogImage}
-                          onChange={(e) =>
-                            setWebsiteSettings({
-                              ...websiteSettings,
-                              ogImage: e.target.value,
-                            })
-                          }
-                          placeholder="https://yoursite.com/social-image.jpg"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Twitter Tags */}
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Twitter Card Tags</h3>
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="twitterTitle">Twitter Title</Label>
-                        <Input
-                          id="twitterTitle"
-                          value={websiteSettings.twitterTitle}
-                          onChange={(e) =>
-                            setWebsiteSettings({
-                              ...websiteSettings,
-                              twitterTitle: e.target.value,
-                            })
-                          }
-                          placeholder="Title when shared on Twitter"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="twitterDescription">
-                          Twitter Description
-                        </Label>
-                        <Textarea
-                          id="twitterDescription"
-                          value={websiteSettings.twitterDescription}
-                          onChange={(e) =>
-                            setWebsiteSettings({
-                              ...websiteSettings,
-                              twitterDescription: e.target.value,
-                            })
-                          }
-                          placeholder="Description when shared on Twitter"
-                          rows={2}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="twitterImage">Twitter Image URL</Label>
-                        <Input
-                          id="twitterImage"
-                          value={websiteSettings.twitterImage}
-                          onChange={(e) =>
-                            setWebsiteSettings({
-                              ...websiteSettings,
-                              twitterImage: e.target.value,
-                            })
-                          }
-                          placeholder="https://yoursite.com/twitter-image.jpg"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <Button
-                    onClick={handleSaveWebsiteSettings}
-                    className="w-full"
-                  >
-                    <Save className="w-4 h-4 mr-2" />
-                    Save Website Settings
-                  </Button>
-                </CardContent>
-              </Card>
-            )}
-
-            {activeTab === "marketing" && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Marketing Settings</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  {/* Facebook Group Settings */}
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium flex items-center gap-2">
-                      <MessageSquare className="w-5 h-5" />
-                      Facebook Community
-                    </h3>
-
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="facebookGroupEnabled"
-                        checked={marketingSettings.facebookGroupEnabled}
-                        onCheckedChange={(checked) =>
-                          setMarketingSettings({
-                            ...marketingSettings,
-                            facebookGroupEnabled: checked as boolean,
-                          })
-                        }
-                      />
-                      <Label htmlFor="facebookGroupEnabled">
-                        Show Facebook Group CTA across the site
-                      </Label>
-                    </div>
-
-                    {marketingSettings.facebookGroupEnabled && (
-                      <div className="space-y-4 ml-6">
-                        <div className="space-y-2">
-                          <Label htmlFor="facebookGroupUrl">
-                            Facebook Group URL
-                          </Label>
-                          <Input
-                            id="facebookGroupUrl"
-                            value={marketingSettings.facebookGroupUrl}
-                            onChange={(e) =>
-                              setMarketingSettings({
-                                ...marketingSettings,
-                                facebookGroupUrl: e.target.value,
-                              })
-                            }
-                            placeholder="https://facebook.com/groups/yourgroup"
-                          />
-                          <p className="text-sm text-muted-foreground">
-                            Enter the full URL to your Facebook group
-                          </p>
-                        </div>
-
-                        <div className="p-4 border rounded-lg bg-muted/50">
-                          <h4 className="font-medium mb-2">Preview</h4>
-                          <div className="border-blue-200 bg-blue-50 p-4 rounded-lg">
-                            <div className="flex items-center gap-4">
-                              <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
-                                <MessageSquare className="w-6 h-6 text-white" />
-                              </div>
-                              <div>
-                                <h3 className="font-semibold text-blue-900 mb-1">
-                                  Join Our Community!
-                                </h3>
-                                <p className="text-sm text-blue-700 mb-2">
-                                  Connect with other waste management
-                                  professionals and get tips, updates, and
-                                  industry insights.
-                                </p>
-                                <div className="bg-blue-600 text-white px-3 py-1 rounded text-sm inline-flex items-center gap-1">
-                                  <Users className="w-4 h-4" />
-                                  Join Facebook Group
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  <Button
-                    onClick={handleSaveMarketingSettings}
-                    className="w-full"
-                  >
-                    <Save className="w-4 h-4 mr-2" />
-                    Save Marketing Settings
-                  </Button>
-                </CardContent>
-              </Card>
-            )}
-
-            {activeTab === "system" && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>System Settings</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Technical SEO Tab */}
+          {activeTab === "seo" && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Tag className="w-5 h-5" />
+                  Technical SEO Settings
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-8">
+                {/* Homepage SEO */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium border-b pb-2">Homepage SEO</h3>
+                  <div className="grid grid-cols-1 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="siteName">Site Name</Label>
+                      <Label htmlFor="homeTitle">Homepage Title</Label>
                       <Input
-                        id="siteName"
-                        value={systemSettings.siteName}
+                        id="homeTitle"
+                        value={seoSettings.homeTitle}
                         onChange={(e) =>
-                          setSystemSettings({
-                            ...systemSettings,
-                            siteName: e.target.value,
+                          setSeoSettings({
+                            ...seoSettings,
+                            homeTitle: e.target.value,
                           })
                         }
+                        placeholder="Page title for homepage"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="supportEmail">Support Email</Label>
-                      <Input
-                        id="supportEmail"
-                        type="email"
-                        value={systemSettings.supportEmail}
+                      <Label htmlFor="homeDescription">Homepage Meta Description</Label>
+                      <Textarea
+                        id="homeDescription"
+                        value={seoSettings.homeDescription}
                         onChange={(e) =>
-                          setSystemSettings({
-                            ...systemSettings,
-                            supportEmail: e.target.value,
+                          setSeoSettings({
+                            ...seoSettings,
+                            homeDescription: e.target.value,
                           })
                         }
+                        placeholder="Meta description for homepage (150-160 chars)"
+                        rows={3}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="homeKeywords">Homepage Keywords</Label>
+                      <Input
+                        id="homeKeywords"
+                        value={seoSettings.homeKeywords}
+                        onChange={(e) =>
+                          setSeoSettings({
+                            ...seoSettings,
+                            homeKeywords: e.target.value,
+                          })
+                        }
+                        placeholder="keyword1, keyword2, keyword3"
                       />
                     </div>
                   </div>
+                </div>
 
-                  <Button onClick={handleSaveSystemSettings}>
-                    <Save className="w-4 h-4 mr-2" />
-                    Save System Settings
-                  </Button>
-                </CardContent>
-              </Card>
-            )}
-
-            {activeTab === "api" && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>API Keys & Webhooks</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="space-y-4">
+                {/* Location Pages SEO Templates */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium border-b pb-2">Location Detail Pages</h3>
+                  <div className="bg-blue-50 p-4 rounded-lg">
+                    <p className="text-sm text-blue-800 mb-2">
+                      Use template variables: {"{location_name}"}, {"{city}"}, {"{state}"}, {"{location_type}"}, {"{zipcode}"}
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="ghlApiKey">GoHighLevel API Key</Label>
-                      <div className="relative">
-                        <Input
-                          id="ghlApiKey"
-                          type={showPasswords ? "text" : "password"}
-                          value={apiSettings.ghlApiKey}
-                          onChange={(e) =>
-                            setApiSettings({
-                              ...apiSettings,
-                              ghlApiKey: e.target.value,
+                      <Label htmlFor="locationTitleTemplate">Title Template</Label>
+                      <Input
+                        id="locationTitleTemplate"
+                        value={seoSettings.locationTitleTemplate}
+                        onChange={(e) =>
+                          setSeoSettings({
+                            ...seoSettings,
+                            locationTitleTemplate: e.target.value,
+                          })
+                        }
+                        placeholder="{location_name} - Waste Disposal | {city}, {state}"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="locationDescriptionTemplate">Description Template</Label>
+                      <Textarea
+                        id="locationDescriptionTemplate"
+                        value={seoSettings.locationDescriptionTemplate}
+                        onChange={(e) =>
+                          setSeoSettings({
+                            ...seoSettings,
+                            locationDescriptionTemplate: e.target.value,
+                          })
+                        }
+                        placeholder="Find details for {location_name} in {city}, {state}..."
+                        rows={2}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Search Results SEO Templates */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium border-b pb-2">Search Results Pages</h3>
+                  <div className="bg-green-50 p-4 rounded-lg">
+                    <p className="text-sm text-green-800 mb-2">
+                      Use template variable: {"{search_term}"}
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="searchTitleTemplate">Search Title Template</Label>
+                      <Input
+                        id="searchTitleTemplate"
+                        value={seoSettings.searchTitleTemplate}
+                        onChange={(e) =>
+                          setSeoSettings({
+                            ...seoSettings,
+                            searchTitleTemplate: e.target.value,
+                          })
+                        }
+                        placeholder="Waste Disposal Facilities near {search_term} | WasteFinder"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="searchDescriptionTemplate">Search Description Template</Label>
+                      <Textarea
+                        id="searchDescriptionTemplate"
+                        value={seoSettings.searchDescriptionTemplate}
+                        onChange={(e) =>
+                          setSeoSettings({
+                            ...seoSettings,
+                            searchDescriptionTemplate: e.target.value,
+                          })
+                        }
+                        placeholder="Find waste disposal facilities near {search_term}..."
+                        rows={2}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Technical SEO Features */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium border-b pb-2">Technical Features</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="enableSchemaMarkup"
+                          checked={seoSettings.enableSchemaMarkup}
+                          onCheckedChange={(checked) =>
+                            setSeoSettings({
+                              ...seoSettings,
+                              enableSchemaMarkup: checked as boolean,
                             })
                           }
-                          placeholder="Enter your GHL API key"
                         />
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          className="absolute right-2 top-1/2 -translate-y-1/2"
-                          onClick={() => setShowPasswords(!showPasswords)}
+                        <Label htmlFor="enableSchemaMarkup">Enable Schema Markup</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="enableSitemap"
+                          checked={seoSettings.enableSitemap}
+                          onCheckedChange={(checked) =>
+                            setSeoSettings({
+                              ...seoSettings,
+                              enableSitemap: checked as boolean,
+                            })
+                          }
+                        />
+                        <Label htmlFor="enableSitemap">Generate XML Sitemap</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="canonicalUrlsEnabled"
+                          checked={seoSettings.canonicalUrlsEnabled}
+                          onCheckedChange={(checked) =>
+                            setSeoSettings({
+                              ...seoSettings,
+                              canonicalUrlsEnabled: checked as boolean,
+                            })
+                          }
+                        />
+                        <Label htmlFor="canonicalUrlsEnabled">Canonical URLs</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="enableBreadcrumbs"
+                          checked={seoSettings.enableBreadcrumbs}
+                          onCheckedChange={(checked) =>
+                            setSeoSettings({
+                              ...seoSettings,
+                              enableBreadcrumbs: checked as boolean,
+                            })
+                          }
+                        />
+                        <Label htmlFor="enableBreadcrumbs">Enable Breadcrumbs</Label>
+                      </div>
+                    </div>
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="sitemapUpdateFrequency">Sitemap Update Frequency</Label>
+                        <Select
+                          value={seoSettings.sitemapUpdateFrequency}
+                          onValueChange={(value) =>
+                            setSeoSettings({
+                              ...seoSettings,
+                              sitemapUpdateFrequency: value,
+                            })
+                          }
                         >
-                          {showPasswords ? (
-                            <EyeOff className="w-4 h-4" />
-                          ) : (
-                            <Eye className="w-4 h-4" />
-                          )}
-                        </Button>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="daily">Daily</SelectItem>
+                            <SelectItem value="weekly">Weekly</SelectItem>
+                            <SelectItem value="monthly">Monthly</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
-                      <Button size="sm" className="mt-2">
-                        Save API Key
-                      </Button>
                     </div>
+                  </div>
+                </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="webhookUrl">Webhook URL</Label>
+                {/* Robots.txt */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium border-b pb-2">Robots.txt</h3>
+                  <div className="space-y-2">
+                    <Label htmlFor="robotsTxt">Robots.txt Content</Label>
+                    <Textarea
+                      id="robotsTxt"
+                      value={seoSettings.robotsTxt}
+                      onChange={(e) =>
+                        setSeoSettings({
+                          ...seoSettings,
+                          robotsTxt: e.target.value,
+                        })
+                      }
+                      rows={8}
+                      className="font-mono text-sm"
+                    />
+                  </div>
+                </div>
+
+                <Button
+                  onClick={handleSaveSeoSettings}
+                  className="w-full"
+                >
+                  <Save className="w-4 h-4 mr-2" />
+                  Save SEO Settings
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Content Management Tab */}
+          {activeTab === "content" && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Content Management</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="bannerText">Header Banner Text</Label>
+                    <Textarea
+                      id="bannerText"
+                      value={contentSettings.bannerText}
+                      onChange={(e) =>
+                        setContentSettings({
+                          ...contentSettings,
+                          bannerText: e.target.value,
+                        })
+                      }
+                      rows={3}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="privacyPolicy">Privacy Policy</Label>
+                    <Textarea
+                      id="privacyPolicy"
+                      value={contentSettings.privacyPolicy}
+                      onChange={(e) =>
+                        setContentSettings({
+                          ...contentSettings,
+                          privacyPolicy: e.target.value,
+                        })
+                      }
+                      rows={8}
+                      placeholder="Enter your privacy policy content..."
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="termsOfService">Terms of Service</Label>
+                    <Textarea
+                      id="termsOfService"
+                      value={contentSettings.termsOfService}
+                      onChange={(e) =>
+                        setContentSettings({
+                          ...contentSettings,
+                          termsOfService: e.target.value,
+                        })
+                      }
+                      rows={8}
+                      placeholder="Enter your terms of service content..."
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="footerContent">Footer Content</Label>
+                    <Textarea
+                      id="footerContent"
+                      value={contentSettings.footerContent}
+                      onChange={(e) =>
+                        setContentSettings({
+                          ...contentSettings,
+                          footerContent: e.target.value,
+                        })
+                      }
+                      rows={5}
+                      placeholder="Enter footer content..."
+                    />
+                  </div>
+                </div>
+
+                <Button onClick={handleSaveContentSettings}>
+                  <Save className="w-4 h-4 mr-2" />
+                  Save Content Settings
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Marketing Tab */}
+          {activeTab === "marketing" && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Marketing Settings</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="facebookGroupEnabled"
+                      checked={marketingSettings.facebookGroupEnabled}
+                      onCheckedChange={(checked) =>
+                        setMarketingSettings({
+                          ...marketingSettings,
+                          facebookGroupEnabled: checked as boolean,
+                        })
+                      }
+                    />
+                    <Label htmlFor="facebookGroupEnabled">
+                      Enable Facebook Group CTA
+                    </Label>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="facebookGroupUrl">Facebook Group URL</Label>
+                    <Input
+                      id="facebookGroupUrl"
+                      value={marketingSettings.facebookGroupUrl}
+                      onChange={(e) =>
+                        setMarketingSettings({
+                          ...marketingSettings,
+                          facebookGroupUrl: e.target.value,
+                        })
+                      }
+                      placeholder="https://facebook.com/groups/your-group"
+                    />
+                  </div>
+                </div>
+
+                <Button onClick={handleSaveMarketingSettings}>
+                  <Save className="w-4 h-4 mr-2" />
+                  Save Marketing Settings
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* System Settings Tab */}
+          {activeTab === "system" && (
+            <Card>
+              <CardHeader>
+                <CardTitle>System Settings</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="siteName">Site Name</Label>
+                    <Input
+                      id="siteName"
+                      value={systemSettings.siteName}
+                      onChange={(e) =>
+                        setSystemSettings({
+                          ...systemSettings,
+                          siteName: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="supportEmail">Support Email</Label>
+                    <Input
+                      id="supportEmail"
+                      type="email"
+                      value={systemSettings.supportEmail}
+                      onChange={(e) =>
+                        setSystemSettings({
+                          ...systemSettings,
+                          supportEmail: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="maintenanceMode"
+                      checked={systemSettings.maintenanceMode}
+                      onCheckedChange={(checked) =>
+                        setSystemSettings({
+                          ...systemSettings,
+                          maintenanceMode: checked as boolean,
+                        })
+                      }
+                    />
+                    <Label htmlFor="maintenanceMode">
+                      Enable Maintenance Mode
+                    </Label>
+                  </div>
+                </div>
+
+                <Button onClick={handleSaveSystemSettings}>
+                  <Save className="w-4 h-4 mr-2" />
+                  Save System Settings
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* API Keys Tab */}
+          {activeTab === "api" && (
+            <Card>
+              <CardHeader>
+                <CardTitle>API Keys</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="googleMapsApiKey">
+                      Google Maps API Key
+                    </Label>
+                    <div className="relative">
                       <Input
-                        id="webhookUrl"
-                        value={apiSettings.webhookUrl}
+                        id="googleMapsApiKey"
+                        type={showPasswords ? "text" : "password"}
+                        value={apiSettings.googleMapsApiKey}
                         onChange={(e) =>
                           setApiSettings({
                             ...apiSettings,
-                            webhookUrl: e.target.value,
+                            googleMapsApiKey: e.target.value,
                           })
                         }
-                        placeholder="https://hooks.zapier.com/..."
+                        placeholder="Enter your Google Maps API key"
                       />
-                      <Button size="sm" className="mt-2">
-                        Save Webhook URL
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() => setShowPasswords(!showPasswords)}
+                      >
+                        {showPasswords ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
                       </Button>
                     </div>
-
-                    <div className="space-y-3">
-                      <Label>Webhook Events</Label>
-                      <div className="grid grid-cols-2 gap-3">
-                        {webhookEvents.map((event) => (
-                          <div
-                            key={event.value}
-                            className="flex items-center space-x-2"
-                          >
-                            <Checkbox
-                              id={event.value}
-                              checked={apiSettings.webhookEvents.includes(
-                                event.value,
-                              )}
-                              onCheckedChange={(checked) =>
-                                handleWebhookEventToggle(
-                                  event.value,
-                                  checked as boolean,
-                                )
-                              }
-                            />
-                            <Label htmlFor={event.value} className="text-sm">
-                              {event.label}
-                            </Label>
-                          </div>
-                        ))}
-                      </div>
-                      <Button size="sm" className="mt-2">
-                        Save Webhook Events
-                      </Button>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="googleMapsApiKey">
-                        Google Maps API Key
-                      </Label>
-                      <div className="relative">
-                        <Input
-                          id="googleMapsApiKey"
-                          type={showPasswords ? "text" : "password"}
-                          value={apiSettings.googleMapsApiKey}
-                          onChange={(e) =>
-                            setApiSettings({
-                              ...apiSettings,
-                              googleMapsApiKey: e.target.value,
-                            })
-                          }
-                          placeholder="Enter your Google Maps API key"
-                        />
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          className="absolute right-2 top-1/2 -translate-y-1/2"
-                          onClick={() => setShowPasswords(!showPasswords)}
-                        >
-                          {showPasswords ? (
-                            <EyeOff className="w-4 h-4" />
-                          ) : (
-                            <Eye className="w-4 h-4" />
-                          )}
-                        </Button>
-                      </div>
-                      <Button size="sm" className="mt-2">
-                        Save Google Maps API
-                      </Button>
-                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      Required for Google Maps integration and location services
+                    </p>
                   </div>
-                </CardContent>
-              </Card>
-            )}
+                </div>
 
-            {activeTab === "content" && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Content Management</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="bannerText">Header Banner Text</Label>
-                      <Textarea
-                        id="bannerText"
-                        value={contentSettings.bannerText}
-                        onChange={(e) =>
-                          setContentSettings({
-                            ...contentSettings,
-                            bannerText: e.target.value,
-                          })
-                        }
-                        rows={3}
-                      />
-                      <Button size="sm" className="mt-2">
-                        Save Banner Text
-                      </Button>
-                    </div>
+                <Button onClick={handleSaveApiSettings}>
+                  <Save className="w-4 h-4 mr-2" />
+                  Save API Settings
+                </Button>
+              </CardContent>
+            </Card>
+          )}
 
-                    <div className="space-y-2">
-                      <Label htmlFor="resourcesContent">
-                        Resources Page Content
-                      </Label>
-                      <Textarea
-                        id="resourcesContent"
-                        value={contentSettings.resourcesContent}
-                        onChange={(e) =>
-                          setContentSettings({
-                            ...contentSettings,
-                            resourcesContent: e.target.value,
-                          })
-                        }
-                        rows={5}
-                        placeholder="Enter HTML content for the resources page..."
-                      />
-                      <Button size="sm" className="mt-2">
-                        Save Resources Content
-                      </Button>
-                    </div>
+          {/* Custom Code Tab */}
+          {activeTab === "code" && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Custom Code</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <p className="text-sm text-yellow-800">
+                    <strong>Important:</strong> Custom code changes will be applied system-wide. 
+                    Make sure to test thoroughly and only include trusted code to maintain security.
+                  </p>
+                </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="privacyPolicy">Privacy Policy</Label>
-                      <Textarea
-                        id="privacyPolicy"
-                        value={contentSettings.privacyPolicy}
-                        onChange={(e) =>
-                          setContentSettings({
-                            ...contentSettings,
-                            privacyPolicy: e.target.value,
-                          })
-                        }
-                        rows={8}
-                        placeholder="Enter privacy policy content..."
-                      />
-                      <Button size="sm" className="mt-2">
-                        Save Privacy Policy
-                      </Button>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="termsOfService">Terms of Service</Label>
-                      <Textarea
-                        id="termsOfService"
-                        value={contentSettings.termsOfService}
-                        onChange={(e) =>
-                          setContentSettings({
-                            ...contentSettings,
-                            termsOfService: e.target.value,
-                          })
-                        }
-                        rows={8}
-                        placeholder="Enter terms of service content..."
-                      />
-                      <Button size="sm" className="mt-2">
-                        Save Terms of Service
-                      </Button>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="footerContent">Footer Content</Label>
-                      <Textarea
-                        id="footerContent"
-                        value={contentSettings.footerContent}
-                        onChange={(e) =>
-                          setContentSettings({
-                            ...contentSettings,
-                            footerContent: e.target.value,
-                          })
-                        }
-                        rows={4}
-                        placeholder="Enter footer content..."
-                      />
-                      <Button size="sm" className="mt-2">
-                        Save Footer Content
-                      </Button>
-                    </div>
+                <div className="space-y-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="headCode">HTML Head Code</Label>
+                    <Textarea
+                      id="headCode"
+                      value={codeSettings.headCode}
+                      onChange={(e) =>
+                        setCodeSettings({
+                          ...codeSettings,
+                          headCode: e.target.value,
+                        })
+                      }
+                      rows={8}
+                      placeholder="<!-- Code to be inserted in <head> section -->"
+                      className="font-mono text-sm"
+                    />
+                    <p className="text-sm text-muted-foreground">
+                      This code will be inserted in the HTML head section of all pages.
+                      Use for analytics, meta tags, or external resources.
+                    </p>
                   </div>
-                </CardContent>
-              </Card>
-            )}
 
-            {activeTab === "code" && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Custom Code</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="headCode">
-                        Head Code (Analytics, Meta tags, etc.)
-                      </Label>
-                      <Textarea
-                        id="headCode"
-                        value={codeSettings.headCode}
-                        onChange={(e) =>
-                          setCodeSettings({
-                            ...codeSettings,
-                            headCode: e.target.value,
-                          })
-                        }
-                        rows={6}
-                        placeholder="<script>...</script> or <meta>..."
-                        className="font-mono text-sm"
-                      />
-                      <Button size="sm" className="mt-2">
-                        Save Head Code
-                      </Button>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="bodyCode">
-                        Body Code (Tracking scripts, etc.)
-                      </Label>
-                      <Textarea
-                        id="bodyCode"
-                        value={codeSettings.bodyCode}
-                        onChange={(e) =>
-                          setCodeSettings({
-                            ...codeSettings,
-                            bodyCode: e.target.value,
-                          })
-                        }
-                        rows={6}
-                        placeholder="<script>...</script>"
-                        className="font-mono text-sm"
-                      />
-                      <Button size="sm" className="mt-2">
-                        Save Body Code
-                      </Button>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="customCSS">Custom CSS</Label>
-                      <Textarea
-                        id="customCSS"
-                        value={codeSettings.customCSS}
-                        onChange={(e) =>
-                          setCodeSettings({
-                            ...codeSettings,
-                            customCSS: e.target.value,
-                          })
-                        }
-                        rows={8}
-                        placeholder=".custom-class { color: red; }"
-                        className="font-mono text-sm"
-                      />
-                      <Button size="sm" className="mt-2">
-                        Save Custom CSS
-                      </Button>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="customJS">Custom JavaScript</Label>
-                      <Textarea
-                        id="customJS"
-                        value={codeSettings.customJS}
-                        onChange={(e) =>
-                          setCodeSettings({
-                            ...codeSettings,
-                            customJS: e.target.value,
-                          })
-                        }
-                        rows={8}
-                        placeholder="console.log('Custom JS');"
-                        className="font-mono text-sm"
-                      />
-                      <Button size="sm" className="mt-2">
-                        Save Custom JavaScript
-                      </Button>
-                    </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="bodyCode">HTML Body Code</Label>
+                    <Textarea
+                      id="bodyCode"
+                      value={codeSettings.bodyCode}
+                      onChange={(e) =>
+                        setCodeSettings({
+                          ...codeSettings,
+                          bodyCode: e.target.value,
+                        })
+                      }
+                      rows={8}
+                      placeholder="<!-- Code to be inserted before closing </body> tag -->"
+                      className="font-mono text-sm"
+                    />
+                    <p className="text-sm text-muted-foreground">
+                      This code will be inserted before the closing body tag on all pages.
+                      Use for tracking scripts or chat widgets.
+                    </p>
                   </div>
-                </CardContent>
-              </Card>
-            )}
-          </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="customCSS">Custom CSS</Label>
+                    <Textarea
+                      id="customCSS"
+                      value={codeSettings.customCSS}
+                      onChange={(e) =>
+                        setCodeSettings({
+                          ...codeSettings,
+                          customCSS: e.target.value,
+                        })
+                      }
+                      rows={12}
+                      placeholder="/* Add your custom CSS styles here */
+.custom-class {
+  color: #333;
+  font-size: 16px;
+}"
+                      className="font-mono text-sm"
+                    />
+                    <p className="text-sm text-muted-foreground">
+                      Add custom CSS styles to override default styling.
+                      These styles will be applied site-wide.
+                    </p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="customJS">Custom JavaScript</Label>
+                    <Textarea
+                      id="customJS"
+                      value={codeSettings.customJS}
+                      onChange={(e) =>
+                        setCodeSettings({
+                          ...codeSettings,
+                          customJS: e.target.value,
+                        })
+                      }
+                      rows={12}
+                      placeholder="// Add your custom JavaScript here
+// This code will be executed on all pages
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Your custom code here
+});"
+                      className="font-mono text-sm"
+                    />
+                    <p className="text-sm text-muted-foreground">
+                      Add custom JavaScript functionality. Code will be executed on all pages.
+                      Ensure proper error handling and testing.
+                    </p>
+                  </div>
+                </div>
+
+                <Button onClick={handleSaveCodeSettings}>
+                  <Save className="w-4 h-4 mr-2" />
+                  Save Custom Code
+                </Button>
+              </CardContent>
+            </Card>
+          )}
         </div>
-
-        {/* Edit User Dialog */}
-        <Dialog open={editUserDialog} onOpenChange={setEditUserDialog}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Edit User</DialogTitle>
-              <DialogDescription>Update user information</DialogDescription>
-            </DialogHeader>
-            {selectedUser && (
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>Full Name</Label>
-                    <Input value={selectedUser.name} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Email</Label>
-                    <Input value={selectedUser.email} />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label>Role</Label>
-                  <Select value={selectedUser.role}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="admin">Admin</SelectItem>
-                      <SelectItem value="editor">Editor</SelectItem>
-                      <SelectItem value="super_admin">Super Admin</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label>Status</Label>
-                  <Select value={selectedUser.status}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="active">Active</SelectItem>
-                      <SelectItem value="inactive">Inactive</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            )}
-            <DialogFooter>
-              <Button
-                variant="outline"
-                onClick={() => setEditUserDialog(false)}
-              >
-                Cancel
-              </Button>
-              <Button onClick={() => setEditUserDialog(false)}>
-                Save Changes
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
       </div>
     </AdminLayout>
   );
