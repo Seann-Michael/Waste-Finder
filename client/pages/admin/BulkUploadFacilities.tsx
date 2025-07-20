@@ -245,11 +245,8 @@ export default function BulkUploadFacilities() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <Header />
-
-      <main className="flex-1">
-        <div className="max-w-6xl mx-auto px-4 py-8">
+    <AdminLayout>
+      <div className="max-w-6xl mx-auto space-y-8">
           {/* Header */}
           <div className="flex items-center gap-4 mb-8">
             <Button variant="outline" asChild>
