@@ -37,7 +37,7 @@ const mockLocations = [
     website: "https://www.clevelandohio.gov",
     latitude: 41.4458,
     longitude: -81.7799,
-    facilityType: "landfill",
+    locationType: "landfill",
     paymentTypes: [
       { id: "1", name: "Cash" },
       { id: "2", name: "Credit Card" },
