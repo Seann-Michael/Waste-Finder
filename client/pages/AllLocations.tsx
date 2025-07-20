@@ -3,6 +3,8 @@ import { useSearchParams } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import LocationCard from "@/components/LocationCard";
+import FacebookCTA from "@/components/FacebookCTA";
+import Advertisement from "@/components/Advertisement";
 import MultiSelectInput from "@/components/MultiSelectInput";
 import MapPlaceholder from "@/components/MapPlaceholder";
 import { Button } from "@/components/ui/button";
