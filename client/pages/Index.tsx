@@ -189,18 +189,14 @@ export default function Index() {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
             <div className="text-center">
-              <div className="text-3xl font-bold text-primary">2,847</div>
+              <div className="text-3xl font-bold text-primary">{locationCounts.total.toLocaleString()}</div>
               <div className="text-muted-foreground">Verified Locations</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-primary">50</div>
               <div className="text-muted-foreground">States Covered</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-primary">15,000+</div>
-              <div className="text-muted-foreground">User Reviews</div>
             </div>
           </div>
         </div>
