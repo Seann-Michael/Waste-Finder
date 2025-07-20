@@ -71,16 +71,16 @@ export default function Header() {
           {/* Business Owner CTA */}
           <div className="hidden sm:flex items-center space-x-2 md:space-x-4">
             <Button
-              variant="outline"
+              variant="default"
               size="sm"
               asChild
-              className="text-xs sm:text-sm"
+              className="text-xs sm:text-sm bg-green-600 text-white hover:bg-green-700 border-green-600"
             >
               <a
                 href="https://yourmarketingagency.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-accent text-accent-foreground hover:bg-accent/90 px-2 sm:px-3"
+                className="px-2 sm:px-3"
               >
                 <span className="hidden md:inline">
                   Marketing for Dumpster Rentals
