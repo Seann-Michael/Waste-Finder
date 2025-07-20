@@ -321,6 +321,75 @@ export default function ReviewsTable() {
     }
   };
 
+  // Bulk action handlers
+  const handleSelectAllReviews = (checked: boolean) => {
+    if (checked) {
+      setSelectedReviews(paginatedReviews.map((review) => review.id));
+    } else {
+      setSelectedReviews([]);
+    }
+  };
+
+  const handleSelectReview = (reviewId: string, checked: boolean) => {
+    if (checked) {
+      setSelectedReviews([...selectedReviews, reviewId]);
+    } else {
+      setSelectedReviews(selectedReviews.filter((id) => id !== reviewId));
+    }
+  };
+
+  const handleBulkAction = (action: "approve" | "reject" | "delete") => {
+    setBulkAction(action);
+    setBulkActionDialogOpen(true);
+  };
+
+  const executeBulkAction = () => {
+    if (!bulkAction || selectedReviews.length === 0) return;
+
+    switch (bulkAction) {
+      case "approve":
+        setReviews(
+          reviews.map((review) =>
+            selectedReviews.includes(review.id)
+              ? {
+                  ...review,
+                  status: "approved" as const,
+                  moderatedAt: new Date().toISOString(),
+                  moderatedBy: "Admin",
+                }
+              : review,
+          ),
+        );
+        alert(`${selectedReviews.length} reviews approved successfully!`);
+        break;
+      case "reject":
+        setReviews(
+          reviews.map((review) =>
+            selectedReviews.includes(review.id)
+              ? {
+                  ...review,
+                  status: "rejected" as const,
+                  moderatedAt: new Date().toISOString(),
+                  moderatedBy: "Admin",
+                }
+              : review,
+          ),
+        );
+        alert(`${selectedReviews.length} reviews rejected successfully!`);
+        break;
+      case "delete":
+        setReviews(
+          reviews.filter((review) => !selectedReviews.includes(review.id)),
+        );
+        alert(`${selectedReviews.length} reviews deleted successfully!`);
+        break;
+    }
+
+    setSelectedReviews([]);
+    setBulkActionDialogOpen(false);
+    setBulkAction(null);
+  };
+
   const exportData = () => {
     const csvContent = [
       [
