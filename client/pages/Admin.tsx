@@ -226,9 +226,19 @@ export default function Admin() {
                     variant="outline"
                     asChild
                   >
-                    <Link to="/all-locations">
+                    <Link to="/admin/locations">
                       <Edit className="w-4 h-4 mr-2" />
-                      Browse & Edit Locations
+                      Location Data Table
+                    </Link>
+                  </Button>
+                  <Button
+                    className="w-full justify-start"
+                    variant="outline"
+                    asChild
+                  >
+                    <Link to="/admin/settings">
+                      <Shield className="w-4 h-4 mr-2" />
+                      Admin Settings
                     </Link>
                   </Button>
                 </CardContent>
