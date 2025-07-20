@@ -76,8 +76,8 @@ export default function SearchForm({
       const params = new URLSearchParams();
       params.set("zipCode", searchParams.zipCode);
       params.set("radius", searchParams.radius.toString());
-      if (searchParams.facilityTypes.length > 0) {
-        params.set("facilityTypes", searchParams.facilityTypes.join(","));
+      if (searchParams.locationTypes.length > 0) {
+        params.set("locationTypes", searchParams.locationTypes.join(","));
       }
       if (searchParams.debrisTypes.length > 0) {
         params.set("debrisTypes", searchParams.debrisTypes.join(","));
