@@ -836,21 +836,21 @@ export default function EditFacility() {
               </CardContent>
             </Card>
 
-            {/* Additional Notes */}
+            {/* Additional Location Details */}
             <Card>
               <CardHeader>
-                <CardTitle>Additional Information</CardTitle>
+                <CardTitle>Additional Location Details</CardTitle>
               </CardHeader>
               <CardContent>
                 <Textarea
-                  value={formData.notes}
+                  value={formData.additionalLocationDetails}
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
-                      notes: e.target.value,
+                      additionalLocationDetails: e.target.value,
                     }))
                   }
-                  placeholder="Any additional information about the facility, pricing, special services, restrictions, etc."
+                  placeholder="Any additional information about the location, special services, restrictions, etc."
                   rows={4}
                 />
               </CardContent>
