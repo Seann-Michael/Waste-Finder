@@ -1244,13 +1244,7 @@ export default function AdminSettings() {
                     </div>
                   </div>
 
-                  <Button onClick={handleSaveAdSettings} className="w-full">
-                    <Save className="w-4 h-4 mr-2" />
-                    Save Advertisement Settings
-                  </Button>
-                </CardContent>
-              </Card>
-            )}
+
 
             {activeTab === "system" && (
               <Card>
