@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FacebookCTA from "@/components/FacebookCTA";
+import AdSense from "@/components/AdSense";
 import SuggestEdit from "@/components/SuggestEdit";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -558,6 +559,9 @@ export default function LocationDetail() {
                   </CardContent>
                 </Card>
               )}
+
+              {/* AdSense for Location Detail */}
+              <AdSense placement="location-detail" className="my-6" />
 
               {/* Reviews */}
               <Card>
