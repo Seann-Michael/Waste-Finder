@@ -557,6 +557,17 @@ export default function ReviewsTable() {
               <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead className="w-12">
+                      <Checkbox
+                        checked={
+                          selectedReviews.length === paginatedReviews.length &&
+                          paginatedReviews.length > 0
+                        }
+                        onCheckedChange={(checked) =>
+                          handleSelectAllReviews(checked as boolean)
+                        }
+                      />
+                    </TableHead>
                     <TableHead
                       className="cursor-pointer hover:bg-muted/50"
                       onClick={() => handleSort("locationName")}
