@@ -24,6 +24,7 @@ import About from "./pages/About";
 import LocationDetail from "./pages/LocationDetail";
 import SuggestLocation from "./pages/SuggestLocation";
 import Resources from "./pages/Resources";
+import SearchTest from "./pages/SearchTest";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -115,6 +116,7 @@ const App = () => (
           />
           <Route path="/location/:id" element={<LocationDetail />} />
           <Route path="/about" element={<About />} />
+          <Route path="/search-test" element={<SearchTest />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
