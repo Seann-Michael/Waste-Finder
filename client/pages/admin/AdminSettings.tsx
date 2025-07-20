@@ -196,7 +196,6 @@ export default function AdminSettings() {
   const tabs = [
     { id: "profile", label: "Profile & Password", icon: User },
     { id: "users", label: "Admin Users", icon: Users },
-    { id: "locations", label: "Pending Locations", icon: MapPin },
     { id: "website", label: "Website Settings", icon: Globe },
     { id: "marketing", label: "Marketing", icon: MessageSquare },
     { id: "system", label: "System Settings", icon: Settings },
