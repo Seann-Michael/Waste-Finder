@@ -194,7 +194,7 @@ export default function EditFacility() {
       });
 
       // Convert operating hours
-      const hoursMap = mockFacility.operatingHours.reduce(
+      const hoursMap = facility.operatingHours.reduce(
         (acc, hour) => {
           acc[hour.dayOfWeek] = hour;
           return acc;
