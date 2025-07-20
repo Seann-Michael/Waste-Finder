@@ -206,6 +206,12 @@ export default function BlogAdmin() {
       .trim();
   };
 
+  const extractYouTubeVideoId = (url: string): string | null => {
+    const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+    const match = url.match(regex);
+    return match ? match[1] : null;
+  };
+
   const validateForm = () => {
     if (!formData.title.trim()) {
       showError("Title is required");
