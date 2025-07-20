@@ -728,9 +728,6 @@ export default function LocationDetail() {
                   </div>
                 </CardContent>
               </Card>
-
-              {/* Facebook CTA */}
-              <FacebookCTA facebookUrl="https://facebook.com/groups/wastefindergroup" />
             </div>
           </div>
         </div>
