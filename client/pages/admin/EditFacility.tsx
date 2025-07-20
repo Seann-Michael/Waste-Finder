@@ -172,7 +172,7 @@ export default function EditFacility() {
         throw new Error("Facility not found");
       }
 
-      setFacility(mockFacility);
+      setFacility(facility);
 
       // Populate form with facility data
       setFormData({
