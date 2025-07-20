@@ -1,20 +1,19 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import FacebookCTA from "@/components/FacebookCTA";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import { Input } from "../components/ui/input";
+import { Button } from "../components/ui/button";
+import { Badge } from "../components/ui/badge";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Calendar, User, ArrowRight, Search, Star, Clock } from "lucide-react";
+} from "../components/ui/select";
+import { Search, Calendar, User, Tag, ChevronRight, BookOpen } from "lucide-react";
 
 interface BlogPost {
   id: string;
@@ -23,148 +22,118 @@ interface BlogPost {
   excerpt: string;
   content: string;
   author: string;
-  status: "draft" | "published" | "archived";
+  status: "draft" | "published" | "scheduled";
   featured: boolean;
   tags: string[];
+  categories: string[];
   featuredImage?: string;
   publishedAt?: string;
   createdAt: string;
   updatedAt: string;
 }
 
-// Mock published blog posts
-const mockBlogPosts: BlogPost[] = [
-  {
-    id: "1",
-    title: "Best Practices for Construction Debris Disposal",
-    slug: "construction-debris-disposal-best-practices",
-    excerpt:
-      "Learn the most effective ways to dispose of construction waste while staying compliant with local regulations.",
-    content: `Construction debris disposal is a critical aspect of any building project. Proper disposal not only keeps job sites clean and safe but also ensures compliance with environmental regulations...`,
-    author: "Sean Webb",
-    status: "published",
-    featured: true,
-    tags: ["construction", "debris", "disposal", "best-practices"],
-    featuredImage:
-      "https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?w=800&h=400&fit=crop",
-    publishedAt: "2024-01-15T10:00:00Z",
-    createdAt: "2024-01-10T14:30:00Z",
-    updatedAt: "2024-01-15T10:00:00Z",
-  },
-  {
-    id: "2",
-    title: "Understanding Landfill Costs: A Complete Guide",
-    slug: "understanding-landfill-costs-guide",
-    excerpt:
-      "A comprehensive breakdown of landfill pricing, factors that affect costs, and tips for budget planning.",
-    content: `Understanding landfill costs is essential for effective waste management budgeting. This guide covers all the factors that influence pricing...`,
-    author: "Sean Webb",
-    status: "published",
-    featured: false,
-    tags: ["landfill", "costs", "pricing", "guide"],
-    featuredImage:
-      "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=800&h=400&fit=crop",
-    publishedAt: "2024-01-10T08:00:00Z",
-    createdAt: "2024-01-05T11:20:00Z",
-    updatedAt: "2024-01-10T08:00:00Z",
-  },
-  {
-    id: "3",
-    title: "Environmental Impact of Proper Waste Management",
-    slug: "environmental-impact-waste-management",
-    excerpt:
-      "Discover how proper waste disposal and management practices can significantly reduce environmental impact.",
-    content: `Environmental consciousness in waste management has never been more important...`,
-    author: "Sean Webb",
-    status: "published",
-    featured: false,
-    tags: ["environment", "sustainability", "waste-management"],
-    featuredImage:
-      "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=800&h=400&fit=crop",
-    publishedAt: "2024-01-08T12:00:00Z",
-    createdAt: "2024-01-03T16:45:00Z",
-    updatedAt: "2024-01-08T12:00:00Z",
-  },
-  {
-    id: "4",
-    title: "Recycling vs. Disposal: Making the Right Choice",
-    slug: "recycling-vs-disposal-guide",
-    excerpt:
-      "When should you recycle and when should you dispose? Learn the environmental and economic factors to consider.",
-    content: `The choice between recycling and disposal isn't always straightforward...`,
-    author: "Sean Webb",
-    status: "published",
-    featured: false,
-    tags: ["recycling", "disposal", "environment", "decision-making"],
-    featuredImage:
-      "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&h=400&fit=crop",
-    publishedAt: "2024-01-05T14:30:00Z",
-    createdAt: "2024-01-01T11:15:00Z",
-    updatedAt: "2024-01-05T14:30:00Z",
-  },
-];
+interface BlogCategory {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  createdAt: string;
+}
 
 export default function Blog() {
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [categories, setCategories] = useState<BlogCategory[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const [filteredPosts, setFilteredPosts] = useState<BlogPost[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedTag, setSelectedTag] = useState<string>("all");
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Get all unique tags from loaded posts
-  const allTags = [
-    "all",
-    ...Array.from(new Set(blogPosts.flatMap((post) => post.tags))),
-  ];
 
   useEffect(() => {
-    // Load published posts from localStorage (same as admin panel)
-    setTimeout(() => {
-      const savedPosts = localStorage.getItem("blogPosts");
-      let allPosts = [];
-
-      if (savedPosts) {
-        allPosts = JSON.parse(savedPosts);
-      } else {
-        // Initialize with sample posts if none exist
-        allPosts = mockBlogPosts;
-        localStorage.setItem("blogPosts", JSON.stringify(mockBlogPosts));
-      }
-
-      const publishedPosts = allPosts.filter(
-        (post) => post.status === "published",
-      );
-      setBlogPosts(publishedPosts);
-      setFilteredPosts(publishedPosts);
-      setIsLoading(false);
-    }, 500);
+    loadBlogData();
   }, []);
 
   useEffect(() => {
-    let filtered = [...blogPosts];
+    filterPosts();
+  }, [posts, searchQuery, selectedCategory]);
+
+  const loadBlogData = () => {
+    // Load blog posts from localStorage
+    const savedPosts = localStorage.getItem("blogPosts");
+    const savedCategories = localStorage.getItem("blogCategories");
+
+    if (savedPosts) {
+      const parsedPosts = JSON.parse(savedPosts);
+      // Only show published posts
+      const publishedPosts = parsedPosts.filter((post: BlogPost) => post.status === "published");
+      setPosts(publishedPosts);
+    }
+
+    if (savedCategories) {
+      setCategories(JSON.parse(savedCategories));
+    } else {
+      // Default categories
+      const defaultCategories: BlogCategory[] = [
+        {
+          id: "1",
+          name: "Waste Management",
+          slug: "waste-management",
+          description: "Tips and guides for proper waste management",
+          createdAt: "2024-01-01T00:00:00Z",
+        },
+        {
+          id: "2",
+          name: "Environmental Impact",
+          slug: "environmental-impact",
+          description: "Articles about environmental effects and sustainability",
+          createdAt: "2024-01-01T00:00:00Z",
+        },
+        {
+          id: "3",
+          name: "Industry News",
+          slug: "industry-news",
+          description: "Latest news and updates in the waste disposal industry",
+          createdAt: "2024-01-01T00:00:00Z",
+        },
+        {
+          id: "4",
+          name: "How-to Guides",
+          slug: "how-to-guides",
+          description: "Step-by-step guides for waste disposal procedures",
+          createdAt: "2024-01-01T00:00:00Z",
+        },
+      ];
+      setCategories(defaultCategories);
+    }
+  };
+
+  const filterPosts = () => {
+    let filtered = [...posts];
 
     // Search filter
-    if (searchTerm.trim()) {
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
         (post) =>
-          post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          post.tags.some((tag) =>
-            tag.toLowerCase().includes(searchTerm.toLowerCase()),
-          ),
+          post.title.toLowerCase().includes(query) ||
+          post.excerpt.toLowerCase().includes(query) ||
+          post.tags.some(tag => tag.toLowerCase().includes(query)) ||
+          post.author.toLowerCase().includes(query)
       );
     }
 
-    // Tag filter
-    if (selectedTag !== "all") {
-      filtered = filtered.filter((post) => post.tags.includes(selectedTag));
+    // Category filter
+    if (selectedCategory !== "all") {
+      filtered = filtered.filter(post => 
+        post.categories.includes(selectedCategory)
+      );
     }
 
     setFilteredPosts(filtered);
-  }, [searchTerm, selectedTag, blogPosts]);
+  };
 
-  const featuredPosts = filteredPosts.filter((post) => post.featured);
-  const regularPosts = filteredPosts.filter((post) => !post.featured);
+  const getCategoryName = (categoryId: string) => {
+    const category = categories.find(cat => cat.id === categoryId);
+    return category?.name || "Unknown";
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -174,26 +143,10 @@ export default function Blog() {
     });
   };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background flex flex-col">
-        <Header />
-        <main className="flex-1">
-          <div className="max-w-7xl mx-auto px-4 py-8">
-            <div className="animate-pulse space-y-8">
-              <div className="h-8 bg-muted rounded w-1/4"></div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[...Array(6)].map((_, i) => (
-                  <div key={i} className="h-64 bg-muted rounded"></div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
+  const featuredPosts = filteredPosts.filter(post => post.featured).slice(0, 2);
+  const regularPosts = filteredPosts.filter(post => !post.featured);
+  const recentPosts = posts.slice(0, 5);
+  const popularTags = [...new Set(posts.flatMap(post => post.tags))].slice(0, 10);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -203,185 +156,312 @@ export default function Blog() {
         <div className="max-w-7xl mx-auto px-4 py-8">
           {/* Header */}
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold mb-4">Waste Management Blog</h1>
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <BookOpen className="w-8 h-8 text-primary" />
+              <h1 className="text-4xl font-bold">Learn</h1>
+            </div>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Expert insights, tips, and best practices for waste disposal and
-              environmental responsibility.
+              Discover expert insights, tips, and guides for waste management and environmental sustainability
             </p>
           </div>
 
-          {/* Search and Filters */}
-          <div className="flex flex-col sm:flex-row gap-4 mb-8">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-              <Input
-                placeholder="Search articles..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            <Select value={selectedTag} onValueChange={setSelectedTag}>
-              <SelectTrigger className="sm:w-48">
-                <SelectValue placeholder="Filter by tag" />
-              </SelectTrigger>
-              <SelectContent>
-                {allTags.map((tag) => (
-                  <SelectItem key={tag} value={tag}>
-                    {tag === "all"
-                      ? "All Topics"
-                      : tag.charAt(0).toUpperCase() + tag.slice(1)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            {/* Left Sidebar - Search and Filters */}
+            <div className="lg:col-span-1 space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Search & Filter</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {/* Search */}
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                    <Input
+                      placeholder="Search articles..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
 
-          {/* Featured Posts */}
-          {featuredPosts.length > 0 && (
-            <section className="mb-12">
-              <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-                <Star className="w-6 h-6 text-yellow-500" />
-                Featured Articles
-              </h2>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {featuredPosts.map((post) => (
-                  <Card
-                    key={post.id}
-                    className="overflow-hidden hover:shadow-lg transition-shadow"
-                  >
-                    {post.featuredImage && (
-                      <div className="aspect-video overflow-hidden">
-                        <img
-                          src={post.featuredImage}
-                          alt={post.title}
-                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                        />
-                      </div>
-                    )}
-                    <CardHeader>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-                        <Calendar className="w-4 h-4" />
-                        {formatDate(post.publishedAt!)}
-                        <User className="w-4 h-4 ml-2" />
-                        {post.author}
-                      </div>
-                      <CardTitle className="text-xl hover:text-primary transition-colors">
-                        <Link to={`/blog/${post.slug}`}>{post.title}</Link>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-muted-foreground mb-4">
-                        {post.excerpt}
-                      </p>
-                      <div className="flex items-center justify-between">
-                        <div className="flex flex-wrap gap-2">
-                          {post.tags.slice(0, 3).map((tag) => (
-                            <Badge
-                              key={tag}
-                              variant="secondary"
-                              className="text-xs"
-                            >
-                              {tag}
-                            </Badge>
-                          ))}
+                  {/* Category Filter */}
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">Category</label>
+                    <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Categories</SelectItem>
+                        {categories.map((category) => (
+                          <SelectItem key={category.id} value={category.id}>
+                            {category.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Categories List */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Categories</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {categories.map((category) => {
+                      const postCount = posts.filter(post => 
+                        post.categories.includes(category.id)
+                      ).length;
+                      
+                      return (
+                        <button
+                          key={category.id}
+                          onClick={() => setSelectedCategory(category.id)}
+                          className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
+                            selectedCategory === category.id
+                              ? "bg-primary text-primary-foreground"
+                              : "hover:bg-muted"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium">{category.name}</span>
+                            <span className="text-xs">{postCount}</span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Popular Tags */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Popular Tags</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {popularTags.map((tag) => (
+                      <Badge
+                        key={tag}
+                        variant="secondary"
+                        className="cursor-pointer hover:bg-primary hover:text-primary-foreground"
+                        onClick={() => setSearchQuery(tag)}
+                      >
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Main Content */}
+            <div className="lg:col-span-2 space-y-8">
+              {/* Featured Posts */}
+              {featuredPosts.length > 0 && (
+                <div>
+                  <h2 className="text-2xl font-bold mb-6">Featured Articles</h2>
+                  <div className="space-y-6">
+                    {featuredPosts.map((post) => (
+                      <Card key={post.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                        <div className="md:flex">
+                          {post.featuredImage && (
+                            <div className="md:w-1/3">
+                              <img
+                                src={post.featuredImage}
+                                alt={post.title}
+                                className="w-full h-48 md:h-full object-cover"
+                              />
+                            </div>
+                          )}
+                          <div className={`p-6 ${post.featuredImage ? "md:w-2/3" : "w-full"}`}>
+                            <div className="flex items-center gap-2 mb-2">
+                              <Badge variant="default">Featured</Badge>
+                              {post.categories.map((categoryId) => (
+                                <Badge key={categoryId} variant="outline">
+                                  {getCategoryName(categoryId)}
+                                </Badge>
+                              ))}
+                            </div>
+                            <h3 className="text-xl font-bold mb-3">
+                              <Link
+                                to={`/blog/${post.slug}`}
+                                className="hover:text-primary transition-colors"
+                              >
+                                {post.title}
+                              </Link>
+                            </h3>
+                            <p className="text-muted-foreground mb-4 line-clamp-3">
+                              {post.excerpt}
+                            </p>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                <div className="flex items-center gap-1">
+                                  <User className="w-4 h-4" />
+                                  <span>{post.author}</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <Calendar className="w-4 h-4" />
+                                  <span>{formatDate(post.publishedAt || post.createdAt)}</span>
+                                </div>
+                              </div>
+                              <Button variant="ghost" size="sm" asChild>
+                                <Link to={`/blog/${post.slug}`}>
+                                  Read more <ChevronRight className="w-4 h-4 ml-1" />
+                                </Link>
+                              </Button>
+                            </div>
+                          </div>
                         </div>
-                        <Button variant="ghost" size="sm" asChild>
-                          <Link to={`/blog/${post.slug}`}>
-                            Read More <ArrowRight className="w-4 h-4 ml-1" />
-                          </Link>
-                        </Button>
-                      </div>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Regular Posts */}
+              <div>
+                {featuredPosts.length > 0 && (
+                  <h2 className="text-2xl font-bold mb-6">Latest Articles</h2>
+                )}
+                
+                {filteredPosts.length === 0 ? (
+                  <Card>
+                    <CardContent className="py-12 text-center">
+                      <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                      <h3 className="text-lg font-medium mb-2">No articles found</h3>
+                      <p className="text-muted-foreground">
+                        Try adjusting your search terms or browse different categories.
+                      </p>
                     </CardContent>
                   </Card>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {/* Facebook CTA */}
-          <div className="mb-12">
-            <FacebookCTA facebookUrl="https://facebook.com/groups/wastefindergroup" />
-          </div>
-
-          {/* Regular Posts */}
-          {regularPosts.length > 0 && (
-            <section className="mb-12">
-              <h2 className="text-2xl font-bold mb-6">Latest Articles</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {regularPosts.map((post) => (
-                  <Card
-                    key={post.id}
-                    className="overflow-hidden hover:shadow-lg transition-shadow"
-                  >
-                    {post.featuredImage && (
-                      <div className="aspect-video overflow-hidden">
-                        <img
-                          src={post.featuredImage}
-                          alt={post.title}
-                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                        />
-                      </div>
-                    )}
-                    <CardHeader>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-                        <Clock className="w-4 h-4" />
-                        {formatDate(post.publishedAt!)}
-                      </div>
-                      <CardTitle className="text-lg hover:text-primary transition-colors">
-                        <Link to={`/blog/${post.slug}`}>{post.title}</Link>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-muted-foreground text-sm mb-4 line-clamp-3">
-                        {post.excerpt}
-                      </p>
-                      <div className="flex items-center justify-between">
-                        <div className="flex flex-wrap gap-1">
-                          {post.tags.slice(0, 2).map((tag) => (
-                            <Badge
-                              key={tag}
-                              variant="outline"
-                              className="text-xs"
+                ) : (
+                  <div className="grid gap-6">
+                    {regularPosts.map((post) => (
+                      <Card key={post.id} className="hover:shadow-lg transition-shadow">
+                        <CardContent className="p-6">
+                          <div className="flex items-center gap-2 mb-3">
+                            {post.categories.map((categoryId) => (
+                              <Badge key={categoryId} variant="outline">
+                                {getCategoryName(categoryId)}
+                              </Badge>
+                            ))}
+                          </div>
+                          <h3 className="text-xl font-bold mb-3">
+                            <Link
+                              to={`/blog/${post.slug}`}
+                              className="hover:text-primary transition-colors"
                             >
-                              {tag}
-                            </Badge>
-                          ))}
-                        </div>
-                        <Button variant="ghost" size="sm" asChild>
-                          <Link to={`/blog/${post.slug}`}>
-                            Read <ArrowRight className="w-3 h-3 ml-1" />
-                          </Link>
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                              {post.title}
+                            </Link>
+                          </h3>
+                          <p className="text-muted-foreground mb-4 line-clamp-2">
+                            {post.excerpt}
+                          </p>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                              <div className="flex items-center gap-1">
+                                <User className="w-4 h-4" />
+                                <span>{post.author}</span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <Calendar className="w-4 h-4" />
+                                <span>{formatDate(post.publishedAt || post.createdAt)}</span>
+                              </div>
+                            </div>
+                            <Button variant="ghost" size="sm" asChild>
+                              <Link to={`/blog/${post.slug}`}>
+                                Read more <ChevronRight className="w-4 h-4 ml-1" />
+                              </Link>
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                )}
               </div>
-            </section>
-          )}
-
-          {/* No Results */}
-          {filteredPosts.length === 0 && (
-            <div className="text-center py-16">
-              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-                <Search className="w-8 h-8 text-muted-foreground" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">No articles found</h3>
-              <p className="text-muted-foreground mb-4">
-                Try adjusting your search terms or browse all topics.
-              </p>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setSearchTerm("");
-                  setSelectedTag("all");
-                }}
-              >
-                Clear Filters
-              </Button>
             </div>
-          )}
+
+            {/* Right Sidebar */}
+            <div className="lg:col-span-1 space-y-6">
+              {/* Recent Posts */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Recent Posts</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {recentPosts.map((post) => (
+                      <div key={post.id} className="pb-4 border-b border-border last:border-0">
+                        <h4 className="font-medium mb-2">
+                          <Link
+                            to={`/blog/${post.slug}`}
+                            className="hover:text-primary transition-colors line-clamp-2"
+                          >
+                            {post.title}
+                          </Link>
+                        </h4>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Calendar className="w-3 h-3" />
+                          <span>{formatDate(post.publishedAt || post.createdAt)}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Newsletter Signup */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Stay Updated</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Get the latest waste management tips and industry insights delivered to your inbox.
+                  </p>
+                  <div className="space-y-3">
+                    <Input placeholder="Enter your email" type="email" />
+                    <Button className="w-full">Subscribe</Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Quick Links */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Quick Links</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <Link
+                      to="/all-locations"
+                      className="block text-sm hover:text-primary transition-colors py-1"
+                    >
+                      Find Disposal Facilities
+                    </Link>
+                    <Link
+                      to="/suggest-location"
+                      className="block text-sm hover:text-primary transition-colors py-1"
+                    >
+                      Suggest a Location
+                    </Link>
+                    <Link
+                      to="/about"
+                      className="block text-sm hover:text-primary transition-colors py-1"
+                    >
+                      About WasteFinder
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </div>
       </main>
 
