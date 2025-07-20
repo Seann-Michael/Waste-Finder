@@ -360,8 +360,8 @@ export default function Admin() {
                     </p>
                   </div>
                 ))}
-                <Button variant="outline" className="w-full" size="sm">
-                  View All Suggestions
+                <Button variant="outline" className="w-full" size="sm" asChild>
+                  <Link to="/admin/suggestions">View All Suggestions</Link>
                 </Button>
               </CardContent>
             </Card>
