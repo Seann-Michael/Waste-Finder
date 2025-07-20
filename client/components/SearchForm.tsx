@@ -23,7 +23,7 @@ interface SearchFormProps {
 export interface SearchParams {
   zipCode: string;
   radius: number;
-  facilityTypes: string[];
+  locationTypes: string[];
   debrisTypes: string[];
 }
 
