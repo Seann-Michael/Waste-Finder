@@ -184,13 +184,13 @@ export default function EditFacility() {
         email: facility.email || "",
         website: facility.website || "",
         facilityType: facility.locationType,
-        paymentTypes: facility.paymentTypes.map((p) => p.name),
+        paymentTypes: facility.paymentTypes?.map((p) => p.name) || [],
         additionalPaymentDetails: facility.additionalPaymentDetails || "",
-        debrisTypes: facility.debrisTypes.map((d) => d.name),
+        debrisTypes: facility.debrisTypes?.map((d) => d.name) || [],
         additionalLocationDetails: facility.notes || "",
-        latitude: facility.latitude.toString(),
-        longitude: facility.longitude.toString(),
-        isActive: facility.isActive,
+        latitude: facility.latitude?.toString() || "",
+        longitude: facility.longitude?.toString() || "",
+        isActive: facility.isActive ?? true,
       });
 
       // Convert operating hours
