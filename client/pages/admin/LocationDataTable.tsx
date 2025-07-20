@@ -112,9 +112,8 @@ type SortDirection = "asc" | "desc";
 
 export default function LocationDataTable() {
   const navigate = useNavigate();
-  const [locations, setLocations] = useState<Location[]>(mockLocations);
-  const [filteredLocations, setFilteredLocations] =
-    useState<Location[]>(mockLocations);
+  const [locations, setLocations] = useState<Location[]>([]);
+  const [filteredLocations, setFilteredLocations] = useState<Location[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
