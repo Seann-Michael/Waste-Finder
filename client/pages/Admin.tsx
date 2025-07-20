@@ -201,7 +201,7 @@ export default function Admin() {
                       const url = window.URL.createObjectURL(blob);
                       const a = document.createElement("a");
                       a.href = url;
-                      a.download = "facilities_export.csv";
+                      a.download = "locations_export.csv";
                       document.body.appendChild(a);
                       a.click();
                       document.body.removeChild(a);
