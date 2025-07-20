@@ -273,6 +273,7 @@ export default function AddLocation() {
           name: type,
           category: "general", // Default category, could be made configurable
           ...(data.debrisPricing[type] || {}),
+          additionalDetails: data.debrisAdditionalDetails[type] || "",
         })),
         notes: data.additionalLocationDetails,
         // Add default operating hours (Monday-Friday 7AM-5PM)
