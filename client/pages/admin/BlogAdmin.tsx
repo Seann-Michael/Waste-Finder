@@ -331,6 +331,7 @@ export default function BlogAdmin() {
       status: "draft",
       featured: false,
       tags: "",
+      categories: [],
       featuredImage: "",
       publishDate: "",
       publishTime: "",
