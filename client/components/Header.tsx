@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { MapPin, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { MapPin, Menu, X, Shield } from "lucide-react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import {
   Tooltip,
@@ -15,6 +15,27 @@ export default function Header() {
 
   // Check if user is admin to show banner edit option
   const isAdmin = localStorage.getItem("adminLoggedIn");
+
+  // Dynamic content from localStorage
+  const [contentSettings, setContentSettings] = useState({
+    bannerText: "🔥 Get more customers for your dumpster rental business - Click here for proven marketing strategies!",
+    bannerUrl: "https://yourmarketingagency.com",
+    marketingButtonText: "Marketing for Dumpster Rentals",
+    marketingButtonUrl: "https://yourmarketingagency.com",
+  });
+
+  useEffect(() => {
+    // Load content settings from localStorage
+    const savedSettings = localStorage.getItem("contentSettings");
+    if (savedSettings) {
+      try {
+        const parsed = JSON.parse(savedSettings);
+        setContentSettings(prev => ({ ...prev, ...parsed }));
+      } catch (error) {
+        console.error("Error loading content settings:", error);
+      }
+    }
+  }, []);
 
   const navigation = [
     { name: "Home", href: "/", active: location.pathname === "/" },
