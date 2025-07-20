@@ -84,6 +84,8 @@ const mockSuggestedLocations: SuggestedLocation[] = [
       phone: "(503) 555-0123",
       email: "info@riverside.com",
       website: "https://riverside-recycling.com",
+      googleBusinessUrl:
+        "https://maps.google.com/maps/place/Riverside+Recycling+Center",
       facilityType: "transfer_station",
       paymentTypes: ["Cash", "Credit Card"],
       debrisTypes: ["General Waste", "Recyclables", "Electronics"],
