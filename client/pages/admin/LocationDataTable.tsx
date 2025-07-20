@@ -458,7 +458,12 @@ export default function LocationDataTable() {
                     currentItems.map((location) => (
                       <TableRow key={location.id} className="hover:bg-muted/50">
                         <TableCell>
-                          <div className="font-medium">{location.name}</div>
+                          <Link
+                            to={`/location/${location.id}`}
+                            className="font-medium text-primary hover:underline"
+                          >
+                            {location.name}
+                          </Link>
                           <div className="text-sm text-muted-foreground">
                             ID: {location.id}
                           </div>
