@@ -50,17 +50,34 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { Location } from "@/shared/api";
 
-// Fetch locations from server API
+// Fetch locations from server API with localStorage fallback
 const fetchLocations = async (): Promise<Location[]> => {
   try {
     const response = await fetch("/api/locations/all");
     if (!response.ok) {
+      // If API is not available (404), fallback to localStorage
+      if (response.status === 404) {
+        throw new Error("API_NOT_FOUND");
+      }
       throw new Error("Failed to fetch locations");
     }
     const data = await response.json();
     return data.data || [];
   } catch (error) {
-    console.error("Error fetching locations:", error);
+    console.error("Error fetching locations from API:", error);
+
+    // Fallback to localStorage if API is not available
+    try {
+      const savedLocations = localStorage.getItem("locations");
+      if (savedLocations) {
+        const locations = JSON.parse(savedLocations);
+        console.log("Loaded locations from localStorage:", locations.length, "locations");
+        return Array.isArray(locations) ? locations : [];
+      }
+    } catch (localStorageError) {
+      console.error("Error loading from localStorage:", localStorageError);
+    }
+
     return [];
   }
 };
