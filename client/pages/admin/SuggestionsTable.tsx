@@ -491,6 +491,150 @@ export default function SuggestionsTable() {
     window.URL.revokeObjectURL(url);
   };
 
+  // Bulk action handlers for edits
+  const handleSelectAllEdits = (checked: boolean) => {
+    if (checked) {
+      setSelectedEdits(editsCurrentItems.map((edit) => edit.id));
+    } else {
+      setSelectedEdits([]);
+    }
+  };
+
+  const handleSelectEdit = (editId: string, checked: boolean) => {
+    if (checked) {
+      setSelectedEdits([...selectedEdits, editId]);
+    } else {
+      setSelectedEdits(selectedEdits.filter((id) => id !== editId));
+    }
+  };
+
+  const handleEditsBulkAction = (action: "approve" | "reject" | "delete") => {
+    setEditsBulkAction(action);
+    setEditsBulkActionDialogOpen(true);
+  };
+
+  const executeEditsBulkAction = () => {
+    if (!editsBulkAction || selectedEdits.length === 0) return;
+
+    switch (editsBulkAction) {
+      case "approve":
+        setSuggestedEdits(
+          suggestedEdits.map((edit) =>
+            selectedEdits.includes(edit.id)
+              ? {
+                  ...edit,
+                  status: "approved" as const,
+                  moderatedAt: new Date().toISOString(),
+                  moderatedBy: "Admin",
+                }
+              : edit,
+          ),
+        );
+        alert(`${selectedEdits.length} edits approved successfully!`);
+        break;
+      case "reject":
+        setSuggestedEdits(
+          suggestedEdits.map((edit) =>
+            selectedEdits.includes(edit.id)
+              ? {
+                  ...edit,
+                  status: "rejected" as const,
+                  moderatedAt: new Date().toISOString(),
+                  moderatedBy: "Admin",
+                }
+              : edit,
+          ),
+        );
+        alert(`${selectedEdits.length} edits rejected successfully!`);
+        break;
+      case "delete":
+        setSuggestedEdits(
+          suggestedEdits.filter((edit) => !selectedEdits.includes(edit.id)),
+        );
+        alert(`${selectedEdits.length} edits deleted successfully!`);
+        break;
+    }
+
+    setSelectedEdits([]);
+    setEditsBulkActionDialogOpen(false);
+    setEditsBulkAction(null);
+  };
+
+  // Bulk action handlers for locations
+  const handleSelectAllLocations = (checked: boolean) => {
+    if (checked) {
+      setSelectedLocations(
+        locationsCurrentItems.map((location) => location.id),
+      );
+    } else {
+      setSelectedLocations([]);
+    }
+  };
+
+  const handleSelectLocation = (locationId: string, checked: boolean) => {
+    if (checked) {
+      setSelectedLocations([...selectedLocations, locationId]);
+    } else {
+      setSelectedLocations(selectedLocations.filter((id) => id !== locationId));
+    }
+  };
+
+  const handleLocationsBulkAction = (
+    action: "approve" | "reject" | "delete",
+  ) => {
+    setLocationsBulkAction(action);
+    setLocationsBulkActionDialogOpen(true);
+  };
+
+  const executeLocationsBulkAction = () => {
+    if (!locationsBulkAction || selectedLocations.length === 0) return;
+
+    switch (locationsBulkAction) {
+      case "approve":
+        setSuggestedLocations(
+          suggestedLocations.map((location) =>
+            selectedLocations.includes(location.id)
+              ? {
+                  ...location,
+                  status: "approved" as const,
+                  moderatedAt: new Date().toISOString(),
+                  moderatedBy: "Admin",
+                }
+              : location,
+          ),
+        );
+        alert(`${selectedLocations.length} locations approved successfully!`);
+        break;
+      case "reject":
+        setSuggestedLocations(
+          suggestedLocations.map((location) =>
+            selectedLocations.includes(location.id)
+              ? {
+                  ...location,
+                  status: "rejected" as const,
+                  moderatedAt: new Date().toISOString(),
+                  moderatedBy: "Admin",
+                }
+              : location,
+          ),
+        );
+        alert(`${selectedLocations.length} locations rejected successfully!`);
+        break;
+      case "delete":
+        setSuggestedLocations(
+          suggestedLocations.filter(
+            (location) => !selectedLocations.includes(location.id),
+          ),
+        );
+        alert(`${selectedLocations.length} locations deleted successfully!`);
+        break;
+    }
+
+    setSelectedLocations([]);
+    setLocationsBulkActionDialogOpen(false);
+    setLocationsBulkAction(null);
+  };
+
   // Pagination calculations for edits
   const editsTotalPages = Math.ceil(filteredEdits.length / editsPageSize);
   const editsStartIndex = (editsCurrentPage - 1) * editsPageSize;
