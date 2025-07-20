@@ -111,16 +111,27 @@ export default function Blog() {
   const [selectedTag, setSelectedTag] = useState<string>("all");
   const [isLoading, setIsLoading] = useState(true);
 
-  // Get all unique tags
+  // Get all unique tags from loaded posts
   const allTags = [
     "all",
-    ...Array.from(new Set(mockBlogPosts.flatMap((post) => post.tags))),
+    ...Array.from(new Set(blogPosts.flatMap((post) => post.tags))),
   ];
 
   useEffect(() => {
-    // Simulate loading published posts
+    // Load published posts from localStorage (same as admin panel)
     setTimeout(() => {
-      const publishedPosts = mockBlogPosts.filter(
+      const savedPosts = localStorage.getItem("blogPosts");
+      let allPosts = [];
+
+      if (savedPosts) {
+        allPosts = JSON.parse(savedPosts);
+      } else {
+        // Initialize with sample posts if none exist
+        allPosts = mockBlogPosts;
+        localStorage.setItem("blogPosts", JSON.stringify(mockBlogPosts));
+      }
+
+      const publishedPosts = allPosts.filter(
         (post) => post.status === "published",
       );
       setBlogPosts(publishedPosts);
