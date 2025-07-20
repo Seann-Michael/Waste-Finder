@@ -226,6 +226,16 @@ export default function Index() {
         </div>
       </section>
 
+      {/* Facebook CTA Section */}
+      <section className="py-8 px-4">
+        <div className="max-w-4xl mx-auto">
+          <FacebookCTA
+            facebookUrl="https://facebook.com/groups/wastefindergroup"
+            className="mb-0"
+          />
+        </div>
+      </section>
+
       {/* Recent Reviews Section */}
       <section className="py-16 px-4">
         <div className="max-w-7xl mx-auto">
