@@ -131,6 +131,11 @@ export default function AdminSettings() {
   const [contentSettings, setContentSettings] = useState({
     bannerText:
       "🔥 Get more customers for your dumpster rental business - Click here for proven marketing strategies!",
+    bannerUrl: "https://yourmarketingagency.com",
+    marketingButtonText: "Marketing for Dumpster Rentals",
+    marketingButtonUrl: "https://yourmarketingagency.com",
+    homeMarketingButtonText: "Marketing for Dumpster Rentals",
+    homeMarketingButtonUrl: "https://yourmarketingagency.com",
     privacyPolicy: "",
     termsOfService: "",
     footerContent: "",
