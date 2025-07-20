@@ -936,7 +936,13 @@ export default function AllLocations() {
             <p className="text-muted-foreground">
               Browse our complete database of {locations.length} waste disposal
               facilities across the United States
-              {searchQuery && ` • Showing results for "${searchQuery}"`}
+              {searchQuery &&
+              /^\d{5}$/.test(searchQuery) &&
+              zipCodeLookup[searchQuery]
+                ? ` • Showing ${filteredLocations.length} facilities within ${searchRadius} miles of ${searchQuery}`
+                : searchQuery
+                  ? ` • Showing ${filteredLocations.length} results for "${searchQuery}"`
+                  : ` • Showing all ${filteredLocations.length} facilities`}
             </p>
           </div>
 
