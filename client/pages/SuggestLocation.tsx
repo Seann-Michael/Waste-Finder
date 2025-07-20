@@ -49,7 +49,7 @@ export default function SuggestLocation() {
     "Cash",
     "Check",
     "Credit/Debit",
-    "New Terms",
+    "Net Terms",
   ];
 
   const debrisOptions = [

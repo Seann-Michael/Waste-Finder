@@ -132,7 +132,7 @@ export default function EditFacility() {
     "Cash",
     "Check",
     "Credit/Debit",
-    "New Terms",
+    "Net Terms",
   ];
 
   const debrisOptions = [

@@ -76,7 +76,7 @@ interface LocationFormData {
   paymentTypes: string[];
   additionalPaymentDetails?: string;
   debrisTypes: string[];
-  debrisPricing: Record<string, { pricePerTon?: number; pricePerLoad?: number; priceNote?: string; }>;
+  debrisPricing: Record<string, { price?: number; priceDetails?: string; }>;
   additionalLocationDetails?: string;
   isActive: boolean;
 }
@@ -95,7 +95,7 @@ const PAYMENT_TYPES = [
   "Cash",
   "Check",
   "Credit/Debit",
-  "New Terms",
+  "Net Terms",
 ] as const;
 
 const DEBRIS_TYPES = [
@@ -742,59 +742,56 @@ export default function AddLocation() {
                       </div>
 
                       {watchedValues.debrisTypes?.includes(debris) && (
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 ml-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 ml-6">
                           <div>
-                            <Label className="text-xs">Price per Ton ($)</Label>
+                            <Label className="text-xs">Price (USD)</Label>
                             <Input
                               type="number"
                               step="0.01"
                               placeholder="65.00"
-                              value={watchedValues.debrisPricing?.[debris]?.pricePerTon || ""}
+                              value={watchedValues.debrisPricing?.[debris]?.price || ""}
                               onChange={(e) => {
                                 const currentPricing = watchedValues.debrisPricing || {};
+                                const value = e.target.value ? parseFloat(e.target.value) : undefined;
                                 setValue("debrisPricing", {
                                   ...currentPricing,
                                   [debris]: {
                                     ...currentPricing[debris],
-                                    pricePerTon: e.target.value ? parseFloat(e.target.value) : undefined,
+                                    price: value,
                                   },
                                 });
+                              }}
+                              onBlur={(e) => {
+                                // Format to 2 decimal places on blur
+                                if (e.target.value) {
+                                  const value = parseFloat(e.target.value);
+                                  if (!isNaN(value)) {
+                                    const currentPricing = watchedValues.debrisPricing || {};
+                                    setValue("debrisPricing", {
+                                      ...currentPricing,
+                                      [debris]: {
+                                        ...currentPricing[debris],
+                                        price: parseFloat(value.toFixed(2)),
+                                      },
+                                    });
+                                  }
+                                }
                               }}
                             />
                           </div>
 
                           <div>
-                            <Label className="text-xs">Price per Load ($)</Label>
+                            <Label className="text-xs">Price Unit Details</Label>
                             <Input
-                              type="number"
-                              step="0.01"
-                              placeholder="25.00"
-                              value={watchedValues.debrisPricing?.[debris]?.pricePerLoad || ""}
+                              placeholder="per ton, per load, per cubic yard, etc."
+                              value={watchedValues.debrisPricing?.[debris]?.priceDetails || ""}
                               onChange={(e) => {
                                 const currentPricing = watchedValues.debrisPricing || {};
                                 setValue("debrisPricing", {
                                   ...currentPricing,
                                   [debris]: {
                                     ...currentPricing[debris],
-                                    pricePerLoad: e.target.value ? parseFloat(e.target.value) : undefined,
-                                  },
-                                });
-                              }}
-                            />
-                          </div>
-
-                          <div>
-                            <Label className="text-xs">Price Note</Label>
-                            <Input
-                              placeholder="Free drop-off"
-                              value={watchedValues.debrisPricing?.[debris]?.priceNote || ""}
-                              onChange={(e) => {
-                                const currentPricing = watchedValues.debrisPricing || {};
-                                setValue("debrisPricing", {
-                                  ...currentPricing,
-                                  [debris]: {
-                                    ...currentPricing[debris],
-                                    priceNote: e.target.value,
+                                    priceDetails: e.target.value,
                                   },
                                 });
                               }}
