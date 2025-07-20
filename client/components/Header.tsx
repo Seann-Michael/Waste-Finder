@@ -132,13 +132,13 @@ export default function Header() {
                 className="text-xs sm:text-sm bg-green-600 text-white hover:bg-green-700 border-green-600"
               >
                 <a
-                  href="https://yourmarketingagency.com"
+                  href={contentSettings.marketingButtonUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-2 sm:px-3"
                 >
                   <span className="hidden md:inline">
-                    Marketing for Dumpster Rentals
+                    {contentSettings.marketingButtonText}
                   </span>
                   <span className="md:hidden">Get Customers</span>
                 </a>
