@@ -411,11 +411,37 @@ export default function LocationDetail() {
   };
 
   const handleDebrisTypeChange = (type: string, checked: boolean) => {
+    setEditFormData(prev => {
+      const newDebrisTypes = checked
+        ? [...prev.debrisTypes, type]
+        : prev.debrisTypes.filter(t => t !== type);
+
+      // Initialize pricing for new debris type or remove it
+      const newDebrisPricing = { ...prev.debrisPricing };
+      if (checked && !newDebrisPricing[type]) {
+        newDebrisPricing[type] = { price: undefined, priceDetails: "" };
+      } else if (!checked) {
+        delete newDebrisPricing[type];
+      }
+
+      return {
+        ...prev,
+        debrisTypes: newDebrisTypes,
+        debrisPricing: newDebrisPricing,
+      };
+    });
+  };
+
+  const handleDebrisPricingChange = (debrisType: string, field: "price" | "priceDetails", value: string | number) => {
     setEditFormData(prev => ({
       ...prev,
-      debrisTypes: checked
-        ? [...prev.debrisTypes, type]
-        : prev.debrisTypes.filter(t => t !== type),
+      debrisPricing: {
+        ...prev.debrisPricing,
+        [debrisType]: {
+          ...prev.debrisPricing[debrisType],
+          [field]: field === "price" ? (value === "" ? undefined : Number(value)) : value,
+        },
+      },
     }));
   };
 
