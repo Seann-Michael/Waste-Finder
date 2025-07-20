@@ -589,12 +589,13 @@ export default function AllLocations() {
       setLocations(mockData);
 
       if (searchQuery && /^\d{5}$/.test(searchQuery)) {
+        const coords = estimateZipCodeCoordinates(searchQuery);
         setSearchLocation({
           zipCode: searchQuery,
-          lat: 41.2367,
-          lng: -81.8552,
-          city: "Elyria",
-          state: "OH",
+          lat: coords?.lat || 41.2367,
+          lng: coords?.lng || -81.8552,
+          city: "Unknown", // We don't have city data in our estimation
+          state: "Unknown", // We don't have state data in our estimation
           radius: searchRadius,
         });
         setSearchMessage(
