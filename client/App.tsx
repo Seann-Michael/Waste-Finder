@@ -45,6 +45,7 @@ const App = () => (
           <Route path="/admin/edit-location/:id" element={<EditFacility />} />
           <Route path="/admin/locations" element={<LocationDataTable />} />
           <Route path="/admin/reviews" element={<ReviewsTable />} />
+          <Route path="/admin/suggestions" element={<SuggestionsTable />} />
           <Route path="/admin/settings" element={<AdminSettings />} />
           <Route path="/location/:id" element={<LocationDetail />} />
           <Route path="/about" element={<About />} />
