@@ -108,6 +108,45 @@ const mockPendingLocations: PendingLocation[] = [
 export default function AdminSettings() {
   const [activeTab, setActiveTab] = useState("profile");
 
+  useEffect(() => {
+    // Load settings from localStorage on mount
+    const savedApiSettings = localStorage.getItem("apiSettings");
+    if (savedApiSettings) {
+      try {
+        setApiSettings(JSON.parse(savedApiSettings));
+      } catch (error) {
+        console.error("Error loading API settings:", error);
+      }
+    }
+
+    const savedContentSettings = localStorage.getItem("contentSettings");
+    if (savedContentSettings) {
+      try {
+        setContentSettings(prev => ({ ...prev, ...JSON.parse(savedContentSettings) }));
+      } catch (error) {
+        console.error("Error loading content settings:", error);
+      }
+    }
+
+    const savedMarketingSettings = localStorage.getItem("marketingSettings");
+    if (savedMarketingSettings) {
+      try {
+        setMarketingSettings(JSON.parse(savedMarketingSettings));
+      } catch (error) {
+        console.error("Error loading marketing settings:", error);
+      }
+    }
+
+    const savedSeoSettings = localStorage.getItem("seoSettings");
+    if (savedSeoSettings) {
+      try {
+        setSeoSettings(prev => ({ ...prev, ...JSON.parse(savedSeoSettings) }));
+      } catch (error) {
+        console.error("Error loading SEO settings:", error);
+      }
+    }
+  }, []);
+
   const [adminUsers, setAdminUsers] = useState<AdminUser[]>(mockAdminUsers);
   const [pendingLocationsList, setPendingLocationsList] =
     useState<PendingLocation[]>(mockPendingLocations);
