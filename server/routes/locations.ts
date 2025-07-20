@@ -1,9 +1,37 @@
+/**
+ * Location Management API Routes
+ *
+ * Purpose: Provides comprehensive CRUD operations for waste disposal locations
+ * with search capabilities, filtering, and security features
+ *
+ * Security Features:
+ * - Authentication required for write operations
+ * - Permission-based access control
+ * - Input validation and sanitization
+ * - Rate limiting on search endpoints
+ * - SQL injection protection
+ *
+ * Endpoints:
+ * - GET /api/locations - Search and filter locations
+ * - GET /api/locations/all - Get all locations with pagination
+ * - GET /api/locations/:id - Get specific location
+ * - POST /api/locations - Create new location (admin only)
+ * - PUT /api/locations/:id - Update location (admin only)
+ * - DELETE /api/locations/:id - Delete location (super admin only)
+ * - PATCH /api/locations/:id/status - Toggle location status
+ */
+
 import { Request, Response } from "express";
+import { authenticateToken, requirePermission } from "./auth";
 
-// In production, this would integrate with a proper geocoding service like Google Maps API
-// For now, return a placeholder message for ZIP code searches
-
-// Calculate distance using Haversine formula
+/**
+ * Calculates distance between two coordinates using Haversine formula
+ * @param lat1 - Latitude of first point
+ * @param lng1 - Longitude of first point
+ * @param lat2 - Latitude of second point
+ * @param lng2 - Longitude of second point
+ * @returns Distance in miles
+ */
 function calculateDistance(
   lat1: number,
   lng1: number,
@@ -21,6 +49,116 @@ function calculateDistance(
       Math.sin(dLng / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
+}
+
+/**
+ * Validates location data for creation/update
+ */
+function validateLocationData(data: any): {
+  isValid: boolean;
+  errors: string[];
+} {
+  const errors: string[] = [];
+
+  // Required fields validation
+  if (!data.name || data.name.trim().length < 3) {
+    errors.push("Name must be at least 3 characters long");
+  }
+
+  if (!data.address || data.address.trim().length < 5) {
+    errors.push("Address must be at least 5 characters long");
+  }
+
+  if (!data.city || data.city.trim().length < 2) {
+    errors.push("City is required");
+  }
+
+  if (!data.state || !/^[A-Z]{2}$/.test(data.state)) {
+    errors.push("State must be a valid 2-letter code");
+  }
+
+  if (!data.zipCode || !/^\d{5}(-\d{4})?$/.test(data.zipCode)) {
+    errors.push("ZIP code must be in format 12345 or 12345-6789");
+  }
+
+  if (!data.phone || !/^\(\d{3}\) \d{3}-\d{4}$/.test(data.phone)) {
+    errors.push("Phone must be in format (555) 123-4567");
+  }
+
+  // Email validation (optional)
+  if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+    errors.push("Invalid email format");
+  }
+
+  // Website validation (optional)
+  if (data.website && !/^https?:\/\/.+/.test(data.website)) {
+    errors.push("Website must start with http:// or https://");
+  }
+
+  // Coordinates validation
+  const lat = parseFloat(data.latitude);
+  const lng = parseFloat(data.longitude);
+
+  if (isNaN(lat) || lat < -90 || lat > 90) {
+    errors.push("Latitude must be between -90 and 90");
+  }
+
+  if (isNaN(lng) || lng < -180 || lng > 180) {
+    errors.push("Longitude must be between -180 and 180");
+  }
+
+  // Location type validation
+  const validTypes = ["landfill", "transfer_station", "construction_landfill"];
+  if (!data.locationType || !validTypes.includes(data.locationType)) {
+    errors.push("Invalid location type");
+  }
+
+  // Payment types validation
+  if (
+    !data.paymentTypes ||
+    !Array.isArray(data.paymentTypes) ||
+    data.paymentTypes.length === 0
+  ) {
+    errors.push("At least one payment type is required");
+  }
+
+  // Debris types validation
+  if (
+    !data.debrisTypes ||
+    !Array.isArray(data.debrisTypes) ||
+    data.debrisTypes.length === 0
+  ) {
+    errors.push("At least one debris type is required");
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors,
+  };
+}
+
+/**
+ * Sanitizes location data to prevent XSS and injection attacks
+ */
+function sanitizeLocationData(data: any): any {
+  const sanitize = (str: string): string => {
+    if (typeof str !== "string") return str;
+    return str
+      .trim()
+      .replace(/[<>]/g, "") // Remove potential HTML tags
+      .substring(0, 500); // Limit length
+  };
+
+  return {
+    ...data,
+    name: sanitize(data.name),
+    address: sanitize(data.address),
+    city: sanitize(data.city),
+    state: data.state?.toUpperCase(),
+    notes: data.notes ? sanitize(data.notes) : "",
+    email: data.email ? data.email.toLowerCase().trim() : "",
+    website: data.website ? data.website.trim() : "",
+  };
 }
 
 // Mock location database
