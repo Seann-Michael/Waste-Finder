@@ -20,6 +20,7 @@ import ReviewsTable from "./pages/admin/ReviewsTable";
 import SuggestionsTable from "./pages/admin/SuggestionsTable";
 import PreviewLocation from "./pages/admin/PreviewLocation";
 import Marketing from "./pages/admin/Marketing";
+import BlogAdmin from "./pages/admin/BlogAdmin";
 import AdminRoute from "./components/admin/AdminRoute";
 import About from "./pages/About";
 import LocationDetail from "./pages/LocationDetail";
@@ -104,6 +105,14 @@ const App = () => (
             element={
               <AdminRoute>
                 <Marketing />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/blog"
+            element={
+              <AdminRoute>
+                <BlogAdmin />
               </AdminRoute>
             }
           />
