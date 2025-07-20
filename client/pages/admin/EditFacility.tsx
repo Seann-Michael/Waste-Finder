@@ -171,14 +171,7 @@ export default function EditFacility() {
       if (!facility) {
         throw new Error('Facility not found');
       }
-        state: "IL",
-        zipCode: "62701",
-        phone: "(555) 123-4567",
-        email: "info@greenvalley.gov",
-        website: "https://greenvalley.gov",
-        latitude: 39.7817,
-        longitude: -89.6501,
-        facilityType: "landfill",
+
         paymentTypes: [
           { id: "1", name: "Cash" },
           { id: "2", name: "Credit Card" },
