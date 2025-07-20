@@ -882,17 +882,47 @@ export default function LocationDetail() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <div className="flex flex-wrap gap-3">
-                    {location.paymentTypes.map((payment) => (
-                      <Badge key={payment.id} variant="outline">
-                        {payment.name}
-                      </Badge>
-                    ))}
-                  </div>
-                  {location.additionalPaymentDetails && (
-                    <div className="text-sm text-muted-foreground border-t pt-3">
-                      <strong>Additional Payment Details:</strong> {location.additionalPaymentDetails}
-                    </div>
+                  {isEditMode ? (
+                    <>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {paymentOptions.map((option) => (
+                          <div key={option} className="flex items-center space-x-2">
+                            <Checkbox
+                              checked={editFormData.paymentTypes.includes(option)}
+                              onCheckedChange={(checked) =>
+                                handlePaymentTypeChange(option, checked as boolean)
+                              }
+                            />
+                            <Label className="text-sm">{option}</Label>
+                          </div>
+                        ))}
+                      </div>
+                      <div>
+                        <Label htmlFor="edit-additionalPaymentDetails">Additional Payment Details</Label>
+                        <Textarea
+                          id="edit-additionalPaymentDetails"
+                          value={editFormData.additionalPaymentDetails}
+                          onChange={(e) => handleFormChange("additionalPaymentDetails", e.target.value)}
+                          placeholder="Any additional payment information..."
+                          rows={3}
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex flex-wrap gap-3">
+                        {location.paymentTypes.map((payment) => (
+                          <Badge key={payment.id} variant="outline">
+                            {payment.name}
+                          </Badge>
+                        ))}
+                      </div>
+                      {location.additionalPaymentDetails && (
+                        <div className="text-sm text-muted-foreground border-t pt-3">
+                          <strong>Additional Payment Details:</strong> {location.additionalPaymentDetails}
+                        </div>
+                      )}
+                    </>
                   )}
                 </CardContent>
               </Card>
