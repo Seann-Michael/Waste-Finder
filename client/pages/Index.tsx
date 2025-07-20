@@ -179,6 +179,23 @@ export default function Index() {
             </p>
           </div>
 
+          {/* Marketing CTA Button */}
+          <div className="max-w-xl mx-auto mb-8">
+            <Button
+              asChild
+              size="lg"
+              className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-6 text-lg"
+            >
+              <a
+                href={contentSettings.homeMarketingButtonUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {contentSettings.homeMarketingButtonText}
+              </a>
+            </Button>
+          </div>
+
           {/* Search Form */}
           <div className="max-w-2xl mx-auto mb-12">
             <SearchForm
