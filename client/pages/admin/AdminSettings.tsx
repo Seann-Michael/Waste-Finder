@@ -350,6 +350,18 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
     alert("SEO settings updated successfully!");
   };
 
+  const handleSaveCodeSettings = () => {
+    localStorage.setItem("codeSettings", JSON.stringify(codeSettings));
+    console.log("Saving code settings:", codeSettings);
+    alert("Custom code settings updated successfully!");
+  };
+
+  const handleSaveSystemSettings = () => {
+    localStorage.setItem("systemSettings", JSON.stringify(systemSettings));
+    console.log("Saving system settings:", systemSettings);
+    alert("System settings updated successfully!");
+  };
+
   const handleSaveBlogSettings = () => {
     console.log("Saving blog settings:", blogSettings);
     localStorage.setItem("blogSettings", JSON.stringify(blogSettings));
