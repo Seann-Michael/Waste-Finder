@@ -34,6 +34,263 @@ interface LocationSearchResponse {
   message: string;
 }
 
+// Mock data for fallback when API is unavailable
+const getMockData = (query?: string): Location[] => {
+  const allMockData: Location[] = [
+    {
+      id: "cleveland-1",
+      name: "Cleveland West Municipal Landfill",
+      address: "15600 Triskett Road",
+      city: "Cleveland",
+      state: "OH",
+      zipCode: "44111",
+      phone: "(216) 664-3060",
+      email: "waste@clevelandohio.gov",
+      website: "https://www.clevelandohio.gov",
+      latitude: 41.4458,
+      longitude: -81.7799,
+      facilityType: "landfill",
+      paymentTypes: [
+        { id: "1", name: "Cash" },
+        { id: "2", name: "Credit Card" },
+        { id: "3", name: "Check" },
+      ],
+      debrisTypes: [
+        {
+          id: "1",
+          name: "General Household Waste",
+          category: "general",
+          pricePerTon: 65,
+        },
+        { id: "2", name: "Yard Waste", category: "general", pricePerTon: 35 },
+        { id: "3", name: "Appliances", category: "general", pricePerLoad: 25 },
+        {
+          id: "4",
+          name: "Electronics",
+          category: "recyclable",
+          priceNote: "Free drop-off",
+        },
+      ],
+      operatingHours: [
+        {
+          dayOfWeek: 1,
+          openTime: "07:00",
+          closeTime: "16:00",
+          isClosed: false,
+        },
+        {
+          dayOfWeek: 2,
+          openTime: "07:00",
+          closeTime: "16:00",
+          isClosed: false,
+        },
+        {
+          dayOfWeek: 3,
+          openTime: "07:00",
+          closeTime: "16:00",
+          isClosed: false,
+        },
+        {
+          dayOfWeek: 4,
+          openTime: "07:00",
+          closeTime: "16:00",
+          isClosed: false,
+        },
+        {
+          dayOfWeek: 5,
+          openTime: "07:00",
+          closeTime: "16:00",
+          isClosed: false,
+        },
+        {
+          dayOfWeek: 6,
+          openTime: "08:00",
+          closeTime: "14:00",
+          isClosed: false,
+        },
+        { dayOfWeek: 0, openTime: "00:00", closeTime: "00:00", isClosed: true },
+      ],
+      notes: "Cleveland's primary municipal waste facility.",
+      rating: 4.2,
+      reviewCount: 89,
+      distance: query === "44035" ? 25.3 : undefined,
+      isActive: true,
+      createdAt: "2024-01-01T00:00:00Z",
+      updatedAt: "2024-01-15T00:00:00Z",
+    },
+    {
+      id: "cleveland-2",
+      name: "West Side Recycling Center",
+      address: "3200 W 65th Street",
+      city: "Cleveland",
+      state: "OH",
+      zipCode: "44111",
+      phone: "(216) 961-4700",
+      latitude: 41.4419,
+      longitude: -81.7879,
+      facilityType: "transfer_station",
+      paymentTypes: [
+        { id: "1", name: "Cash" },
+        { id: "2", name: "Credit Card" },
+        { id: "3", name: "Check" },
+      ],
+      debrisTypes: [
+        {
+          id: "1",
+          name: "General Household Waste",
+          category: "general",
+          pricePerTon: 60,
+        },
+        {
+          id: "4",
+          name: "Electronics",
+          category: "recyclable",
+          priceNote: "Free drop-off",
+        },
+        {
+          id: "6",
+          name: "Recyclables",
+          category: "recyclable",
+          priceNote: "Free drop-off",
+        },
+      ],
+      operatingHours: [
+        {
+          dayOfWeek: 1,
+          openTime: "08:00",
+          closeTime: "17:00",
+          isClosed: false,
+        },
+        {
+          dayOfWeek: 2,
+          openTime: "08:00",
+          closeTime: "17:00",
+          isClosed: false,
+        },
+        {
+          dayOfWeek: 3,
+          openTime: "08:00",
+          closeTime: "17:00",
+          isClosed: false,
+        },
+        {
+          dayOfWeek: 4,
+          openTime: "08:00",
+          closeTime: "17:00",
+          isClosed: false,
+        },
+        {
+          dayOfWeek: 5,
+          openTime: "08:00",
+          closeTime: "17:00",
+          isClosed: false,
+        },
+        {
+          dayOfWeek: 6,
+          openTime: "09:00",
+          closeTime: "14:00",
+          isClosed: false,
+        },
+        { dayOfWeek: 0, openTime: "00:00", closeTime: "00:00", isClosed: true },
+      ],
+      notes: "Specialized recycling center.",
+      rating: 4.6,
+      reviewCount: 142,
+      distance: query === "44035" ? 24.8 : undefined,
+      isActive: true,
+      createdAt: "2024-01-01T00:00:00Z",
+      updatedAt: "2024-01-18T00:00:00Z",
+    },
+    {
+      id: "cleveland-3",
+      name: "Parma Transfer Station",
+      address: "6161 Ackley Road",
+      city: "Parma",
+      state: "OH",
+      zipCode: "44129",
+      phone: "(440) 885-8181",
+      latitude: 41.3784,
+      longitude: -81.729,
+      facilityType: "transfer_station",
+      paymentTypes: [
+        { id: "1", name: "Cash" },
+        { id: "2", name: "Credit Card" },
+      ],
+      debrisTypes: [
+        {
+          id: "1",
+          name: "General Waste",
+          category: "general",
+          pricePerTon: 55,
+        },
+        {
+          id: "5",
+          name: "Construction Debris",
+          category: "construction",
+          pricePerTon: 85,
+        },
+      ],
+      operatingHours: [
+        {
+          dayOfWeek: 1,
+          openTime: "06:00",
+          closeTime: "18:00",
+          isClosed: false,
+        },
+        {
+          dayOfWeek: 2,
+          openTime: "06:00",
+          closeTime: "18:00",
+          isClosed: false,
+        },
+        {
+          dayOfWeek: 3,
+          openTime: "06:00",
+          closeTime: "18:00",
+          isClosed: false,
+        },
+        {
+          dayOfWeek: 4,
+          openTime: "06:00",
+          closeTime: "18:00",
+          isClosed: false,
+        },
+        {
+          dayOfWeek: 5,
+          openTime: "06:00",
+          closeTime: "18:00",
+          isClosed: false,
+        },
+        {
+          dayOfWeek: 6,
+          openTime: "07:00",
+          closeTime: "15:00",
+          isClosed: false,
+        },
+        { dayOfWeek: 0, openTime: "00:00", closeTime: "00:00", isClosed: true },
+      ],
+      rating: 3.8,
+      reviewCount: 67,
+      distance: query === "44035" ? 28.1 : undefined,
+      isActive: true,
+      createdAt: "2024-01-01T00:00:00Z",
+      updatedAt: "2024-01-10T00:00:00Z",
+    },
+  ];
+
+  // Filter for Cleveland area ZIP codes
+  if (
+    query === "44035" ||
+    query === "44111" ||
+    query === "44129" ||
+    query === "44102"
+  ) {
+    return allMockData.sort((a, b) => (a.distance || 0) - (b.distance || 0));
+  }
+
+  return allMockData;
+};
+
 export default function AllLocations() {
   const [searchParams] = useSearchParams();
   const [locations, setLocations] = useState<Location[]>([]);
