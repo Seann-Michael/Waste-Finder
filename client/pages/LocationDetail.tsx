@@ -354,10 +354,12 @@ export default function LocationDetail() {
                 <h1 className="text-3xl font-bold mb-4">{location.name}</h1>
 
                 <div className="flex items-center gap-2 mb-4">
-                  {renderStars(location.rating, "w-5 h-5")}
-                  <span className="text-lg font-medium">{location.rating}</span>
+                  {renderStars(reviews.length > 0 ? reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length : 0, "w-5 h-5")}
+                  <span className="text-lg font-medium">
+                    {reviews.length > 0 ? (reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length).toFixed(1) : "0"}
+                  </span>
                   <span className="text-muted-foreground">
-                    ({location.reviewCount} reviews)
+                    ({reviews.length} reviews)
                   </span>
                 </div>
 
@@ -718,7 +720,7 @@ export default function LocationDetail() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Reviews:</span>
-                    <span>{location.reviewCount}</span>
+                    <span>{reviews.length}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Page Views:</span>
