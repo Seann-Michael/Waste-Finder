@@ -573,9 +573,7 @@ export default function BulkUploadFacilities() {
             </div>
           </div>
         </div>
-      </main>
-
-      <Footer />
-    </div>
+      </div>
+    </AdminLayout>
   );
 }
