@@ -635,7 +635,7 @@ export default function AllLocations() {
         const coords = zipCodeLookup[query];
         if (coords) {
           searchCoordinates = coords;
-          // Calculate distances and filter within 50 miles
+          // Calculate distances and filter within specified radius
           filtered = filtered
             .map((location) => ({
               ...location,
@@ -646,7 +646,7 @@ export default function AllLocations() {
                 location.longitude,
               ),
             }))
-            .filter((location) => (location.distance || 0) <= 50);
+            .filter((location) => (location.distance || 0) <= searchRadius);
         } else {
           // If zip code not in lookup, fall back to text search
           filtered = filtered.filter(
