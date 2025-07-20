@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import RichTextEditor from "@/components/ui/rich-text-editor";
 import ImageUpload from "@/components/ui/image-upload";
+import BlogPreview from "@/components/BlogPreview";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
@@ -571,14 +572,39 @@ export default function BlogAdmin() {
               />
             </div>
 
-            <div>
-              <Label htmlFor="tags">Tags</Label>
-              <Input
-                id="tags"
-                value={formData.tags}
-                onChange={(e) => setFormData(prev => ({ ...prev, tags: e.target.value }))}
-                placeholder="tag1, tag2, tag3"
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="tags">Tags</Label>
+                <Input
+                  id="tags"
+                  value={formData.tags}
+                  onChange={(e) => setFormData(prev => ({ ...prev, tags: e.target.value }))}
+                  placeholder="tag1, tag2, tag3"
+                />
+              </div>
+              <div>
+                <Label htmlFor="categories">Categories</Label>
+                <Select
+                  value={formData.categories[0] || ""}
+                  onValueChange={(value) =>
+                    setFormData(prev => ({
+                      ...prev,
+                      categories: value ? [value] : []
+                    }))
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map((category) => (
+                      <SelectItem key={category.id} value={category.id}>
+                        {category.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -662,6 +688,14 @@ export default function BlogAdmin() {
               Cancel
             </Button>
             <Button
+              variant="secondary"
+              onClick={() => setShowPreview(true)}
+              disabled={!formData.title.trim() || !formData.content.trim()}
+            >
+              <Eye className="w-4 h-4 mr-2" />
+              Preview
+            </Button>
+            <Button
               onClick={handleSavePost}
               disabled={isLoading || !formData.title.trim() || !formData.excerpt.trim() || !formData.content.trim()}
             >
@@ -671,6 +705,14 @@ export default function BlogAdmin() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Blog Preview Dialog */}
+      <BlogPreview
+        open={showPreview}
+        onOpenChange={setShowPreview}
+        formData={formData}
+        categories={categories}
+      />
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
