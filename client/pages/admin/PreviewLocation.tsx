@@ -270,7 +270,7 @@ export default function PreviewLocation() {
     );
   }
 
-  if (!location || (isEditing && !editedLocation)) {
+  if (isEditing && !editedLocation) {
     return (
       <AdminLayout>
         <div className="flex items-center justify-center py-16">
@@ -283,7 +283,8 @@ export default function PreviewLocation() {
     );
   }
 
-  const currentLocation = isEditing ? editedLocation! : location;
+  const currentLocation =
+    isEditing && editedLocation ? editedLocation : location;
 
   return (
     <AdminLayout>
