@@ -190,6 +190,14 @@ export default function SuggestionsTable() {
     useState<SortDirection>("desc");
   const [editsPageSize, setEditsPageSize] = useState(25);
 
+  // Bulk selection for edits
+  const [selectedEdits, setSelectedEdits] = useState<string[]>([]);
+  const [editsBulkActionDialogOpen, setEditsBulkActionDialogOpen] =
+    useState(false);
+  const [editsBulkAction, setEditsBulkAction] = useState<
+    "approve" | "reject" | "delete" | null
+  >(null);
+
   // Suggested Locations State
   const [suggestedLocations, setSuggestedLocations] = useState<
     SuggestedLocation[]
