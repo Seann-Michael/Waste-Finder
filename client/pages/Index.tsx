@@ -162,6 +162,14 @@ export default function Index() {
         </div>
       </section>
 
+      {/* Facebook CTA and Advertisement */}
+      <section className="py-8 px-4 bg-muted/30">
+        <div className="max-w-4xl mx-auto space-y-6">
+          <FacebookCTA />
+          <Advertisement placement="home" />
+        </div>
+      </section>
+
       {/* Facility Types Section */}
       <section className="py-16 px-4">
         <div className="max-w-7xl mx-auto">
