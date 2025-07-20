@@ -57,6 +57,7 @@ interface SuggestedLocation {
     phone?: string;
     email?: string;
     website?: string;
+    googleBusinessUrl?: string;
     facilityType: string;
     paymentTypes: string[];
     debrisTypes: string[];
