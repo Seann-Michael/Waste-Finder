@@ -324,6 +324,37 @@ export function handleLocationsSearch(req: Request, res: Response) {
   }
 }
 
+// GET /api/locations/all - Get all locations with optional search
+export function handleAllLocations(req: Request, res: Response) {
+  try {
+    const { search } = req.query;
+
+    let filteredLocations = [...mockLocations];
+
+    if (search && typeof search === "string") {
+      const searchTerm = search.toLowerCase();
+      filteredLocations = mockLocations.filter(
+        (location) =>
+          location.name.toLowerCase().includes(searchTerm) ||
+          location.city.toLowerCase().includes(searchTerm) ||
+          location.zipCode.includes(searchTerm),
+      );
+    }
+
+    res.json({
+      success: true,
+      data: filteredLocations,
+      total: filteredLocations.length,
+    });
+  } catch (error) {
+    console.error("Error fetching all locations:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch locations",
+    });
+  }
+}
+
 // GET /api/locations/:id - Get specific location
 export function handleLocationById(req: Request, res: Response) {
   try {
