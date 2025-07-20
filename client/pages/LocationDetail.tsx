@@ -537,6 +537,13 @@ export default function LocationDetail() {
                       </div>
                     ))}
                   </div>
+                  <div className="mt-4 p-3 bg-muted/50 rounded-lg">
+                    <p className="text-xs text-muted-foreground">
+                      * Please call to verify hours and check for holiday
+                      schedules. Hours may vary during peak seasons or special
+                      circumstances.
+                    </p>
+                  </div>
                 </CardContent>
               </Card>
 
