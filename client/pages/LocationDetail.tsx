@@ -71,10 +71,17 @@ export default function LocationDetail() {
   const loadLocationData = async () => {
     setIsLoading(true);
     try {
-      // Mock data for demonstration
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      // Fetch location data from server
+      const response = await fetch(`/api/locations/${id}`);
 
-      const mockLocation: Location = {
+      if (!response.ok) {
+        throw new Error('Failed to fetch location data');
+      }
+
+      const data = await response.json();
+      const fetchedLocation = data.data;
+
+      if (!fetchedLocation) {
         id: id || "1",
         name: "Green Valley Municipal Landfill",
         address: "1234 Waste Management Drive",
