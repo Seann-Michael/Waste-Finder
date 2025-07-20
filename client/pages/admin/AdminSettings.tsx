@@ -738,33 +738,63 @@ export default function AdminSettings() {
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="siteLogo">Site Logo URL</Label>
-                        <Input
-                          id="siteLogo"
-                          value={websiteSettings.siteLogo}
-                          onChange={(e) =>
-                            setWebsiteSettings({
-                              ...websiteSettings,
-                              siteLogo: e.target.value,
-                            })
-                          }
-                          placeholder="https://yoursite.com/logo.png"
-                        />
+                        <Label htmlFor="siteLogo">Site Logo</Label>
+                        <div className="space-y-2">
+                          <Input
+                            id="siteLogo"
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                handleFileUpload(file, "logo");
+                              }
+                            }}
+                          />
+                          {websiteSettings.siteLogo && (
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                              <span>Current: </span>
+                              <a
+                                href={websiteSettings.siteLogo}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-primary hover:underline"
+                              >
+                                View Logo
+                              </a>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="favicon">Favicon URL</Label>
-                      <Input
-                        id="favicon"
-                        value={websiteSettings.favicon}
-                        onChange={(e) =>
-                          setWebsiteSettings({
-                            ...websiteSettings,
-                            favicon: e.target.value,
-                          })
-                        }
-                        placeholder="https://yoursite.com/favicon.ico"
-                      />
+                      <Label htmlFor="favicon">Favicon</Label>
+                      <div className="space-y-2">
+                        <Input
+                          id="favicon"
+                          type="file"
+                          accept="image/*,.ico"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              handleFileUpload(file, "favicon");
+                            }
+                          }}
+                        />
+                        {websiteSettings.favicon && (
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <span>Current: </span>
+                            <a
+                              href={websiteSettings.favicon}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-primary hover:underline"
+                            >
+                              View Favicon
+                            </a>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
 
