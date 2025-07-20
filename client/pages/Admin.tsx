@@ -491,20 +491,12 @@ export default function Admin() {
             </Button>
             <Button
               variant="outline"
-              onClick={() => {
-                // Handle rejection
-                setSelectedReview(null);
-              }}
+              onClick={() => handleRejectReview(selectedReview?.id)}
             >
               <AlertTriangle className="w-4 h-4 mr-2" />
               Reject Review
             </Button>
-            <Button
-              onClick={() => {
-                // Handle approval
-                setSelectedReview(null);
-              }}
-            >
+            <Button onClick={() => handleApproveReview(selectedReview?.id)}>
               <CheckCircle className="w-4 h-4 mr-2" />
               Approve Review
             </Button>
