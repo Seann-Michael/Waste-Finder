@@ -109,6 +109,8 @@ const mockSuggestedLocations: SuggestedLocation[] = [
       state: "IL",
       zipCode: "60601",
       phone: "(312) 555-9876",
+      googleBusinessUrl:
+        "https://maps.google.com/maps/place/Metro+Waste+Facility",
       facilityType: "landfill",
       paymentTypes: ["Cash"],
       debrisTypes: ["General Waste"],
