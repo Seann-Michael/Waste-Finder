@@ -1356,6 +1356,81 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                   </div>
 
                   <div className="space-y-2">
+                    <Label htmlFor="bannerUrl">Banner Link URL</Label>
+                    <Input
+                      id="bannerUrl"
+                      value={contentSettings.bannerUrl}
+                      onChange={(e) =>
+                        setContentSettings({
+                          ...contentSettings,
+                          bannerUrl: e.target.value,
+                        })
+                      }
+                      placeholder="https://example.com"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="marketingButtonText">Header Marketing Button Text</Label>
+                    <Input
+                      id="marketingButtonText"
+                      value={contentSettings.marketingButtonText}
+                      onChange={(e) =>
+                        setContentSettings({
+                          ...contentSettings,
+                          marketingButtonText: e.target.value,
+                        })
+                      }
+                      placeholder="Marketing for Dumpster Rentals"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="marketingButtonUrl">Header Marketing Button URL</Label>
+                    <Input
+                      id="marketingButtonUrl"
+                      value={contentSettings.marketingButtonUrl}
+                      onChange={(e) =>
+                        setContentSettings({
+                          ...contentSettings,
+                          marketingButtonUrl: e.target.value,
+                        })
+                      }
+                      placeholder="https://example.com"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="homeMarketingButtonText">Homepage Marketing Button Text</Label>
+                    <Input
+                      id="homeMarketingButtonText"
+                      value={contentSettings.homeMarketingButtonText}
+                      onChange={(e) =>
+                        setContentSettings({
+                          ...contentSettings,
+                          homeMarketingButtonText: e.target.value,
+                        })
+                      }
+                      placeholder="Marketing for Dumpster Rentals"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="homeMarketingButtonUrl">Homepage Marketing Button URL</Label>
+                    <Input
+                      id="homeMarketingButtonUrl"
+                      value={contentSettings.homeMarketingButtonUrl}
+                      onChange={(e) =>
+                        setContentSettings({
+                          ...contentSettings,
+                          homeMarketingButtonUrl: e.target.value,
+                        })
+                      }
+                      placeholder="https://example.com"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
                     <Label htmlFor="privacyPolicy">Privacy Policy</Label>
                     <Textarea
                       id="privacyPolicy"
