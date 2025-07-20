@@ -117,28 +117,6 @@ export interface LocationSuggestionRequest {
   notes?: string;
 }
 
-// Advertisement and Marketing Settings
-export interface AdSettings {
-  adsenseEnabled: boolean;
-  adsenseCode: string;
-  customAdsEnabled: boolean;
-  customAds: CustomAd[];
-  facebookGroupEnabled: boolean;
-  facebookGroupUrl: string;
-  facebookGroupCta: string;
-}
-
-export interface CustomAd {
-  id: string;
-  title: string;
-  content: string;
-  imageUrl?: string;
-  linkUrl?: string;
-  placement: "home" | "search" | "location" | "all";
-  isActive: boolean;
-  priority: number;
-}
-
 // Example response type for /api/demo
 export interface DemoResponse {
   message: string;
