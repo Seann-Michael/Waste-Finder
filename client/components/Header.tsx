@@ -60,16 +60,28 @@ export default function Header() {
     <>
       {/* Admin Editable Banner */}
       <div className="bg-primary text-primary-foreground py-2 px-4 text-center text-sm">
-        <span>
-          🔥 Get more customers for your dumpster rental business - Click here
-          for proven marketing strategies!
-        </span>
+        <a href={contentSettings.bannerUrl} target="_blank" rel="noopener noreferrer">
+          {contentSettings.bannerText}
+        </a>
         {isAdmin && (
-          <button className="ml-2 text-xs underline hover:no-underline">
+          <Link to="/admin/settings?tab=content" className="ml-2 text-xs underline hover:no-underline">
             [Edit Banner]
-          </button>
+          </Link>
         )}
       </div>
+
+      {/* Admin Indicator */}
+      {isAdmin && (
+        <div className="bg-yellow-500 text-black py-1 px-4 text-center text-xs font-medium">
+          <div className="flex items-center justify-center gap-1">
+            <Shield className="w-3 h-3" />
+            <span>ADMIN MODE - You are logged in as administrator</span>
+            <Link to="/admin" className="ml-2 underline hover:no-underline">
+              Go to Admin Dashboard
+            </Link>
+          </div>
+        </div>
+      )}
 
       <header className="bg-white border-b border-border shadow-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
