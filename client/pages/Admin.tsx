@@ -46,6 +46,22 @@ export default function Admin() {
     navigate("/");
   };
 
+  const handleApproveReview = (reviewId: string) => {
+    setPendingReviewsList(
+      pendingReviewsList.filter((review) => review.id !== reviewId),
+    );
+    setSelectedReview(null);
+    alert("Review approved successfully!");
+  };
+
+  const handleRejectReview = (reviewId: string) => {
+    setPendingReviewsList(
+      pendingReviewsList.filter((review) => review.id !== reviewId),
+    );
+    setSelectedReview(null);
+    alert("Review rejected successfully!");
+  };
+
   const stats = [
     {
       label: "Total Locations",
