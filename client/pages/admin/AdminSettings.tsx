@@ -196,7 +196,16 @@ export default function AdminSettings() {
     adsenseEnabled: false,
     adsenseCode: "",
     customAdsEnabled: false,
-    customAds: [],
+    customAds: [] as Array<{
+      id: string;
+      title: string;
+      content: string;
+      imageUrl: string;
+      linkUrl: string;
+      placement: "home" | "search" | "location" | "all";
+      priority: number;
+      isActive: boolean;
+    }>,
     facebookGroupEnabled: false,
     facebookGroupUrl: "",
     facebookGroupCta:
