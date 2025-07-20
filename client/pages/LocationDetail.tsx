@@ -928,13 +928,26 @@ export default function LocationDetail() {
               </Card>
 
               {/* Additional Location Details */}
-              {location.notes && (
+              {(location.notes || isEditMode) && (
                 <Card>
                   <CardHeader>
                     <CardTitle>Additional Location Details</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground">{location.notes}</p>
+                    {isEditMode ? (
+                      <div>
+                        <Label htmlFor="edit-notes">Additional Information</Label>
+                        <Textarea
+                          id="edit-notes"
+                          value={editFormData.notes}
+                          onChange={(e) => handleFormChange("notes", e.target.value)}
+                          placeholder="Any additional information about the facility, directions, restrictions, etc."
+                          rows={4}
+                        />
+                      </div>
+                    ) : (
+                      <p className="text-muted-foreground">{location.notes}</p>
+                    )}
                   </CardContent>
                 </Card>
               )}
