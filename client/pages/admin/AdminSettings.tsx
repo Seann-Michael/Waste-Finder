@@ -122,7 +122,15 @@ export default function AdminSettings() {
     if (savedAdSettings) {
       try {
         const settings = JSON.parse(savedAdSettings);
-        setAdSettings(settings);
+        // Ensure customAds is always an array
+        if (settings && typeof settings === "object") {
+          setAdSettings({
+            ...settings,
+            customAds: Array.isArray(settings.customAds)
+              ? settings.customAds
+              : [],
+          });
+        }
       } catch (error) {
         console.error("Error loading ad settings:", error);
       }
