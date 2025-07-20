@@ -415,9 +415,8 @@ export default function Admin() {
             </Card>
           </div>
         </div>
-      </main>
 
-      {/* Review Detail Dialog */}
+        {/* Review Detail Dialog */}
       <Dialog
         open={!!selectedReview}
         onOpenChange={() => setSelectedReview(null)}
