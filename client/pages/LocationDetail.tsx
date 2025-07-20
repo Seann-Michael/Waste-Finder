@@ -702,12 +702,6 @@ export default function LocationDetail() {
                 </CardContent>
               </Card>
 
-              {/* Advertisement */}
-              <Advertisement placement="location" />
-
-              {/* Facebook CTA */}
-              <FacebookCTA />
-
               {/* Map Placeholder */}
               <Card>
                 <CardHeader>
