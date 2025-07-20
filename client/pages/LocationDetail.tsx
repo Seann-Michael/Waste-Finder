@@ -304,21 +304,34 @@ export default function LocationDetail() {
         <div className="max-w-7xl mx-auto px-4 py-8">
           {/* Back to Results & Breadcrumb */}
           <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Link to="/" className="hover:text-primary">
-                Home
-              </Link>
-              <span>/</span>
-              <Link to="/all-locations" className="hover:text-primary">
-                Locations
-              </Link>
-              <span>/</span>
-              <span>{location.name}</span>
-            </div>
             <Button variant="outline" onClick={() => window.history.back()}>
               <ChevronLeft className="w-4 h-4 mr-2" />
               Back to Results
             </Button>
+
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Link to="/" className="hover:text-primary">
+                  Home
+                </Link>
+                <span>/</span>
+                <Link to="/all-locations" className="hover:text-primary">
+                  Locations
+                </Link>
+                <span>/</span>
+                <span>{location.name}</span>
+              </div>
+
+              {/* Edit button for super admin only */}
+              {localStorage.getItem("adminLoggedIn") && (
+                <Button variant="outline" size="sm" asChild>
+                  <Link to={`/admin/edit-location/${location.id}`}>
+                    <Edit className="w-4 h-4 mr-2" />
+                    Edit
+                  </Link>
+                </Button>
+              )}
+            </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
