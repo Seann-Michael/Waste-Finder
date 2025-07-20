@@ -513,7 +513,7 @@ export default function LocationDetail() {
                     Payment Methods
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="space-y-3">
                   <div className="flex flex-wrap gap-3">
                     {location.paymentTypes.map((payment) => (
                       <Badge key={payment.id} variant="outline">
@@ -521,14 +521,19 @@ export default function LocationDetail() {
                       </Badge>
                     ))}
                   </div>
+                  {location.additionalPaymentDetails && (
+                    <div className="text-sm text-muted-foreground border-t pt-3">
+                      <strong>Additional Payment Details:</strong> {location.additionalPaymentDetails}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
-              {/* Additional Notes */}
+              {/* Additional Location Details */}
               {location.notes && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Additional Information</CardTitle>
+                    <CardTitle>Additional Location Details</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <p className="text-muted-foreground">{location.notes}</p>
