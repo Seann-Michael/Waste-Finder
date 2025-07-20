@@ -8,6 +8,9 @@ export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
 
+  // Check if user is admin to show banner edit option
+  const isAdmin = localStorage.getItem("adminLoggedIn");
+
   const navigation = [
     { name: "Home", href: "/", active: location.pathname === "/" },
     {
