@@ -13,6 +13,7 @@ export interface Location {
   phone: string;
   email?: string;
   website?: string;
+  googleBusinessUrl?: string; // Google My Business profile URL
   latitude: number;
   longitude: number;
   facilityType: "landfill" | "transfer_station" | "construction_landfill";
