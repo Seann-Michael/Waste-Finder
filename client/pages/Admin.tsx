@@ -325,8 +325,13 @@ export default function Admin() {
                       </p>
                     </div>
                   ))}
-                  <Button variant="outline" className="w-full" size="sm">
-                    View All Reviews
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    size="sm"
+                    asChild
+                  >
+                    <Link to="/admin/reviews">View All Reviews</Link>
                   </Button>
                 </CardContent>
               </Card>
