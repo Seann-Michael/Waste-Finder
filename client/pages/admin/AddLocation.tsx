@@ -77,6 +77,7 @@ interface LocationFormData {
   additionalPaymentDetails?: string;
   debrisTypes: string[];
   debrisPricing: Record<string, { price?: number; priceDetails?: string; }>;
+  debrisAdditionalDetails: Record<string, string>;
   additionalLocationDetails?: string;
   isActive: boolean;
 }
@@ -200,6 +201,7 @@ export default function AddLocation() {
       additionalPaymentDetails: "",
       debrisTypes: [],
       debrisPricing: {},
+      debrisAdditionalDetails: {},
       additionalLocationDetails: "",
       isActive: true,
     },
@@ -414,18 +416,24 @@ export default function AddLocation() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="md:col-span-2">
                   <Label htmlFor="name">Location Name *</Label>
-                  <Input
-                    id="name"
-                    {...register("name", {
-                      required: "Location name is required",
-                      minLength: {
-                        value: 3,
-                        message: "Name must be at least 3 characters",
-                      },
-                    })}
-                    placeholder="e.g., Springfield Municipal Landfill"
-                    className={errors.name ? "border-red-500" : ""}
-                  />
+                  <div className="relative">
+                    <Input
+                      id="name"
+                      {...register("name", {
+                        required: "Location name is required",
+                        minLength: {
+                          value: 3,
+                          message: "Name must be at least 3 characters",
+                        },
+                      })}
+                      placeholder="Search for business name or enter manually"
+                      className={errors.name ? "border-red-500" : ""}
+                      autoComplete="off"
+                    />
+                    <div className="text-xs text-muted-foreground mt-1">
+                      Start typing to search Google Places or enter name manually
+                    </div>
+                  </div>
                   {errors.name && (
                     <p className="text-red-500 text-sm mt-1">
                       {errors.name.message}
@@ -498,11 +506,12 @@ export default function AddLocation() {
                     {...register("zipCode", {
                       required: "ZIP code is required",
                       pattern: {
-                        value: /^\d{5}(-\d{4})?$/,
-                        message: "Invalid ZIP code format",
+                        value: /^\d{5}$/,
+                        message: "ZIP code must be exactly 5 digits",
                       },
                     })}
                     placeholder="e.g., 12345"
+                    maxLength={5}
                     className={errors.zipCode ? "border-red-500" : ""}
                   />
                   {errors.zipCode && (
@@ -519,12 +528,19 @@ export default function AddLocation() {
                     {...register("phone", {
                       required: "Phone number is required",
                       pattern: {
-                        value: /^\(\d{3}\) \d{3}-\d{4}$/,
-                        message: "Phone format: (555) 123-4567",
+                        value: /^\d{10}$/,
+                        message: "Phone number must be exactly 10 digits",
                       },
                     })}
-                    placeholder="(555) 123-4567"
+                    placeholder="5551234567"
+                    maxLength={10}
                     className={errors.phone ? "border-red-500" : ""}
+                    onKeyPress={(e) => {
+                      // Only allow numbers
+                      if (!/\d/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'Tab') {
+                        e.preventDefault();
+                      }
+                    }}
                   />
                   {errors.phone && (
                     <p className="text-red-500 text-sm mt-1">
@@ -726,10 +742,13 @@ export default function AddLocation() {
                               checked as boolean,
                             );
                             if (!checked) {
-                              // Clear pricing data when unchecked
+                              // Clear pricing data and additional details when unchecked
                               const currentPricing = watchedValues.debrisPricing || {};
+                              const currentDetails = watchedValues.debrisAdditionalDetails || {};
                               delete currentPricing[debris];
+                              delete currentDetails[debris];
                               setValue("debrisPricing", currentPricing);
+                              setValue("debrisAdditionalDetails", currentDetails);
                             }
                           }}
                         />
@@ -742,61 +761,79 @@ export default function AddLocation() {
                       </div>
 
                       {watchedValues.debrisTypes?.includes(debris) && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 ml-6">
-                          <div>
-                            <Label className="text-xs">Price (USD)</Label>
-                            <div className="relative">
-                              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">$</span>
+                        <div className="space-y-3 ml-6">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                              <Label className="text-xs">Price (USD)</Label>
+                              <div className="relative">
+                                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">$</span>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  placeholder="34.00"
+                                  className="pl-7"
+                                  value={watchedValues.debrisPricing?.[debris]?.price || ""}
+                                  onChange={(e) => {
+                                    const currentPricing = watchedValues.debrisPricing || {};
+                                    const value = e.target.value ? parseFloat(e.target.value) : undefined;
+                                    setValue("debrisPricing", {
+                                      ...currentPricing,
+                                      [debris]: {
+                                        ...currentPricing[debris],
+                                        price: value,
+                                      },
+                                    });
+                                  }}
+                                  onBlur={(e) => {
+                                    // Format to 2 decimal places on blur
+                                    if (e.target.value) {
+                                      const value = parseFloat(e.target.value);
+                                      if (!isNaN(value)) {
+                                        const currentPricing = watchedValues.debrisPricing || {};
+                                        setValue("debrisPricing", {
+                                          ...currentPricing,
+                                          [debris]: {
+                                            ...currentPricing[debris],
+                                            price: parseFloat(value.toFixed(2)),
+                                          },
+                                        });
+                                      }
+                                    }
+                                  }}
+                                />
+                              </div>
+                            </div>
+
+                            <div>
+                              <Label className="text-xs">Price Unit Details</Label>
                               <Input
-                                type="number"
-                                step="0.01"
-                                placeholder="34.00"
-                                className="pl-7"
-                                value={watchedValues.debrisPricing?.[debris]?.price || ""}
+                                placeholder="per ton, per load, per cubic yard, etc."
+                                value={watchedValues.debrisPricing?.[debris]?.priceDetails || ""}
                                 onChange={(e) => {
                                   const currentPricing = watchedValues.debrisPricing || {};
-                                  const value = e.target.value ? parseFloat(e.target.value) : undefined;
                                   setValue("debrisPricing", {
                                     ...currentPricing,
                                     [debris]: {
                                       ...currentPricing[debris],
-                                      price: value,
+                                      priceDetails: e.target.value,
                                     },
                                   });
-                                }}
-                                onBlur={(e) => {
-                                  // Format to 2 decimal places on blur
-                                  if (e.target.value) {
-                                    const value = parseFloat(e.target.value);
-                                    if (!isNaN(value)) {
-                                      const currentPricing = watchedValues.debrisPricing || {};
-                                      setValue("debrisPricing", {
-                                        ...currentPricing,
-                                        [debris]: {
-                                          ...currentPricing[debris],
-                                          price: parseFloat(value.toFixed(2)),
-                                        },
-                                      });
-                                    }
-                                  }
                                 }}
                               />
                             </div>
                           </div>
 
                           <div>
-                            <Label className="text-xs">Price Unit Details</Label>
-                            <Input
-                              placeholder="per ton, per load, per cubic yard, etc."
-                              value={watchedValues.debrisPricing?.[debris]?.priceDetails || ""}
+                            <Label className="text-xs">Additional Details for {debris}</Label>
+                            <Textarea
+                              placeholder="Special requirements, restrictions, preparation instructions, etc."
+                              rows={2}
+                              value={watchedValues.debrisAdditionalDetails?.[debris] || ""}
                               onChange={(e) => {
-                                const currentPricing = watchedValues.debrisPricing || {};
-                                setValue("debrisPricing", {
-                                  ...currentPricing,
-                                  [debris]: {
-                                    ...currentPricing[debris],
-                                    priceDetails: e.target.value,
-                                  },
+                                const currentDetails = watchedValues.debrisAdditionalDetails || {};
+                                setValue("debrisAdditionalDetails", {
+                                  ...currentDetails,
+                                  [debris]: e.target.value,
                                 });
                               }}
                             />
