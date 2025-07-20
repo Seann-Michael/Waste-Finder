@@ -230,7 +230,7 @@ export default function BulkUploadFacilities() {
   const downloadTemplate = () => {
     // Updated template with location terminology
     const csvContent = `name,address,city,state,zipCode,phone,email,website,facilityType,paymentTypes,debrisTypes,operatingHours,notes
-"Sample Landfill","123 Main St","Springfield","IL","62701","(555) 123-4567","info@sample.com","https://sample.com","landfill","Cash,Credit Card","General Waste,Yard Waste","Mon-Fri 7AM-5PM","Sample notes"
+"Sample Landfill","123 Main St","Springfield","IL","62701","(555) 123-4567","info@sample.com","https://sample.com","landfill","Cash,Credit/Debit","General Waste,Yard Waste","Mon-Fri 7AM-5PM","Sample notes"
 "Sample Transfer Station","456 Oak Ave","Springfield","IL","62702","(555) 987-6543","contact@transfer.com","","transfer_station","Cash,Check","General Waste,Electronics","Mon-Sat 6AM-6PM","Transfer station example"`;
 
     const blob = new Blob([csvContent], { type: "text/csv" });
