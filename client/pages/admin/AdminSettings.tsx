@@ -1172,11 +1172,6 @@ export default function AdminSettings() {
                         </div>
                       )}
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
             {activeTab === "system" && (
               <Card>
                 <CardHeader>
