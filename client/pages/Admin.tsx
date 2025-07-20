@@ -289,7 +289,7 @@ export default function Admin() {
                   <Badge variant="secondary">{pendingReviewsList.length}</Badge>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {pendingReviews.map((review) => (
+                  {pendingReviewsList.map((review) => (
                     <div
                       key={review.id}
                       className="border rounded-lg p-3 space-y-2 cursor-pointer hover:bg-muted/50 transition-colors"
