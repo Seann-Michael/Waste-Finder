@@ -324,7 +324,7 @@ export default function ReviewsTable() {
   // Bulk action handlers
   const handleSelectAllReviews = (checked: boolean) => {
     if (checked) {
-      setSelectedReviews(paginatedReviews.map((review) => review.id));
+      setSelectedReviews(currentItems.map((review) => review.id));
     } else {
       setSelectedReviews([]);
     }
