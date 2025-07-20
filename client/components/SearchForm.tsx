@@ -86,11 +86,11 @@ export default function SearchForm({
     }
   };
 
-  const handleFacilityTypeChange = (type: string, checked: boolean) => {
+  const handleLocationTypeChange = (type: string, checked: boolean) => {
     if (checked) {
-      setFacilityTypes((prev) => [...prev, type]);
+      setLocationTypes((prev) => [...prev, type]);
     } else {
-      setFacilityTypes((prev) => prev.filter((t) => t !== type));
+      setLocationTypes((prev) => prev.filter((t) => t !== type));
     }
   };
 
