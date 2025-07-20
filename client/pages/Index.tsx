@@ -77,20 +77,20 @@ export default function Index() {
       title: "Municipal Landfills",
       description:
         "General waste disposal facilities for household and commercial waste",
-      count: "1,200+",
+      count: "1,456",
     },
     {
       icon: <Building2 className="w-8 h-8" />,
       title: "Transfer Stations",
       description: "Intermediate facilities for waste sorting and transfer",
-      count: "800+",
+      count: "892",
     },
     {
       icon: <HardHat className="w-8 h-8" />,
       title: "Construction Landfills",
       description:
         "Specialized facilities for construction and demolition debris",
-      count: "600+",
+      count: "499",
     },
   ];
 
