@@ -573,72 +573,157 @@ export default function LocationDetail() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="flex items-start gap-3">
-                    <MapPin className="w-5 h-5 text-muted-foreground mt-0.5" />
-                    <a
-                      href={getDirectionsUrl()}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary hover:underline"
-                    >
-                      <div>{location.address}</div>
-                      <div>
-                        {location.city}, {location.state} {location.zipCode}
+                  {isEditMode ? (
+                    <>
+                      <div className="space-y-3">
+                        <div>
+                          <Label htmlFor="edit-address">Street Address</Label>
+                          <Input
+                            id="edit-address"
+                            value={editFormData.address}
+                            onChange={(e) => handleFormChange("address", e.target.value)}
+                            placeholder="1234 Main St"
+                          />
+                        </div>
+                        <div className="grid grid-cols-3 gap-2">
+                          <div>
+                            <Label htmlFor="edit-city">City</Label>
+                            <Input
+                              id="edit-city"
+                              value={editFormData.city}
+                              onChange={(e) => handleFormChange("city", e.target.value)}
+                              placeholder="City"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="edit-state">State</Label>
+                            <Input
+                              id="edit-state"
+                              value={editFormData.state}
+                              onChange={(e) => handleFormChange("state", e.target.value)}
+                              placeholder="IL"
+                              maxLength={2}
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="edit-zipCode">ZIP</Label>
+                            <Input
+                              id="edit-zipCode"
+                              value={editFormData.zipCode}
+                              onChange={(e) => handleFormChange("zipCode", e.target.value)}
+                              placeholder="62701"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <Label htmlFor="edit-phone">Phone Number</Label>
+                          <Input
+                            id="edit-phone"
+                            value={editFormData.phone}
+                            onChange={(e) => handleFormChange("phone", e.target.value)}
+                            placeholder="(555) 123-4567"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="edit-email">Email Address</Label>
+                          <Input
+                            id="edit-email"
+                            type="email"
+                            value={editFormData.email}
+                            onChange={(e) => handleFormChange("email", e.target.value)}
+                            placeholder="info@facility.com"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="edit-website">Website</Label>
+                          <Input
+                            id="edit-website"
+                            value={editFormData.website}
+                            onChange={(e) => handleFormChange("website", e.target.value)}
+                            placeholder="https://example.com"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="edit-googleBusinessUrl">Google Business Profile</Label>
+                          <Input
+                            id="edit-googleBusinessUrl"
+                            value={editFormData.googleBusinessUrl}
+                            onChange={(e) => handleFormChange("googleBusinessUrl", e.target.value)}
+                            placeholder="https://maps.google.com/..."
+                          />
+                        </div>
                       </div>
-                    </a>
-                  </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex items-start gap-3">
+                        <MapPin className="w-5 h-5 text-muted-foreground mt-0.5" />
+                        <a
+                          href={getDirectionsUrl()}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary hover:underline"
+                        >
+                          <div>{location.address}</div>
+                          <div>
+                            {location.city}, {location.state} {location.zipCode}
+                          </div>
+                        </a>
+                      </div>
 
-                  {location.phone && (
-                    <div className="flex items-center gap-3">
-                      <Phone className="w-5 h-5 text-muted-foreground" />
-                      <a
-                        href={`tel:${location.phone}`}
-                        className="text-primary hover:underline"
-                      >
-                        {location.phone}
-                      </a>
-                    </div>
-                  )}
+                      {location.phone && (
+                        <div className="flex items-center gap-3">
+                          <Phone className="w-5 h-5 text-muted-foreground" />
+                          <a
+                            href={`tel:${location.phone}`}
+                            className="text-primary hover:underline"
+                          >
+                            {location.phone}
+                          </a>
+                        </div>
+                      )}
 
-                  {location.email && (
-                    <div className="flex items-center gap-3">
-                      <Mail className="w-5 h-5 text-muted-foreground" />
-                      <a
-                        href={`mailto:${location.email}`}
-                        className="text-primary hover:underline"
-                      >
-                        {location.email}
-                      </a>
-                    </div>
-                  )}
+                      {location.email && (
+                        <div className="flex items-center gap-3">
+                          <Mail className="w-5 h-5 text-muted-foreground" />
+                          <a
+                            href={`mailto:${location.email}`}
+                            className="text-primary hover:underline"
+                          >
+                            {location.email}
+                          </a>
+                        </div>
+                      )}
 
-                  {location.website && (
-                    <div className="flex items-center gap-3">
-                      <Globe className="w-5 h-5 text-muted-foreground" />
-                      <a
-                        href={location.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-primary hover:underline"
-                      >
-                        Visit Website
-                      </a>
-                    </div>
-                  )}
+                      {location.website && (
+                        <div className="flex items-center gap-3">
+                          <Globe className="w-5 h-5 text-muted-foreground" />
+                          <a
+                            href={location.website}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-primary hover:underline"
+                          >
+                            Visit Website
+                          </a>
+                        </div>
+                      )}
 
-                  {location.googleBusinessUrl && (
-                    <div className="mt-4">
-                      <Button
-                        onClick={() =>
-                          window.open(location.googleBusinessUrl, "_blank")
-                        }
-                        className="w-full"
-                        variant="outline"
-                      >
-                        <Building2 className="w-4 h-4 mr-2" />
-                        View Google Business Profile
-                      </Button>
-                    </div>
+                      {location.googleBusinessUrl && (
+                        <div className="mt-4">
+                          <Button
+                            onClick={() =>
+                              window.open(location.googleBusinessUrl, "_blank")
+                            }
+                            className="w-full"
+                            variant="outline"
+                          >
+                            <Building2 className="w-4 h-4 mr-2" />
+                            View Google Business Profile
+                          </Button>
+                        </div>
+                      )}
+                    </>
                   )}
                 </CardContent>
               </Card>
