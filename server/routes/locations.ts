@@ -265,10 +265,10 @@ export function handleLocationsSearch(req: Request, res: Response) {
       );
     }
 
-    // Apply facility type filter
-    if (facilityType && facilityType !== "all") {
+    // Apply location type filter
+    if (locationType && locationType !== "all") {
       locations = locations.filter(
-        (location) => location.facilityType === facilityType,
+        (location) => location.locationType === locationType,
       );
     }
 
