@@ -57,6 +57,7 @@ export default function LocationDetail() {
   const [isLoading, setIsLoading] = useState(true);
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [showSuggestionForm, setShowSuggestionForm] = useState(false);
+  const [pageViews, setPageViews] = useState(0);
 
   // Review form state
   const [reviewRating, setReviewRating] = useState(5);
@@ -67,8 +68,25 @@ export default function LocationDetail() {
   useEffect(() => {
     if (id) {
       loadLocationData();
+      incrementPageView();
     }
   }, [id]);
+
+  const incrementPageView = () => {
+    if (!id) return;
+
+    const viewKey = `pageviews_${id}`;
+    const currentViews = parseInt(localStorage.getItem(viewKey) || '0');
+    const newViews = currentViews + 1;
+    localStorage.setItem(viewKey, newViews.toString());
+    setPageViews(newViews);
+  };
+
+  const getLocationIdNumber = (locationId: string): string => {
+    // Extract numerical part from location ID (e.g., "location-4" -> "4")
+    const match = locationId.match(/\d+/);
+    return match ? match[0] : locationId;
+  };
 
   const loadLocationData = async () => {
     setIsLoading(true);
@@ -619,7 +637,7 @@ export default function LocationDetail() {
               </Card>
 
               {/* Spacer to align with Contact Information */}
-              <div className="h-4"></div>
+              <div className="h-2"></div>
 
               {/* Google Map Embed */}
               <Card>
@@ -667,7 +685,7 @@ export default function LocationDetail() {
                 <CardContent className="space-y-4">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Location ID:</span>
-                    <span className="font-mono text-sm">{location.id}</span>
+                    <span className="font-mono text-sm">{getLocationIdNumber(location.id)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Type:</span>
@@ -683,7 +701,7 @@ export default function LocationDetail() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Page Views:</span>
-                    <span>{Math.floor(Math.random() * 2000) + 500}</span>
+                    <span>{pageViews}</span>
                   </div>
                   {location.distance && (
                     <div className="flex justify-between">
