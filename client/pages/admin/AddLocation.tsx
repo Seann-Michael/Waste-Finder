@@ -351,11 +351,25 @@ export default function AddLocation() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to create location");
+        let errorMessage = "Failed to create location";
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorMessage;
+        } catch (jsonError) {
+          // If response is not JSON or body is already consumed, use status text
+          errorMessage = response.statusText || errorMessage;
+        }
+        throw new Error(errorMessage);
       }
 
-      const result = await response.json();
+      let result;
+      try {
+        result = await response.json();
+      } catch (jsonError) {
+        // If response is not JSON, continue anyway - the location might have been created
+        console.warn("Response was not JSON, but request might have succeeded");
+        result = { success: true };
+      }
 
       showSuccess("Location created successfully!");
       reset(); // Clear form
