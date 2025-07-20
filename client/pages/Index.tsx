@@ -161,16 +161,16 @@ export default function Index() {
         </div>
       </section>
 
-      {/* Facility Types Section */}
+      {/* Location Types Section */}
       <section className="py-16 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-foreground mb-4">
-              Types of Facilities
+              Types of Locations
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               We maintain a comprehensive database of all waste disposal
-              facility types
+              location types
             </p>
           </div>
 
@@ -189,7 +189,7 @@ export default function Index() {
                     {type.description}
                   </p>
                   <Badge variant="secondary" className="text-lg px-3 py-1">
-                    {type.count} facilities
+                    {type.count} locations
                   </Badge>
                 </CardContent>
               </Card>
