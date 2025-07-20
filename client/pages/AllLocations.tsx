@@ -394,28 +394,56 @@ const getMockData = (query?: string): Location[] => {
   ];
 
   if (query && /^\d{5}$/.test(query)) {
-    const distance = calculateMockDistance(query);
-    console.log(`Distance from ${query} to Cleveland area:`, distance);
+    const distanceToArea = calculateMockDistance(query);
+    console.log(`Distance from ${query} to Cleveland area:`, distanceToArea);
 
-    // Show Cleveland facilities if within 100 miles
-    if (distance <= 100) {
-      const facilitiesWithDistance = allMockData.map((facility) => ({
-        ...facility,
-        distance: calculateMockDistance(query) + Math.random() * 10, // Add some variation
-      }));
+    // Show Cleveland facilities if within 200 miles (reasonable driving distance)
+    if (distanceToArea <= 200) {
+      // Calculate individual distances from the query ZIP to each facility
+      const queryCoords = estimateZipCodeCoordinates(query);
+
+      const facilitiesWithDistance = allMockData.map((facility) => {
+        let facilityDistance = distanceToArea;
+
+        // If we have facility coordinates, calculate exact distance
+        if (queryCoords && facility.latitude && facility.longitude) {
+          facilityDistance = calculateDistance(
+            queryCoords.lat,
+            queryCoords.lng,
+            facility.latitude,
+            facility.longitude,
+          );
+        } else {
+          // Fallback: use base distance plus small variation
+          facilityDistance = distanceToArea + (Math.random() - 0.5) * 10;
+        }
+
+        return {
+          ...facility,
+          distance: Math.round(facilityDistance * 10) / 10, // Round to 1 decimal
+        };
+      });
 
       console.log(
         "Returning Cleveland area mock data for:",
         query,
-        "Distance:",
-        distance,
+        "Base distance:",
+        distanceToArea,
+        "Facilities:",
+        facilitiesWithDistance.length,
       );
+
       return facilitiesWithDistance.sort(
         (a, b) => (a.distance || 0) - (b.distance || 0),
       );
     } else {
-      console.log("ZIP code too far from Cleveland area:", query);
-      return []; // No results for distant ZIP codes
+      console.log(
+        "ZIP code too far from Cleveland area:",
+        query,
+        "Distance:",
+        distanceToArea,
+      );
+      return []; // No results for very distant ZIP codes
     }
   }
 
