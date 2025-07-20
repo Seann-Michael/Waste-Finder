@@ -214,8 +214,8 @@ const mockLocations = [
     locationType: "transfer_station",
     paymentTypes: [
       { id: "1", name: "Cash" },
-      { id: "2", name: "Credit Card" },
-      { id: "3", name: "Check" },
+      { id: "2", name: "Check" },
+      { id: "3", name: "Credit/Debit" },
     ],
     debrisTypes: [
       {
