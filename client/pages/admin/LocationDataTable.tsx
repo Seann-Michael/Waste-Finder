@@ -39,6 +39,21 @@ import {
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
+// Fetch locations from server API
+const fetchLocations = async (): Promise<Location[]> => {
+  try {
+    const response = await fetch("/api/locations/all");
+    if (!response.ok) {
+      throw new Error("Failed to fetch locations");
+    }
+    const data = await response.json();
+    return data.data || [];
+  } catch (error) {
+    console.error("Error fetching locations:", error);
+    return [];
+  }
+};
+
 interface Location {
   id: string;
   name: string;
