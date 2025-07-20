@@ -137,7 +137,7 @@ const mockLocations = [
     phone: "(440) 885-8181",
     latitude: 41.3784,
     longitude: -81.729,
-    facilityType: "transfer_station",
+    locationType: "transfer_station",
     paymentTypes: [
       { id: "1", name: "Cash" },
       { id: "2", name: "Credit Card" },
