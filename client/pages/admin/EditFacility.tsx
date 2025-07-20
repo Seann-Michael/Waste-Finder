@@ -172,21 +172,7 @@ export default function EditFacility() {
         throw new Error('Facility not found');
       }
 
-        paymentTypes: [
-          { id: "1", name: "Cash" },
-          { id: "2", name: "Credit Card" },
-          { id: "3", name: "Check" },
-        ],
-        debrisTypes: [
-          {
-            id: "1",
-            name: "General Household Waste",
-            category: "general",
-            pricePerTon: 65,
-          },
-          { id: "2", name: "Yard Waste", category: "general", pricePerTon: 35 },
-          {
-            id: "3",
+
             name: "Appliances",
             category: "general",
             pricePerLoad: 25,
