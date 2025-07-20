@@ -116,9 +116,12 @@ export default function LocationDataTable() {
 
   useEffect(() => {
     const loadLocations = async () => {
+      console.log("LocationDataTable: Starting to load locations...");
       setIsLoading(true);
       try {
         const data = await fetchLocations();
+        console.log("LocationDataTable: Loaded locations:", data.length, "locations");
+        console.log("LocationDataTable: First location:", data[0]);
         setLocations(data);
         setFilteredLocations(data);
       } catch (error) {
