@@ -886,30 +886,61 @@ export default function AllLocations() {
   };
 
   const filterAndSortLocations = () => {
+    console.log("Starting filterAndSortLocations with:", {
+      searchQuery,
+      searchRadius,
+      locationsCount: locations.length,
+    });
+
     let filtered = [...locations];
     let searchCoordinates: { lat: number; lng: number } | null = null;
 
     // Handle zip code-based distance search
     if (searchQuery.trim()) {
       const query = searchQuery.trim();
+      console.log("Processing search query:", query);
 
       // Check if it's a zip code (5 digits)
       if (/^\d{5}$/.test(query)) {
+        console.log("Detected ZIP code, getting coordinates...");
         const coords = getZipCodeCoordinates(query);
+        console.log("ZIP code coordinates:", coords);
+
         if (coords) {
           searchCoordinates = coords;
+          console.log(
+            "Calculating distances from:",
+            coords,
+            "within radius:",
+            searchRadius,
+          );
+
           // Calculate distances and filter within specified radius
           filtered = filtered
-            .map((location) => ({
-              ...location,
-              distance: calculateDistance(
+            .map((location) => {
+              const distance = calculateDistance(
                 coords.lat,
                 coords.lng,
                 location.latitude,
                 location.longitude,
-              ),
-            }))
-            .filter((location) => (location.distance || 0) <= searchRadius);
+              );
+              console.log(
+                `Distance to ${location.name}: ${distance.toFixed(2)} miles`,
+              );
+              return {
+                ...location,
+                distance: distance,
+              };
+            })
+            .filter((location) => {
+              const withinRadius = (location.distance || 0) <= searchRadius;
+              console.log(
+                `${location.name} within ${searchRadius} miles: ${withinRadius}`,
+              );
+              return withinRadius;
+            });
+
+          console.log("Filtered results count:", filtered.length);
         } else {
           // If zip code not in lookup, fall back to text search
           filtered = filtered.filter(
