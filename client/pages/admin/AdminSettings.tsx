@@ -1124,17 +1124,15 @@ export default function AdminSettings() {
                     </h3>
                     <div className="space-y-4">
                       <div className="flex items-center space-x-2">
-                        <input
+                        <Checkbox
                           id="customAdsEnabled"
-                          type="checkbox"
                           checked={adSettings.customAdsEnabled}
-                          onChange={(e) =>
+                          onCheckedChange={(checked) =>
                             setAdSettings({
                               ...adSettings,
-                              customAdsEnabled: e.target.checked,
+                              customAdsEnabled: checked,
                             })
                           }
-                          className="rounded border-border"
                         />
                         <Label htmlFor="customAdsEnabled">
                           Enable Custom Ads
