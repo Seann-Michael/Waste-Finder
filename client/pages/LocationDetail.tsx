@@ -75,14 +75,14 @@ export default function LocationDetail() {
       const response = await fetch(`/api/locations/${id}`);
 
       if (!response.ok) {
-        throw new Error('Failed to fetch location data');
+        throw new Error("Failed to fetch location data");
       }
 
       const data = await response.json();
       const fetchedLocation = data.data;
 
       if (!fetchedLocation) {
-        throw new Error('Location not found');
+        throw new Error("Location not found");
       }
 
       // Mock reviews data (this would typically come from a separate API endpoint)
@@ -124,98 +124,6 @@ export default function LocationDetail() {
 
       setLocation(fetchedLocation);
       setReviews(mockReviews);
-        address: "1234 Waste Management Drive",
-        city: "Springfield",
-        state: "IL",
-        zipCode: "62701",
-        phone: "(555) 123-4567",
-        email: "info@greenvalley.gov",
-        website: "https://greenvalley.gov",
-        googleBusinessUrl:
-          "https://maps.google.com/maps/place/Green+Valley+Municipal+Landfill",
-        latitude: 39.7817,
-        longitude: -89.6501,
-        facilityType: "landfill",
-        paymentTypes: [
-          { id: "1", name: "Cash" },
-          { id: "2", name: "Credit/Debit Card" },
-          { id: "3", name: "Check" },
-        ],
-        debrisTypes: [
-          {
-            id: "1",
-            name: "General Household Waste",
-            category: "general",
-            pricePerTon: 65,
-          },
-          { id: "2", name: "Yard Waste", category: "general", pricePerTon: 35 },
-          {
-            id: "3",
-            name: "Appliances",
-            category: "general",
-            pricePerLoad: 25,
-          },
-          {
-            id: "4",
-            name: "Electronics",
-            category: "recyclable",
-            priceNote: "Free drop-off",
-          },
-          { id: "5", name: "Tires", category: "general", pricePerLoad: 15 },
-        ],
-        operatingHours: [
-          {
-            dayOfWeek: 1,
-            openTime: "07:00",
-            closeTime: "17:00",
-            isClosed: false,
-          },
-          {
-            dayOfWeek: 2,
-            openTime: "07:00",
-            closeTime: "17:00",
-            isClosed: false,
-          },
-          {
-            dayOfWeek: 3,
-            openTime: "07:00",
-            closeTime: "17:00",
-            isClosed: false,
-          },
-          {
-            dayOfWeek: 4,
-            openTime: "07:00",
-            closeTime: "17:00",
-            isClosed: false,
-          },
-          {
-            dayOfWeek: 5,
-            openTime: "07:00",
-            closeTime: "17:00",
-            isClosed: false,
-          },
-          {
-            dayOfWeek: 6,
-            openTime: "08:00",
-            closeTime: "15:00",
-            isClosed: false,
-          },
-          {
-            dayOfWeek: 0,
-            openTime: "00:00",
-            closeTime: "00:00",
-            isClosed: true,
-          },
-        ],
-        notes:
-          "Large municipal facility accepting most household and commercial waste. Recycling center on-site. Special handling for hazardous materials available by appointment. Scale house for accurate weight-based pricing.",
-        rating: 4.5,
-        reviewCount: 127,
-        distance: 3.2,
-        isActive: true,
-        createdAt: "2024-01-01T00:00:00Z",
-        updatedAt: "2024-01-15T00:00:00Z",
-      };
 
       const mockReviews: Review[] = [
         {
