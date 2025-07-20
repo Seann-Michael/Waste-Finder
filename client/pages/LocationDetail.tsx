@@ -287,6 +287,15 @@ export default function LocationDetail() {
   const handleEditMode = () => {
     if (!location) return;
 
+    // Create debris pricing map from location data
+    const debrisPricingMap: Record<string, { price?: number; priceDetails?: string }> = {};
+    location.debrisTypes?.forEach((debris) => {
+      debrisPricingMap[debris.name] = {
+        price: debris.price,
+        priceDetails: debris.priceDetails || "",
+      };
+    });
+
     setEditFormData({
       name: location.name || "",
       address: location.address || "",
@@ -301,6 +310,7 @@ export default function LocationDetail() {
       paymentTypes: location.paymentTypes?.map(p => p.name) || [],
       additionalPaymentDetails: location.additionalPaymentDetails || "",
       debrisTypes: location.debrisTypes?.map(d => d.name) || [],
+      debrisPricing: debrisPricingMap,
       notes: location.notes || "",
       operatingHours: location.operatingHours || [],
     });
