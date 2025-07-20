@@ -30,6 +30,7 @@ import {
   Globe,
   CreditCard,
   Trash2,
+  Trash,
   Building2,
   HardHat,
   CheckCircle,
