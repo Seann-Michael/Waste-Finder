@@ -46,6 +46,8 @@ import {
   Calendar,
   DollarSign,
   AlertCircle,
+  Facebook,
+  Users,
 } from "lucide-react";
 
 export default function LocationDetail() {
@@ -587,8 +589,72 @@ export default function LocationDetail() {
 
             {/* Sidebar */}
             <div className="space-y-6">
-              {/* Facebook CTA */}
-              <FacebookCTA facebookUrl="https://facebook.com/groups/wastefindergroup" />
+              {/* Facebook CTA - Smaller Height */}
+              <Card className="border-blue-200 bg-blue-50">
+                <CardContent className="pt-4 pb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="flex-shrink-0">
+                      <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                        <Facebook className="w-5 h-5 text-white" />
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-blue-900 text-sm mb-1">
+                        Join Our Community!
+                      </h3>
+                      <p className="text-xs text-blue-700 mb-2">
+                        Connect with waste management professionals.
+                      </p>
+                      <Button
+                        onClick={() => window.open("https://facebook.com/groups/wastefindergroup", "_blank")}
+                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                        size="sm"
+                      >
+                        <Users className="w-3 h-3 mr-1" />
+                        Join Group
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Google Map Embed */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <MapPin className="w-5 h-5" />
+                    Location
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="aspect-square rounded-lg overflow-hidden">
+                    <iframe
+                      width="100%"
+                      height="100%"
+                      frameBorder="0"
+                      scrolling="no"
+                      marginHeight={0}
+                      marginWidth={0}
+                      src={`https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=${encodeURIComponent(
+                        `${location.address}, ${location.city}, ${location.state} ${location.zipCode}`
+                      )}`}
+                      title="Location Map"
+                      className="border-0"
+                    />
+                  </div>
+                  <div className="mt-3 text-center">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => window.open(getDirectionsUrl(), "_blank")}
+                      className="w-full"
+                    >
+                      <Navigation className="w-4 h-4 mr-2" />
+                      Get Directions
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
 
               {/* Quick Info */}
               <Card>
@@ -614,29 +680,6 @@ export default function LocationDetail() {
                       <span>{location.distance} miles</span>
                     </div>
                   )}
-                </CardContent>
-              </Card>
-
-              {/* Map Placeholder */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Location</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="aspect-square bg-muted rounded-lg flex items-center justify-center">
-                    <div className="text-center">
-                      <MapPin className="w-12 h-12 text-muted-foreground mx-auto mb-2" />
-                      <p className="text-sm text-muted-foreground">
-                        Interactive Map
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        Coming Soon
-                      </p>
-                    </div>
-                  </div>
-                  <div className="mt-4 text-center text-sm text-muted-foreground">
-                    <p>Click address above for directions</p>
-                  </div>
                 </CardContent>
               </Card>
             </div>
