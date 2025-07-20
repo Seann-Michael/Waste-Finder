@@ -917,9 +917,7 @@ export default function AdminSettings() {
             )}
 
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Advertisement & Marketing Settings</CardTitle>
+
                   <CardDescription>
                     Configure AdSense, custom advertisements, and social media
                     promotions
