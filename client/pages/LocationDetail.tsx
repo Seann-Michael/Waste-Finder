@@ -737,34 +737,81 @@ export default function LocationDetail() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
-                    {location.operatingHours.map((hours) => (
-                      <div
-                        key={hours.dayOfWeek}
-                        className="flex justify-between items-center"
-                      >
-                        <span className="font-medium">
-                          {getDayName(hours.dayOfWeek)}
-                        </span>
-                        <span
-                          className={
-                            hours.isClosed ? "text-muted-foreground" : ""
-                          }
-                        >
-                          {hours.isClosed
-                            ? "Closed"
-                            : `${formatTime(hours.openTime)} - ${formatTime(hours.closeTime)}`}
-                        </span>
+                  {isEditMode ? (
+                    <div className="space-y-4">
+                      {editFormData.operatingHours.map((hours, index) => (
+                        <div key={hours.dayOfWeek} className="flex items-center gap-4">
+                          <div className="w-20 text-sm font-medium">
+                            {getDayName(hours.dayOfWeek)}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Checkbox
+                              checked={!hours.isClosed}
+                              onCheckedChange={(checked) =>
+                                handleOperatingHourChange(index, "isClosed", !checked)
+                              }
+                            />
+                            <span className="text-sm">Open</span>
+                          </div>
+                          {!hours.isClosed && (
+                            <>
+                              <Input
+                                type="time"
+                                value={hours.openTime}
+                                onChange={(e) =>
+                                  handleOperatingHourChange(index, "openTime", e.target.value)
+                                }
+                                className="w-32"
+                              />
+                              <span className="text-sm text-muted-foreground">to</span>
+                              <Input
+                                type="time"
+                                value={hours.closeTime}
+                                onChange={(e) =>
+                                  handleOperatingHourChange(index, "closeTime", e.target.value)
+                                }
+                                className="w-32"
+                              />
+                            </>
+                          )}
+                          {hours.isClosed && (
+                            <span className="text-sm text-muted-foreground">Closed</span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <>
+                      <div className="space-y-3">
+                        {location.operatingHours.map((hours) => (
+                          <div
+                            key={hours.dayOfWeek}
+                            className="flex justify-between items-center"
+                          >
+                            <span className="font-medium">
+                              {getDayName(hours.dayOfWeek)}
+                            </span>
+                            <span
+                              className={
+                                hours.isClosed ? "text-muted-foreground" : ""
+                              }
+                            >
+                              {hours.isClosed
+                                ? "Closed"
+                                : `${formatTime(hours.openTime)} - ${formatTime(hours.closeTime)}`}
+                            </span>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                  <div className="mt-4 p-3 bg-muted/50 rounded-lg">
-                    <p className="text-xs text-muted-foreground">
-                      * Please call to verify hours and check for holiday
-                      schedules. Hours may vary during peak seasons or special
-                      circumstances.
-                    </p>
-                  </div>
+                      <div className="mt-4 p-3 bg-muted/50 rounded-lg">
+                        <p className="text-xs text-muted-foreground">
+                          * Please call to verify hours and check for holiday
+                          schedules. Hours may vary during peak seasons or special
+                          circumstances.
+                        </p>
+                      </div>
+                    </>
+                  )}
                 </CardContent>
               </Card>
 
