@@ -46,7 +46,7 @@ export default function Admin() {
 
   const stats = [
     {
-      label: "Total Facilities",
+      label: "Total Locations",
       value: "2,647",
       icon: <MapPin className="w-5 h-5" />,
     },
@@ -61,7 +61,7 @@ export default function Admin() {
       icon: <Edit className="w-5 h-5" />,
     },
     {
-      label: "Active Users",
+      label: "Monthly Searches",
       value: "1,892",
       icon: <Users className="w-5 h-5" />,
     },
