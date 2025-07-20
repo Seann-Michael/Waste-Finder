@@ -166,8 +166,8 @@ const mockLocations = [
     locationType: "landfill",
     paymentTypes: [
       { id: "1", name: "Cash" },
-      { id: "2", name: "Credit Card" },
-      { id: "3", name: "Check" },
+      { id: "2", name: "Check" },
+      { id: "3", name: "Credit/Debit" },
     ],
     debrisTypes: [
       {
@@ -266,7 +266,7 @@ const mockLocations = [
     locationType: "transfer_station",
     paymentTypes: [
       { id: "1", name: "Cash" },
-      { id: "2", name: "Credit Card" },
+      { id: "2", name: "Credit/Debit" },
     ],
     debrisTypes: [
       { id: "1", name: "General Waste", category: "general", pricePerTon: 55 },
@@ -305,7 +305,7 @@ const mockLocations = [
     locationType: "transfer_station",
     paymentTypes: [
       { id: "1", name: "Cash" },
-      { id: "2", name: "Credit Card" },
+      { id: "2", name: "Credit/Debit" },
     ],
     debrisTypes: [
       {
@@ -344,8 +344,8 @@ const mockLocations = [
     locationType: "landfill",
     paymentTypes: [
       { id: "1", name: "Cash" },
-      { id: "2", name: "Credit Card" },
-      { id: "3", name: "Check" },
+      { id: "2", name: "Check" },
+      { id: "3", name: "Credit/Debit" },
     ],
     debrisTypes: [
       { id: "1", name: "General Waste", category: "general", pricePerTon: 60 },
