@@ -49,6 +49,9 @@ import {
   MapPin,
   MessageSquare,
   ArrowLeft,
+  Image,
+  FileText,
+  Tag,
 } from "lucide-react";
 
 interface AdminUser {
