@@ -302,12 +302,10 @@ export function handleLocationsSearch(req: Request, res: Response) {
 
     // Prepare search location info for response
     let searchLocation = null;
-    if (zipCode && zipCodeDatabase[zipCode as string]) {
-      searchLocation = {
-        zipCode,
-        ...zipCodeDatabase[zipCode as string],
-        radius: parseInt(radius as string, 10),
-      };
+    let message = `Found ${locations.length} locations`;
+
+    if (zipCode && typeof zipCode === "string" && /^\d{5}$/.test(zipCode)) {
+      message = `Found ${locations.length} locations (ZIP code search requires geocoding service integration)`;
     }
 
     res.json({
@@ -315,9 +313,7 @@ export function handleLocationsSearch(req: Request, res: Response) {
       data: locations,
       total: locations.length,
       searchLocation,
-      message: searchLocation
-        ? `Found ${locations.length} facilities within ${radius} miles of ${zipCode}`
-        : `Found ${locations.length} facilities`,
+      message,
     });
   } catch (error) {
     console.error("Error in locations search:", error);
