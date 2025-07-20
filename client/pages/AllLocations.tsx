@@ -325,7 +325,7 @@ export default function AllLocations() {
     // If we have URL params, immediately show mock data as fallback
     if (zipFromParams) {
       console.log("Loading immediate fallback data for ZIP:", zipFromParams);
-      const mockData = getMockData(zipFromParams);
+      const data = await fetchLocations(zipFromParams);
       setLocations(mockData);
       setSearchLocation({
         zipCode: zipFromParams,
@@ -336,7 +336,7 @@ export default function AllLocations() {
         radius: parseInt(radiusFromParams || "50", 10),
       });
       setSearchMessage(
-        `Found ${mockData.length} facilities within ${radiusFromParams || "50"} miles of ${zipFromParams}`,
+        `Found ${data.length} facilities within ${radiusFromParams || "50"} miles of ${zipFromParams}`,
       );
       setIsLoading(false);
     }
