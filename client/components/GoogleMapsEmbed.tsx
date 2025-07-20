@@ -20,21 +20,37 @@ interface GoogleMapsEmbedProps {
   className?: string;
 }
 
-export default function GoogleMapsEmbed({ 
-  locations, 
+export default function GoogleMapsEmbed({
+  locations,
   searchQuery = "",
   className = ""
 }: GoogleMapsEmbedProps) {
   const [mapUrl, setMapUrl] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [apiKey, setApiKey] = useState("AIzaSyDdferzYu85fJL0DH_UbeVYGR9Xt9bX4x0");
+
+  useEffect(() => {
+    // Load API key from localStorage
+    const savedApiSettings = localStorage.getItem("apiSettings");
+    if (savedApiSettings) {
+      try {
+        const parsed = JSON.parse(savedApiSettings);
+        if (parsed.googleMapsApiKey) {
+          setApiKey(parsed.googleMapsApiKey);
+        }
+      } catch (error) {
+        console.error("Error loading API settings:", error);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     generateMapUrl();
-  }, [locations, searchQuery]);
+  }, [locations, searchQuery, apiKey]);
 
   const generateMapUrl = () => {
     setIsLoading(true);
-    
+
     // Create a center point based on locations or search query
     let centerLat = 39.8283; // Default to center of US
     let centerLng = -98.5795;
@@ -43,7 +59,7 @@ export default function GoogleMapsEmbed({
     if (locations.length > 0) {
       // Calculate center point from all locations
       const validLocations = locations.filter(loc => loc.latitude && loc.longitude);
-      
+
       if (validLocations.length > 0) {
         const avgLat = validLocations.reduce((sum, loc) => sum + (loc.latitude || 0), 0) / validLocations.length;
         const avgLng = validLocations.reduce((sum, loc) => sum + (loc.longitude || 0), 0) / validLocations.length;
@@ -56,7 +72,7 @@ export default function GoogleMapsEmbed({
     // Build the Google Maps embed URL
     const baseUrl = "https://www.google.com/maps/embed/v1/view";
     const apiKey = "AIzaSyBFw0Qbyq9zTFTd-tUY6dQHuFW6mZWRJRI"; // You'll need to replace with actual key
-    
+
     // For demo purposes, create a simple map centered on the calculated location
     const params = new URLSearchParams({
       key: apiKey,
@@ -112,7 +128,7 @@ export default function GoogleMapsEmbed({
             title="Waste Disposal Facilities Map"
             className="rounded-lg"
           />
-          
+
           {/* Map overlay with location count */}
           <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg">
             <div className="flex items-center gap-2 text-sm font-medium">
