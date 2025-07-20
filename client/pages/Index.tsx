@@ -246,17 +246,10 @@ export default function Index() {
             Join thousands of users who trust WasteFinder for their disposal
             needs
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex justify-center">
             <Button size="lg" variant="secondary" className="text-lg px-8">
               Search Facilities
               <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="text-lg px-8 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
-            >
-              Suggest a Location
             </Button>
           </div>
         </div>
