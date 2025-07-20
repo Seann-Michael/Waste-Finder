@@ -77,7 +77,7 @@ interface LocationFormData {
   additionalPaymentDetails?: string;
   debrisTypes: string[];
   debrisPricing: Record<string, { price?: number; priceDetails?: string; }>;
-  debrisAdditionalDetails: Record<string, string>;
+  debrisAdditionalDetails?: string;
   additionalLocationDetails?: string;
   isActive: boolean;
 }
@@ -201,7 +201,7 @@ export default function AddLocation() {
       additionalPaymentDetails: "",
       debrisTypes: [],
       debrisPricing: {},
-      debrisAdditionalDetails: {},
+      debrisAdditionalDetails: "",
       additionalLocationDetails: "",
       isActive: true,
     },
@@ -281,8 +281,8 @@ export default function AddLocation() {
           name: type,
           category: "general", // Default category, could be made configurable
           ...(data.debrisPricing[type] || {}),
-          additionalDetails: data.debrisAdditionalDetails[type] || "",
         })),
+        debrisAdditionalDetails: data.debrisAdditionalDetails,
         notes: data.additionalLocationDetails,
         // Add default operating hours (Monday-Friday 7AM-5PM)
         operatingHours: [
@@ -749,13 +749,15 @@ export default function AddLocation() {
                               checked as boolean,
                             );
                             if (!checked) {
-                              // Clear pricing data and additional details when unchecked
+                              // Clear pricing data when unchecked
                               const currentPricing = watchedValues.debrisPricing || {};
-                              const currentDetails = watchedValues.debrisAdditionalDetails || {};
                               delete currentPricing[debris];
-                              delete currentDetails[debris];
                               setValue("debrisPricing", currentPricing);
-                              setValue("debrisAdditionalDetails", currentDetails);
+
+                              // Clear debris additional details if no debris types selected
+                              if (watchedValues.debrisTypes?.length === 1) {
+                                setValue("debrisAdditionalDetails", "");
+                              }
                             }
                           }}
                         />
@@ -768,79 +770,61 @@ export default function AddLocation() {
                       </div>
 
                       {watchedValues.debrisTypes?.includes(debris) && (
-                        <div className="space-y-3 ml-6">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            <div>
-                              <Label className="text-xs">Price (USD)</Label>
-                              <div className="relative">
-                                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">$</span>
-                                <Input
-                                  type="number"
-                                  step="0.01"
-                                  placeholder="34.00"
-                                  className="pl-7"
-                                  value={watchedValues.debrisPricing?.[debris]?.price || ""}
-                                  onChange={(e) => {
-                                    const currentPricing = watchedValues.debrisPricing || {};
-                                    const value = e.target.value ? parseFloat(e.target.value) : undefined;
-                                    setValue("debrisPricing", {
-                                      ...currentPricing,
-                                      [debris]: {
-                                        ...currentPricing[debris],
-                                        price: value,
-                                      },
-                                    });
-                                  }}
-                                  onBlur={(e) => {
-                                    // Format to 2 decimal places on blur
-                                    if (e.target.value) {
-                                      const value = parseFloat(e.target.value);
-                                      if (!isNaN(value)) {
-                                        const currentPricing = watchedValues.debrisPricing || {};
-                                        setValue("debrisPricing", {
-                                          ...currentPricing,
-                                          [debris]: {
-                                            ...currentPricing[debris],
-                                            price: parseFloat(value.toFixed(2)),
-                                          },
-                                        });
-                                      }
-                                    }
-                                  }}
-                                />
-                              </div>
-                            </div>
-
-                            <div>
-                              <Label className="text-xs">Price Unit Details</Label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 ml-6">
+                          <div>
+                            <Label className="text-xs">Price (USD)</Label>
+                            <div className="relative">
+                              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">$</span>
                               <Input
-                                placeholder="per ton, per load, per cubic yard, etc."
-                                value={watchedValues.debrisPricing?.[debris]?.priceDetails || ""}
+                                type="number"
+                                step="0.01"
+                                placeholder="34.00"
+                                className="pl-7"
+                                value={watchedValues.debrisPricing?.[debris]?.price || ""}
                                 onChange={(e) => {
                                   const currentPricing = watchedValues.debrisPricing || {};
+                                  const value = e.target.value ? parseFloat(e.target.value) : undefined;
                                   setValue("debrisPricing", {
                                     ...currentPricing,
                                     [debris]: {
                                       ...currentPricing[debris],
-                                      priceDetails: e.target.value,
+                                      price: value,
                                     },
                                   });
+                                }}
+                                onBlur={(e) => {
+                                  // Format to 2 decimal places on blur
+                                  if (e.target.value) {
+                                    const value = parseFloat(e.target.value);
+                                    if (!isNaN(value)) {
+                                      const currentPricing = watchedValues.debrisPricing || {};
+                                      setValue("debrisPricing", {
+                                        ...currentPricing,
+                                        [debris]: {
+                                          ...currentPricing[debris],
+                                          price: parseFloat(value.toFixed(2)),
+                                        },
+                                      });
+                                    }
+                                  }
                                 }}
                               />
                             </div>
                           </div>
 
                           <div>
-                            <Label className="text-xs">Additional Details for {debris}</Label>
-                            <Textarea
-                              placeholder="Special requirements, restrictions, preparation instructions, etc."
-                              rows={2}
-                              value={watchedValues.debrisAdditionalDetails?.[debris] || ""}
+                            <Label className="text-xs">Price Unit Details</Label>
+                            <Input
+                              placeholder="per ton, per load, per cubic yard, etc."
+                              value={watchedValues.debrisPricing?.[debris]?.priceDetails || ""}
                               onChange={(e) => {
-                                const currentDetails = watchedValues.debrisAdditionalDetails || {};
-                                setValue("debrisAdditionalDetails", {
-                                  ...currentDetails,
-                                  [debris]: e.target.value,
+                                const currentPricing = watchedValues.debrisPricing || {};
+                                setValue("debrisPricing", {
+                                  ...currentPricing,
+                                  [debris]: {
+                                    ...currentPricing[debris],
+                                    priceDetails: e.target.value,
+                                  },
                                 });
                               }}
                             />
