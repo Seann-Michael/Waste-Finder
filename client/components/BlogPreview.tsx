@@ -22,11 +22,11 @@ interface BlogPreviewProps {
   }>;
 }
 
-export default function BlogPreview({ 
-  open, 
-  onOpenChange, 
-  formData, 
-  categories 
+export default function BlogPreview({
+  open,
+  onOpenChange,
+  formData,
+  categories
 }: BlogPreviewProps) {
   const getCategoryNames = (categoryIds: string[]) => {
     return categories
@@ -115,7 +115,19 @@ export default function BlogPreview({
 
           {/* Content */}
           <div className="prose prose-gray max-w-none">
-            <div 
+            <style jsx>{`
+              .video-embed iframe {
+                width: 100%;
+                height: 315px;
+                border-radius: 8px;
+              }
+              @media (max-width: 768px) {
+                .video-embed iframe {
+                  height: 200px;
+                }
+              }
+            `}</style>
+            <div
               dangerouslySetInnerHTML={{ __html: formData.content || "<p>No content yet...</p>" }}
               className="text-foreground leading-relaxed"
             />
