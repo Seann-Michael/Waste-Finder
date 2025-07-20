@@ -1016,17 +1016,15 @@ export default function AdminSettings() {
                     <h3 className="text-lg font-medium">Google AdSense</h3>
                     <div className="space-y-4">
                       <div className="flex items-center space-x-2">
-                        <input
+                        <Checkbox
                           id="adsenseEnabled"
-                          type="checkbox"
                           checked={adSettings.adsenseEnabled}
-                          onChange={(e) =>
+                          onCheckedChange={(checked) =>
                             setAdSettings({
                               ...adSettings,
-                              adsenseEnabled: e.target.checked,
+                              adsenseEnabled: checked,
                             })
                           }
-                          className="rounded border-border"
                         />
                         <Label htmlFor="adsenseEnabled">
                           Enable Google AdSense
