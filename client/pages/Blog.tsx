@@ -435,21 +435,7 @@ export default function Blog() {
                 </CardContent>
               </Card>
 
-              {/* Newsletter Signup */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Stay Updated</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Get the latest waste management tips and industry insights delivered to your inbox.
-                  </p>
-                  <div className="space-y-3">
-                    <Input placeholder="Enter your email" type="email" />
-                    <Button className="w-full">Subscribe</Button>
-                  </div>
-                </CardContent>
-              </Card>
+
 
               {/* Quick Links */}
               <Card>
