@@ -171,7 +171,6 @@ export default function EditFacility() {
       if (!facility) {
         throw new Error('Facility not found');
       }
-        id: id || "1",
         name: "Green Valley Municipal Landfill",
         address: "1234 Waste Management Drive",
         city: "Springfield",
