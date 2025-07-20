@@ -45,37 +45,25 @@ export default function Marketing() {
       enabled: false,
       code: "",
       placement: "search-results",
-      displayName: "Search Results Center",
+      displayName: "Search Results Content",
     },
-    searchResultsLeft: {
+    searchResultsTop: {
       enabled: false,
       code: "",
-      placement: "search-results-left",
-      displayName: "Search Results Left Sidebar",
-    },
-    searchResultsRight: {
-      enabled: false,
-      code: "",
-      placement: "search-results-right",
-      displayName: "Search Results Right Sidebar",
+      placement: "search-results-top",
+      displayName: "Search Results Top Banner",
     },
     locationDetail: {
       enabled: false,
       code: "",
       placement: "location-detail",
-      displayName: "Location Detail Center",
+      displayName: "Location Detail Content",
     },
-    locationDetailLeft: {
+    locationDetailTop: {
       enabled: false,
       code: "",
-      placement: "location-detail-left",
-      displayName: "Location Detail Left Sidebar",
-    },
-    locationDetailRight: {
-      enabled: false,
-      code: "",
-      placement: "location-detail-right",
-      displayName: "Location Detail Right Sidebar",
+      placement: "location-detail-top",
+      displayName: "Location Detail Top Banner",
     },
   });
 
@@ -311,10 +299,10 @@ export default function Marketing() {
               <h4 className="font-medium">Placement Descriptions:</h4>
               <ul className="space-y-1 text-sm text-muted-foreground ml-4">
                 <li><strong>Homepage Banner:</strong> Displays at the top of the homepage</li>
-                <li><strong>Search Results Center:</strong> Shows in the main content area on search/browse pages</li>
-                <li><strong>Search Results Left/Right Sidebar:</strong> Vertical ads on the sides of search results</li>
-                <li><strong>Location Detail Center:</strong> Appears in the main content on individual location pages</li>
-                <li><strong>Location Detail Left/Right Sidebar:</strong> Vertical ads on the sides of location pages</li>
+                <li><strong>Search Results Content:</strong> Shows in the main content area on search/browse pages</li>
+                <li><strong>Search Results Top Banner:</strong> Horizontal banner at the top of search results page</li>
+                <li><strong>Location Detail Content:</strong> Appears in the main content on individual location pages</li>
+                <li><strong>Location Detail Top Banner:</strong> Horizontal banner at the top of location detail page</li>
               </ul>
             </div>
           </CardContent>
