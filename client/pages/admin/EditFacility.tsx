@@ -261,21 +261,21 @@ export default function EditFacility() {
 
       // Populate form with facility data
       setFormData({
-        name: mockFacility.name,
-        address: mockFacility.address,
-        city: mockFacility.city,
-        state: mockFacility.state,
-        zipCode: mockFacility.zipCode,
-        phone: mockFacility.phone,
-        email: mockFacility.email || "",
-        website: mockFacility.website || "",
-        facilityType: mockFacility.facilityType,
-        paymentTypes: mockFacility.paymentTypes.map((p) => p.name),
-        debrisTypes: mockFacility.debrisTypes.map((d) => d.name),
-        notes: mockFacility.notes || "",
-        latitude: mockFacility.latitude.toString(),
-        longitude: mockFacility.longitude.toString(),
-        isActive: mockFacility.isActive,
+        name: facility.name,
+        address: facility.address,
+        city: facility.city,
+        state: facility.state,
+        zipCode: facility.zipCode,
+        phone: facility.phone,
+        email: facility.email || "",
+        website: facility.website || "",
+        facilityType: facility.locationType,
+        paymentTypes: facility.paymentTypes.map((p) => p.name),
+        debrisTypes: facility.debrisTypes.map((d) => d.name),
+        notes: facility.notes || "",
+        latitude: facility.latitude.toString(),
+        longitude: facility.longitude.toString(),
+        isActive: facility.isActive,
       });
 
       // Convert operating hours
