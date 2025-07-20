@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   Select,
   SelectContent,
@@ -32,6 +33,7 @@ import {
   Trash2,
   Building2,
   HardHat,
+  AlertCircle,
 } from "lucide-react";
 import { Location } from "@shared/api";
 
@@ -448,6 +450,16 @@ export default function EditFacility() {
             </Link>
           </Button>
         </div>
+
+        {/* Error Display */}
+        {formErrors.general && (
+          <Alert className="border-red-200 bg-red-50">
+            <AlertCircle className="h-4 w-4 text-red-600" />
+            <AlertDescription className="text-red-700">
+              {formErrors.general}
+            </AlertDescription>
+          </Alert>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
