@@ -763,27 +763,96 @@ export default function EditFacility() {
                 <div className="space-y-4">
                   <div>
                     <Label className="text-base font-medium">
-                      Debris Types Accepted
+                      Accepted Materials & Pricing
                     </Label>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-3">
+                    <div className="space-y-4 mt-3">
                       {debrisOptions.map((debris) => (
                         <div
                           key={debris}
-                          className="flex items-center space-x-2"
+                          className="border rounded-lg p-4 space-y-3"
                         >
-                          <Checkbox
-                            id={debris}
-                            checked={formData.debrisTypes.includes(debris)}
-                            onCheckedChange={(checked) =>
-                              handleDebrisChange(debris, checked as boolean)
-                            }
-                          />
-                          <Label
-                            htmlFor={debris}
-                            className="text-sm font-normal"
-                          >
-                            {debris}
-                          </Label>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox
+                              id={debris}
+                              checked={formData.debrisTypes.includes(debris)}
+                              onCheckedChange={(checked) =>
+                                handleDebrisChange(debris, checked as boolean)
+                              }
+                            />
+                            <Label
+                              htmlFor={debris}
+                              className="text-sm font-medium"
+                            >
+                              {debris}
+                            </Label>
+                          </div>
+
+                          {formData.debrisTypes.includes(debris) && (
+                            <div className="ml-6 grid grid-cols-1 md:grid-cols-3 gap-3">
+                              <div className="space-y-2">
+                                <Label className="text-xs">
+                                  Price per Ton ($)
+                                </Label>
+                                <Input
+                                  type="number"
+                                  placeholder="65.00"
+                                  value={
+                                    debrisPricing[debris]?.pricePerTon || ""
+                                  }
+                                  onChange={(e) =>
+                                    setDebrisPricing({
+                                      ...debrisPricing,
+                                      [debris]: {
+                                        ...debrisPricing[debris],
+                                        pricePerTon: e.target.value
+                                          ? parseFloat(e.target.value)
+                                          : undefined,
+                                      },
+                                    })
+                                  }
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-xs">
+                                  Price per Load ($)
+                                </Label>
+                                <Input
+                                  type="number"
+                                  placeholder="25.00"
+                                  value={
+                                    debrisPricing[debris]?.pricePerLoad || ""
+                                  }
+                                  onChange={(e) =>
+                                    setDebrisPricing({
+                                      ...debrisPricing,
+                                      [debris]: {
+                                        ...debrisPricing[debris],
+                                        pricePerLoad: e.target.value
+                                          ? parseFloat(e.target.value)
+                                          : undefined,
+                                      },
+                                    })
+                                  }
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-xs">Special Note</Label>
+                                <Input
+                                  placeholder="Free drop-off"
+                                  value={debrisPricing[debris]?.priceNote || ""}
+                                  onChange={(e) =>
+                                    setDebrisPricing({
+                                      ...debrisPricing,
+                                      [debris]: {
+                                        ...debrisPricing[debris],
+                                        priceNote: e.target.value,
+                                      },
+                                    })
+                                  }
+                                />
+                              </div>
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
