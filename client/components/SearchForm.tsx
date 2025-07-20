@@ -50,7 +50,7 @@ export default function SearchForm({
   const navigate = useNavigate();
   const [zipCode, setZipCode] = useState("");
   const [radius, setRadius] = useState(50);
-  const [facilityTypes, setFacilityTypes] = useState<string[]>([
+  const [locationTypes, setLocationTypes] = useState<string[]>([
     "landfill",
     "transfer_station",
   ]);
