@@ -215,7 +215,7 @@ const mockLocations = [
     phone: "(555) 123-4567",
     latitude: 39.7817,
     longitude: -89.6501,
-    facilityType: "landfill",
+    locationType: "landfill",
     paymentTypes: [
       { id: "1", name: "Cash" },
       { id: "2", name: "Credit Card" },
