@@ -114,7 +114,6 @@ export default function SearchForm({
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* ZIP Code Input */}
           <div className="space-y-2">
-            <Label htmlFor="zipCode">ZIP Code *</Label>
             <Input
               id="zipCode"
               type="text"
