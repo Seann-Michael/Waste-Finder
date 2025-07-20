@@ -129,11 +129,9 @@ export default function EditFacility() {
 
   const paymentOptions = [
     "Cash",
-    "Credit Card",
-    "Debit Card",
     "Check",
-    "ACH/Bank Transfer",
-    "Digital Payment",
+    "Credit/Debit",
+    "New Terms",
   ];
 
   const debrisOptions = [
