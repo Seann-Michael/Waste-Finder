@@ -81,6 +81,7 @@ export default function LocationDetail() {
     paymentTypes: [] as string[],
     additionalPaymentDetails: "",
     debrisTypes: [] as string[],
+    debrisPricing: {} as Record<string, { price?: number; priceDetails?: string }>,
     notes: "",
     operatingHours: [] as any[],
   });
