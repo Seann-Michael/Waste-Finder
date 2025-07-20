@@ -267,6 +267,131 @@ export default function LocationDetail() {
     )}`;
   };
 
+  // Admin editing functions
+  const handleEditMode = () => {
+    if (!location) return;
+
+    setEditFormData({
+      name: location.name || "",
+      address: location.address || "",
+      city: location.city || "",
+      state: location.state || "",
+      zipCode: location.zipCode || "",
+      phone: location.phone || "",
+      email: location.email || "",
+      website: location.website || "",
+      googleBusinessUrl: location.googleBusinessUrl || "",
+      facilityType: location.locationType || "",
+      paymentTypes: location.paymentTypes?.map(p => p.name) || [],
+      additionalPaymentDetails: location.additionalPaymentDetails || "",
+      debrisTypes: location.debrisTypes?.map(d => d.name) || [],
+      notes: location.notes || "",
+      operatingHours: location.operatingHours || [],
+    });
+    setIsEditMode(true);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditMode(false);
+    setEditFormData({
+      name: "",
+      address: "",
+      city: "",
+      state: "",
+      zipCode: "",
+      phone: "",
+      email: "",
+      website: "",
+      googleBusinessUrl: "",
+      facilityType: "",
+      paymentTypes: [],
+      additionalPaymentDetails: "",
+      debrisTypes: [],
+      notes: "",
+      operatingHours: [],
+    });
+  };
+
+  const handleSaveEdit = async () => {
+    if (!location || !id) return;
+
+    setIsSubmitting(true);
+    try {
+      const updatedLocation = {
+        ...location,
+        ...editFormData,
+        paymentTypes: editFormData.paymentTypes.map((name, index) => ({
+          id: index.toString(),
+          name,
+        })),
+        debrisTypes: editFormData.debrisTypes.map((name, index) => ({
+          id: index.toString(),
+          name,
+          price: location.debrisTypes?.[index]?.price,
+          priceDetails: location.debrisTypes?.[index]?.priceDetails,
+        })),
+        locationType: editFormData.facilityType,
+        updatedAt: new Date().toISOString(),
+      };
+
+      // Update via API
+      const response = await fetch(`/api/locations/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedLocation),
+      });
+
+      if (response.ok) {
+        setLocation(updatedLocation);
+        setIsEditMode(false);
+        alert("Location updated successfully!");
+      } else {
+        throw new Error("Failed to update location");
+      }
+    } catch (error) {
+      console.error("Error updating location:", error);
+      alert("Failed to update location. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleFormChange = (field: string, value: any) => {
+    setEditFormData(prev => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const handleOperatingHourChange = (index: number, field: string, value: string | boolean) => {
+    setEditFormData(prev => ({
+      ...prev,
+      operatingHours: prev.operatingHours.map((hour, i) =>
+        i === index ? { ...hour, [field]: value } : hour
+      ),
+    }));
+  };
+
+  const handlePaymentTypeChange = (type: string, checked: boolean) => {
+    setEditFormData(prev => ({
+      ...prev,
+      paymentTypes: checked
+        ? [...prev.paymentTypes, type]
+        : prev.paymentTypes.filter(t => t !== type),
+    }));
+  };
+
+  const handleDebrisTypeChange = (type: string, checked: boolean) => {
+    setEditFormData(prev => ({
+      ...prev,
+      debrisTypes: checked
+        ? [...prev.debrisTypes, type]
+        : prev.debrisTypes.filter(t => t !== type),
+    }));
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex flex-col">
