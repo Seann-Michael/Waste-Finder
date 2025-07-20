@@ -85,6 +85,8 @@ export default function LocationDetail() {
         phone: "(555) 123-4567",
         email: "info@greenvalley.gov",
         website: "https://greenvalley.gov",
+        googleBusinessUrl:
+          "https://maps.google.com/maps/place/Green+Valley+Municipal+Landfill",
         latitude: 39.7817,
         longitude: -89.6501,
         facilityType: "landfill",
