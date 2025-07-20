@@ -38,6 +38,7 @@ import {
   ArrowUpDown,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { Location } from "@/shared/api";
 
 // Fetch locations from server API
 const fetchLocations = async (): Promise<Location[]> => {
@@ -53,23 +54,6 @@ const fetchLocations = async (): Promise<Location[]> => {
     return [];
   }
 };
-
-interface Location {
-  id: string;
-  name: string;
-  address: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  type: "landfill" | "transfer_station" | "construction_landfill";
-  phone: string;
-  operatingHours: string;
-  paymentMethods: string[];
-  debrisTypes: string[];
-  status: "active" | "inactive" | "pending";
-  createdAt: string;
-  lastUpdated: string;
-}
 
 const mockLocations: Location[] = [
   {
