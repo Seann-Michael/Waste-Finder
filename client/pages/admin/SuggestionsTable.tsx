@@ -1325,6 +1325,81 @@ export default function SuggestionsTable() {
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* Bulk Action Confirmation Dialogs */}
+        <Dialog
+          open={editsBulkActionDialogOpen}
+          onOpenChange={setEditsBulkActionDialogOpen}
+        >
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Confirm Bulk Action - Edits</DialogTitle>
+              <DialogDescription>
+                {editsBulkAction === "approve" &&
+                  `Are you sure you want to approve ${selectedEdits.length} edit suggestions?`}
+                {editsBulkAction === "reject" &&
+                  `Are you sure you want to reject ${selectedEdits.length} edit suggestions?`}
+                {editsBulkAction === "delete" &&
+                  `Are you sure you want to permanently delete ${selectedEdits.length} edit suggestions? This action cannot be undone.`}
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setEditsBulkActionDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant={
+                  editsBulkAction === "delete" ? "destructive" : "default"
+                }
+                onClick={executeEditsBulkAction}
+              >
+                {editsBulkAction === "approve" && "Approve Edits"}
+                {editsBulkAction === "reject" && "Reject Edits"}
+                {editsBulkAction === "delete" && "Delete Edits"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog
+          open={locationsBulkActionDialogOpen}
+          onOpenChange={setLocationsBulkActionDialogOpen}
+        >
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Confirm Bulk Action - Locations</DialogTitle>
+              <DialogDescription>
+                {locationsBulkAction === "approve" &&
+                  `Are you sure you want to approve ${selectedLocations.length} location suggestions?`}
+                {locationsBulkAction === "reject" &&
+                  `Are you sure you want to reject ${selectedLocations.length} location suggestions?`}
+                {locationsBulkAction === "delete" &&
+                  `Are you sure you want to permanently delete ${selectedLocations.length} location suggestions? This action cannot be undone.`}
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setLocationsBulkActionDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant={
+                  locationsBulkAction === "delete" ? "destructive" : "default"
+                }
+                onClick={executeLocationsBulkAction}
+              >
+                {locationsBulkAction === "approve" && "Approve Locations"}
+                {locationsBulkAction === "reject" && "Reject Locations"}
+                {locationsBulkAction === "delete" && "Delete Locations"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </AdminLayout>
   );
