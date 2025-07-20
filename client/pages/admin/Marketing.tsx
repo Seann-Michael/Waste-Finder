@@ -45,13 +45,37 @@ export default function Marketing() {
       enabled: false,
       code: "",
       placement: "search-results",
-      displayName: "Search Results Sidebar",
+      displayName: "Search Results Center",
+    },
+    searchResultsLeft: {
+      enabled: false,
+      code: "",
+      placement: "search-results-left",
+      displayName: "Search Results Left Sidebar",
+    },
+    searchResultsRight: {
+      enabled: false,
+      code: "",
+      placement: "search-results-right",
+      displayName: "Search Results Right Sidebar",
     },
     locationDetail: {
       enabled: false,
       code: "",
       placement: "location-detail",
-      displayName: "Location Detail Page",
+      displayName: "Location Detail Center",
+    },
+    locationDetailLeft: {
+      enabled: false,
+      code: "",
+      placement: "location-detail-left",
+      displayName: "Location Detail Left Sidebar",
+    },
+    locationDetailRight: {
+      enabled: false,
+      code: "",
+      placement: "location-detail-right",
+      displayName: "Location Detail Right Sidebar",
     },
   });
 
@@ -282,13 +306,15 @@ export default function Marketing() {
                 <li>Paste it in the appropriate placement above</li>
               </ol>
             </div>
-            
+
             <div className="space-y-2">
               <h4 className="font-medium">Placement Descriptions:</h4>
               <ul className="space-y-1 text-sm text-muted-foreground ml-4">
                 <li><strong>Homepage Banner:</strong> Displays at the top of the homepage</li>
-                <li><strong>Search Results Sidebar:</strong> Shows in the sidebar on search/browse pages</li>
-                <li><strong>Location Detail Page:</strong> Appears on individual location pages</li>
+                <li><strong>Search Results Center:</strong> Shows in the main content area on search/browse pages</li>
+                <li><strong>Search Results Left/Right Sidebar:</strong> Vertical ads on the sides of search results</li>
+                <li><strong>Location Detail Center:</strong> Appears in the main content on individual location pages</li>
+                <li><strong>Location Detail Left/Right Sidebar:</strong> Vertical ads on the sides of location pages</li>
               </ul>
             </div>
           </CardContent>
