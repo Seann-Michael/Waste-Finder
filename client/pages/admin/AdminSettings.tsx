@@ -225,6 +225,36 @@ export default function AdminSettings() {
     alert("Marketing settings updated successfully!");
   };
 
+  const handleDeletePendingLocation = (locationId: string) => {
+    if (
+      confirm(
+        "Are you sure you want to delete this pending location? This action cannot be undone.",
+      )
+    ) {
+      setPendingLocationsList((prev) =>
+        prev.filter((loc) => loc.id !== locationId),
+      );
+      alert("Pending location deleted successfully.");
+    }
+  };
+
+  const handleApprovePendingLocation = (locationId: string) => {
+    // In real app, this would move the location to active status
+    setPendingLocationsList((prev) =>
+      prev.filter((loc) => loc.id !== locationId),
+    );
+    alert("Location approved and added to active listings.");
+  };
+
+  const handleRejectPendingLocation = (locationId: string) => {
+    if (confirm("Are you sure you want to reject this location suggestion?")) {
+      setPendingLocationsList((prev) =>
+        prev.filter((loc) => loc.id !== locationId),
+      );
+      alert("Location suggestion rejected.");
+    }
+  };
+
   const handleFileUpload = async (file: File, type: "logo" | "favicon") => {
     // Mock file upload - in real app, upload to your storage service
     const formData = new FormData();
