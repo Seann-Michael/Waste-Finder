@@ -35,10 +35,9 @@ import {
 interface ActivityItem {
   id: string;
   type:
-    | "facility_created"
-    | "facility_updated"
+    | "location_created"
+    | "location_updated"
     | "review_submitted"
-    | "user_registered"
     | "suggestion_submitted";
   description: string;
   user: string;
