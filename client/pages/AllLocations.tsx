@@ -497,12 +497,13 @@ export default function AllLocations() {
       console.log("Loading immediate fallback data for ZIP:", zipFromParams);
       const mockData = getMockData(zipFromParams);
       setLocations(mockData);
+      const coords = estimateZipCodeCoordinates(zipFromParams);
       setSearchLocation({
         zipCode: zipFromParams,
-        lat: 41.2367,
-        lng: -81.8552,
-        city: "Elyria",
-        state: "OH",
+        lat: coords?.lat || 41.2367,
+        lng: coords?.lng || -81.8552,
+        city: "Unknown", // We don't have city data in our estimation
+        state: "Unknown", // We don't have state data in our estimation
         radius: parseInt(radiusFromParams || "50", 10),
       });
       setSearchMessage(
