@@ -666,6 +666,234 @@ export default function AdminSettings() {
               </Card>
             )}
 
+            {activeTab === "website" && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Website Settings</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* Basic Website Settings */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium flex items-center gap-2">
+                      <Globe className="w-5 h-5" />
+                      Basic Settings
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="siteUrl">Site URL</Label>
+                        <Input
+                          id="siteUrl"
+                          value={websiteSettings.siteUrl}
+                          onChange={(e) =>
+                            setWebsiteSettings({
+                              ...websiteSettings,
+                              siteUrl: e.target.value,
+                            })
+                          }
+                          placeholder="https://yoursite.com"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="siteLogo">Site Logo URL</Label>
+                        <Input
+                          id="siteLogo"
+                          value={websiteSettings.siteLogo}
+                          onChange={(e) =>
+                            setWebsiteSettings({
+                              ...websiteSettings,
+                              siteLogo: e.target.value,
+                            })
+                          }
+                          placeholder="https://yoursite.com/logo.png"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="favicon">Favicon URL</Label>
+                      <Input
+                        id="favicon"
+                        value={websiteSettings.favicon}
+                        onChange={(e) =>
+                          setWebsiteSettings({
+                            ...websiteSettings,
+                            favicon: e.target.value,
+                          })
+                        }
+                        placeholder="https://yoursite.com/favicon.ico"
+                      />
+                    </div>
+                  </div>
+
+                  {/* SEO Meta Tags */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium flex items-center gap-2">
+                      <Tag className="w-5 h-5" />
+                      SEO Meta Tags
+                    </h3>
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="metaTitle">Meta Title</Label>
+                        <Input
+                          id="metaTitle"
+                          value={websiteSettings.metaTitle}
+                          onChange={(e) =>
+                            setWebsiteSettings({
+                              ...websiteSettings,
+                              metaTitle: e.target.value,
+                            })
+                          }
+                          placeholder="Page title for search engines"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="metaDescription">
+                          Meta Description
+                        </Label>
+                        <Textarea
+                          id="metaDescription"
+                          value={websiteSettings.metaDescription}
+                          onChange={(e) =>
+                            setWebsiteSettings({
+                              ...websiteSettings,
+                              metaDescription: e.target.value,
+                            })
+                          }
+                          placeholder="Brief description for search engines (150-160 characters)"
+                          rows={3}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="metaKeywords">Meta Keywords</Label>
+                        <Input
+                          id="metaKeywords"
+                          value={websiteSettings.metaKeywords}
+                          onChange={(e) =>
+                            setWebsiteSettings({
+                              ...websiteSettings,
+                              metaKeywords: e.target.value,
+                            })
+                          }
+                          placeholder="keyword1, keyword2, keyword3"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Open Graph Tags */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium">
+                      Open Graph Tags (Facebook)
+                    </h3>
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="ogTitle">OG Title</Label>
+                        <Input
+                          id="ogTitle"
+                          value={websiteSettings.ogTitle}
+                          onChange={(e) =>
+                            setWebsiteSettings({
+                              ...websiteSettings,
+                              ogTitle: e.target.value,
+                            })
+                          }
+                          placeholder="Title when shared on social media"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="ogDescription">OG Description</Label>
+                        <Textarea
+                          id="ogDescription"
+                          value={websiteSettings.ogDescription}
+                          onChange={(e) =>
+                            setWebsiteSettings({
+                              ...websiteSettings,
+                              ogDescription: e.target.value,
+                            })
+                          }
+                          placeholder="Description when shared on social media"
+                          rows={2}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="ogImage">OG Image URL</Label>
+                        <Input
+                          id="ogImage"
+                          value={websiteSettings.ogImage}
+                          onChange={(e) =>
+                            setWebsiteSettings({
+                              ...websiteSettings,
+                              ogImage: e.target.value,
+                            })
+                          }
+                          placeholder="https://yoursite.com/social-image.jpg"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Twitter Tags */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium">Twitter Card Tags</h3>
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="twitterTitle">Twitter Title</Label>
+                        <Input
+                          id="twitterTitle"
+                          value={websiteSettings.twitterTitle}
+                          onChange={(e) =>
+                            setWebsiteSettings({
+                              ...websiteSettings,
+                              twitterTitle: e.target.value,
+                            })
+                          }
+                          placeholder="Title when shared on Twitter"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="twitterDescription">
+                          Twitter Description
+                        </Label>
+                        <Textarea
+                          id="twitterDescription"
+                          value={websiteSettings.twitterDescription}
+                          onChange={(e) =>
+                            setWebsiteSettings({
+                              ...websiteSettings,
+                              twitterDescription: e.target.value,
+                            })
+                          }
+                          placeholder="Description when shared on Twitter"
+                          rows={2}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="twitterImage">Twitter Image URL</Label>
+                        <Input
+                          id="twitterImage"
+                          value={websiteSettings.twitterImage}
+                          onChange={(e) =>
+                            setWebsiteSettings({
+                              ...websiteSettings,
+                              twitterImage: e.target.value,
+                            })
+                          }
+                          placeholder="https://yoursite.com/twitter-image.jpg"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <Button
+                    onClick={handleSaveWebsiteSettings}
+                    className="w-full"
+                  >
+                    <Save className="w-4 h-4 mr-2" />
+                    Save Website Settings
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+
             {activeTab === "system" && (
               <Card>
                 <CardHeader>
