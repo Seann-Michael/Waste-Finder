@@ -488,6 +488,35 @@ export default function LocationDetail() {
                       </a>
                     </div>
                   )}
+
+                  {location.googleBusinessUrl && (
+                    <div className="flex items-center gap-3">
+                      <Building2 className="w-5 h-5 text-muted-foreground" />
+                      <a
+                        href={location.googleBusinessUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        View on Google Business
+                      </a>
+                    </div>
+                  )}
+
+                  {location.googleBusinessUrl && (
+                    <div className="mt-4">
+                      <Button
+                        onClick={() =>
+                          window.open(location.googleBusinessUrl, "_blank")
+                        }
+                        className="w-full"
+                        variant="outline"
+                      >
+                        <Building2 className="w-4 h-4 mr-2" />
+                        View Google Business Profile
+                      </Button>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
