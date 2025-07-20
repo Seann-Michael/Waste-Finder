@@ -225,6 +225,37 @@ export default function AdminSettings() {
     alert("Marketing settings updated successfully!");
   };
 
+  const handleFileUpload = async (file: File, type: "logo" | "favicon") => {
+    // Mock file upload - in real app, upload to your storage service
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("type", type);
+
+    try {
+      // Simulate upload
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      // Generate mock URL (in real app, this would come from your upload service)
+      const mockUrl = `https://your-cdn.com/${type}/${file.name}`;
+
+      if (type === "logo") {
+        setWebsiteSettings({
+          ...websiteSettings,
+          siteLogo: mockUrl,
+        });
+      } else {
+        setWebsiteSettings({
+          ...websiteSettings,
+          favicon: mockUrl,
+        });
+      }
+
+      alert(`${type === "logo" ? "Logo" : "Favicon"} uploaded successfully!`);
+    } catch (error) {
+      alert(`Failed to upload ${type}. Please try again.`);
+    }
+  };
+
   const handleSaveCodeSettings = () => {
     console.log("Saving code settings:", codeSettings);
     alert("Code settings updated successfully!");
