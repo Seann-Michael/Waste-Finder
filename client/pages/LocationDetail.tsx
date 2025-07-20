@@ -12,6 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import StarRating from "@/components/ui/star-rating";
 import {
   Select,
@@ -50,6 +51,8 @@ import {
   AlertCircle,
   Facebook,
   Users,
+  Save,
+  X,
 } from "lucide-react";
 
 export default function LocationDetail() {
