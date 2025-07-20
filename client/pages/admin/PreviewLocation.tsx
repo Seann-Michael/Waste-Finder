@@ -670,11 +670,13 @@ export default function PreviewLocation() {
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
-                    {currentLocation.details.paymentTypes.map((method) => (
-                      <Badge key={method} variant="secondary">
-                        {method}
-                      </Badge>
-                    ))}
+                    {(currentLocation.details?.paymentTypes || []).map(
+                      (method) => (
+                        <Badge key={method} variant="secondary">
+                          {method}
+                        </Badge>
+                      ),
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -688,11 +690,13 @@ export default function PreviewLocation() {
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
-                    {currentLocation.details.debrisTypes.map((debris) => (
-                      <Badge key={debris} variant="outline">
-                        {debris}
-                      </Badge>
-                    ))}
+                    {(currentLocation.details?.debrisTypes || []).map(
+                      (debris) => (
+                        <Badge key={debris} variant="outline">
+                          {debris}
+                        </Badge>
+                      ),
+                    )}
                   </div>
                 </CardContent>
               </Card>
