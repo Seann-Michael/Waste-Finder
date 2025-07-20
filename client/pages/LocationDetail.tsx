@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SuggestEdit from "@/components/SuggestEdit";
+import FacebookCTA from "@/components/FacebookCTA";
+import Advertisement from "@/components/Advertisement";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
