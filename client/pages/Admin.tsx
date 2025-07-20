@@ -196,7 +196,7 @@ export default function Admin() {
                     onClick={() => {
                       // Mock export function
                       const csvContent =
-                        "facility_id,name,address,city,state,zip_code\n1,Sample Facility,123 Main St,Springfield,IL,62701";
+                        "location_id,name,address,city,state,zip_code\n1,Sample Location,123 Main St,Springfield,IL,62701";
                       const blob = new Blob([csvContent], { type: "text/csv" });
                       const url = window.URL.createObjectURL(blob);
                       const a = document.createElement("a");
