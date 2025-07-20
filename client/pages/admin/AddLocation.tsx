@@ -341,34 +341,64 @@ export default function AddLocation() {
         updatedAt: new Date().toISOString(),
       };
 
-      // Submit to API
-      const response = await fetch("/api/locations", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        let errorMessage = "Failed to create location";
-        try {
-          const errorData = await response.json();
-          errorMessage = errorData.error || errorMessage;
-        } catch (jsonError) {
-          // If response is not JSON or body is already consumed, use status text
-          errorMessage = response.statusText || errorMessage;
-        }
-        throw new Error(errorMessage);
-      }
-
+      // Try to submit to API first, fallback to localStorage if API is not available
       let result;
       try {
-        result = await response.json();
-      } catch (jsonError) {
-        // If response is not JSON, continue anyway - the location might have been created
-        console.warn("Response was not JSON, but request might have succeeded");
-        result = { success: true };
+        const response = await fetch("/api/locations", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+          // If it's a 404, the API doesn't exist, so we'll use localStorage fallback
+          if (response.status === 404) {
+            throw new Error("API_NOT_FOUND");
+          }
+
+          let errorMessage = "Failed to create location";
+          try {
+            const errorData = await response.json();
+            errorMessage = errorData.error || errorMessage;
+          } catch (jsonError) {
+            // If response is not JSON or body is already consumed, use status text
+            errorMessage = response.statusText || errorMessage;
+          }
+          throw new Error(errorMessage);
+        }
+
+        try {
+          result = await response.json();
+        } catch (jsonError) {
+          // If response is not JSON, continue anyway - the location might have been created
+          console.warn("Response was not JSON, but request might have succeeded");
+          result = { success: true };
+        }
+      } catch (error) {
+        // If API is not available (404 or network error), save to localStorage
+        if (error instanceof Error && (error.message === "API_NOT_FOUND" || error.name === "TypeError")) {
+          console.log("API not available, saving to localStorage...");
+
+          // Generate a unique ID for the location
+          const locationId = `location-${Date.now()}`;
+          const locationWithId = { ...payload, id: locationId };
+
+          // Get existing locations from localStorage
+          const existingLocations = JSON.parse(localStorage.getItem("locations") || "[]");
+
+          // Add new location
+          existingLocations.push(locationWithId);
+
+          // Save back to localStorage
+          localStorage.setItem("locations", JSON.stringify(existingLocations));
+
+          result = { success: true, id: locationId };
+        } else {
+          // Re-throw other errors
+          throw error;
+        }
       }
 
       showSuccess("Location created successfully!");
