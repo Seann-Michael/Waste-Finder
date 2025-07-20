@@ -725,12 +725,36 @@ export default function AdminSettings() {
                           {location.address}
                         </p>
                         <div className="flex gap-2">
-                          <Button size="sm" variant="outline">
-                            View Details
+                          <Button size="sm" variant="outline" asChild>
+                            <Link to={`/admin/preview-location/${location.id}`}>
+                              View Details
+                            </Link>
                           </Button>
-                          <Button size="sm">Approve</Button>
-                          <Button size="sm" variant="destructive">
+                          <Button
+                            size="sm"
+                            onClick={() =>
+                              handleApprovePendingLocation(location.id)
+                            }
+                          >
+                            Approve
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            onClick={() =>
+                              handleRejectPendingLocation(location.id)
+                            }
+                          >
                             Reject
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() =>
+                              handleDeletePendingLocation(location.id)
+                            }
+                          >
+                            <Trash2 className="w-4 h-4" />
                           </Button>
                         </div>
                       </div>
