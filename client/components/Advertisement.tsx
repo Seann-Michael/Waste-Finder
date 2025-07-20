@@ -94,13 +94,18 @@ export default function Advertisement({
               <p className="text-xs">Ad will appear here</p>
               <p className="text-xs mt-1">Code: {adSettings.adsenseCode}</p>
             </div>
-            {/* In production, this would be replaced with actual AdSense code */}
-            {/* <ins className="adsbygoogle"
-                 style={{display: "block"}}
-                 data-ad-client={adSettings.adsenseCode}
-                 data-ad-slot="..."
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins> */}
+            {/* AdSense placeholder - replace with actual implementation */}
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `
+                  // AdSense code would be injected here
+                  // (google = window.google || {}).cmd = google.cmd || [];
+                  // google.cmd.push(function() {
+                  //   google.display('${placement}-ad-slot');
+                  // });
+                `,
+              }}
+            />
           </div>
         </div>
       )}
