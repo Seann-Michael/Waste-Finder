@@ -21,13 +21,30 @@ import { Search, SlidersHorizontal, MapPin, Loader2 } from "lucide-react";
 
 // Sample zip code to coordinates lookup - in a real app this would be a proper geocoding service
 const zipCodeLookup: Record<string, { lat: number; lng: number }> = {
-  "44111": { lat: 41.4458, lng: -81.7799 }, // Cleveland West
-  "44129": { lat: 41.3784, lng: -81.729 }, // Parma
+  // Cleveland, OH area ZIP codes
   "44102": { lat: 41.4919, lng: -81.7357 }, // Cleveland East
+  "44111": { lat: 41.4458, lng: -81.7799 }, // Cleveland West
   "44113": { lat: 41.4897, lng: -81.6934 }, // Cleveland Downtown
+  "44129": { lat: 41.3784, lng: -81.729 }, // Parma
+  "44130": { lat: 41.3784, lng: -81.7799 }, // Parma Heights
+  "44134": { lat: 41.3446, lng: -81.7799 }, // Parma/Seven Hills
+  "44135": { lat: 41.395, lng: -81.763 }, // Cleveland Southwest/Parma border
+  "44136": { lat: 41.3615, lng: -81.8153 }, // Strongsville
+  "44137": { lat: 41.3279, lng: -81.6773 }, // Maple Heights
+  "44138": { lat: 41.3446, lng: -81.6279 }, // Garfield Heights
+  "44139": { lat: 41.395, lng: -81.6773 }, // Brooklyn/Parma
+  "44144": { lat: 41.3279, lng: -81.7799 }, // Cleveland Southwest
+  "44109": { lat: 41.4081, lng: -81.6773 }, // Cleveland Southwest
+  "44105": { lat: 41.4211, lng: -81.6279 }, // Cleveland Southeast
+  "44125": { lat: 41.4081, lng: -81.6473 }, // Cleveland Southwest
+  "44131": { lat: 41.4081, lng: -81.7468 }, // Cleveland Southwest
+
+  // Springfield IL area
   "62701": { lat: 39.7817, lng: -89.6501 }, // Springfield IL
   "62702": { lat: 39.7567, lng: -89.6301 }, // Springfield IL
   "62703": { lat: 39.7317, lng: -89.6701 }, // Springfield IL
+
+  // Other major cities for testing
   "60601": { lat: 41.8781, lng: -87.6298 }, // Chicago Downtown
   "10001": { lat: 40.7505, lng: -73.9934 }, // NYC Manhattan
   "90210": { lat: 34.0901, lng: -118.4065 }, // Beverly Hills
