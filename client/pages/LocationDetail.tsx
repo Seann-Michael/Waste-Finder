@@ -877,37 +877,109 @@ export default function LocationDetail() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
-                    {location.debrisTypes.map((debris) => (
-                      <div
-                        key={debris.id}
-                        className="flex justify-between items-center p-3 border rounded-lg"
-                      >
-                        <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 bg-success rounded-full"></div>
-                          <span className="font-medium">{debris.name}</span>
-                        </div>
-                        <div className="text-right">
-                          <span className="font-semibold text-primary">
-                            {debris.price !== undefined
-                              ? `$${debris.price.toFixed(2)} ${debris.priceDetails || ""}`
-                              : "Call for pricing"}
-                          </span>
+                  {isEditMode ? (
+                    <div className="space-y-6">
+                      {/* Debris Type Selection */}
+                      <div>
+                        <Label className="text-base font-medium mb-3 block">Select Accepted Debris Types</Label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          {debrisOptions.map((option) => (
+                            <div key={option} className="flex items-center space-x-2">
+                              <Checkbox
+                                checked={editFormData.debrisTypes.includes(option)}
+                                onCheckedChange={(checked) =>
+                                  handleDebrisTypeChange(option, checked as boolean)
+                                }
+                              />
+                              <Label className="text-sm">{option}</Label>
+                            </div>
+                          ))}
                         </div>
                       </div>
-                    ))}
-                  </div>
-                  <div className="mt-4 p-3 bg-muted/50 rounded-lg">
-                    <p className="text-sm text-muted-foreground mb-2">
-                      * Prices may vary based on quantity and material
-                      condition. Contact facility for current rates and minimum
-                      requirements.
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Price table last updated:{" "}
-                      {new Date(location.updatedAt).toLocaleDateString()}
-                    </p>
-                  </div>
+
+                      {/* Pricing for Selected Debris Types */}
+                      {editFormData.debrisTypes.length > 0 && (
+                        <div>
+                          <Label className="text-base font-medium mb-3 block">Pricing Information</Label>
+                          <div className="space-y-4">
+                            {editFormData.debrisTypes.map((debrisType) => (
+                              <div key={debrisType} className="border rounded-lg p-4">
+                                <div className="flex items-center gap-2 mb-3">
+                                  <div className="w-2 h-2 bg-success rounded-full"></div>
+                                  <span className="font-medium">{debrisType}</span>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                  <div>
+                                    <Label htmlFor={`price-${debrisType}`} className="text-sm">
+                                      Price per ton ($)
+                                    </Label>
+                                    <Input
+                                      id={`price-${debrisType}`}
+                                      type="number"
+                                      step="0.01"
+                                      min="0"
+                                      value={editFormData.debrisPricing[debrisType]?.price ?? ""}
+                                      onChange={(e) =>
+                                        handleDebrisPricingChange(debrisType, "price", e.target.value)
+                                      }
+                                      placeholder="0.00"
+                                    />
+                                  </div>
+                                  <div>
+                                    <Label htmlFor={`priceDetails-${debrisType}`} className="text-sm">
+                                      Price Details
+                                    </Label>
+                                    <Input
+                                      id={`priceDetails-${debrisType}`}
+                                      value={editFormData.debrisPricing[debrisType]?.priceDetails ?? ""}
+                                      onChange={(e) =>
+                                        handleDebrisPricingChange(debrisType, "priceDetails", e.target.value)
+                                      }
+                                      placeholder="per ton, minimum, etc."
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <>
+                      <div className="space-y-4">
+                        {location.debrisTypes.map((debris) => (
+                          <div
+                            key={debris.id}
+                            className="flex justify-between items-center p-3 border rounded-lg"
+                          >
+                            <div className="flex items-center gap-2">
+                              <div className="w-2 h-2 bg-success rounded-full"></div>
+                              <span className="font-medium">{debris.name}</span>
+                            </div>
+                            <div className="text-right">
+                              <span className="font-semibold text-primary">
+                                {debris.price !== undefined
+                                  ? `$${debris.price.toFixed(2)} ${debris.priceDetails || ""}`
+                                  : "Call for pricing"}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="mt-4 p-3 bg-muted/50 rounded-lg">
+                        <p className="text-sm text-muted-foreground mb-2">
+                          * Prices may vary based on quantity and material
+                          condition. Contact facility for current rates and minimum
+                          requirements.
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Price table last updated:{" "}
+                          {new Date(location.updatedAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </>
+                  )}
                 </CardContent>
               </Card>
 
