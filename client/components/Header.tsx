@@ -26,7 +26,18 @@ export default function Header() {
   ];
 
   return (
-    <header className="bg-white border-b border-border shadow-sm sticky top-0 z-50">
+    <>
+      {/* Admin Editable Banner */}
+      <div className="bg-primary text-primary-foreground py-2 px-4 text-center text-sm">
+        <span>🔥 Get more customers for your dumpster rental business - Click here for proven marketing strategies!</span>
+        {isAdmin && (
+          <button className="ml-2 text-xs underline hover:no-underline">
+            [Edit Banner]
+          </button>
+        )}
+      </div>
+
+      <header className="bg-white border-b border-border shadow-sm sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
         <div className="flex justify-between items-center h-14 sm:h-16">
           {/* Logo */}
