@@ -555,7 +555,7 @@ export default function PreviewLocation() {
                   )}
                 </div>
 
-                {currentLocation.details.operatingHours && (
+                {currentLocation.details?.operatingHours && (
                   <div>
                     <Label className="text-sm font-medium flex items-center gap-2">
                       <Clock className="w-4 h-4" />
@@ -563,7 +563,7 @@ export default function PreviewLocation() {
                     </Label>
                     {isEditing ? (
                       <Input
-                        value={currentLocation.details.operatingHours}
+                        value={currentLocation.details?.operatingHours || ""}
                         onChange={(e) =>
                           handleFieldChange(
                             "details.operatingHours",
@@ -575,7 +575,7 @@ export default function PreviewLocation() {
                       />
                     ) : (
                       <p className="text-sm">
-                        {currentLocation.details.operatingHours}
+                        {currentLocation.details?.operatingHours}
                       </p>
                     )}
                   </div>
