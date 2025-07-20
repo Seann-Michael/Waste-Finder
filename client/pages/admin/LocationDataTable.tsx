@@ -185,6 +185,21 @@ export default function LocationDataTable() {
     );
   };
 
+  const refreshLocations = async () => {
+    console.log("Manually refreshing locations...");
+    setIsLoading(true);
+    try {
+      const data = await fetchLocations();
+      console.log("Manual refresh: Loaded locations:", data.length, "locations");
+      setLocations(data);
+      setFilteredLocations(data);
+    } catch (error) {
+      console.error("Failed to refresh locations:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const sortLocations = (locations: Location[]) => {
     return [...locations].sort((a, b) => {
       const aValue = a[sortField];
