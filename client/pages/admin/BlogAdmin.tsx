@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import RichTextEditor from "@/components/ui/rich-text-editor";
+import ImageUpload from "@/components/ui/image-upload";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
@@ -82,7 +84,8 @@ export default function BlogAdmin() {
     featured: false,
     tags: "",
     featuredImage: "",
-    publishedAt: "",
+    publishDate: "",
+    publishTime: "",
   });
 
   useEffect(() => {
@@ -113,7 +116,7 @@ export default function BlogAdmin() {
           updatedAt: "2024-01-15T10:00:00Z",
         },
         {
-          id: "2", 
+          id: "2",
           title: "Environmental Benefits of Proper Waste Sorting",
           slug: "environmental-benefits-proper-waste-sorting",
           excerpt: "Learn how proper waste sorting at disposal facilities contributes to environmental protection and sustainability.",
@@ -145,7 +148,19 @@ export default function BlogAdmin() {
     try {
       const slug = generateSlug(formData.title);
       const now = new Date().toISOString();
-      
+
+      // Combine date and time for publishedAt
+      let publishedAt: string | undefined;
+      if (formData.status === "published") {
+        if (formData.publishDate && formData.publishTime) {
+          publishedAt = new Date(`${formData.publishDate}T${formData.publishTime}`).toISOString();
+        } else {
+          publishedAt = now;
+        }
+      } else if (formData.status === "scheduled" && formData.publishDate && formData.publishTime) {
+        publishedAt = new Date(`${formData.publishDate}T${formData.publishTime}`).toISOString();
+      }
+
       const postData: BlogPost = {
         id: editingPost?.id || Date.now().toString(),
         title: formData.title,
@@ -157,7 +172,7 @@ export default function BlogAdmin() {
         featured: formData.featured,
         tags: formData.tags.split(",").map(tag => tag.trim()).filter(Boolean),
         featuredImage: formData.featuredImage || undefined,
-        publishedAt: formData.status === "published" ? (formData.publishedAt || now) : undefined,
+        publishedAt,
         createdAt: editingPost?.createdAt || now,
         updatedAt: now,
       };
@@ -165,10 +180,10 @@ export default function BlogAdmin() {
       const updatedPosts = editingPost
         ? posts.map(post => post.id === editingPost.id ? postData : post)
         : [...posts, postData];
-      
+
       setPosts(updatedPosts);
       localStorage.setItem("blogPosts", JSON.stringify(updatedPosts));
-      
+
       showSuccess(editingPost ? "Post updated successfully!" : "Post created successfully!");
       setShowEditor(false);
       resetForm();
@@ -181,6 +196,16 @@ export default function BlogAdmin() {
 
   const handleEditPost = (post: BlogPost) => {
     setEditingPost(post);
+
+    // Parse publish date and time
+    let publishDate = "";
+    let publishTime = "";
+    if (post.publishedAt) {
+      const date = new Date(post.publishedAt);
+      publishDate = date.toISOString().split('T')[0];
+      publishTime = date.toTimeString().slice(0, 5);
+    }
+
     setFormData({
       title: post.title,
       excerpt: post.excerpt,
@@ -190,18 +215,19 @@ export default function BlogAdmin() {
       featured: post.featured,
       tags: post.tags.join(", "),
       featuredImage: post.featuredImage || "",
-      publishedAt: post.publishedAt || "",
+      publishDate,
+      publishTime,
     });
     setShowEditor(true);
   };
 
   const handleDeletePost = async () => {
     if (!postToDelete) return;
-    
+
     const updatedPosts = posts.filter(post => post.id !== postToDelete.id);
     setPosts(updatedPosts);
     localStorage.setItem("blogPosts", JSON.stringify(updatedPosts));
-    
+
     showSuccess("Post deleted successfully!");
     setDeleteDialogOpen(false);
     setPostToDelete(null);
@@ -217,7 +243,8 @@ export default function BlogAdmin() {
       featured: false,
       tags: "",
       featuredImage: "",
-      publishedAt: "",
+      publishDate: "",
+      publishTime: "",
     });
     setEditingPost(null);
   };
@@ -401,7 +428,7 @@ export default function BlogAdmin() {
               Write engaging content for your audience
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -437,17 +464,15 @@ export default function BlogAdmin() {
 
             <div>
               <Label htmlFor="content">Content *</Label>
-              <Textarea
-                id="content"
+              <RichTextEditor
                 value={formData.content}
-                onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
-                placeholder="Write your blog post content here (Markdown supported)"
-                rows={12}
-                className="font-mono"
+                onChange={(content) => setFormData(prev => ({ ...prev, content }))}
+                placeholder="Write your blog post content here. Use the toolbar for formatting options or switch to HTML mode for advanced editing."
+                className="mt-2"
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <Label htmlFor="tags">Tags</Label>
                 <Input
@@ -458,19 +483,16 @@ export default function BlogAdmin() {
                 />
               </div>
               <div>
-                <Label htmlFor="featured-image">Featured Image URL</Label>
-                <Input
-                  id="featured-image"
+                <ImageUpload
                   value={formData.featuredImage}
-                  onChange={(e) => setFormData(prev => ({ ...prev, featuredImage: e.target.value }))}
-                  placeholder="https://example.com/image.jpg"
+                  onChange={(url) => setFormData(prev => ({ ...prev, featuredImage: url }))}
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div>
-                <Label htmlFor="status">Status</Label>
+                <Label htmlFor="status">Status *</Label>
                 <Select
                   value={formData.status}
                   onValueChange={(value) => setFormData(prev => ({ ...prev, status: value as any }))}
@@ -480,20 +502,40 @@ export default function BlogAdmin() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="draft">Draft</SelectItem>
-                    <SelectItem value="published">Published</SelectItem>
-                    <SelectItem value="scheduled">Scheduled</SelectItem>
+                    <SelectItem value="published">Publish Now</SelectItem>
+                    <SelectItem value="scheduled">Schedule</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
-              <div>
-                <Label htmlFor="published-at">Publish Date</Label>
-                <Input
-                  id="published-at"
-                  type="datetime-local"
-                  value={formData.publishedAt}
-                  onChange={(e) => setFormData(prev => ({ ...prev, publishedAt: e.target.value }))}
-                />
-              </div>
+
+              {(formData.status === "published" || formData.status === "scheduled") && (
+                <>
+                  <div>
+                    <Label htmlFor="publish-date">
+                      {formData.status === "scheduled" ? "Schedule Date *" : "Publish Date"}
+                    </Label>
+                    <Input
+                      id="publish-date"
+                      type="date"
+                      value={formData.publishDate}
+                      onChange={(e) => setFormData(prev => ({ ...prev, publishDate: e.target.value }))}
+                      min={new Date().toISOString().split('T')[0]}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="publish-time">
+                      {formData.status === "scheduled" ? "Schedule Time *" : "Publish Time"}
+                    </Label>
+                    <Input
+                      id="publish-time"
+                      type="time"
+                      value={formData.publishTime}
+                      onChange={(e) => setFormData(prev => ({ ...prev, publishTime: e.target.value }))}
+                    />
+                  </div>
+                </>
+              )}
+
               <div className="flex items-center space-x-2 pt-6">
                 <Switch
                   id="featured"
@@ -503,6 +545,25 @@ export default function BlogAdmin() {
                 <Label htmlFor="featured">Featured Post</Label>
               </div>
             </div>
+
+            {formData.status === "scheduled" && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="flex items-center gap-2 text-blue-800">
+                  <Calendar className="w-4 h-4" />
+                  <span className="font-medium">Scheduled Publication</span>
+                </div>
+                <p className="text-sm text-blue-700 mt-1">
+                  This post will be automatically published on{" "}
+                  {formData.publishDate && formData.publishTime ? (
+                    <span className="font-medium">
+                      {new Date(`${formData.publishDate}T${formData.publishTime}`).toLocaleString()}
+                    </span>
+                  ) : (
+                    "the selected date and time"
+                  )}
+                </p>
+              </div>
+            )}
           </div>
 
           <DialogFooter>
