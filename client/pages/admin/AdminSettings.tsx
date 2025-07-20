@@ -1061,17 +1061,15 @@ export default function AdminSettings() {
                     <h3 className="text-lg font-medium">Facebook Community</h3>
                     <div className="space-y-4">
                       <div className="flex items-center space-x-2">
-                        <input
+                        <Checkbox
                           id="facebookGroupEnabled"
-                          type="checkbox"
                           checked={adSettings.facebookGroupEnabled}
-                          onChange={(e) =>
+                          onCheckedChange={(checked) =>
                             setAdSettings({
                               ...adSettings,
-                              facebookGroupEnabled: e.target.checked,
+                              facebookGroupEnabled: checked,
                             })
                           }
-                          className="rounded border-border"
                         />
                         <Label htmlFor="facebookGroupEnabled">
                           Show Facebook Group CTA
