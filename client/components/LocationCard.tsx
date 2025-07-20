@@ -32,7 +32,7 @@ const getLocationIcon = (type: Location["locationType"]) => {
   }
 };
 
-const getFacilityLabel = (type: Location["facilityType"]) => {
+const getLocationLabel = (type: Location["locationType"]) => {
   switch (type) {
     case "landfill":
       return "Landfill";
