@@ -43,7 +43,7 @@ interface ColumnMapping {
 }
 
 const systemFields = [
-  { value: "", label: "Skip this column" },
+  { value: "skip", label: "Skip this column" },
   { value: "name", label: "Location Name" },
   { value: "address", label: "Street Address" },
   { value: "city", label: "City" },
