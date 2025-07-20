@@ -610,28 +610,10 @@ export default function AllLocations() {
                   </p>
                 </div>
               ) : (
-                <div className="space-y-6">
-                  {/* Advertisement after first 3 results */}
-                  <div className="grid grid-cols-1 gap-6">
-                    {locations.slice(0, 3).map((location) => (
-                      <LocationCard key={location.id} location={location} />
-                    ))}
-                  </div>
-
-                  {locations.length > 3 && (
-                    <>
-                      <Advertisement placement="search" />
-                      <div className="grid grid-cols-1 gap-6">
-                        {locations.slice(3).map((location) => (
-                          <LocationCard key={location.id} location={location} />
-                        ))}
-                      </div>
-                    </>
-                  )}
-
-                  {locations.length <= 3 && locations.length > 0 && (
-                    <Advertisement placement="search" />
-                  )}
+                <div className="grid grid-cols-1 gap-6">
+                  {locations.map((location) => (
+                    <LocationCard key={location.id} location={location} />
+                  ))}
                 </div>
               )}
             </div>
