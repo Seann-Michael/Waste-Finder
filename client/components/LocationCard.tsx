@@ -245,11 +245,9 @@ export default function LocationCard({ location }: LocationCardProps) {
                   {debris.name}
                 </Badge>
                 <span className="text-muted-foreground">
-                  {debris.pricePerTon
-                    ? `$${debris.pricePerTon}/ton`
-                    : debris.pricePerLoad
-                      ? `$${debris.pricePerLoad}/load`
-                      : debris.priceNote || "Call for pricing"}
+                  {debris.price !== undefined
+                    ? `$${debris.price.toFixed(2)} ${debris.priceDetails || ""}`
+                    : "Call for pricing"}
                 </span>
               </div>
             ))}

@@ -481,11 +481,9 @@ export default function LocationDetail() {
                         </div>
                         <div className="text-right">
                           <span className="font-semibold text-primary">
-                            {debris.pricePerTon
-                              ? `$${debris.pricePerTon}/ton`
-                              : debris.pricePerLoad
-                                ? `$${debris.pricePerLoad}/load`
-                                : debris.priceNote || "Call for pricing"}
+                            {debris.price !== undefined
+                              ? `$${debris.price.toFixed(2)} ${debris.priceDetails || ""}`
+                              : "Call for pricing"}
                           </span>
                         </div>
                       </div>
