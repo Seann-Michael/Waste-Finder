@@ -55,56 +55,7 @@ const fetchLocations = async (): Promise<Location[]> => {
   }
 };
 
-const mockLocations: Location[] = [
-  {
-    id: "1",
-    name: "Green Valley Landfill",
-    address: "123 Waste Management Dr",
-    city: "Springfield",
-    state: "IL",
-    zipCode: "62701",
-    type: "landfill",
-    phone: "(555) 123-4567",
-    operatingHours: "Mon-Fri 7AM-6PM, Sat 8AM-4PM",
-    paymentMethods: ["Cash", "Credit Card", "Check"],
-    debrisTypes: ["General Waste", "Construction", "Yard Waste"],
-    status: "active",
-    createdAt: "2024-01-15T10:30:00Z",
-    lastUpdated: "2024-01-20T14:20:00Z",
-  },
-  {
-    id: "2",
-    name: "Metro Transfer Station",
-    address: "456 Industrial Blvd",
-    city: "Chicago",
-    state: "IL",
-    zipCode: "60601",
-    type: "transfer_station",
-    phone: "(555) 987-6543",
-    operatingHours: "Mon-Sat 6AM-7PM",
-    paymentMethods: ["Cash", "Credit Card"],
-    debrisTypes: ["General Waste", "Recyclables"],
-    status: "active",
-    createdAt: "2024-01-10T09:15:00Z",
-    lastUpdated: "2024-01-18T11:45:00Z",
-  },
-  {
-    id: "3",
-    name: "Capitol Construction Landfill",
-    address: "789 Construction Way",
-    city: "Peoria",
-    state: "IL",
-    zipCode: "61602",
-    type: "construction_landfill",
-    phone: "(555) 456-7890",
-    operatingHours: "Mon-Fri 6AM-6PM",
-    paymentMethods: ["Cash", "Credit Card", "Account"],
-    debrisTypes: ["Construction", "Demolition", "Concrete"],
-    status: "active",
-    createdAt: "2024-01-12T14:00:00Z",
-    lastUpdated: "2024-01-19T16:30:00Z",
-  },
-];
+// Mock data removed - now fetching from API
 
 type SortField = keyof Location;
 type SortDirection = "asc" | "desc";
