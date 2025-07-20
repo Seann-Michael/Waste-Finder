@@ -31,11 +31,13 @@ import {
   MessageSquare,
   Search,
   Download,
-  Eye,
   CheckCircle,
   AlertTriangle,
   Trash2,
   RefreshCw,
+  ChevronUp,
+  ChevronDown,
+  ArrowUpDown,
 } from "lucide-react";
 
 interface Review {
@@ -112,20 +114,10 @@ const mockReviews: Review[] = [
     moderatedAt: "2024-01-19T18:30:00Z",
     moderatedBy: "Admin",
   },
-  {
-    id: "5",
-    locationName: "Green Valley Landfill",
-    locationId: "loc_1",
-    author: "Tom B.",
-    email: "tom.b@email.com",
-    rating: 3,
-    title: "Average experience",
-    content:
-      "Nothing special but gets the job done. Pricing is fair and location is accessible.",
-    status: "pending",
-    submittedAt: "2024-01-19T14:10:00Z",
-  },
 ];
+
+type SortField = keyof Review;
+type SortDirection = "asc" | "desc";
 
 export default function ReviewsTable() {
   const [reviews, setReviews] = useState<Review[]>(mockReviews);
@@ -136,7 +128,9 @@ export default function ReviewsTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   const [viewDialogOpen, setViewDialogOpen] = useState(false);
-  const itemsPerPage = 25;
+  const [sortField, setSortField] = useState<SortField>("submittedAt");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
+  const [pageSize, setPageSize] = useState(25);
 
   const statusOptions = [
     { value: "all", label: "All Status" },
@@ -153,6 +147,53 @@ export default function ReviewsTable() {
     { value: "2", label: "2 Stars" },
     { value: "1", label: "1 Star" },
   ];
+
+  const pageSizeOptions = [
+    { value: 10, label: "10 per page" },
+    { value: 25, label: "25 per page" },
+    { value: 50, label: "50 per page" },
+    { value: 100, label: "100 per page" },
+  ];
+
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+  };
+
+  const getSortIcon = (field: SortField) => {
+    if (sortField !== field) {
+      return <ArrowUpDown className="w-4 h-4 ml-2 text-gray-400" />;
+    }
+    return sortDirection === "asc" ? (
+      <ChevronUp className="w-4 h-4 ml-2" />
+    ) : (
+      <ChevronDown className="w-4 h-4 ml-2" />
+    );
+  };
+
+  const sortReviews = (reviews: Review[]) => {
+    return [...reviews].sort((a, b) => {
+      const aValue = a[sortField];
+      const bValue = b[sortField];
+
+      let comparison = 0;
+      if (typeof aValue === "string" && typeof bValue === "string") {
+        comparison = aValue.localeCompare(bValue);
+      } else if (typeof aValue === "number" && typeof bValue === "number") {
+        comparison = aValue - bValue;
+      } else if (aValue < bValue) {
+        comparison = -1;
+      } else if (aValue > bValue) {
+        comparison = 1;
+      }
+
+      return sortDirection === "asc" ? comparison : -comparison;
+    });
+  };
 
   const filterReviews = () => {
     let filtered = [...reviews];
@@ -182,13 +223,28 @@ export default function ReviewsTable() {
       );
     }
 
+    // Sort the filtered results
+    filtered = sortReviews(filtered);
+
     setFilteredReviews(filtered);
     setCurrentPage(1);
   };
 
   useEffect(() => {
     filterReviews();
-  }, [searchQuery, statusFilter, ratingFilter, reviews]);
+  }, [
+    searchQuery,
+    statusFilter,
+    ratingFilter,
+    reviews,
+    sortField,
+    sortDirection,
+  ]);
+
+  const handleRowClick = (review: Review) => {
+    setSelectedReview(review);
+    setViewDialogOpen(true);
+  };
 
   const getStatusBadge = (status: Review["status"]) => {
     switch (status) {
@@ -213,11 +269,6 @@ export default function ReviewsTable() {
       default:
         return <Badge variant="secondary">{status}</Badge>;
     }
-  };
-
-  const handleViewReview = (review: Review) => {
-    setSelectedReview(review);
-    setViewDialogOpen(true);
   };
 
   const handleApproveReview = (reviewId: string) => {
@@ -306,9 +357,9 @@ export default function ReviewsTable() {
   };
 
   // Pagination
-  const totalPages = Math.ceil(filteredReviews.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
+  const totalPages = Math.ceil(filteredReviews.length / pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
   const currentItems = filteredReviews.slice(startIndex, endIndex);
 
   return (
@@ -389,20 +440,67 @@ export default function ReviewsTable() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Location</TableHead>
-                    <TableHead>Author</TableHead>
-                    <TableHead>Rating</TableHead>
-                    <TableHead>Title</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Submitted</TableHead>
-                    <TableHead>Actions</TableHead>
+                    <TableHead
+                      className="cursor-pointer hover:bg-muted/50"
+                      onClick={() => handleSort("locationName")}
+                    >
+                      <div className="flex items-center">
+                        Location
+                        {getSortIcon("locationName")}
+                      </div>
+                    </TableHead>
+                    <TableHead
+                      className="cursor-pointer hover:bg-muted/50"
+                      onClick={() => handleSort("author")}
+                    >
+                      <div className="flex items-center">
+                        Author
+                        {getSortIcon("author")}
+                      </div>
+                    </TableHead>
+                    <TableHead
+                      className="cursor-pointer hover:bg-muted/50"
+                      onClick={() => handleSort("rating")}
+                    >
+                      <div className="flex items-center">
+                        Rating
+                        {getSortIcon("rating")}
+                      </div>
+                    </TableHead>
+                    <TableHead
+                      className="cursor-pointer hover:bg-muted/50"
+                      onClick={() => handleSort("title")}
+                    >
+                      <div className="flex items-center">
+                        Title
+                        {getSortIcon("title")}
+                      </div>
+                    </TableHead>
+                    <TableHead
+                      className="cursor-pointer hover:bg-muted/50"
+                      onClick={() => handleSort("status")}
+                    >
+                      <div className="flex items-center">
+                        Status
+                        {getSortIcon("status")}
+                      </div>
+                    </TableHead>
+                    <TableHead
+                      className="cursor-pointer hover:bg-muted/50"
+                      onClick={() => handleSort("submittedAt")}
+                    >
+                      <div className="flex items-center">
+                        Submitted
+                        {getSortIcon("submittedAt")}
+                      </div>
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {currentItems.length === 0 ? (
                     <TableRow>
                       <TableCell
-                        colSpan={7}
+                        colSpan={6}
                         className="text-center py-8 text-muted-foreground"
                       >
                         No reviews found matching your criteria
@@ -410,9 +508,13 @@ export default function ReviewsTable() {
                     </TableRow>
                   ) : (
                     currentItems.map((review) => (
-                      <TableRow key={review.id} className="hover:bg-muted/50">
+                      <TableRow
+                        key={review.id}
+                        className="hover:bg-muted/50 cursor-pointer"
+                        onClick={() => handleRowClick(review)}
+                      >
                         <TableCell>
-                          <div className="font-medium">
+                          <div className="font-medium text-primary">
                             {review.locationName}
                           </div>
                           <div className="text-xs text-muted-foreground">
@@ -455,42 +557,6 @@ export default function ReviewsTable() {
                             {new Date(review.submittedAt).toLocaleTimeString()}
                           </div>
                         </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-1">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleViewReview(review)}
-                            >
-                              <Eye className="w-4 h-4" />
-                            </Button>
-                            {review.status === "pending" && (
-                              <>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => handleApproveReview(review.id)}
-                                >
-                                  <CheckCircle className="w-4 h-4 text-green-600" />
-                                </Button>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => handleRejectReview(review.id)}
-                                >
-                                  <AlertTriangle className="w-4 h-4 text-red-600" />
-                                </Button>
-                              </>
-                            )}
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleDeleteReview(review.id)}
-                            >
-                              <Trash2 className="w-4 h-4 text-red-600" />
-                            </Button>
-                          </div>
-                        </TableCell>
                       </TableRow>
                     ))
                   )}
@@ -499,10 +565,33 @@ export default function ReviewsTable() {
             </div>
 
             {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="flex items-center justify-between">
-                <div className="text-sm text-muted-foreground">
-                  Page {currentPage} of {totalPages}
+            <div className="flex items-center justify-between">
+              <div className="text-sm text-muted-foreground">
+                Page {currentPage} of {totalPages}
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <Select
+                    value={pageSize.toString()}
+                    onValueChange={(value) => {
+                      setPageSize(Number(value));
+                      setCurrentPage(1);
+                    }}
+                  >
+                    <SelectTrigger className="w-32">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {pageSizeOptions.map((option) => (
+                        <SelectItem
+                          key={option.value}
+                          value={option.value.toString()}
+                        >
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="flex items-center gap-2">
                   <Button
@@ -527,7 +616,7 @@ export default function ReviewsTable() {
                   </Button>
                 </div>
               </div>
-            )}
+            </div>
           </CardContent>
         </Card>
 
@@ -591,33 +680,34 @@ export default function ReviewsTable() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
+                    <h4 className="font-medium">Location</h4>
+                    <p className="text-sm text-muted-foreground">
+                      {selectedReview.locationName}
+                    </p>
+                  </div>
+                  <div>
                     <h4 className="font-medium">Status</h4>
                     {getStatusBadge(selectedReview.status)}
                   </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
                   <div>
                     <h4 className="font-medium">Submitted</h4>
                     <p className="text-sm text-muted-foreground">
                       {new Date(selectedReview.submittedAt).toLocaleString()}
                     </p>
                   </div>
+                  {selectedReview.moderatedAt && (
+                    <div>
+                      <h4 className="font-medium">Moderated</h4>
+                      <p className="text-sm text-muted-foreground">
+                        {new Date(selectedReview.moderatedAt).toLocaleString()}{" "}
+                        by {selectedReview.moderatedBy}
+                      </p>
+                    </div>
+                  )}
                 </div>
-
-                {selectedReview.moderatedAt && (
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <h4 className="font-medium">Moderated By</h4>
-                      <p className="text-sm text-muted-foreground">
-                        {selectedReview.moderatedBy}
-                      </p>
-                    </div>
-                    <div>
-                      <h4 className="font-medium">Moderated At</h4>
-                      <p className="text-sm text-muted-foreground">
-                        {new Date(selectedReview.moderatedAt).toLocaleString()}
-                      </p>
-                    </div>
-                  </div>
-                )}
               </div>
             )}
 
