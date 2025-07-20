@@ -202,73 +202,74 @@ export default function Admin() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Actions */}
+          {/* Pending Locations */}
           <div className="lg:col-span-1">
             <Card>
-              <CardHeader>
-                <CardTitle>Quick Actions</CardTitle>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <MapPin className="w-5 h-5" />
+                  Pending Locations
+                </CardTitle>
+                <Badge variant="secondary">3</Badge>
               </CardHeader>
-              <CardContent className="space-y-3">
-                <Button
-                  className="w-full justify-start"
-                  variant="outline"
-                  asChild
-                >
-                  <Link to="/admin/bulk-upload">
-                    <Upload className="w-4 h-4 mr-2" />
-                    Bulk Upload Locations
-                  </Link>
-                </Button>
-                <Button
-                  className="w-full justify-start"
-                  variant="outline"
-                  onClick={() => {
-                    // Mock export function
-                    const csvContent =
-                      "location_id,name,address,city,state,zip_code\n1,Sample Location,123 Main St,Springfield,IL,62701";
-                    const blob = new Blob([csvContent], { type: "text/csv" });
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement("a");
-                    a.href = url;
-                    a.download = "locations_export.csv";
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    window.URL.revokeObjectURL(url);
-                  }}
-                >
-                  <Download className="w-4 h-4 mr-2" />
-                  Export Database
-                </Button>
-                <Button
-                  className="w-full justify-start"
-                  variant="outline"
-                  asChild
-                >
-                  <Link to="/admin/add-location">
-                    <MapPin className="w-4 h-4 mr-2" />
-                    Add New Location
-                  </Link>
-                </Button>
-                <Button
-                  className="w-full justify-start"
-                  variant="outline"
-                  asChild
-                >
-                  <Link to="/admin/locations">
-                    <Edit className="w-4 h-4 mr-2" />
-                    Location Data Table
-                  </Link>
-                </Button>
-                <Button
-                  className="w-full justify-start"
-                  variant="outline"
-                  asChild
-                >
-                  <Link to="/admin/settings">
-                    <Shield className="w-4 h-4 mr-2" />
-                    Admin Settings
-                  </Link>
+              <CardContent className="space-y-4">
+                <div className="border rounded-lg p-3 space-y-2 cursor-pointer hover:bg-muted/50 transition-colors">
+                  <div className="flex items-center justify-between">
+                    <Badge variant="outline" className="text-xs">
+                      New Location
+                    </Badge>
+                    <span className="text-xs text-muted-foreground">
+                      1 day ago
+                    </span>
+                  </div>
+                  <h4 className="font-medium text-sm">
+                    Riverside Recycling Center
+                  </h4>
+                  <p className="text-xs text-muted-foreground">
+                    Submitted by Lisa K.
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    456 River Road, Portland, OR 97202
+                  </p>
+                </div>
+                <div className="border rounded-lg p-3 space-y-2 cursor-pointer hover:bg-muted/50 transition-colors">
+                  <div className="flex items-center justify-between">
+                    <Badge variant="outline" className="text-xs">
+                      New Location
+                    </Badge>
+                    <span className="text-xs text-muted-foreground">
+                      2 days ago
+                    </span>
+                  </div>
+                  <h4 className="font-medium text-sm">Metro Waste Facility</h4>
+                  <p className="text-xs text-muted-foreground">
+                    Submitted by Tom B.
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    789 Industrial Ave, Chicago, IL 60601
+                  </p>
+                </div>
+                <div className="border rounded-lg p-3 space-y-2 cursor-pointer hover:bg-muted/50 transition-colors">
+                  <div className="flex items-center justify-between">
+                    <Badge variant="outline" className="text-xs">
+                      New Location
+                    </Badge>
+                    <span className="text-xs text-muted-foreground">
+                      3 days ago
+                    </span>
+                  </div>
+                  <h4 className="font-medium text-sm">
+                    EcoWaste Transfer Station
+                  </h4>
+                  <p className="text-xs text-muted-foreground">
+                    Submitted by Sarah M.
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    321 Green Street, Denver, CO 80202
+                  </p>
+                </div>
+                <Button variant="outline" className="w-full" size="sm" asChild>
+                  <Link to="/admin/suggestions">View All Pending</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -326,42 +327,55 @@ export default function Admin() {
             </Card>
           </div>
 
-          {/* Pending Suggestions */}
+          {/* Pending Edits */}
           <div className="lg:col-span-1">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="flex items-center gap-2">
                   <Edit className="w-5 h-5" />
-                  Pending Suggestions
+                  Pending Edits
                 </CardTitle>
-                <Badge variant="secondary">{pendingSuggestions.length}</Badge>
+                <Badge variant="secondary">2</Badge>
               </CardHeader>
               <CardContent className="space-y-4">
-                {pendingSuggestions.map((suggestion) => (
-                  <div
-                    key={suggestion.id}
-                    className="border rounded-lg p-3 space-y-2 cursor-pointer hover:bg-muted/50 transition-colors"
-                    onClick={() => setSelectedSuggestion(suggestion)}
-                  >
-                    <div className="flex items-center justify-between">
-                      <Badge variant="outline" className="text-xs">
-                        {suggestion.type}
-                      </Badge>
-                      <span className="text-xs text-muted-foreground">
-                        {suggestion.date}
-                      </span>
-                    </div>
-                    <h4 className="font-medium text-sm">{suggestion.name}</h4>
-                    <p className="text-xs text-muted-foreground">
-                      Submitted by {suggestion.submitter}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Click to view details and approve/reject
-                    </p>
+                <div className="border rounded-lg p-3 space-y-2 cursor-pointer hover:bg-muted/50 transition-colors">
+                  <div className="flex items-center justify-between">
+                    <Badge variant="outline" className="text-xs">
+                      Edit Location
+                    </Badge>
+                    <span className="text-xs text-muted-foreground">
+                      2 days ago
+                    </span>
                   </div>
-                ))}
+                  <h4 className="font-medium text-sm">
+                    Downtown Transfer Station
+                  </h4>
+                  <p className="text-xs text-muted-foreground">
+                    Submitted by Tom B.
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Phone number update request
+                  </p>
+                </div>
+                <div className="border rounded-lg p-3 space-y-2 cursor-pointer hover:bg-muted/50 transition-colors">
+                  <div className="flex items-center justify-between">
+                    <Badge variant="outline" className="text-xs">
+                      Edit Location
+                    </Badge>
+                    <span className="text-xs text-muted-foreground">
+                      1 week ago
+                    </span>
+                  </div>
+                  <h4 className="font-medium text-sm">Green Valley Landfill</h4>
+                  <p className="text-xs text-muted-foreground">
+                    Submitted by Mike R.
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Operating hours update
+                  </p>
+                </div>
                 <Button variant="outline" className="w-full" size="sm" asChild>
-                  <Link to="/admin/suggestions">View All Suggestions</Link>
+                  <Link to="/admin/suggestions">View All Edits</Link>
                 </Button>
               </CardContent>
             </Card>
