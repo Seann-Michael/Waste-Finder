@@ -162,41 +162,15 @@ export default function EditFacility() {
       const response = await fetch(`/api/locations/${id}`);
 
       if (!response.ok) {
-        throw new Error('Failed to fetch facility data');
+        throw new Error("Failed to fetch facility data");
       }
 
       const data = await response.json();
       const facility = data.data;
 
       if (!facility) {
-        throw new Error('Facility not found');
+        throw new Error("Facility not found");
       }
-
-
-
-
-          {
-            dayOfWeek: 6,
-            openTime: "08:00",
-            closeTime: "15:00",
-            isClosed: false,
-          },
-          {
-            dayOfWeek: 0,
-            openTime: "00:00",
-            closeTime: "00:00",
-            isClosed: true,
-          },
-        ],
-        notes:
-          "Large municipal facility accepting most household and commercial waste.",
-        rating: 4.5,
-        reviewCount: 127,
-        distance: 3.2,
-        isActive: true,
-        createdAt: "2024-01-01T00:00:00Z",
-        updatedAt: "2024-01-15T00:00:00Z",
-      };
 
       setFacility(mockFacility);
 
