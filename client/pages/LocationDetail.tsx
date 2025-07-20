@@ -676,6 +676,9 @@ export default function LocationDetail() {
 
             {/* Sidebar */}
             <div className="space-y-6">
+              {/* Facebook CTA */}
+              <FacebookCTA facebookUrl="https://facebook.com/groups/wastefindergroup" />
+
               {/* Quick Info */}
               <Card>
                 <CardHeader>
