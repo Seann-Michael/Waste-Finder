@@ -78,6 +78,7 @@ interface LocationFormData {
   debrisTypes: string[];
   debrisPricing: Record<string, { price?: number; priceDetails?: string; }>;
   debrisAdditionalDetails?: string;
+  additionalDebrisPricingDetails?: string;
   additionalLocationDetails?: string;
   isActive: boolean;
 }
@@ -202,6 +203,7 @@ export default function AddLocation() {
       debrisTypes: [],
       debrisPricing: {},
       debrisAdditionalDetails: "",
+      additionalDebrisPricingDetails: "",
       additionalLocationDetails: "",
       isActive: true,
     },
