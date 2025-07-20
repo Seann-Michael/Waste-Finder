@@ -442,24 +442,21 @@ export default function EditFacility() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background flex flex-col">
-        <Header />
-        <main className="flex-1 flex items-center justify-center">
+      <AdminLayout>
+        <div className="flex items-center justify-center py-16">
           <div className="text-center">
-            <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
+            <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
             <p>Loading facility data...</p>
           </div>
-        </main>
-        <Footer />
-      </div>
+        </div>
+      </AdminLayout>
     );
   }
 
   if (submitSuccess) {
     return (
-      <div className="min-h-screen bg-background flex flex-col">
-        <Header />
-        <main className="flex-1 flex items-center justify-center">
+      <AdminLayout>
+        <div className="flex items-center justify-center py-16">
           <Card className="max-w-md">
             <CardContent className="pt-8 text-center">
               <CheckCircle className="w-12 h-12 text-green-600 mx-auto mb-4" />
@@ -475,9 +472,8 @@ export default function EditFacility() {
               </Button>
             </CardContent>
           </Card>
-        </main>
-        <Footer />
-      </div>
+        </div>
+      </AdminLayout>
     );
   }
 
