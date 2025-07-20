@@ -7,7 +7,11 @@ interface AdSenseProps {
 
 interface AdConfig {
   enabled: boolean;
+  adType: "adsense" | "image" | "html";
   code: string;
+  imageUrl?: string;
+  linkUrl?: string;
+  altText?: string;
   placement: string;
   displayName: string;
 }
@@ -41,17 +45,62 @@ export default function AdSense({ placement, className = "" }: AdSenseProps) {
     }
   };
 
-  // Show actual ad if enabled and has code
-  if (adConfig && adConfig.enabled && adConfig.code) {
+  // Check if ad is valid and enabled
+  const isAdValid = () => {
+    if (!adConfig || !adConfig.enabled) return false;
+
+    switch (adConfig.adType) {
+      case "adsense":
+      case "html":
+        return !!adConfig.code;
+      case "image":
+        return !!(adConfig.imageUrl && adConfig.altText);
+      default:
+        return false;
+    }
+  };
+
+  // Render actual ad if enabled and valid
+  if (isAdValid()) {
     return (
       <div className={`ad-container ${className}`}>
         <div className="text-xs text-muted-foreground text-center mb-2">
           Advertisement
         </div>
-        <div
-          dangerouslySetInnerHTML={{ __html: adConfig.code }}
-          className="flex justify-center"
-        />
+        <div className="flex justify-center">
+          {adConfig!.adType === "image" ? (
+            adConfig!.linkUrl ? (
+              <a
+                href={adConfig!.linkUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block"
+              >
+                <img
+                  src={adConfig!.imageUrl}
+                  alt={adConfig!.altText}
+                  className="max-w-full h-auto rounded"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                  }}
+                />
+              </a>
+            ) : (
+              <img
+                src={adConfig!.imageUrl}
+                alt={adConfig!.altText}
+                className="max-w-full h-auto rounded"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                }}
+              />
+            )
+          ) : (
+            <div dangerouslySetInnerHTML={{ __html: adConfig!.code }} />
+          )}
+        </div>
       </div>
     );
   }
@@ -79,7 +128,7 @@ export default function AdSense({ placement, className = "" }: AdSenseProps) {
           <div className="text-sm">
             {!adConfig || !adConfig.enabled
               ? "Ad placement disabled"
-              : "No ad code configured"
+              : "No ad configured"
             }
           </div>
           <div className="text-xs text-muted-foreground/70">
