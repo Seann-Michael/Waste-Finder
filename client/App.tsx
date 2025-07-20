@@ -16,6 +16,7 @@ import AddFacility from "./pages/admin/AddFacility";
 import EditFacility from "./pages/admin/EditFacility";
 import LocationDataTable from "./pages/admin/LocationDataTable";
 import AdminSettings from "./pages/admin/AdminSettings";
+import ReviewsTable from "./pages/admin/ReviewsTable";
 import About from "./pages/About";
 import LocationDetail from "./pages/LocationDetail";
 import SuggestLocation from "./pages/SuggestLocation";
