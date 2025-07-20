@@ -249,7 +249,7 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
     showRelatedPosts: true,
     enableComments: false,
     enableSocialSharing: true,
-    enableNewsletterSignup: true,
+    enableNewsletterSignup: false,
 
     // Reading Time
     enableReadingTime: true,
