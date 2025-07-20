@@ -354,8 +354,8 @@ export default function LocationDetail() {
         debrisTypes: editFormData.debrisTypes.map((name, index) => ({
           id: index.toString(),
           name,
-          price: location.debrisTypes?.[index]?.price,
-          priceDetails: location.debrisTypes?.[index]?.priceDetails,
+          price: editFormData.debrisPricing[name]?.price,
+          priceDetails: editFormData.debrisPricing[name]?.priceDetails || "",
         })),
         locationType: editFormData.facilityType,
         updatedAt: new Date().toISOString(),
