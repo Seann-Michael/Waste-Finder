@@ -12,6 +12,7 @@ import {
   FileText,
   Home,
   Database,
+  DollarSign,
 } from "lucide-react";
 
 const adminNavItems = [
@@ -34,6 +35,11 @@ const adminNavItems = [
     title: "Suggestions",
     href: "/admin/suggestions",
     icon: Edit,
+  },
+  {
+    title: "Marketing",
+    href: "/admin/marketing",
+    icon: DollarSign,
   },
   {
     title: "Settings",
