@@ -340,7 +340,8 @@ export default function LocationDataTable() {
   const currentItems = filteredLocations.slice(startIndex, endIndex);
 
   return (
-    <div className="space-y-6">
+    <AdminLayout>
+      <div className="space-y-6">
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
