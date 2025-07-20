@@ -425,12 +425,7 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
     }
   };
 
-  const handleSaveCodeSettings = () => {
-    console.log("Saving code settings:", codeSettings);
-    // Here you would implement the actual functionality to inject the custom code
-    // For security, this should be handled server-side with proper validation
-    alert("Custom code settings saved successfully! Changes may take a few minutes to appear.");
-  };
+
 
   const handleSaveWebsiteSettings = () => {
     console.log("Saving website settings:", websiteSettings);
