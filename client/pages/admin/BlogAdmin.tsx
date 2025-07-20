@@ -578,12 +578,38 @@ export default function BlogAdmin() {
 
             <div>
               <Label htmlFor="content">Content *</Label>
-              <RichTextEditor
-                value={formData.content}
-                onChange={(content) => setFormData(prev => ({ ...prev, content }))}
-                placeholder="Write your blog post content here. Use the toolbar for formatting options or switch to HTML mode for advanced editing."
-                className="mt-2"
-              />
+              <div className="space-y-2">
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const youtubeUrl = prompt("Enter YouTube video URL:");
+                      if (youtubeUrl) {
+                        const videoId = extractYouTubeVideoId(youtubeUrl);
+                        if (videoId) {
+                          const embedCode = `<div class="video-embed my-4"><iframe width="100%" height="315" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe></div>`;
+                          setFormData(prev => ({
+                            ...prev,
+                            content: prev.content + '\n\n' + embedCode
+                          }));
+                        } else {
+                          showError("Invalid YouTube URL. Please use a valid YouTube video URL.");
+                        }
+                      }
+                    }}
+                  >
+                    📺 Add YouTube Video
+                  </Button>
+                </div>
+                <RichTextEditor
+                  value={formData.content}
+                  onChange={(content) => setFormData(prev => ({ ...prev, content }))}
+                  placeholder="Write your blog post content here. Use the toolbar for formatting options or switch to HTML mode for advanced editing."
+                  className="mt-2"
+                />
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
