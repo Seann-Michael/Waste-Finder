@@ -21,19 +21,9 @@ const adminNavItems = [
     icon: BarChart3,
   },
   {
-    title: "All Locations",
+    title: "Locations",
     href: "/admin/locations",
     icon: Database,
-  },
-  {
-    title: "Add Location",
-    href: "/admin/add-location",
-    icon: MapPin,
-  },
-  {
-    title: "Bulk Upload",
-    href: "/admin/bulk-upload",
-    icon: Upload,
   },
   {
     title: "Reviews",
