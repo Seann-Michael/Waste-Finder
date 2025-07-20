@@ -39,15 +39,71 @@ const App = () => (
           <Route path="/all-locations" element={<AllLocations />} />
           <Route path="/suggest-location" element={<SuggestLocation />} />
           <Route path="/resources" element={<Resources />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route
+            path="/admin"
+            element={
+              <AdminRoute>
+                <Admin />
+              </AdminRoute>
+            }
+          />
           <Route path="/admin-login" element={<AdminLogin />} />
-          <Route path="/admin/bulk-upload" element={<BulkUploadFacilities />} />
-          <Route path="/admin/add-location" element={<AddFacility />} />
-          <Route path="/admin/edit-location/:id" element={<EditFacility />} />
-          <Route path="/admin/locations" element={<LocationDataTable />} />
-          <Route path="/admin/reviews" element={<ReviewsTable />} />
-          <Route path="/admin/suggestions" element={<SuggestionsTable />} />
-          <Route path="/admin/settings" element={<AdminSettings />} />
+          <Route
+            path="/admin/bulk-upload"
+            element={
+              <AdminRoute>
+                <BulkUploadFacilities />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/add-location"
+            element={
+              <AdminRoute>
+                <AddFacility />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/edit-location/:id"
+            element={
+              <AdminRoute>
+                <EditFacility />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/locations"
+            element={
+              <AdminRoute>
+                <LocationDataTable />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/reviews"
+            element={
+              <AdminRoute>
+                <ReviewsTable />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/suggestions"
+            element={
+              <AdminRoute>
+                <SuggestionsTable />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/settings"
+            element={
+              <AdminRoute>
+                <AdminSettings />
+              </AdminRoute>
+            }
+          />
           <Route path="/location/:id" element={<LocationDetail />} />
           <Route path="/about" element={<About />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
