@@ -34,14 +34,16 @@ import {
   Building2,
   HardHat,
   AlertCircle,
+  Navigation,
+  Edit,
 } from "lucide-react";
 import { Location } from "@shared/api";
 
-export default function EditFacility() {
+export default function EditLocation() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const [facility, setFacility] = useState<Location | null>(null);
+  const [location, setLocation] = useState<Location | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -62,6 +64,7 @@ export default function EditFacility() {
     additionalPaymentDetails: "",
     debrisTypes: [] as string[],
     additionalLocationDetails: "",
+    additionalDebrisPricingDetails: "",
     latitude: "",
     longitude: "",
     isActive: true,
@@ -147,281 +150,216 @@ export default function EditFacility() {
     "Concrete",
     "Asphalt",
     "Metal",
-    "Wood",
-    "Hazardous Materials",
-    "Recyclables",
+    "Hazardous Waste",
   ];
 
   useEffect(() => {
-    loadFacility();
+    if (id) {
+      loadLocationData();
+    }
   }, [id]);
 
-  const loadFacility = async () => {
+  const loadLocationData = async () => {
     setIsLoading(true);
     try {
-      // Fetch facility data from server API
+      // Fetch location data from server/localStorage
       const response = await fetch(`/api/locations/${id}`);
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch facility data");
-      }
-
-      const data = await response.json();
-      const facility = data.data;
-
-      if (!facility) {
-        throw new Error("Facility not found");
-      }
-
-      setFacility(facility);
-
-      // Populate form with facility data
-      setFormData({
-        name: facility.name,
-        address: facility.address,
-        city: facility.city,
-        state: facility.state,
-        zipCode: facility.zipCode,
-        phone: facility.phone,
-        email: facility.email || "",
-        website: facility.website || "",
-        facilityType: facility.locationType,
-        paymentTypes: facility.paymentTypes?.map((p) => p.name) || [],
-        additionalPaymentDetails: facility.additionalPaymentDetails || "",
-        debrisTypes: facility.debrisTypes?.map((d) => d.name) || [],
-        additionalLocationDetails: facility.notes || "",
-        latitude: facility.latitude?.toString() || "",
-        longitude: facility.longitude?.toString() || "",
-        isActive: facility.isActive ?? true,
-      });
-
-      // Convert operating hours
-      if (facility.operatingHours && Array.isArray(facility.operatingHours)) {
-        const hoursMap = facility.operatingHours.reduce(
-          (acc, hour) => {
-            if (hour && typeof hour.dayOfWeek !== 'undefined') {
-              acc[hour.dayOfWeek] = hour;
-            }
-            return acc;
-          },
-          {} as Record<number, any>,
-        );
-
-        setOperatingHours((prev) =>
-          prev.map((hour) => ({
-            ...hour,
-            openTime: hoursMap[hour.day]?.openTime || "",
-            closeTime: hoursMap[hour.day]?.closeTime || "",
-            isClosed: hoursMap[hour.day]?.isClosed || false,
-          })),
-        );
+      
+      if (response.ok) {
+        const locationData = await response.json();
+        setLocation(locationData);
+        populateFormData(locationData);
+      } else {
+        // Fallback to mock data for development
+        const mockLocation = {
+          id: id!,
+          name: "Green Valley Landfill",
+          address: "1234 Waste Drive",
+          city: "Springfield",
+          state: "IL",
+          zipCode: "62701",
+          phone: "(555) 123-4567",
+          email: "info@greenvalleylandfill.com",
+          website: "https://greenvalleylandfill.com",
+          facilityType: "landfill",
+          paymentTypes: ["Cash", "Credit/Debit"],
+          debrisTypes: ["General Household Waste", "Yard Waste"],
+          additionalLocationDetails: "Large municipal landfill serving Springfield area",
+          additionalDebrisPricingDetails: "Volume discounts available for commercial customers",
+          latitude: 39.7817,
+          longitude: -89.6501,
+          isActive: true,
+        };
+        setLocation(mockLocation);
+        populateFormData(mockLocation);
       }
     } catch (error) {
-      console.error("Error loading facility:", error);
-      setFormErrors({ general: "Failed to load facility data. Please try again." });
-
-      // If facility not found, redirect back to locations list
-      if (error instanceof Error && error.message.includes("not found")) {
-        setTimeout(() => {
-          navigate("/admin/locations");
-        }, 2000);
-      }
+      console.error("Error loading location:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handlePaymentChange = (payment: string, checked: boolean) => {
-    if (checked) {
-      setFormData((prev) => ({
-        ...prev,
-        paymentTypes: [...prev.paymentTypes, payment],
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        paymentTypes: prev.paymentTypes.filter((p) => p !== payment),
-      }));
-    }
-  };
+  const populateFormData = (locationData: any) => {
+    setFormData({
+      name: locationData.name || "",
+      address: locationData.address || "",
+      city: locationData.city || "",
+      state: locationData.state || "",
+      zipCode: locationData.zipCode || "",
+      phone: locationData.phone || "",
+      email: locationData.email || "",
+      website: locationData.website || "",
+      googleBusinessUrl: locationData.googleBusinessUrl || "",
+      facilityType: locationData.facilityType || "",
+      paymentTypes: locationData.paymentTypes || [],
+      additionalPaymentDetails: locationData.additionalPaymentDetails || "",
+      debrisTypes: locationData.debrisTypes || [],
+      additionalLocationDetails: locationData.additionalLocationDetails || "",
+      additionalDebrisPricingDetails: locationData.additionalDebrisPricingDetails || "",
+      latitude: locationData.latitude?.toString() || "",
+      longitude: locationData.longitude?.toString() || "",
+      isActive: locationData.isActive !== undefined ? locationData.isActive : true,
+    });
 
-  const handleDebrisChange = (debris: string, checked: boolean) => {
-    if (checked) {
-      setFormData((prev) => ({
-        ...prev,
-        debrisTypes: [...prev.debrisTypes, debris],
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        debrisTypes: prev.debrisTypes.filter((d) => d !== debris),
-      }));
-    }
-  };
-
-  const handleHoursChange = (
-    index: number,
-    field: string,
-    value: string | boolean,
-  ) => {
-    setOperatingHours((prev) =>
-      prev.map((hour, i) => (i === index ? { ...hour, [field]: value } : hour)),
-    );
-  };
-
-  const validateForm = () => {
-    const errors: Record<string, string> = {};
-
-    if (!formData.name) errors.name = "Facility name is required";
-    if (!formData.address) errors.address = "Address is required";
-    if (!formData.city) errors.city = "City is required";
-    if (!formData.state) errors.state = "State is required";
-    if (!formData.zipCode) errors.zipCode = "ZIP code is required";
-    else if (!/^\d{5}$/.test(formData.zipCode))
-      errors.zipCode = "ZIP code must be 5 digits";
-    if (!formData.facilityType)
-      errors.facilityType = "Facility type is required";
-    if (formData.phone && !/^\(\d{3}\) \d{3}-\d{4}$/.test(formData.phone)) {
-      errors.phone = "Phone must be in format (XXX) XXX-XXXX";
-    }
-    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errors.email = "Invalid email format";
+    // Set operating hours if available
+    if (locationData.operatingHours) {
+      setOperatingHours(locationData.operatingHours);
     }
 
-    setFormErrors(errors);
-    return Object.keys(errors).length === 0;
+    // Set debris pricing if available
+    if (locationData.debrisPricing) {
+      setDebrisPricing(locationData.debrisPricing);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!validateForm()) return;
-
     setIsSubmitting(true);
-    try {
-      // Mock API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+    setFormErrors({});
 
-      setSubmitSuccess(true);
-      setTimeout(() => {
-        navigate("/admin");
-      }, 2000);
+    try {
+      // Validate required fields
+      const errors: Record<string, string> = {};
+      
+      if (!formData.name.trim()) {
+        errors.name = "Facility name is required";
+      }
+      if (!formData.address.trim()) {
+        errors.address = "Address is required";
+      }
+      if (!formData.city.trim()) {
+        errors.city = "City is required";
+      }
+      if (!formData.state.trim()) {
+        errors.state = "State is required";
+      }
+      if (!formData.zipCode.trim()) {
+        errors.zipCode = "ZIP code is required";
+      }
+      if (!formData.facilityType) {
+        errors.facilityType = "Facility type is required";
+      }
+
+      if (Object.keys(errors).length > 0) {
+        setFormErrors(errors);
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Prepare the data for submission
+      const submissionData = {
+        ...formData,
+        operatingHours,
+        debrisPricing,
+        latitude: formData.latitude ? parseFloat(formData.latitude) : undefined,
+        longitude: formData.longitude ? parseFloat(formData.longitude) : undefined,
+      };
+
+      // Submit to server
+      const response = await fetch(`/api/locations/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(submissionData),
+      });
+
+      if (response.ok) {
+        setSubmitSuccess(true);
+        setTimeout(() => {
+          navigate("/admin/locations");
+        }, 2000);
+      } else {
+        throw new Error("Failed to update location");
+      }
     } catch (error) {
-      console.error("Error updating facility:", error);
+      console.error("Error updating location:", error);
+      setFormErrors({ general: "Failed to update location. Please try again." });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleArchive = async () => {
-    if (
-      !confirm(
-        "Are you sure you want to archive this facility? It will be hidden from public view.",
-      )
-    ) {
-      return;
-    }
-
-    try {
-      // Mock API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      alert("Facility archived successfully");
-      navigate("/admin");
-    } catch (error) {
-      console.error("Error archiving facility:", error);
-    }
+  const handlePaymentTypeChange = (type: string, checked: boolean) => {
+    setFormData(prev => ({
+      ...prev,
+      paymentTypes: checked
+        ? [...prev.paymentTypes, type]
+        : prev.paymentTypes.filter(t => t !== type)
+    }));
   };
 
-  const handleDelete = async () => {
-    if (
-      !confirm(
-        "Are you sure you want to permanently delete this facility? This action cannot be undone.",
-      )
-    ) {
-      return;
-    }
-
-    try {
-      // Mock API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      alert("Facility deleted successfully");
-      navigate("/admin");
-    } catch (error) {
-      console.error("Error deleting facility:", error);
-    }
+  const handleDebrisTypeChange = (type: string, checked: boolean) => {
+    setFormData(prev => ({
+      ...prev,
+      debrisTypes: checked
+        ? [...prev.debrisTypes, type]
+        : prev.debrisTypes.filter(t => t !== type)
+    }));
   };
 
-  const getFacilityIcon = (type: Location["facilityType"]) => {
-    switch (type) {
-      case "landfill":
-        return <Trash2 className="w-6 h-6" />;
-      case "transfer_station":
-        return <Building2 className="w-6 h-6" />;
-      case "construction_landfill":
-        return <HardHat className="w-6 h-6" />;
-      default:
-        return <Trash2 className="w-6 h-6" />;
-    }
-  };
-
-  const getFacilityLabel = (type: Location["facilityType"]) => {
-    switch (type) {
-      case "landfill":
-        return "Municipal Landfill";
-      case "transfer_station":
-        return "Transfer Station";
-      case "construction_landfill":
-        return "Construction Landfill";
-      default:
-        return "Waste Facility";
-    }
-  };
-
-  const renderStars = (rating: number, size = "w-4 h-4") => {
-    return Array.from({ length: 5 }, (_, i) => (
-      <Star
-        key={i}
-        className={`${size} ${
-          i < Math.floor(rating)
-            ? "text-yellow-400 fill-current"
-            : "text-gray-300"
-        }`}
-      />
+  const handleOperatingHourChange = (index: number, field: string, value: string | boolean) => {
+    setOperatingHours(prev => prev.map((hour, i) =>
+      i === index ? { ...hour, [field]: value } : hour
     ));
+  };
+
+  const handleDebrisPricingChange = (debris: string, field: string, value: string | number) => {
+    setDebrisPricing(prev => ({
+      ...prev,
+      [debris]: {
+        ...prev[debris],
+        [field]: value
+      }
+    }));
   };
 
   if (isLoading) {
     return (
       <AdminLayout>
-        <div className="flex items-center justify-center py-16">
-          <div className="text-center">
-            <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p>Loading facility data...</p>
-          </div>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-lg">Loading location...</div>
         </div>
       </AdminLayout>
     );
   }
 
-  if (submitSuccess) {
+  if (!location) {
     return (
       <AdminLayout>
-        <div className="flex items-center justify-center py-16">
-          <Card className="max-w-md">
-            <CardContent className="pt-8 text-center">
-              <CheckCircle className="w-12 h-12 text-green-600 mx-auto mb-4" />
-              <h2 className="text-2xl font-bold mb-4">
-                Facility Updated Successfully!
-              </h2>
-              <p className="text-muted-foreground mb-6">
-                The facility information has been updated and changes are now
-                live.
-              </p>
-              <Button asChild>
-                <Link to="/admin">Return to Admin Dashboard</Link>
-              </Button>
-            </CardContent>
-          </Card>
+        <div className="max-w-2xl mx-auto py-16 text-center">
+          <AlertCircle className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
+          <h1 className="text-2xl font-bold mb-2">Location Not Found</h1>
+          <p className="text-muted-foreground mb-6">
+            The location you're looking for doesn't exist or may have been removed.
+          </p>
+          <Button asChild>
+            <Link to="/admin/locations">
+              <ChevronLeft className="w-4 h-4 mr-2" />
+              Back to Locations
+            </Link>
+          </Button>
         </div>
       </AdminLayout>
     );
@@ -429,495 +367,73 @@ export default function EditFacility() {
 
   return (
     <AdminLayout>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Back to Results & Breadcrumb */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Link to="/admin" className="hover:text-primary">
-              Admin
-            </Link>
-            <span>/</span>
-            <Link to="/admin/locations" className="hover:text-primary">
-              Locations
-            </Link>
-            <span>/</span>
-            <span>Edit Location</span>
+      <div className="max-w-6xl mx-auto space-y-8">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Button variant="outline" asChild>
+              <Link to="/admin/locations">
+                <ChevronLeft className="w-4 h-4 mr-2" />
+                Back to Locations
+              </Link>
+            </Button>
+            <div>
+              <h1 className="text-3xl font-bold">Edit Location</h1>
+              <p className="text-muted-foreground">
+                Update facility information and settings
+              </p>
+            </div>
           </div>
-          <Button variant="outline" asChild>
-            <Link to="/admin/locations">
-              <ChevronLeft className="w-4 h-4 mr-2" />
-              Back to Locations
-            </Link>
-          </Button>
         </div>
 
-        {/* Error Display */}
-        {formErrors.general && (
-          <Alert className="border-red-200 bg-red-50">
-            <AlertCircle className="h-4 w-4 text-red-600" />
-            <AlertDescription className="text-red-700">
-              {formErrors.general}
+        {/* Success Alert */}
+        {submitSuccess && (
+          <Alert>
+            <CheckCircle className="h-4 w-4" />
+            <AlertDescription>
+              Location updated successfully! Redirecting to locations list...
             </AlertDescription>
           </Alert>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Header */}
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="text-primary">
-                  {getFacilityIcon(
-                    formData.facilityType as Location["facilityType"],
+        {/* Error Alert */}
+        {formErrors.general && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{formErrors.general}</AlertDescription>
+          </Alert>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Basic Information */}
+          <Card>
+            <CardHeader className="flex flex-row items-center gap-2">
+              <MapPin className="w-5 h-5" />
+              <CardTitle>Basic Information</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Facility Name *</Label>
+                  <Input
+                    id="name"
+                    value={formData.name}
+                    onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                    placeholder="Enter facility name"
+                  />
+                  {formErrors.name && (
+                    <p className="text-sm text-red-600">{formErrors.name}</p>
                   )}
                 </div>
-                <Badge variant="secondary" className="flex items-center gap-1">
-                  {getFacilityLabel(
-                    formData.facilityType as Location["facilityType"],
-                  )}
-                </Badge>
-              </div>
-
-              <div className="space-y-4">
-                <Label htmlFor="name" className="text-2xl font-bold">
-                  Facility Name
-                </Label>
-                <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      name: e.target.value,
-                    }))
-                  }
-                  className="text-3xl font-bold border-none px-0 text-foreground"
-                  placeholder="e.g., Green Valley Landfill"
-                />
-              </div>
-
-              <div className="flex items-center gap-2 mb-4">
-                {renderStars(facility?.rating || 4.5, "w-5 h-5")}
-                <span className="text-lg font-medium">
-                  {facility?.rating || 4.5}
-                </span>
-                <span className="text-muted-foreground">
-                  ({facility?.reviewCount || 127} reviews)
-                </span>
-              </div>
-
-              <div className="flex flex-wrap gap-3">
-                <Button type="submit" disabled={isSubmitting}>
-                  <Save className="w-4 h-4 mr-2" />
-                  {isSubmitting ? "Saving..." : "Save Changes"}
-                </Button>
-              </div>
-            </div>
-
-            {/* Contact Information */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Phone className="w-5 h-5" />
-                  Contact Information
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label className="flex items-start gap-3">
-                    <MapPin className="w-5 h-5 text-muted-foreground mt-0.5" />
-                    Address
-                  </Label>
-                  <div className="space-y-2 ml-8">
-                    <Input
-                      value={formData.address}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          address: e.target.value,
-                        }))
-                      }
-                      placeholder="Street Address"
-                    />
-                    <div className="grid grid-cols-3 gap-2">
-                      <Input
-                        value={formData.city}
-                        onChange={(e) =>
-                          setFormData((prev) => ({
-                            ...prev,
-                            city: e.target.value,
-                          }))
-                        }
-                        placeholder="City"
-                      />
-                      <Input
-                        value={formData.state}
-                        onChange={(e) =>
-                          setFormData((prev) => ({
-                            ...prev,
-                            state: e.target.value.toUpperCase(),
-                          }))
-                        }
-                        placeholder="State"
-                        maxLength={2}
-                      />
-                      <Input
-                        value={formData.zipCode}
-                        onChange={(e) =>
-                          setFormData((prev) => ({
-                            ...prev,
-                            zipCode: e.target.value,
-                          }))
-                        }
-                        placeholder="ZIP Code"
-                        maxLength={5}
-                      />
-                    </div>
-                  </div>
-                </div>
 
                 <div className="space-y-2">
-                  <Label className="flex items-center gap-3">
-                    <Phone className="w-5 h-5 text-muted-foreground" />
-                    Phone
-                  </Label>
-                  <Input
-                    value={formData.phone}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        phone: e.target.value,
-                      }))
-                    }
-                    placeholder="(555) 123-4567"
-                    className="ml-8"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label className="flex items-center gap-3">
-                    <Mail className="w-5 h-5 text-muted-foreground" />
-                    Email
-                  </Label>
-                  <Input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        email: e.target.value,
-                      }))
-                    }
-                    placeholder="info@facility.com"
-                    className="ml-8"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label className="flex items-center gap-3">
-                    <Globe className="w-5 h-5 text-muted-foreground" />
-                    Website
-                  </Label>
-                  <Input
-                    type="url"
-                    value={formData.website}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        website: e.target.value,
-                      }))
-                    }
-                    placeholder="https://facility.com"
-                    className="ml-8"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label className="flex items-center gap-3">
-                    <Building2 className="w-5 h-5 text-muted-foreground" />
-                    Google My Business URL
-                  </Label>
-                  <Input
-                    type="url"
-                    value={formData.googleBusinessUrl}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        googleBusinessUrl: e.target.value,
-                      }))
-                    }
-                    placeholder="https://maps.google.com/maps/place/..."
-                    className="ml-8"
-                  />
-                  <p className="text-xs text-muted-foreground ml-8">
-                    Link to your Google Business Profile for reviews and
-                    directions
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Operating Hours */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Clock className="w-5 h-5" />
-                  Operating Hours
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {operatingHours.map((hour, index) => (
-                    <div
-                      key={hour.day}
-                      className="flex justify-between items-center"
-                    >
-                      <span className="font-medium w-24">{hour.dayName}</span>
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          checked={hour.isClosed}
-                          onCheckedChange={(checked) =>
-                            handleHoursChange(
-                              index,
-                              "isClosed",
-                              checked as boolean,
-                            )
-                          }
-                        />
-                        <Label className="text-sm">Closed</Label>
-                        {!hour.isClosed && (
-                          <>
-                            <Input
-                              type="time"
-                              value={hour.openTime}
-                              onChange={(e) =>
-                                handleHoursChange(
-                                  index,
-                                  "openTime",
-                                  e.target.value,
-                                )
-                              }
-                              className="w-32"
-                            />
-                            <span>to</span>
-                            <Input
-                              type="time"
-                              value={hour.closeTime}
-                              onChange={(e) =>
-                                handleHoursChange(
-                                  index,
-                                  "closeTime",
-                                  e.target.value,
-                                )
-                              }
-                              className="w-32"
-                            />
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Accepted Materials with Pricing */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <DollarSign className="w-5 h-5" />
-                  Accepted Materials & Pricing
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div>
-                    <Label className="text-base font-medium">
-                      Accepted Materials & Pricing
-                    </Label>
-                    <div className="space-y-4 mt-3">
-                      {debrisOptions.map((debris) => (
-                        <div
-                          key={debris}
-                          className="border rounded-lg p-4 space-y-3"
-                        >
-                          <div className="flex items-center space-x-2">
-                            <Checkbox
-                              id={debris}
-                              checked={formData.debrisTypes.includes(debris)}
-                              onCheckedChange={(checked) =>
-                                handleDebrisChange(debris, checked as boolean)
-                              }
-                            />
-                            <Label
-                              htmlFor={debris}
-                              className="text-sm font-medium"
-                            >
-                              {debris}
-                            </Label>
-                          </div>
-
-                          {formData.debrisTypes.includes(debris) && (
-                            <div className="ml-6 grid grid-cols-1 md:grid-cols-3 gap-3">
-                              <div className="space-y-2">
-                                <Label className="text-xs">
-                                  Price per Ton ($)
-                                </Label>
-                                <Input
-                                  type="number"
-                                  placeholder="65.00"
-                                  value={
-                                    debrisPricing[debris]?.pricePerTon || ""
-                                  }
-                                  onChange={(e) =>
-                                    setDebrisPricing({
-                                      ...debrisPricing,
-                                      [debris]: {
-                                        ...debrisPricing[debris],
-                                        pricePerTon: e.target.value
-                                          ? parseFloat(e.target.value)
-                                          : undefined,
-                                      },
-                                    })
-                                  }
-                                />
-                              </div>
-                              <div className="space-y-2">
-                                <Label className="text-xs">
-                                  Price per Load ($)
-                                </Label>
-                                <Input
-                                  type="number"
-                                  placeholder="25.00"
-                                  value={
-                                    debrisPricing[debris]?.pricePerLoad || ""
-                                  }
-                                  onChange={(e) =>
-                                    setDebrisPricing({
-                                      ...debrisPricing,
-                                      [debris]: {
-                                        ...debrisPricing[debris],
-                                        pricePerLoad: e.target.value
-                                          ? parseFloat(e.target.value)
-                                          : undefined,
-                                      },
-                                    })
-                                  }
-                                />
-                              </div>
-                              <div className="space-y-2">
-                                <Label className="text-xs">Special Note</Label>
-                                <Input
-                                  placeholder="Free drop-off"
-                                  value={debrisPricing[debris]?.priceNote || ""}
-                                  onChange={(e) =>
-                                    setDebrisPricing({
-                                      ...debrisPricing,
-                                      [debris]: {
-                                        ...debrisPricing[debris],
-                                        priceNote: e.target.value,
-                                      },
-                                    })
-                                  }
-                                />
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Payment Methods */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <CreditCard className="w-5 h-5" />
-                  Payment Methods
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  {paymentOptions.map((payment) => (
-                    <div key={payment} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={payment}
-                        checked={formData.paymentTypes.includes(payment)}
-                        onCheckedChange={(checked) =>
-                          handlePaymentChange(payment, checked as boolean)
-                        }
-                      />
-                      <Label htmlFor={payment} className="text-sm font-normal">
-                        {payment}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-
-                <div>
-                  <Label htmlFor="additionalPaymentDetails">Additional Payment Details</Label>
-                  <Textarea
-                    id="additionalPaymentDetails"
-                    value={formData.additionalPaymentDetails}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        additionalPaymentDetails: e.target.value,
-                      }))
-                    }
-                    placeholder="Any additional payment information, terms, or special arrangements..."
-                    rows={3}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Additional Location Details */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Additional Location Details</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Textarea
-                  value={formData.additionalLocationDetails}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      additionalLocationDetails: e.target.value,
-                    }))
-                  }
-                  placeholder="Any additional information about the location, special services, restrictions, etc."
-                  rows={4}
-                />
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Quick Info */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Quick Info</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Type:</span>
+                  <Label htmlFor="facilityType">Facility Type *</Label>
                   <Select
                     value={formData.facilityType}
-                    onValueChange={(value) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        facilityType: value,
-                      }))
-                    }
+                    onValueChange={(value) => setFormData(prev => ({ ...prev, facilityType: value }))}
                   >
-                    <SelectTrigger className="w-auto">
-                      <SelectValue />
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select facility type" />
                     </SelectTrigger>
                     <SelectContent>
                       {facilityTypes.map((type) => (
@@ -927,83 +443,320 @@ export default function EditFacility() {
                       ))}
                     </SelectContent>
                   </Select>
+                  {formErrors.facilityType && (
+                    <p className="text-sm text-red-600">{formErrors.facilityType}</p>
+                  )}
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Status:</span>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="isActive"
-                      checked={formData.isActive}
-                      onCheckedChange={(checked) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          isActive: checked as boolean,
-                        }))
-                      }
-                    />
-                    <Label htmlFor="isActive" className="text-sm">
-                      Active
-                    </Label>
-                  </div>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Rating:</span>
-                  <span>{facility?.rating || 4.5}/5</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Reviews:</span>
-                  <span>{facility?.reviewCount || 127}</span>
-                </div>
-              </CardContent>
-            </Card>
+              </div>
 
-            {/* Map Placeholder */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Location</CardTitle>
-              </CardHeader>
-              <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <Label>Coordinates</Label>
-                  <div className="grid grid-cols-1 gap-2">
+                  <Label htmlFor="address">Street Address *</Label>
+                  <Input
+                    id="address"
+                    value={formData.address}
+                    onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))}
+                    placeholder="1234 Main St"
+                  />
+                  {formErrors.address && (
+                    <p className="text-sm text-red-600">{formErrors.address}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="city">City *</Label>
+                  <Input
+                    id="city"
+                    value={formData.city}
+                    onChange={(e) => setFormData(prev => ({ ...prev, city: e.target.value }))}
+                    placeholder="City"
+                  />
+                  {formErrors.city && (
+                    <p className="text-sm text-red-600">{formErrors.city}</p>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="state">State *</Label>
                     <Input
-                      value={formData.latitude}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          latitude: e.target.value,
-                        }))
-                      }
-                      placeholder="Latitude (e.g., 40.7128)"
+                      id="state"
+                      value={formData.state}
+                      onChange={(e) => setFormData(prev => ({ ...prev, state: e.target.value }))}
+                      placeholder="IL"
+                      maxLength={2}
                     />
+                    {formErrors.state && (
+                      <p className="text-sm text-red-600">{formErrors.state}</p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="zipCode">ZIP Code *</Label>
                     <Input
-                      value={formData.longitude}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          longitude: e.target.value,
-                        }))
-                      }
-                      placeholder="Longitude (e.g., -74.0060)"
+                      id="zipCode"
+                      value={formData.zipCode}
+                      onChange={(e) => setFormData(prev => ({ ...prev, zipCode: e.target.value }))}
+                      placeholder="62701"
                     />
+                    {formErrors.zipCode && (
+                      <p className="text-sm text-red-600">{formErrors.zipCode}</p>
+                    )}
                   </div>
                 </div>
-                <div className="aspect-square bg-muted rounded-lg flex items-center justify-center mt-4">
-                  <div className="text-center">
-                    <MapPin className="w-12 h-12 text-muted-foreground mx-auto mb-2" />
-                    <p className="text-sm text-muted-foreground">
-                      Interactive Map
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Preview Location
-                    </p>
-                  </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Contact Information */}
+          <Card>
+            <CardHeader className="flex flex-row items-center gap-2">
+              <Phone className="w-5 h-5" />
+              <CardTitle>Contact Information</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Phone Number</Label>
+                  <Input
+                    id="phone"
+                    value={formData.phone}
+                    onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+                    placeholder="(555) 123-4567"
+                  />
                 </div>
-              </CardContent>
-            </Card>
+
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email Address</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                    placeholder="info@facility.com"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="website">Website</Label>
+                  <Input
+                    id="website"
+                    value={formData.website}
+                    onChange={(e) => setFormData(prev => ({ ...prev, website: e.target.value }))}
+                    placeholder="https://example.com"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="googleBusinessUrl">Google Business Profile</Label>
+                  <Input
+                    id="googleBusinessUrl"
+                    value={formData.googleBusinessUrl}
+                    onChange={(e) => setFormData(prev => ({ ...prev, googleBusinessUrl: e.target.value }))}
+                    placeholder="https://maps.google.com/..."
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Operating Hours */}
+          <Card>
+            <CardHeader className="flex flex-row items-center gap-2">
+              <Clock className="w-5 h-5" />
+              <CardTitle>Operating Hours</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {operatingHours.map((hour, index) => (
+                  <div key={hour.day} className="flex items-center gap-4">
+                    <div className="w-20 text-sm font-medium">
+                      {hour.dayName}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        checked={!hour.isClosed}
+                        onCheckedChange={(checked) =>
+                          handleOperatingHourChange(index, "isClosed", !checked)
+                        }
+                      />
+                      <span className="text-sm">Open</span>
+                    </div>
+                    {!hour.isClosed && (
+                      <>
+                        <Input
+                          type="time"
+                          value={hour.openTime}
+                          onChange={(e) =>
+                            handleOperatingHourChange(index, "openTime", e.target.value)
+                          }
+                          className="w-32"
+                        />
+                        <span className="text-sm text-muted-foreground">to</span>
+                        <Input
+                          type="time"
+                          value={hour.closeTime}
+                          onChange={(e) =>
+                            handleOperatingHourChange(index, "closeTime", e.target.value)
+                          }
+                          className="w-32"
+                        />
+                      </>
+                    )}
+                    {hour.isClosed && (
+                      <span className="text-sm text-muted-foreground">Closed</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Payment Types */}
+          <Card>
+            <CardHeader className="flex flex-row items-center gap-2">
+              <CreditCard className="w-5 h-5" />
+              <CardTitle>Payment Methods</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {paymentOptions.map((option) => (
+                  <div key={option} className="flex items-center space-x-2">
+                    <Checkbox
+                      checked={formData.paymentTypes.includes(option)}
+                      onCheckedChange={(checked) =>
+                        handlePaymentTypeChange(option, checked as boolean)
+                      }
+                    />
+                    <Label className="text-sm">{option}</Label>
+                  </div>
+                ))}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="additionalPaymentDetails">Additional Payment Details</Label>
+                <Textarea
+                  id="additionalPaymentDetails"
+                  value={formData.additionalPaymentDetails}
+                  onChange={(e) => setFormData(prev => ({ ...prev, additionalPaymentDetails: e.target.value }))}
+                  placeholder="Any additional payment information or special terms..."
+                  rows={3}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Debris Types */}
+          <Card>
+            <CardHeader className="flex flex-row items-center gap-2">
+              <Trash2 className="w-5 h-5" />
+              <CardTitle>Accepted Debris Types</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {debrisOptions.map((option) => (
+                  <div key={option} className="flex items-center space-x-2">
+                    <Checkbox
+                      checked={formData.debrisTypes.includes(option)}
+                      onCheckedChange={(checked) =>
+                        handleDebrisTypeChange(option, checked as boolean)
+                      }
+                    />
+                    <Label className="text-sm">{option}</Label>
+                  </div>
+                ))}
+              </div>
+
+              {formData.debrisTypes.length > 0 && (
+                <div className="space-y-2">
+                  <Label htmlFor="additionalDebrisPricingDetails">Debris Pricing Details</Label>
+                  <Textarea
+                    id="additionalDebrisPricingDetails"
+                    value={formData.additionalDebrisPricingDetails}
+                    onChange={(e) => setFormData(prev => ({ ...prev, additionalDebrisPricingDetails: e.target.value }))}
+                    placeholder="Pricing information, volume discounts, special rates..."
+                    rows={3}
+                  />
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Location Details */}
+          <Card>
+            <CardHeader className="flex flex-row items-center gap-2">
+              <Navigation className="w-5 h-5" />
+              <CardTitle>Location Details</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="latitude">Latitude</Label>
+                  <Input
+                    id="latitude"
+                    value={formData.latitude}
+                    onChange={(e) => setFormData(prev => ({ ...prev, latitude: e.target.value }))}
+                    placeholder="39.7817"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="longitude">Longitude</Label>
+                  <Input
+                    id="longitude"
+                    value={formData.longitude}
+                    onChange={(e) => setFormData(prev => ({ ...prev, longitude: e.target.value }))}
+                    placeholder="-89.6501"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="additionalLocationDetails">Additional Location Details</Label>
+                <Textarea
+                  id="additionalLocationDetails"
+                  value={formData.additionalLocationDetails}
+                  onChange={(e) => setFormData(prev => ({ ...prev, additionalLocationDetails: e.target.value }))}
+                  placeholder="Any additional information about the facility, directions, restrictions, etc."
+                  rows={4}
+                />
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  checked={formData.isActive}
+                  onCheckedChange={(checked) =>
+                    setFormData(prev => ({ ...prev, isActive: checked as boolean }))
+                  }
+                />
+                <Label>Location is active and visible to users</Label>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Submit Button */}
+          <div className="flex justify-end gap-4">
+            <Button type="button" variant="outline" asChild>
+              <Link to="/admin/locations">Cancel</Link>
+            </Button>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                  Updating...
+                </>
+              ) : (
+                <>
+                  <Save className="w-4 h-4 mr-2" />
+                  Update Location
+                </>
+              )}
+            </Button>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </AdminLayout>
   );
 }
