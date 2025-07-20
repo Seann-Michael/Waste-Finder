@@ -48,6 +48,12 @@ const knownZipCodes: Record<string, { lat: number; lng: number }> = {
   "44129": { lat: 41.3784, lng: -81.729 }, // Parma
   "44135": { lat: 41.395, lng: -81.763 }, // Cleveland Southwest
 
+  // Additional Ohio ZIP codes
+  "44035": { lat: 41.2367, lng: -81.8552 }, // Elyria, OH (about 25 miles from Cleveland)
+  "44001": { lat: 41.6025, lng: -80.7698 }, // Ashtabula, OH
+  "44012": { lat: 41.6053, lng: -81.337 }, // Avon Lake, OH
+  "44017": { lat: 41.4034, lng: -82.1832 }, // Elyria, OH
+
   // Springfield IL area (existing facilities)
   "62701": { lat: 39.7817, lng: -89.6501 }, // Springfield IL
   "62702": { lat: 39.7567, lng: -89.6301 }, // Springfield IL
