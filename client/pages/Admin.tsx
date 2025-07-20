@@ -187,7 +187,7 @@ export default function Admin() {
                   >
                     <Link to="/admin/bulk-upload">
                       <Upload className="w-4 h-4 mr-2" />
-                      Bulk Upload Facilities
+                      Bulk Upload Locations
                     </Link>
                   </Button>
                   <Button
