@@ -47,10 +47,9 @@ export default function SuggestLocation() {
 
   const paymentOptions = [
     "Cash",
-    "Credit Card",
-    "Debit Card",
     "Check",
-    "ACH/Bank Transfer",
+    "Credit/Debit",
+    "New Terms",
   ];
 
   const debrisOptions = [
