@@ -173,15 +173,7 @@ export default function EditFacility() {
       }
 
 
-            name: "Appliances",
-            category: "general",
-            pricePerLoad: 25,
-          },
-        ],
-        operatingHours: [
-          {
-            dayOfWeek: 1,
-            openTime: "07:00",
+
             closeTime: "17:00",
             isClosed: false,
           },
