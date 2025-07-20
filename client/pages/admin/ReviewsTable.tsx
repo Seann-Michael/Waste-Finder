@@ -628,7 +628,7 @@ export default function ReviewsTable() {
                   {currentItems.length === 0 ? (
                     <TableRow>
                       <TableCell
-                        colSpan={6}
+                        colSpan={7}
                         className="text-center py-8 text-muted-foreground"
                       >
                         No reviews found matching your criteria
@@ -636,12 +636,19 @@ export default function ReviewsTable() {
                     </TableRow>
                   ) : (
                     currentItems.map((review) => (
-                      <TableRow
-                        key={review.id}
-                        className="hover:bg-muted/50 cursor-pointer"
-                        onClick={() => handleRowClick(review)}
-                      >
-                        <TableCell>
+                      <TableRow key={review.id} className="hover:bg-muted/50">
+                        <TableCell onClick={(e) => e.stopPropagation()}>
+                          <Checkbox
+                            checked={selectedReviews.includes(review.id)}
+                            onCheckedChange={(checked) =>
+                              handleSelectReview(review.id, checked as boolean)
+                            }
+                          />
+                        </TableCell>
+                        <TableCell
+                          className="cursor-pointer"
+                          onClick={() => handleRowClick(review)}
+                        >
                           <div className="font-medium text-primary">
                             {review.locationName}
                           </div>
