@@ -1256,60 +1256,63 @@ export default function AdminSettings() {
                               <h4 className="font-medium">
                                 Existing Custom Ads
                               </h4>
-                              {adSettings.customAds.map((ad: any) => (
-                                <div
-                                  key={ad.id}
-                                  className="border rounded-lg p-4 space-y-2"
-                                >
-                                  <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-2">
-                                      <h5 className="font-medium">
-                                        {ad.title}
-                                      </h5>
-                                      <Badge
-                                        variant={
-                                          ad.isActive ? "default" : "secondary"
-                                        }
-                                      >
-                                        {ad.isActive ? "Active" : "Inactive"}
-                                      </Badge>
-                                      <Badge variant="outline">
-                                        {ad.placement}
-                                      </Badge>
+                              {Array.isArray(adSettings.customAds) &&
+                                adSettings.customAds.map((ad) => (
+                                  <div
+                                    key={ad.id}
+                                    className="border rounded-lg p-4 space-y-2"
+                                  >
+                                    <div className="flex items-center justify-between">
+                                      <div className="flex items-center gap-2">
+                                        <h5 className="font-medium">
+                                          {ad.title}
+                                        </h5>
+                                        <Badge
+                                          variant={
+                                            ad.isActive
+                                              ? "default"
+                                              : "secondary"
+                                          }
+                                        >
+                                          {ad.isActive ? "Active" : "Inactive"}
+                                        </Badge>
+                                        <Badge variant="outline">
+                                          {ad.placement}
+                                        </Badge>
+                                      </div>
+                                      <div className="flex gap-2">
+                                        <Button
+                                          size="sm"
+                                          variant="outline"
+                                          onClick={() =>
+                                            handleToggleCustomAd(ad.id)
+                                          }
+                                        >
+                                          {ad.isActive
+                                            ? "Deactivate"
+                                            : "Activate"}
+                                        </Button>
+                                        <Button
+                                          size="sm"
+                                          variant="destructive"
+                                          onClick={() =>
+                                            handleRemoveCustomAd(ad.id)
+                                          }
+                                        >
+                                          Remove
+                                        </Button>
+                                      </div>
                                     </div>
-                                    <div className="flex gap-2">
-                                      <Button
-                                        size="sm"
-                                        variant="outline"
-                                        onClick={() =>
-                                          handleToggleCustomAd(ad.id)
-                                        }
-                                      >
-                                        {ad.isActive
-                                          ? "Deactivate"
-                                          : "Activate"}
-                                      </Button>
-                                      <Button
-                                        size="sm"
-                                        variant="destructive"
-                                        onClick={() =>
-                                          handleRemoveCustomAd(ad.id)
-                                        }
-                                      >
-                                        Remove
-                                      </Button>
-                                    </div>
-                                  </div>
-                                  <p className="text-sm text-muted-foreground">
-                                    {ad.content}
-                                  </p>
-                                  {ad.linkUrl && (
-                                    <p className="text-xs text-blue-600">
-                                      {ad.linkUrl}
+                                    <p className="text-sm text-muted-foreground">
+                                      {ad.content}
                                     </p>
-                                  )}
-                                </div>
-                              ))}
+                                    {ad.linkUrl && (
+                                      <p className="text-xs text-blue-600">
+                                        {ad.linkUrl}
+                                      </p>
+                                    )}
+                                  </div>
+                                ))}
                             </div>
                           )}
                         </div>
