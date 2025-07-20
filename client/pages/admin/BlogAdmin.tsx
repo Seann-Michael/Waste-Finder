@@ -164,6 +164,7 @@ export default function BlogAdmin() {
           status: "published",
           featured: true,
           tags: ["landfill", "costs", "pricing", "guide"],
+          categories: ["1", "4"], // Waste Management and How-to Guides
           featuredImage: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800",
           publishedAt: "2024-01-15T10:00:00Z",
           createdAt: "2024-01-15T08:00:00Z",
@@ -179,6 +180,7 @@ export default function BlogAdmin() {
           status: "draft",
           featured: false,
           tags: ["environment", "recycling", "sustainability"],
+          categories: ["2"], // Environmental Impact
           createdAt: "2024-01-14T14:30:00Z",
           updatedAt: "2024-01-14T14:30:00Z",
         },
@@ -256,6 +258,7 @@ export default function BlogAdmin() {
         status: formData.status,
         featured: formData.featured,
         tags: formData.tags.split(",").map(tag => tag.trim()).filter(Boolean),
+        categories: formData.categories,
         featuredImage: formData.featuredImage || undefined,
         publishedAt,
         createdAt: editingPost?.createdAt || now,
@@ -299,6 +302,7 @@ export default function BlogAdmin() {
       status: post.status,
       featured: post.featured,
       tags: post.tags.join(", "),
+      categories: post.categories,
       featuredImage: post.featuredImage || "",
       publishDate,
       publishTime,
