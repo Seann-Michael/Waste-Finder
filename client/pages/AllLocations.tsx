@@ -34,6 +34,35 @@ interface LocationSearchResponse {
   message: string;
 }
 
+// Simple distance calculation for mock data
+const calculateMockDistance = (zipCode: string): number => {
+  // Cleveland center coordinates
+  const clevelandLat = 41.4993;
+  const clevelandLng = -81.6944;
+
+  // Estimate coordinates based on ZIP code for Ohio area
+  const zipNum = parseInt(zipCode);
+
+  // For 44xxx ZIP codes (Ohio, Cleveland area)
+  if (zipCode.startsWith("44")) {
+    const lat = clevelandLat + ((zipNum % 1000) - 500) * 0.001;
+    const lng = clevelandLng + ((zipNum % 100) - 50) * 0.002;
+
+    // Calculate distance using simple formula
+    const latDiff = lat - clevelandLat;
+    const lngDiff = lng - clevelandLng;
+    return Math.sqrt(latDiff * latDiff + lngDiff * lngDiff) * 69; // Rough miles conversion
+  }
+
+  // For other Ohio ZIP codes (43xxx, 45xxx)
+  if (zipCode.startsWith("43") || zipCode.startsWith("45")) {
+    return Math.abs(zipNum - 44000) * 0.01; // Rough distance estimate
+  }
+
+  // Far away ZIP codes
+  return 999;
+};
+
 // Mock data for fallback when API is unavailable
 const getMockData = (query?: string): Location[] => {
   const allMockData: Location[] = [
@@ -278,16 +307,30 @@ const getMockData = (query?: string): Location[] => {
     },
   ];
 
-  // Filter for Cleveland area ZIP codes - always show data for these
-  if (
-    query === "44035" ||
-    query === "44111" ||
-    query === "44129" ||
-    query === "44102" ||
-    (query && query.startsWith("44"))
-  ) {
-    console.log("Returning Cleveland area mock data for:", query);
-    return allMockData.sort((a, b) => (a.distance || 0) - (b.distance || 0));
+  if (query && /^\d{5}$/.test(query)) {
+    const distance = calculateMockDistance(query);
+    console.log(`Distance from ${query} to Cleveland area:`, distance);
+
+    // Show Cleveland facilities if within 100 miles
+    if (distance <= 100) {
+      const facilitiesWithDistance = allMockData.map((facility) => ({
+        ...facility,
+        distance: calculateMockDistance(query) + Math.random() * 10, // Add some variation
+      }));
+
+      console.log(
+        "Returning Cleveland area mock data for:",
+        query,
+        "Distance:",
+        distance,
+      );
+      return facilitiesWithDistance.sort(
+        (a, b) => (a.distance || 0) - (b.distance || 0),
+      );
+    } else {
+      console.log("ZIP code too far from Cleveland area:", query);
+      return []; // No results for distant ZIP codes
+    }
   }
 
   // Return all data if no specific filter
