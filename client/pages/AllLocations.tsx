@@ -278,16 +278,20 @@ const getMockData = (query?: string): Location[] => {
     },
   ];
 
-  // Filter for Cleveland area ZIP codes
+  // Filter for Cleveland area ZIP codes - always show data for these
   if (
     query === "44035" ||
     query === "44111" ||
     query === "44129" ||
-    query === "44102"
+    query === "44102" ||
+    (query && query.startsWith("44"))
   ) {
+    console.log("Returning Cleveland area mock data for:", query);
     return allMockData.sort((a, b) => (a.distance || 0) - (b.distance || 0));
   }
 
+  // Return all data if no specific filter
+  console.log("Returning all mock data for query:", query);
   return allMockData;
 };
 
