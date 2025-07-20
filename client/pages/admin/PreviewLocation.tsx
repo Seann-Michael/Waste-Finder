@@ -703,7 +703,7 @@ export default function PreviewLocation() {
             </div>
 
             {/* Notes */}
-            {currentLocation.details.notes && (
+            {currentLocation.details?.notes && (
               <Card>
                 <CardHeader>
                   <CardTitle>Additional Information</CardTitle>
@@ -711,7 +711,7 @@ export default function PreviewLocation() {
                 <CardContent>
                   {isEditing ? (
                     <Textarea
-                      value={currentLocation.details.notes}
+                      value={currentLocation.details?.notes || ""}
                       onChange={(e) =>
                         handleFieldChange("details.notes", e.target.value)
                       }
@@ -719,7 +719,7 @@ export default function PreviewLocation() {
                       rows={4}
                     />
                   ) : (
-                    <p className="text-sm">{currentLocation.details.notes}</p>
+                    <p className="text-sm">{currentLocation.details?.notes}</p>
                   )}
                 </CardContent>
               </Card>
