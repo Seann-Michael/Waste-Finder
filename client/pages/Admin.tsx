@@ -127,8 +127,8 @@ export default function Admin() {
         const parsed = JSON.parse(savedSuggestions);
         return Array.isArray(parsed) ? parsed.length : 0;
       }
-      // Use mock data if available, otherwise return 0
-      return Array.isArray(mockPendingSuggestions) ? mockPendingSuggestions.length : 0;
+      // Return default count if no saved data
+      return 2; // Default mock count
     } catch (error) {
       console.error("Error getting pending suggestions:", error);
       return 0;
