@@ -54,21 +54,53 @@ const knownZipCodes: Record<string, { lat: number; lng: number }> = {
   "62703": { lat: 39.7317, lng: -89.6701 }, // Springfield IL
 };
 
-// ZIP code prefix to approximate state/region mapping
+// ZIP code prefix to approximate state/region mapping (accurate US postal system)
 const zipPrefixToRegion: Record<
   string,
   { lat: number; lng: number; name: string }
 > = {
-  "0": { lat: 42.3601, lng: -71.0589, name: "Massachusetts/New England" },
-  "1": { lat: 40.7589, lng: -73.9851, name: "New York/New Jersey" },
-  "2": { lat: 38.9072, lng: -77.0369, name: "DC/Maryland/Virginia" },
-  "3": { lat: 39.9526, lng: -75.1652, name: "Pennsylvania/Delaware" },
-  "4": { lat: 33.749, lng: -84.388, name: "Georgia/Florida/South" },
-  "5": { lat: 39.0458, lng: -76.6413, name: "Maryland/West Virginia" },
-  "6": { lat: 41.8781, lng: -87.6298, name: "Illinois/Chicago" },
-  "7": { lat: 39.0997, lng: -94.5786, name: "Kansas/Missouri" },
-  "8": { lat: 39.7392, lng: -104.9903, name: "Colorado/Mountain West" },
-  "9": { lat: 34.0522, lng: -118.2437, name: "California/West Coast" },
+  "0": {
+    lat: 42.3601,
+    lng: -71.0589,
+    name: "Connecticut/Massachusetts/Maine/New Hampshire/New Jersey/Rhode Island/Vermont",
+  },
+  "1": { lat: 40.7589, lng: -73.9851, name: "Delaware/New York/Pennsylvania" },
+  "2": {
+    lat: 38.9072,
+    lng: -77.0369,
+    name: "DC/Maryland/North Carolina/South Carolina/Virginia/West Virginia",
+  },
+  "3": {
+    lat: 33.749,
+    lng: -84.388,
+    name: "Alabama/Florida/Georgia/Mississippi/Tennessee",
+  },
+  "4": { lat: 41.4993, lng: -82.2907, name: "Indiana/Kentucky/Michigan/Ohio" }, // Fixed for Ohio!
+  "5": {
+    lat: 44.2619,
+    lng: -96.7853,
+    name: "Iowa/Minnesota/Montana/North Dakota/South Dakota/Wisconsin",
+  },
+  "6": {
+    lat: 41.8781,
+    lng: -87.6298,
+    name: "Illinois/Kansas/Missouri/Nebraska",
+  },
+  "7": {
+    lat: 31.9686,
+    lng: -99.9018,
+    name: "Arkansas/Louisiana/Oklahoma/Texas",
+  },
+  "8": {
+    lat: 39.7392,
+    lng: -104.9903,
+    name: "Arizona/Colorado/Idaho/New Mexico/Nevada/Utah/Wyoming",
+  },
+  "9": {
+    lat: 36.7783,
+    lng: -119.4179,
+    name: "Alaska/California/Hawaii/Oregon/Washington",
+  },
 };
 
 // Function to get coordinates for any ZIP code
