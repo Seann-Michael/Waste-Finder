@@ -1064,11 +1064,63 @@ export default function SuggestionsTable() {
                   {filteredLocations.length} suggested locations
                 </div>
 
+                {/* Bulk Actions for Locations */}
+                {selectedLocations.length > 0 && (
+                  <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg">
+                    <span className="text-sm font-medium">
+                      {selectedLocations.length} selected
+                    </span>
+                    <Button
+                      size="sm"
+                      onClick={() => handleLocationsBulkAction("approve")}
+                      className="bg-green-600 hover:bg-green-700"
+                    >
+                      <CheckCircle className="w-4 h-4 mr-1" />
+                      Approve
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={() => handleLocationsBulkAction("reject")}
+                    >
+                      <AlertTriangle className="w-4 h-4 mr-1" />
+                      Reject
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleLocationsBulkAction("delete")}
+                    >
+                      <Trash2 className="w-4 h-4 mr-1" />
+                      Delete
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setSelectedLocations([])}
+                    >
+                      Clear Selection
+                    </Button>
+                  </div>
+                )}
+
                 {/* Locations Table */}
                 <div className="border rounded-lg overflow-x-auto">
                   <Table>
                     <TableHeader>
                       <TableRow>
+                        <TableHead className="w-12">
+                          <Checkbox
+                            checked={
+                              selectedLocations.length ===
+                                locationsCurrentItems.length &&
+                              locationsCurrentItems.length > 0
+                            }
+                            onCheckedChange={(checked) =>
+                              handleSelectAllLocations(checked as boolean)
+                            }
+                          />
+                        </TableHead>
                         <TableHead
                           className="cursor-pointer hover:bg-muted/50"
                           onClick={() => handleLocationsSort("locationName")}
