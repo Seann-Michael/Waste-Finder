@@ -164,20 +164,20 @@ export default function SearchForm({
                 </Select>
               </div>
 
-              {/* Facility Types */}
+              {/* Location Types */}
               <div className="space-y-3">
-                <Label>Facility Types</Label>
+                <Label>Location Types</Label>
                 <div className="grid grid-cols-1 gap-3">
-                  {facilityTypeOptions.map((option) => (
+                  {locationTypeOptions.map((option) => (
                     <div
                       key={option.value}
                       className="flex items-center space-x-2"
                     >
                       <Checkbox
                         id={option.value}
-                        checked={facilityTypes.includes(option.value)}
+                        checked={locationTypes.includes(option.value)}
                         onCheckedChange={(checked) =>
-                          handleFacilityTypeChange(
+                          handleLocationTypeChange(
                             option.value,
                             checked as boolean,
                           )
