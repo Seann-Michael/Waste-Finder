@@ -236,50 +236,6 @@ export default function Index() {
         </div>
       </section>
 
-      {/* Recent Reviews Section */}
-      <section className="py-16 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-4">
-              What People Are Saying
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              Real reviews from real users
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {recentReviews.map((review, index) => (
-              <Card key={index}>
-                <CardContent className="pt-6">
-                  <div className="flex items-center gap-1 mb-3">
-                    {Array.from({ length: 5 }, (_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-4 h-4 ${
-                          i < review.rating
-                            ? "text-yellow-400 fill-current"
-                            : "text-gray-300"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <h4 className="font-semibold text-foreground mb-2">
-                    {review.location}
-                  </h4>
-                  <p className="text-muted-foreground text-sm mb-3">
-                    "{review.comment}"
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    — {review.author}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* CTA Section */}
       <section className="py-16 px-4 bg-primary text-primary-foreground">
         <div className="max-w-4xl mx-auto text-center">
