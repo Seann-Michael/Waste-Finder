@@ -193,6 +193,7 @@ export default function AdminSettings() {
     { id: "users", label: "Admin Users", icon: Users },
     { id: "locations", label: "Pending Locations", icon: MapPin },
     { id: "website", label: "Website Settings", icon: Globe },
+    { id: "marketing", label: "Marketing", icon: MessageSquare },
     { id: "system", label: "System Settings", icon: Settings },
     { id: "api", label: "API & Webhooks", icon: Key },
     { id: "content", label: "Content Management", icon: FileText },
