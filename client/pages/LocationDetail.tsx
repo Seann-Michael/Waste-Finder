@@ -153,7 +153,7 @@ export default function LocationDetail() {
     setReviewAuthor("");
   };
 
-  const getFacilityIcon = (type: Location["facilityType"]) => {
+  const getLocationIcon = (type: Location["locationType"]) => {
     switch (type) {
       case "landfill":
         return <Trash2 className="w-6 h-6" />;
@@ -166,7 +166,7 @@ export default function LocationDetail() {
     }
   };
 
-  const getFacilityLabel = (type: Location["facilityType"]) => {
+  const getLocationLabel = (type: Location["locationType"]) => {
     switch (type) {
       case "landfill":
         return "Municipal Landfill";
@@ -175,7 +175,7 @@ export default function LocationDetail() {
       case "construction_landfill":
         return "Construction Landfill";
       default:
-        return "Waste Facility";
+        return "Waste Location";
     }
   };
 
