@@ -612,8 +612,20 @@ export default function AllLocations() {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 gap-6">
-                  {locations.map((location) => (
-                    <LocationCard key={location.id} location={location} />
+                  {locations.map((location, index) => (
+                    <div key={location.id}>
+                      <LocationCard location={location} />
+                      {/* Add Facebook CTA after every 3rd location */}
+                      {(index + 1) % 3 === 0 &&
+                        index < locations.length - 1 && (
+                          <div className="my-6">
+                            <FacebookCTA
+                              facebookUrl="https://facebook.com/groups/wastefindergroup"
+                              className="mx-auto max-w-md"
+                            />
+                          </div>
+                        )}
+                    </div>
                   ))}
                 </div>
               )}
