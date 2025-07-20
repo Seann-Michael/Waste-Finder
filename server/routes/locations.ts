@@ -250,41 +250,19 @@ export function handleLocationsSearch(req: Request, res: Response) {
       radius = "50",
       facilityType,
       debrisTypes,
-      sortBy = "distance",
+      sortBy = "name",
     } = req.query;
 
     let locations = [...mockLocations];
 
-    // If ZIP code is provided, filter by distance
+    // Note: In production, ZIP code searches would use a geocoding service
+    // For now, return all locations when ZIP code is provided
     if (zipCode && typeof zipCode === "string" && /^\d{5}$/.test(zipCode)) {
-      const zipData = zipCodeDatabase[zipCode];
-
-      if (zipData) {
-        const radiusNum = parseInt(radius as string, 10);
-
-        // Calculate distances and filter by radius
-        locations = locations
-          .map((location) => ({
-            ...location,
-            distance: calculateDistance(
-              zipData.lat,
-              zipData.lng,
-              location.latitude,
-              location.longitude,
-            ),
-          }))
-          .filter((location) => location.distance <= radiusNum)
-          .sort((a, b) => a.distance - b.distance); // Sort by distance
-      } else {
-        // ZIP code not found, return empty results
-        return res.json({
-          success: true,
-          data: [],
-          total: 0,
-          searchLocation: null,
-          message: `ZIP code ${zipCode} not found in our database.`,
-        });
-      }
+      // TODO: Integrate with geocoding service (Google Maps API, etc.)
+      // For now, show a message that ZIP code search requires integration
+      console.log(
+        `ZIP code search requested: ${zipCode} (requires geocoding service integration)`,
+      );
     }
 
     // Apply facility type filter
