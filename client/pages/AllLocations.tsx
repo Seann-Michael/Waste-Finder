@@ -19,6 +19,42 @@ import {
 import { Location } from "@shared/api";
 import { Search, SlidersHorizontal, MapPin, Loader2 } from "lucide-react";
 
+// Sample zip code to coordinates lookup - in a real app this would be a proper geocoding service
+const zipCodeLookup: Record<string, { lat: number; lng: number }> = {
+  "44111": { lat: 41.4458, lng: -81.7799 }, // Cleveland West
+  "44129": { lat: 41.3784, lng: -81.729 }, // Parma
+  "44102": { lat: 41.4919, lng: -81.7357 }, // Cleveland East
+  "44113": { lat: 41.4897, lng: -81.6934 }, // Cleveland Downtown
+  "62701": { lat: 39.7817, lng: -89.6501 }, // Springfield IL
+  "62702": { lat: 39.7567, lng: -89.6301 }, // Springfield IL
+  "62703": { lat: 39.7317, lng: -89.6701 }, // Springfield IL
+  "60601": { lat: 41.8781, lng: -87.6298 }, // Chicago Downtown
+  "10001": { lat: 40.7505, lng: -73.9934 }, // NYC Manhattan
+  "90210": { lat: 34.0901, lng: -118.4065 }, // Beverly Hills
+  "33101": { lat: 25.7617, lng: -80.1918 }, // Miami
+  "02101": { lat: 42.3601, lng: -71.0589 }, // Boston
+};
+
+// Calculate distance between two points using Haversine formula
+const calculateDistance = (
+  lat1: number,
+  lng1: number,
+  lat2: number,
+  lng2: number,
+): number => {
+  const R = 3959; // Earth's radius in miles
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLng / 2) *
+      Math.sin(dLng / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c; // Distance in miles
+};
+
 export default function AllLocations() {
   const [searchParams] = useSearchParams();
   const [locations, setLocations] = useState<Location[]>([]);
