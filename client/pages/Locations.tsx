@@ -50,7 +50,7 @@ export default function Locations() {
       }
 
       const data = await response.json();
-      const fetchedLocations = data.locations || [];
+      const fetchedLocations = data.data || [];
 
       // Sort locations based on sortBy
       const sortedLocations = [...fetchedLocations].sort((a, b) => {
