@@ -560,8 +560,8 @@ export default function ReviewsTable() {
                     <TableHead className="w-12">
                       <Checkbox
                         checked={
-                          selectedReviews.length === paginatedReviews.length &&
-                          paginatedReviews.length > 0
+                          selectedReviews.length === currentItems.length &&
+                          currentItems.length > 0
                         }
                         onCheckedChange={(checked) =>
                           handleSelectAllReviews(checked as boolean)
