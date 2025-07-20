@@ -286,7 +286,7 @@ export default function Admin() {
                     <MessageSquare className="w-5 h-5" />
                     Pending Reviews
                   </CardTitle>
-                  <Badge variant="secondary">{pendingReviews.length}</Badge>
+                  <Badge variant="secondary">{pendingReviewsList.length}</Badge>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {pendingReviews.map((review) => (
