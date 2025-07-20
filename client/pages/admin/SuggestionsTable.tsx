@@ -139,7 +139,7 @@ const mockSuggestedLocations: SuggestedLocation[] = [
       email: "info@riverside.com",
       website: "https://riverside-recycling.com",
       facilityType: "transfer_station",
-      paymentTypes: ["Cash", "Credit Card"],
+      paymentTypes: ["Cash", "Credit/Debit"],
       debrisTypes: ["General Waste", "Recyclables", "Electronics"],
       operatingHours: "Mon-Fri 7AM-6PM, Sat 8AM-4PM",
       notes: "New eco-friendly facility with advanced recycling capabilities",
