@@ -684,6 +684,29 @@ export default function EditFacility() {
                     className="ml-8"
                   />
                 </div>
+
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-3">
+                    <Building2 className="w-5 h-5 text-muted-foreground" />
+                    Google My Business URL
+                  </Label>
+                  <Input
+                    type="url"
+                    value={formData.googleBusinessUrl}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        googleBusinessUrl: e.target.value,
+                      }))
+                    }
+                    placeholder="https://maps.google.com/maps/place/..."
+                    className="ml-8"
+                  />
+                  <p className="text-xs text-muted-foreground ml-8">
+                    Link to your Google Business Profile for reviews and
+                    directions
+                  </p>
+                </div>
               </CardContent>
             </Card>
 
