@@ -88,9 +88,19 @@ export default function AllLocations() {
       // Build query parameters
       const params = new URLSearchParams();
 
+      // Only search by ZIP if it's a complete 5-digit code
       if (searchQuery && /^\d{5}$/.test(searchQuery)) {
         params.set("zipCode", searchQuery);
         params.set("radius", searchRadius.toString());
+      } else if (searchQuery && searchQuery.length >= 3) {
+        // For text searches, pass as general query (you could extend backend to handle this)
+        params.set("query", searchQuery);
+      } else if (!searchQuery) {
+        // Load all locations when no search query
+      } else {
+        // Don't make API call for partial ZIP codes (less than 5 digits)
+        setIsLoading(false);
+        return;
       }
 
       if (filterType && filterType !== "all") {
@@ -105,25 +115,33 @@ export default function AllLocations() {
         params.set("sortBy", sortBy);
       }
 
+      console.log("Making API call to:", `/api/locations?${params.toString()}`);
+
       // Call backend API
       const response = await fetch(`/api/locations?${params.toString()}`);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const data: LocationSearchResponse = await response.json();
 
       if (data.success) {
         setLocations(data.data);
         setSearchLocation(data.searchLocation || null);
         setSearchMessage(data.message);
+        console.log("API success:", data);
       } else {
         console.error("API error:", data);
         setLocations([]);
         setSearchLocation(null);
-        setSearchMessage("Error loading locations");
+        setSearchMessage(data.message || "Error loading locations");
       }
     } catch (error) {
       console.error("Error loading locations:", error);
       setLocations([]);
       setSearchLocation(null);
-      setSearchMessage("Error loading locations");
+      setSearchMessage("Error connecting to server. Please try again.");
     } finally {
       setIsLoading(false);
     }
