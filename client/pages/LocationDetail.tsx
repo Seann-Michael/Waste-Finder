@@ -452,15 +452,17 @@ export default function LocationDetail() {
                     </a>
                   </div>
 
-                  <div className="flex items-center gap-3">
-                    <Phone className="w-5 h-5 text-muted-foreground" />
-                    <a
-                      href={`tel:${location.phone}`}
-                      className="text-primary hover:underline"
-                    >
-                      {location.phone}
-                    </a>
-                  </div>
+                  {location.phone && (
+                    <div className="flex items-center gap-3">
+                      <Phone className="w-5 h-5 text-muted-foreground" />
+                      <a
+                        href={`tel:${location.phone}`}
+                        className="text-primary hover:underline"
+                      >
+                        {location.phone}
+                      </a>
+                    </div>
+                  )}
 
                   {location.email && (
                     <div className="flex items-center gap-3">
@@ -484,20 +486,6 @@ export default function LocationDetail() {
                         className="text-primary hover:underline"
                       >
                         Visit Website
-                      </a>
-                    </div>
-                  )}
-
-                  {location.googleBusinessUrl && (
-                    <div className="flex items-center gap-3">
-                      <Building2 className="w-5 h-5 text-muted-foreground" />
-                      <a
-                        href={location.googleBusinessUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-primary hover:underline"
-                      >
-                        View on Google Business
                       </a>
                     </div>
                   )}
