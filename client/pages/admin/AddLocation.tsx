@@ -838,17 +838,35 @@ export default function AddLocation() {
                 </div>
 
                 {watchedValues.debrisTypes && watchedValues.debrisTypes.length > 0 && (
-                  <div className="mt-6">
-                    <Label className="text-base font-medium">Additional Debris Information</Label>
-                    <Textarea
-                      placeholder="General requirements, restrictions, preparation instructions for debris types..."
-                      rows={3}
-                      value={watchedValues.debrisAdditionalDetails || ""}
-                      onChange={(e) => {
-                        setValue("debrisAdditionalDetails", e.target.value);
-                      }}
-                      className="mt-2"
-                    />
+                  <div className="mt-6 space-y-4">
+                    <div>
+                      <Label className="text-base font-medium">Additional Debris Information</Label>
+                      <Textarea
+                        placeholder="General requirements, restrictions, preparation instructions for debris types..."
+                        rows={3}
+                        value={watchedValues.debrisAdditionalDetails || ""}
+                        onChange={(e) => {
+                          setValue("debrisAdditionalDetails", e.target.value);
+                        }}
+                        className="mt-2"
+                      />
+                    </div>
+
+                    <div>
+                      <Label className="text-base font-medium">Additional Debris Type Pricing Details</Label>
+                      <Textarea
+                        placeholder="Special pricing information, volume discounts, seasonal rates, or other pricing details that apply to debris disposal..."
+                        rows={3}
+                        value={watchedValues.additionalDebrisPricingDetails || ""}
+                        onChange={(e) => {
+                          setValue("additionalDebrisPricingDetails", e.target.value);
+                        }}
+                        className="mt-2"
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Include any special pricing arrangements, bulk discounts, seasonal variations, or additional fees that customers should know about.
+                      </p>
+                    </div>
                   </div>
                 )}
               </div>

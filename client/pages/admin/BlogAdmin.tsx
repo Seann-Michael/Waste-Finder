@@ -102,6 +102,9 @@ export default function BlogAdmin() {
     featuredImage: "",
     publishDate: "",
     publishTime: "",
+    customSeoTitle: "",
+    customSeoDescription: "",
+    customSeoKeywords: "",
   });
 
   useEffect(() => {
@@ -341,6 +344,9 @@ export default function BlogAdmin() {
       featuredImage: "",
       publishDate: "",
       publishTime: "",
+      customSeoTitle: "",
+      customSeoDescription: "",
+      customSeoKeywords: "",
     });
     setEditingPost(null);
   };
