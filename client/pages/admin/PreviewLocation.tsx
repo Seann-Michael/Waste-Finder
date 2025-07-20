@@ -270,6 +270,19 @@ export default function PreviewLocation() {
     );
   }
 
+  if (!location || (isEditing && !editedLocation)) {
+    return (
+      <AdminLayout>
+        <div className="flex items-center justify-center py-16">
+          <div className="text-center">
+            <h2 className="text-lg font-semibold mb-2">Loading...</h2>
+            <p className="text-muted-foreground">Loading location details</p>
+          </div>
+        </div>
+      </AdminLayout>
+    );
+  }
+
   const currentLocation = isEditing ? editedLocation! : location;
 
   return (
