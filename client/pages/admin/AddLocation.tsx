@@ -271,6 +271,7 @@ export default function AddLocation() {
       // Prepare API payload
       const payload = {
         ...data,
+        facilityType: data.locationType, // Map locationType to facilityType for consistency
         latitude: data.latitude ? parseFloat(data.latitude) : undefined,
         longitude: data.longitude ? parseFloat(data.longitude) : undefined,
         paymentTypes: data.paymentTypes.map((type, index) => ({
