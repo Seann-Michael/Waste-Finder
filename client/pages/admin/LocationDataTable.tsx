@@ -460,6 +460,28 @@ export default function LocationDataTable() {
                   <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
                   Refresh
                 </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const data = localStorage.getItem("locations");
+                    console.log("Current localStorage 'locations':", data);
+                    if (data) {
+                      try {
+                        const parsed = JSON.parse(data);
+                        console.log("Parsed locations:", parsed);
+                        alert(`Found ${Array.isArray(parsed) ? parsed.length : 'invalid'} locations in localStorage`);
+                      } catch (e) {
+                        console.error("Error parsing localStorage:", e);
+                        alert("Error parsing localStorage data");
+                      }
+                    } else {
+                      alert("No locations found in localStorage");
+                    }
+                  }}
+                >
+                  Debug Storage
+                </Button>
               </div>
             </div>
           </CardHeader>
