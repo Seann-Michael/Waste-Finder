@@ -512,15 +512,21 @@ export default function EditFacility() {
             <div>
               <div className="flex items-center gap-3 mb-4">
                 <div className="text-primary">
-                  {getFacilityIcon(formData.facilityType as Location["facilityType"])}
+                  {getFacilityIcon(
+                    formData.facilityType as Location["facilityType"],
+                  )}
                 </div>
                 <Badge variant="secondary" className="flex items-center gap-1">
-                  {getFacilityLabel(formData.facilityType as Location["facilityType"])}
+                  {getFacilityLabel(
+                    formData.facilityType as Location["facilityType"],
+                  )}
                 </Badge>
               </div>
 
               <div className="space-y-4">
-                <Label htmlFor="name" className="text-2xl font-bold">Facility Name</Label>
+                <Label htmlFor="name" className="text-2xl font-bold">
+                  Facility Name
+                </Label>
                 <Input
                   id="name"
                   value={formData.name}
@@ -537,7 +543,9 @@ export default function EditFacility() {
 
               <div className="flex items-center gap-2 mb-4">
                 {renderStars(facility?.rating || 4.5, "w-5 h-5")}
-                <span className="text-lg font-medium">{facility?.rating || 4.5}</span>
+                <span className="text-lg font-medium">
+                  {facility?.rating || 4.5}
+                </span>
                 <span className="text-muted-foreground">
                   ({facility?.reviewCount || 127} reviews)
                 </span>
@@ -751,7 +759,10 @@ export default function EditFacility() {
                     </Label>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-3">
                       {debrisOptions.map((debris) => (
-                        <div key={debris} className="flex items-center space-x-2">
+                        <div
+                          key={debris}
+                          className="flex items-center space-x-2"
+                        >
                           <Checkbox
                             id={debris}
                             checked={formData.debrisTypes.includes(debris)}
@@ -759,7 +770,10 @@ export default function EditFacility() {
                               handleDebrisChange(debris, checked as boolean)
                             }
                           />
-                          <Label htmlFor={debris} className="text-sm font-normal">
+                          <Label
+                            htmlFor={debris}
+                            className="text-sm font-normal"
+                          >
                             {debris}
                           </Label>
                         </div>
@@ -781,10 +795,7 @@ export default function EditFacility() {
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {paymentOptions.map((payment) => (
-                    <div
-                      key={payment}
-                      className="flex items-center space-x-2"
-                    >
+                    <div key={payment} className="flex items-center space-x-2">
                       <Checkbox
                         id={payment}
                         checked={formData.paymentTypes.includes(payment)}
@@ -792,10 +803,7 @@ export default function EditFacility() {
                           handlePaymentChange(payment, checked as boolean)
                         }
                       />
-                      <Label
-                        htmlFor={payment}
-                        className="text-sm font-normal"
-                      >
+                      <Label htmlFor={payment} className="text-sm font-normal">
                         {payment}
                       </Label>
                     </div>
@@ -931,7 +939,6 @@ export default function EditFacility() {
             </Card>
           </div>
         </div>
-      </div>
       </form>
     </AdminLayout>
   );
