@@ -88,7 +88,7 @@ const mockSuggestedLocations: SuggestedLocation[] = [
       googleBusinessUrl:
         "https://maps.google.com/maps/place/Riverside+Recycling+Center",
       facilityType: "transfer_station",
-      paymentTypes: ["Cash", "Credit Card"],
+      paymentTypes: ["Cash", "Credit/Debit"],
       debrisTypes: ["General Waste", "Recyclables", "Electronics"],
       operatingHours: "Mon-Fri 7AM-6PM, Sat 8AM-4PM",
       notes: "New eco-friendly facility with advanced recycling capabilities",
