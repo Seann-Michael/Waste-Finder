@@ -212,6 +212,14 @@ export default function EditFacility() {
       );
     } catch (error) {
       console.error("Error loading facility:", error);
+      setFormErrors({ general: "Failed to load facility data. Please try again." });
+
+      // If facility not found, redirect back to locations list
+      if (error instanceof Error && error.message.includes("not found")) {
+        setTimeout(() => {
+          navigate("/admin/locations");
+        }, 2000);
+      }
     } finally {
       setIsLoading(false);
     }
