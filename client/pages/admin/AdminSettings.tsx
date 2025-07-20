@@ -918,11 +918,7 @@ export default function AdminSettings() {
 
 
 
-                  <CardDescription>
-                    Configure AdSense, custom advertisements, and social media
-                    promotions
-                  </CardDescription>
-                </CardHeader>
+
                 <CardContent className="space-y-6">
                   {/* Google AdSense */}
                   <div className="space-y-4">
