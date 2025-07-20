@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 interface AdSenseProps {
-  placement: "homepage" | "search-results" | "location-detail" | "search-results-left" | "search-results-right" | "location-detail-left" | "location-detail-right";
+  placement: "homepage" | "search-results" | "location-detail" | "search-results-top" | "location-detail-top";
   className?: string;
 }
 
@@ -30,16 +30,12 @@ export default function AdSense({ placement, className = "" }: AdSenseProps) {
         return "Homepage Banner";
       case "search-results":
         return "Search Results";
-      case "search-results-left":
-        return "Search Left Sidebar";
-      case "search-results-right":
-        return "Search Right Sidebar";
+      case "search-results-top":
+        return "Search Results Top Banner";
       case "location-detail":
         return "Location Detail";
-      case "location-detail-left":
-        return "Location Left Sidebar";
-      case "location-detail-right":
-        return "Location Right Sidebar";
+      case "location-detail-top":
+        return "Location Detail Top Banner";
       default:
         return "Advertisement";
     }
