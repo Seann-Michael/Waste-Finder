@@ -184,12 +184,12 @@ export default function Header() {
                   className="w-full mt-2 bg-green-600 text-white hover:bg-green-700"
                 >
                   <a
-                    href="https://yourmarketingagency.com"
+                    href={contentSettings.marketingButtonUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    Marketing for Dumpster Rentals
+                    {contentSettings.marketingButtonText}
                   </a>
                 </Button>
               </nav>
