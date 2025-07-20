@@ -432,10 +432,7 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
     alert("Website settings updated successfully!");
   };
 
-  const handleSaveSystemSettings = () => {
-    console.log("Saving system settings:", systemSettings);
-    alert("System settings updated successfully!");
-  };
+
 
   const getRoleBadge = (role: AdminUser["role"]) => {
     switch (role) {
