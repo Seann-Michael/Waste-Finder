@@ -194,7 +194,7 @@ export default function AllLocations() {
             {/* Search and Filters - Left Sidebar */}
             <div className="lg:col-span-1">
               <Card className="sticky top-24">
-                <CardContent className="p-6">
+                <CardContent className="p-4">
                   <h3 className="font-semibold mb-4">Search & Filter</h3>
 
                   <div className="space-y-4">
@@ -202,7 +202,7 @@ export default function AllLocations() {
                       <div className="relative">
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                         <Input
-                          placeholder="Search by name, city, or ZIP code..."
+                          placeholder="Search by Zip Code, Name or City"
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
                           className="pl-10"
