@@ -627,7 +627,7 @@ export default function PreviewLocation() {
                   </div>
                 )}
 
-                {currentLocation.details.website && (
+                {currentLocation.details?.website && (
                   <div>
                     <Label className="text-sm font-medium flex items-center gap-2">
                       <Globe className="w-4 h-4" />
@@ -635,7 +635,7 @@ export default function PreviewLocation() {
                     </Label>
                     {isEditing ? (
                       <Input
-                        value={currentLocation.details.website}
+                        value={currentLocation.details?.website || ""}
                         onChange={(e) =>
                           handleFieldChange("details.website", e.target.value)
                         }
@@ -645,12 +645,12 @@ export default function PreviewLocation() {
                     ) : (
                       <p className="text-sm">
                         <a
-                          href={currentLocation.details.website}
+                          href={currentLocation.details?.website}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-primary hover:underline"
                         >
-                          {currentLocation.details.website}
+                          {currentLocation.details?.website}
                         </a>
                       </p>
                     )}
