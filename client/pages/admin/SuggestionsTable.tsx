@@ -1181,7 +1181,7 @@ export default function SuggestionsTable() {
                       {locationsCurrentItems.length === 0 ? (
                         <TableRow>
                           <TableCell
-                            colSpan={6}
+                            colSpan={7}
                             className="text-center py-8 text-muted-foreground"
                           >
                             No suggested locations found matching your criteria
@@ -1191,10 +1191,25 @@ export default function SuggestionsTable() {
                         locationsCurrentItems.map((location) => (
                           <TableRow
                             key={location.id}
-                            className="hover:bg-muted/50 cursor-pointer"
-                            onClick={() => handleLocationRowClick(location)}
+                            className="hover:bg-muted/50"
                           >
-                            <TableCell>
+                            <TableCell onClick={(e) => e.stopPropagation()}>
+                              <Checkbox
+                                checked={selectedLocations.includes(
+                                  location.id,
+                                )}
+                                onCheckedChange={(checked) =>
+                                  handleSelectLocation(
+                                    location.id,
+                                    checked as boolean,
+                                  )
+                                }
+                              />
+                            </TableCell>
+                            <TableCell
+                              className="cursor-pointer"
+                              onClick={() => handleLocationRowClick(location)}
+                            >
                               <div className="font-medium text-primary">
                                 {location.locationName}
                               </div>
