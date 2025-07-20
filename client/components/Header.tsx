@@ -61,18 +61,27 @@ export default function Header() {
             {/* Desktop Navigation */}
             <nav className="hidden md:flex space-x-8">
               {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className={cn(
-                    "text-sm font-medium transition-colors hover:text-primary",
-                    item.active
-                      ? "text-primary border-b-2 border-primary"
-                      : "text-muted-foreground",
-                  )}
-                >
-                  {item.name}
-                </Link>
+                <Tooltip key={item.name}>
+                  <TooltipTrigger asChild>
+                    <Link
+                      to={item.href}
+                      className={cn(
+                        "text-sm font-medium transition-colors hover:text-primary",
+                        item.active
+                          ? "text-primary border-b-2 border-primary"
+                          : "text-muted-foreground",
+                      )}
+                    >
+                      {item.name}
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="text-xs">
+                      {window.location.origin}
+                      {item.href}
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
               ))}
             </nav>
 
