@@ -916,7 +916,7 @@ export default function AdminSettings() {
               </Card>
             )}
 
-            {activeTab === "ads" && (
+
               <Card>
                 <CardHeader>
                   <CardTitle>Advertisement & Marketing Settings</CardTitle>
