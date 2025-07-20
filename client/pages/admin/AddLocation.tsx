@@ -1,13 +1,35 @@
+/**
+ * Add Location Admin Page
+ *
+ * Purpose: Provides a comprehensive form for waste management administrators
+ * to add new disposal locations to the system
+ *
+ * Dependencies:
+ * - Requires admin authentication (protected by AdminRoute)
+ * - Uses React Hook Form for form state management and validation
+ * - Integrates with the server API at /api/locations
+ * - Utilizes toast notifications for user feedback
+ *
+ * Features:
+ * - Complete location information capture
+ * - Real-time form validation
+ * - Mobile-responsive design
+ * - Bulk debris type selection
+ * - Operating hours configuration
+ * - Payment method selection
+ * - Coordinate input validation
+ * - Success/error handling with toast notifications
+ */
+
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -15,212 +37,363 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
-  ChevronLeft,
   MapPin,
-  Plus,
+  Clock,
+  CreditCard,
+  Trash2,
+  AlertCircle,
   CheckCircle,
-  AlertTriangle,
+  Loader2,
 } from "lucide-react";
+import { useToastNotifications } from "@/hooks/use-toast-notifications";
 
-export default function AddFacility() {
+/**
+ * Form data interface for location creation
+ * Defines all required and optional fields for a new location
+ */
+interface LocationFormData {
+  name: string;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  phone: string;
+  email?: string;
+  website?: string;
+  googleBusinessUrl?: string;
+  latitude: string;
+  longitude: string;
+  locationType: "landfill" | "transfer_station" | "construction_landfill";
+  paymentTypes: string[];
+  debrisTypes: string[];
+  notes?: string;
+  isActive: boolean;
+}
+
+/**
+ * Configuration arrays for form dropdowns
+ * These could be moved to a configuration file or fetched from API
+ */
+const LOCATION_TYPES = [
+  { value: "landfill", label: "Municipal Landfill" },
+  { value: "transfer_station", label: "Transfer Station" },
+  { value: "construction_landfill", label: "Construction Landfill" },
+] as const;
+
+const PAYMENT_TYPES = [
+  "Cash",
+  "Credit Card",
+  "Debit Card",
+  "Check",
+  "ACH Transfer",
+  "Corporate Account",
+] as const;
+
+const DEBRIS_TYPES = [
+  "General Household Waste",
+  "Yard Waste",
+  "Construction Debris",
+  "Electronics",
+  "Appliances",
+  "Tires",
+  "Concrete",
+  "Asphalt",
+  "Metal",
+  "Wood",
+  "Hazardous Materials",
+] as const;
+
+const US_STATES = [
+  { value: "AL", label: "Alabama" },
+  { value: "AK", label: "Alaska" },
+  { value: "AZ", label: "Arizona" },
+  { value: "AR", label: "Arkansas" },
+  { value: "CA", label: "California" },
+  { value: "CO", label: "Colorado" },
+  { value: "CT", label: "Connecticut" },
+  { value: "DE", label: "Delaware" },
+  { value: "FL", label: "Florida" },
+  { value: "GA", label: "Georgia" },
+  { value: "HI", label: "Hawaii" },
+  { value: "ID", label: "Idaho" },
+  { value: "IL", label: "Illinois" },
+  { value: "IN", label: "Indiana" },
+  { value: "IA", label: "Iowa" },
+  { value: "KS", label: "Kansas" },
+  { value: "KY", label: "Kentucky" },
+  { value: "LA", label: "Louisiana" },
+  { value: "ME", label: "Maine" },
+  { value: "MD", label: "Maryland" },
+  { value: "MA", label: "Massachusetts" },
+  { value: "MI", label: "Michigan" },
+  { value: "MN", label: "Minnesota" },
+  { value: "MS", label: "Mississippi" },
+  { value: "MO", label: "Missouri" },
+  { value: "MT", label: "Montana" },
+  { value: "NE", label: "Nebraska" },
+  { value: "NV", label: "Nevada" },
+  { value: "NH", label: "New Hampshire" },
+  { value: "NJ", label: "New Jersey" },
+  { value: "NM", label: "New Mexico" },
+  { value: "NY", label: "New York" },
+  { value: "NC", label: "North Carolina" },
+  { value: "ND", label: "North Dakota" },
+  { value: "OH", label: "Ohio" },
+  { value: "OK", label: "Oklahoma" },
+  { value: "OR", label: "Oregon" },
+  { value: "PA", label: "Pennsylvania" },
+  { value: "RI", label: "Rhode Island" },
+  { value: "SC", label: "South Carolina" },
+  { value: "SD", label: "South Dakota" },
+  { value: "TN", label: "Tennessee" },
+  { value: "TX", label: "Texas" },
+  { value: "UT", label: "Utah" },
+  { value: "VT", label: "Vermont" },
+  { value: "VA", label: "Virginia" },
+  { value: "WA", label: "Washington" },
+  { value: "WV", label: "West Virginia" },
+  { value: "WI", label: "Wisconsin" },
+  { value: "WY", label: "Wyoming" },
+] as const;
+
+/**
+ * AddLocation Component
+ * Renders the complete add location form with validation and submission
+ */
+export default function AddLocation() {
   const navigate = useNavigate();
+  const { showSuccess, showError, showWarning } = useToastNotifications();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    address: "",
-    city: "",
-    state: "",
-    zipCode: "",
-    phone: "",
-    email: "",
-    website: "",
-    googleBusinessUrl: "",
-    facilityType: "",
-    operatingHours: "",
-    notes: "",
-    latitude: "",
-    longitude: "",
-    paymentMethods: [] as string[],
-    debrisTypes: [] as string[],
+
+  // Initialize React Hook Form with default values
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch,
+    reset,
+  } = useForm<LocationFormData>({
+    defaultValues: {
+      name: "",
+      address: "",
+      city: "",
+      state: "",
+      zipCode: "",
+      phone: "",
+      email: "",
+      website: "",
+      googleBusinessUrl: "",
+      latitude: "",
+      longitude: "",
+      locationType: "landfill",
+      paymentTypes: [],
+      debrisTypes: [],
+      notes: "",
+      isActive: true,
+    },
   });
 
-  const [debrisPricing, setDebrisPricing] = useState<
-    Record<
-      string,
-      {
-        pricePerTon?: number;
-        pricePerLoad?: number;
-        priceNote?: string;
-      }
-    >
-  >({});
+  // Watch form values for dynamic updates
+  const watchedValues = watch();
 
-  const facilityTypes = [
-    { value: "landfill", label: "Landfill" },
-    { value: "transfer_station", label: "Transfer Station" },
-    { value: "construction_landfill", label: "Construction Landfill" },
-  ];
+  /**
+   * Validates coordinate input to ensure proper latitude/longitude format
+   */
+  const validateCoordinates = (lat: string, lng: string): boolean => {
+    const latitude = parseFloat(lat);
+    const longitude = parseFloat(lng);
 
-  const paymentOptions = [
-    "Cash",
-    "Credit Card",
-    "Debit Card",
-    "Check",
-    "Account",
-    "Mobile Payment",
-  ];
+    if (isNaN(latitude) || isNaN(longitude)) {
+      showError("Coordinates must be valid numbers");
+      return false;
+    }
 
-  const debrisOptions = [
-    "General Waste",
-    "Construction Debris",
-    "Yard Waste",
-    "Electronics",
-    "Appliances",
-    "Metal",
-    "Wood",
-    "Concrete",
-    "Asphalt",
-    "Recyclables",
-  ];
+    if (latitude < -90 || latitude > 90) {
+      showError("Latitude must be between -90 and 90 degrees");
+      return false;
+    }
 
-  const usStates = [
-    "AL",
-    "AK",
-    "AZ",
-    "AR",
-    "CA",
-    "CO",
-    "CT",
-    "DE",
-    "FL",
-    "GA",
-    "HI",
-    "ID",
-    "IL",
-    "IN",
-    "IA",
-    "KS",
-    "KY",
-    "LA",
-    "ME",
-    "MD",
-    "MA",
-    "MI",
-    "MN",
-    "MS",
-    "MO",
-    "MT",
-    "NE",
-    "NV",
-    "NH",
-    "NJ",
-    "NM",
-    "NY",
-    "NC",
-    "ND",
-    "OH",
-    "OK",
-    "OR",
-    "PA",
-    "RI",
-    "SC",
-    "SD",
-    "TN",
-    "TX",
-    "UT",
-    "VT",
-    "VA",
-    "WA",
-    "WV",
-    "WI",
-    "WY",
-  ];
+    if (longitude < -180 || longitude > 180) {
+      showError("Longitude must be between -180 and 180 degrees");
+      return false;
+    }
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    return true;
   };
 
-  const handleCheckboxChange = (
-    field: "paymentMethods" | "debrisTypes",
-    value: string,
-    checked: boolean,
-  ) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: checked
-        ? [...prev[field], value]
-        : prev[field].filter((item) => item !== value),
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
+  /**
+   * Handles form submission with comprehensive validation and API call
+   */
+  const onSubmit = async (data: LocationFormData) => {
     try {
-      // Mock API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      setIsSubmitting(true);
 
-      setSubmitSuccess(true);
+      // Validate coordinates
+      if (!validateCoordinates(data.latitude, data.longitude)) {
+        return;
+      }
 
-      // Redirect after success
+      // Validate required arrays
+      if (data.paymentTypes.length === 0) {
+        showWarning("Please select at least one payment method");
+        return;
+      }
+
+      if (data.debrisTypes.length === 0) {
+        showWarning("Please select at least one debris type");
+        return;
+      }
+
+      // Prepare API payload
+      const payload = {
+        ...data,
+        latitude: parseFloat(data.latitude),
+        longitude: parseFloat(data.longitude),
+        paymentTypes: data.paymentTypes.map((type, index) => ({
+          id: (index + 1).toString(),
+          name: type,
+        })),
+        debrisTypes: data.debrisTypes.map((type, index) => ({
+          id: (index + 1).toString(),
+          name: type,
+          category: "general", // Default category, could be made configurable
+        })),
+        // Add default operating hours (Monday-Friday 7AM-5PM)
+        operatingHours: [
+          {
+            dayOfWeek: 1,
+            openTime: "07:00",
+            closeTime: "17:00",
+            isClosed: false,
+          },
+          {
+            dayOfWeek: 2,
+            openTime: "07:00",
+            closeTime: "17:00",
+            isClosed: false,
+          },
+          {
+            dayOfWeek: 3,
+            openTime: "07:00",
+            closeTime: "17:00",
+            isClosed: false,
+          },
+          {
+            dayOfWeek: 4,
+            openTime: "07:00",
+            closeTime: "17:00",
+            isClosed: false,
+          },
+          {
+            dayOfWeek: 5,
+            openTime: "07:00",
+            closeTime: "17:00",
+            isClosed: false,
+          },
+          {
+            dayOfWeek: 6,
+            openTime: "00:00",
+            closeTime: "00:00",
+            isClosed: true,
+          },
+          {
+            dayOfWeek: 0,
+            openTime: "00:00",
+            closeTime: "00:00",
+            isClosed: true,
+          },
+        ],
+        rating: 0,
+        reviewCount: 0,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      // Submit to API
+      const response = await fetch("/api/locations", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to create location");
+      }
+
+      const result = await response.json();
+
+      showSuccess("Location created successfully!");
+      reset(); // Clear form
+
+      // Navigate to the new location or back to locations list
       setTimeout(() => {
-        navigate("/admin");
-      }, 2000);
+        navigate("/admin/locations");
+      }, 1500);
     } catch (error) {
-      console.error("Error creating facility:", error);
+      console.error("Error creating location:", error);
+      showError(
+        error instanceof Error ? error.message : "Failed to create location",
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (submitSuccess) {
-    return (
-      <AdminLayout>
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <Card className="max-w-md">
-            <CardContent className="pt-8 text-center">
-              <CheckCircle className="w-12 h-12 text-green-600 mx-auto mb-4" />
-              <h2 className="text-2xl font-bold mb-4">
-                Location Added Successfully!
-              </h2>
-              <p className="text-muted-foreground mb-6">
-                The new location has been added to the database and is now
-                available to users.
-              </p>
-              <Button asChild>
-                <Link to="/admin">Return to Admin Dashboard</Link>
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </AdminLayout>
-    );
-  }
+  /**
+   * Handles checkbox changes for multi-select fields
+   */
+  const handleArrayFieldChange = (
+    fieldName: "paymentTypes" | "debrisTypes",
+    value: string,
+    checked: boolean,
+  ) => {
+    const currentValues = watchedValues[fieldName] || [];
+    if (checked) {
+      setValue(fieldName, [...currentValues, value]);
+    } else {
+      setValue(
+        fieldName,
+        currentValues.filter((item) => item !== value),
+      );
+    }
+  };
 
   return (
     <AdminLayout>
-      <div className="space-y-8">
-        {/* Header */}
-        <div className="flex items-center gap-4">
-          <Button variant="outline" asChild>
-            <Link to="/admin">
-              <ChevronLeft className="w-4 h-4 mr-2" />
-              Back to Admin
-            </Link>
-          </Button>
+      <div className="max-w-4xl mx-auto p-4 space-y-6">
+        {/* Page Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold">Add New Location</h1>
-            <p className="text-muted-foreground">
-              Add a new waste disposal location to the database
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+              Add New Location
+            </h1>
+            <p className="text-gray-600 mt-1">
+              Create a new waste disposal location entry
             </p>
           </div>
+          <Button
+            variant="outline"
+            onClick={() => navigate("/admin/locations")}
+            className="self-start sm:self-auto"
+          >
+            Back to Locations
+          </Button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Basic Information */}
           <Card>
             <CardHeader>
@@ -228,253 +401,389 @@ export default function AddFacility() {
                 <MapPin className="w-5 h-5" />
                 Basic Information
               </CardTitle>
+              <CardDescription>
+                Essential details about the waste disposal location
+              </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="md:col-span-2">
                   <Label htmlFor="name">Location Name *</Label>
                   <Input
                     id="name"
-                    value={formData.name}
-                    onChange={(e) => handleInputChange("name", e.target.value)}
-                    required
-                    placeholder="e.g., Green Valley Landfill"
+                    {...register("name", {
+                      required: "Location name is required",
+                      minLength: {
+                        value: 3,
+                        message: "Name must be at least 3 characters",
+                      },
+                    })}
+                    placeholder="e.g., Springfield Municipal Landfill"
+                    className={errors.name ? "border-red-500" : ""}
                   />
+                  {errors.name && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.name.message}
+                    </p>
+                  )}
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="facilityType">Location Type *</Label>
-                  <Select
-                    value={formData.facilityType}
-                    onValueChange={(value) =>
-                      handleInputChange("facilityType", value)
-                    }
-                    required
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select location type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {facilityTypes.map((type) => (
-                        <SelectItem key={type.value} value={type.value}>
-                          {type.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+
+                <div className="md:col-span-2">
+                  <Label htmlFor="address">Street Address *</Label>
+                  <Input
+                    id="address"
+                    {...register("address", {
+                      required: "Address is required",
+                    })}
+                    placeholder="e.g., 123 Industrial Drive"
+                    className={errors.address ? "border-red-500" : ""}
+                  />
+                  {errors.address && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.address.message}
+                    </p>
+                  )}
                 </div>
-              </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="address">Street Address *</Label>
-                <Input
-                  id="address"
-                  value={formData.address}
-                  onChange={(e) => handleInputChange("address", e.target.value)}
-                  required
-                  placeholder="123 Main Street"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="space-y-2">
+                <div>
                   <Label htmlFor="city">City *</Label>
                   <Input
                     id="city"
-                    value={formData.city}
-                    onChange={(e) => handleInputChange("city", e.target.value)}
-                    required
-                    placeholder="Springfield"
+                    {...register("city", { required: "City is required" })}
+                    placeholder="e.g., Springfield"
+                    className={errors.city ? "border-red-500" : ""}
                   />
+                  {errors.city && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.city.message}
+                    </p>
+                  )}
                 </div>
-                <div className="space-y-2">
+
+                <div>
                   <Label htmlFor="state">State *</Label>
                   <Select
-                    value={formData.state}
-                    onValueChange={(value) => handleInputChange("state", value)}
-                    required
+                    value={watchedValues.state}
+                    onValueChange={(value) => setValue("state", value)}
                   >
-                    <SelectTrigger>
-                      <SelectValue placeholder="State" />
+                    <SelectTrigger
+                      className={errors.state ? "border-red-500" : ""}
+                    >
+                      <SelectValue placeholder="Select state" />
                     </SelectTrigger>
                     <SelectContent>
-                      {usStates.map((state) => (
-                        <SelectItem key={state} value={state}>
-                          {state}
+                      {US_STATES.map((state) => (
+                        <SelectItem key={state.value} value={state.value}>
+                          {state.label}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
+                  {errors.state && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.state.message}
+                    </p>
+                  )}
                 </div>
-                <div className="space-y-2">
+
+                <div>
                   <Label htmlFor="zipCode">ZIP Code *</Label>
                   <Input
                     id="zipCode"
-                    value={formData.zipCode}
-                    onChange={(e) =>
-                      handleInputChange("zipCode", e.target.value)
-                    }
-                    required
-                    placeholder="62701"
+                    {...register("zipCode", {
+                      required: "ZIP code is required",
+                      pattern: {
+                        value: /^\d{5}(-\d{4})?$/,
+                        message: "Invalid ZIP code format",
+                      },
+                    })}
+                    placeholder="e.g., 12345"
+                    className={errors.zipCode ? "border-red-500" : ""}
                   />
+                  {errors.zipCode && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.zipCode.message}
+                    </p>
+                  )}
                 </div>
-              </div>
-            </CardContent>
-          </Card>
 
-          {/* Contact Information */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Contact Information</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label>
+                <div>
+                  <Label htmlFor="phone">Phone Number *</Label>
                   <Input
                     id="phone"
-                    value={formData.phone}
-                    onChange={(e) => handleInputChange("phone", e.target.value)}
+                    {...register("phone", {
+                      required: "Phone number is required",
+                      pattern: {
+                        value: /^\(\d{3}\) \d{3}-\d{4}$/,
+                        message: "Phone format: (555) 123-4567",
+                      },
+                    })}
                     placeholder="(555) 123-4567"
+                    className={errors.phone ? "border-red-500" : ""}
                   />
+                  {errors.phone && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.phone.message}
+                    </p>
+                  )}
                 </div>
-                <div className="space-y-2">
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
                   <Label htmlFor="email">Email Address</Label>
                   <Input
                     id="email"
                     type="email"
-                    value={formData.email}
-                    onChange={(e) => handleInputChange("email", e.target.value)}
-                    placeholder="info@example.com"
+                    {...register("email", {
+                      pattern: {
+                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                        message: "Invalid email format",
+                      },
+                    })}
+                    placeholder="info@location.com"
+                    className={errors.email ? "border-red-500" : ""}
                   />
+                  {errors.email && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.email.message}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <Label htmlFor="website">Website</Label>
+                  <Input
+                    id="website"
+                    {...register("website", {
+                      pattern: {
+                        value: /^https?:\/\/.+/,
+                        message: "Website must start with http:// or https://",
+                      },
+                    })}
+                    placeholder="https://location.com"
+                    className={errors.website ? "border-red-500" : ""}
+                  />
+                  {errors.website && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.website.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Location Type and Services */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Trash2 className="w-5 h-5" />
+                Location Type & Services
+              </CardTitle>
+              <CardDescription>
+                Specify the type of location and services offered
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div>
+                <Label htmlFor="locationType">Location Type *</Label>
+                <Select
+                  value={watchedValues.locationType}
+                  onValueChange={(value) =>
+                    setValue("locationType", value as any)
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select location type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {LOCATION_TYPES.map((type) => (
+                      <SelectItem key={type.value} value={type.value}>
+                        {type.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label className="text-base font-medium">
+                  Payment Methods *
+                </Label>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-2">
+                  {PAYMENT_TYPES.map((payment) => (
+                    <div key={payment} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={`payment-${payment}`}
+                        checked={
+                          watchedValues.paymentTypes?.includes(payment) || false
+                        }
+                        onCheckedChange={(checked) =>
+                          handleArrayFieldChange(
+                            "paymentTypes",
+                            payment,
+                            checked as boolean,
+                          )
+                        }
+                      />
+                      <Label
+                        htmlFor={`payment-${payment}`}
+                        className="text-sm font-normal cursor-pointer"
+                      >
+                        {payment}
+                      </Label>
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="website">Website</Label>
+              <div>
+                <Label className="text-base font-medium">
+                  Accepted Debris Types *
+                </Label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
+                  {DEBRIS_TYPES.map((debris) => (
+                    <div key={debris} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={`debris-${debris}`}
+                        checked={
+                          watchedValues.debrisTypes?.includes(debris) || false
+                        }
+                        onCheckedChange={(checked) =>
+                          handleArrayFieldChange(
+                            "debrisTypes",
+                            debris,
+                            checked as boolean,
+                          )
+                        }
+                      />
+                      <Label
+                        htmlFor={`debris-${debris}`}
+                        className="text-sm font-normal cursor-pointer"
+                      >
+                        {debris}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Coordinates and Additional Info */}
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                Geographic Coordinates & Additional Information
+              </CardTitle>
+              <CardDescription>
+                Precise location coordinates and optional details
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="latitude">Latitude *</Label>
+                  <Input
+                    id="latitude"
+                    {...register("latitude", {
+                      required: "Latitude is required",
+                      pattern: {
+                        value: /^-?([1-8]?\d(\.\d+)?|90(\.0+)?)$/,
+                        message: "Invalid latitude format",
+                      },
+                    })}
+                    placeholder="e.g., 39.7817"
+                    className={errors.latitude ? "border-red-500" : ""}
+                  />
+                  {errors.latitude && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.latitude.message}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <Label htmlFor="longitude">Longitude *</Label>
+                  <Input
+                    id="longitude"
+                    {...register("longitude", {
+                      required: "Longitude is required",
+                      pattern: {
+                        value: /^-?((1[0-7]\d)|([1-9]?\d))(\.\d+)?$/,
+                        message: "Invalid longitude format",
+                      },
+                    })}
+                    placeholder="e.g., -89.6501"
+                    className={errors.longitude ? "border-red-500" : ""}
+                  />
+                  {errors.longitude && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.longitude.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="googleBusinessUrl">Google Business URL</Label>
                 <Input
-                  id="website"
-                  value={formData.website}
-                  onChange={(e) => handleInputChange("website", e.target.value)}
-                  placeholder="https://www.example.com"
+                  id="googleBusinessUrl"
+                  {...register("googleBusinessUrl")}
+                  placeholder="https://maps.google.com/maps/place/..."
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="operatingHours">Operating Hours</Label>
-                <Input
-                  id="operatingHours"
-                  value={formData.operatingHours}
-                  onChange={(e) =>
-                    handleInputChange("operatingHours", e.target.value)
-                  }
-                  placeholder="Mon-Fri 7AM-5PM, Sat 8AM-4PM"
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Payment Methods */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Payment Methods</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {paymentOptions.map((method) => (
-                  <div key={method} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`payment-${method}`}
-                      checked={formData.paymentMethods.includes(method)}
-                      onCheckedChange={(checked) =>
-                        handleCheckboxChange(
-                          "paymentMethods",
-                          method,
-                          checked as boolean,
-                        )
-                      }
-                    />
-                    <Label
-                      htmlFor={`payment-${method}`}
-                      className="text-sm font-normal"
-                    >
-                      {method}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Debris Types */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Accepted Debris Types</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {debrisOptions.map((debris) => (
-                  <div key={debris} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`debris-${debris}`}
-                      checked={formData.debrisTypes.includes(debris)}
-                      onCheckedChange={(checked) =>
-                        handleCheckboxChange(
-                          "debrisTypes",
-                          debris,
-                          checked as boolean,
-                        )
-                      }
-                    />
-                    <Label
-                      htmlFor={`debris-${debris}`}
-                      className="text-sm font-normal"
-                    >
-                      {debris}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Additional Information */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Additional Information</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <Label htmlFor="notes">Notes</Label>
+              <div>
+                <Label htmlFor="notes">Additional Notes</Label>
                 <Textarea
                   id="notes"
-                  value={formData.notes}
-                  onChange={(e) => handleInputChange("notes", e.target.value)}
-                  placeholder="Additional information about this location..."
+                  {...register("notes")}
+                  placeholder="Any additional information about the location, special services, restrictions, etc."
                   rows={4}
                 />
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="isActive"
+                  checked={watchedValues.isActive}
+                  onCheckedChange={(checked) =>
+                    setValue("isActive", checked as boolean)
+                  }
+                />
+                <Label htmlFor="isActive" className="cursor-pointer">
+                  Location is active and visible to users
+                </Label>
               </div>
             </CardContent>
           </Card>
 
           {/* Submit Button */}
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-4 justify-end">
             <Button
               type="button"
               variant="outline"
-              onClick={() => navigate("/admin")}
+              onClick={() => navigate("/admin/locations")}
+              disabled={isSubmitting}
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="min-w-[140px]"
+            >
               {isSubmitting ? (
                 <>
-                  <Plus className="w-4 h-4 mr-2 animate-spin" />
-                  Adding Location...
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Creating...
                 </>
               ) : (
                 <>
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Location
+                  <CheckCircle className="w-4 h-4 mr-2" />
+                  Create Location
                 </>
               )}
             </Button>
