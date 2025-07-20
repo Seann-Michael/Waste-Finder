@@ -133,6 +133,13 @@ export default function ReviewsTable() {
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
   const [pageSize, setPageSize] = useState(25);
 
+  // Bulk selection state
+  const [selectedReviews, setSelectedReviews] = useState<string[]>([]);
+  const [bulkActionDialogOpen, setBulkActionDialogOpen] = useState(false);
+  const [bulkAction, setBulkAction] = useState<
+    "approve" | "reject" | "delete" | null
+  >(null);
+
   const statusOptions = [
     { value: "all", label: "All Status" },
     { value: "pending", label: "Pending" },
