@@ -834,6 +834,21 @@ export default function AddLocation() {
                     </div>
                   ))}
                 </div>
+
+                {watchedValues.debrisTypes && watchedValues.debrisTypes.length > 0 && (
+                  <div className="mt-6">
+                    <Label className="text-base font-medium">Additional Debris Information</Label>
+                    <Textarea
+                      placeholder="General requirements, restrictions, preparation instructions for debris types..."
+                      rows={3}
+                      value={watchedValues.debrisAdditionalDetails || ""}
+                      onChange={(e) => {
+                        setValue("debrisAdditionalDetails", e.target.value);
+                      }}
+                      className="mt-2"
+                    />
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
