@@ -745,39 +745,43 @@ export default function AddLocation() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 ml-6">
                           <div>
                             <Label className="text-xs">Price (USD)</Label>
-                            <Input
-                              type="number"
-                              step="0.01"
-                              placeholder="65.00"
-                              value={watchedValues.debrisPricing?.[debris]?.price || ""}
-                              onChange={(e) => {
-                                const currentPricing = watchedValues.debrisPricing || {};
-                                const value = e.target.value ? parseFloat(e.target.value) : undefined;
-                                setValue("debrisPricing", {
-                                  ...currentPricing,
-                                  [debris]: {
-                                    ...currentPricing[debris],
-                                    price: value,
-                                  },
-                                });
-                              }}
-                              onBlur={(e) => {
-                                // Format to 2 decimal places on blur
-                                if (e.target.value) {
-                                  const value = parseFloat(e.target.value);
-                                  if (!isNaN(value)) {
-                                    const currentPricing = watchedValues.debrisPricing || {};
-                                    setValue("debrisPricing", {
-                                      ...currentPricing,
-                                      [debris]: {
-                                        ...currentPricing[debris],
-                                        price: parseFloat(value.toFixed(2)),
-                                      },
-                                    });
+                            <div className="relative">
+                              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">$</span>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                placeholder="34.00"
+                                className="pl-7"
+                                value={watchedValues.debrisPricing?.[debris]?.price || ""}
+                                onChange={(e) => {
+                                  const currentPricing = watchedValues.debrisPricing || {};
+                                  const value = e.target.value ? parseFloat(e.target.value) : undefined;
+                                  setValue("debrisPricing", {
+                                    ...currentPricing,
+                                    [debris]: {
+                                      ...currentPricing[debris],
+                                      price: value,
+                                    },
+                                  });
+                                }}
+                                onBlur={(e) => {
+                                  // Format to 2 decimal places on blur
+                                  if (e.target.value) {
+                                    const value = parseFloat(e.target.value);
+                                    if (!isNaN(value)) {
+                                      const currentPricing = watchedValues.debrisPricing || {};
+                                      setValue("debrisPricing", {
+                                        ...currentPricing,
+                                        [debris]: {
+                                          ...currentPricing[debris],
+                                          price: parseFloat(value.toFixed(2)),
+                                        },
+                                      });
+                                    }
                                   }
-                                }
-                              }}
-                            />
+                                }}
+                              />
+                            </div>
                           </div>
 
                           <div>
