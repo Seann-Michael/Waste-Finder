@@ -29,7 +29,9 @@ import {
   Mail,
   Globe,
   CreditCard,
-  Trash,
+  Trash2,
+  Building2,
+  HardHat,
   CheckCircle,
   AlertTriangle,
   Edit,
@@ -206,6 +208,45 @@ export default function PreviewLocation() {
     }
   };
 
+  const getFacilityIcon = (type: string) => {
+    switch (type) {
+      case "landfill":
+        return <Trash2 className="w-6 h-6" />;
+      case "transfer_station":
+        return <Building2 className="w-6 h-6" />;
+      case "construction_landfill":
+        return <HardHat className="w-6 h-6" />;
+      default:
+        return <Trash2 className="w-6 h-6" />;
+    }
+  };
+
+  const getFacilityLabel = (type: string) => {
+    switch (type) {
+      case "landfill":
+        return "Municipal Landfill";
+      case "transfer_station":
+        return "Transfer Station";
+      case "construction_landfill":
+        return "Construction Landfill";
+      default:
+        return "Waste Facility";
+    }
+  };
+
+  const renderStars = (rating: number, size = "w-4 h-4") => {
+    return Array.from({ length: 5 }, (_, i) => (
+      <Star
+        key={i}
+        className={`${size} ${
+          i < Math.floor(rating)
+            ? "text-yellow-400 fill-current"
+            : "text-gray-300"
+        }`}
+      />
+    ));
+  };
+
   if (!location) {
     return (
       <AdminLayout>
@@ -317,30 +358,76 @@ export default function PreviewLocation() {
           </CardContent>
         </Card>
 
-        {/* Location Preview */}
+        {/* Location Preview - Matches /location page layout exactly */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Location Details */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Basic Information */}
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Header - Matches LocationDetail exactly */}
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="text-primary">
+                  {getFacilityIcon(currentLocation.details.facilityType)}
+                </div>
+                <Badge variant="secondary" className="flex items-center gap-1">
+                  {getFacilityLabel(currentLocation.details.facilityType)}
+                </Badge>
+              </div>
+
+              {isEditing ? (
+                <Input
+                  value={currentLocation.locationName}
+                  onChange={(e) =>
+                    handleFieldChange("locationName", e.target.value)
+                  }
+                  className="text-3xl font-bold mb-4 border-none px-0"
+                />
+              ) : (
+                <h1 className="text-3xl font-bold mb-4">
+                  {currentLocation.locationName}
+                </h1>
+              )}
+
+              <div className="flex items-center gap-2 mb-4">
+                {renderStars(4.5, "w-5 h-5")}
+                <span className="text-lg font-medium">4.5</span>
+                <span className="text-muted-foreground">
+                  (0 reviews - will show after approval)
+                </span>
+              </div>
+
+              <div className="flex flex-wrap gap-3">
+                {currentLocation.status === "pending" && (
+                  <>
+                    <Button
+                      variant="outline"
+                      onClick={() => setIsEditing(!isEditing)}
+                    >
+                      <Edit className="w-4 h-4 mr-2" />
+                      {isEditing ? "Cancel Edit" : "Edit Details"}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowRejectDialog(true)}
+                    >
+                      <AlertTriangle className="w-4 h-4 mr-2" />
+                      Reject
+                    </Button>
+                    <Button onClick={() => setShowApproveDialog(true)}>
+                      <CheckCircle className="w-4 h-4 mr-2" />
+                      Approve
+                    </Button>
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* Contact Information */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <MapPin className="w-5 h-5" />
-                  {isEditing ? (
-                    <Input
-                      value={currentLocation.locationName}
-                      onChange={(e) =>
-                        handleFieldChange("locationName", e.target.value)
-                      }
-                      className="text-lg font-bold"
-                    />
-                  ) : (
-                    currentLocation.locationName
-                  )}
+                  <Phone className="w-5 h-5" />
+                  Contact Information
                 </CardTitle>
-                <div className="flex items-center gap-2">
-                  {getTypeBadge(currentLocation.details.facilityType)}
-                </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>

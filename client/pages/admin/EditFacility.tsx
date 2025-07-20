@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import {
   Select,
   SelectContent,
@@ -16,16 +16,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
-  ChevronLeft,
   MapPin,
+  Phone,
+  Clock,
+  Globe,
+  Mail,
+  Star,
   Save,
   CheckCircle,
-  AlertTriangle,
-  Loader2,
+  ChevronLeft,
+  Calendar,
+  DollarSign,
+  CreditCard,
   Trash2,
-  Archive,
+  Building2,
+  HardHat,
 } from "lucide-react";
 import { Location } from "@shared/api";
 
@@ -395,6 +401,45 @@ export default function EditFacility() {
     }
   };
 
+  const getFacilityIcon = (type: Location["facilityType"]) => {
+    switch (type) {
+      case "landfill":
+        return <Trash2 className="w-6 h-6" />;
+      case "transfer_station":
+        return <Building2 className="w-6 h-6" />;
+      case "construction_landfill":
+        return <HardHat className="w-6 h-6" />;
+      default:
+        return <Trash2 className="w-6 h-6" />;
+    }
+  };
+
+  const getFacilityLabel = (type: Location["facilityType"]) => {
+    switch (type) {
+      case "landfill":
+        return "Municipal Landfill";
+      case "transfer_station":
+        return "Transfer Station";
+      case "construction_landfill":
+        return "Construction Landfill";
+      default:
+        return "Waste Facility";
+    }
+  };
+
+  const renderStars = (rating: number, size = "w-4 h-4") => {
+    return Array.from({ length: 5 }, (_, i) => (
+      <Star
+        key={i}
+        className={`${size} ${
+          i < Math.floor(rating)
+            ? "text-yellow-400 fill-current"
+            : "text-gray-300"
+        }`}
+      />
+    ));
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex flex-col">
@@ -437,259 +482,180 @@ export default function EditFacility() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <Header />
+    <AdminLayout>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Back to Results & Breadcrumb */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Link to="/admin" className="hover:text-primary">
+              Admin
+            </Link>
+            <span>/</span>
+            <Link to="/admin/locations" className="hover:text-primary">
+              Locations
+            </Link>
+            <span>/</span>
+            <span>Edit Location</span>
+          </div>
+          <Button variant="outline" asChild>
+            <Link to="/admin/locations">
+              <ChevronLeft className="w-4 h-4 mr-2" />
+              Back to Locations
+            </Link>
+          </Button>
+        </div>
 
-      <main className="flex-1">
-        <div className="max-w-4xl mx-auto px-4 py-8">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-4">
-              <Button variant="outline" asChild>
-                <Link to="/admin">
-                  <ChevronLeft className="w-4 h-4 mr-2" />
-                  Back to Admin
-                </Link>
-              </Button>
-              <div>
-                <h1 className="text-3xl font-bold">Edit Facility</h1>
-                <p className="text-muted-foreground">
-                  Update facility information and settings
-                </p>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Header */}
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="text-primary">
+                  {getFacilityIcon(formData.facilityType as Location["facilityType"])}
+                </div>
+                <Badge variant="secondary" className="flex items-center gap-1">
+                  {getFacilityLabel(formData.facilityType as Location["facilityType"])}
+                </Badge>
+              </div>
+
+              <div className="space-y-4">
+                <Label htmlFor="name" className="text-2xl font-bold">Facility Name</Label>
+                <Input
+                  id="name"
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      name: e.target.value,
+                    }))
+                  }
+                  className="text-3xl font-bold border-none px-0 text-foreground"
+                  placeholder="e.g., Green Valley Landfill"
+                />
+              </div>
+
+              <div className="flex items-center gap-2 mb-4">
+                {renderStars(facility?.rating || 4.5, "w-5 h-5")}
+                <span className="text-lg font-medium">{facility?.rating || 4.5}</span>
+                <span className="text-muted-foreground">
+                  ({facility?.reviewCount || 127} reviews)
+                </span>
+              </div>
+
+              <div className="flex flex-wrap gap-3">
+                <Button type="submit" disabled={isSubmitting}>
+                  <Save className="w-4 h-4 mr-2" />
+                  {isSubmitting ? "Saving..." : "Save Changes"}
+                </Button>
               </div>
             </div>
 
-            {/* Status & Actions */}
-            <div className="flex items-center gap-2">
-              <Badge variant={formData.isActive ? "default" : "secondary"}>
-                {formData.isActive ? "Active" : "Inactive"}
-              </Badge>
-              <Button variant="outline" size="sm" onClick={handleArchive}>
-                <Archive className="w-4 h-4 mr-2" />
-                Archive
-              </Button>
-              <Button variant="destructive" size="sm" onClick={handleDelete}>
-                <Trash2 className="w-4 h-4 mr-2" />
-                Delete
-              </Button>
-            </div>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-8">
-            {/* Basic Information */}
+            {/* Contact Information */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <MapPin className="w-5 h-5" />
-                  Basic Information
+                  <Phone className="w-5 h-5" />
+                  Contact Information
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-center space-x-2 mb-4">
-                  <Checkbox
-                    id="isActive"
-                    checked={formData.isActive}
-                    onCheckedChange={(checked) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        isActive: checked as boolean,
-                      }))
-                    }
-                  />
-                  <Label htmlFor="isActive">
-                    Facility is active and visible to users
+                <div className="space-y-2">
+                  <Label className="flex items-start gap-3">
+                    <MapPin className="w-5 h-5 text-muted-foreground mt-0.5" />
+                    Address
                   </Label>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="name">Facility Name *</Label>
+                  <div className="space-y-2 ml-8">
                     <Input
-                      id="name"
-                      value={formData.name}
+                      value={formData.address}
                       onChange={(e) =>
                         setFormData((prev) => ({
                           ...prev,
-                          name: e.target.value,
+                          address: e.target.value,
                         }))
                       }
-                      placeholder="e.g., Green Valley Landfill"
-                      className={formErrors.name ? "border-red-500" : ""}
+                      placeholder="Street Address"
                     />
-                    {formErrors.name && (
-                      <p className="text-sm text-red-600 mt-1">
-                        {formErrors.name}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <Label htmlFor="facilityType">Facility Type *</Label>
-                    <Select
-                      value={formData.facilityType}
-                      onValueChange={(value) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          facilityType: value,
-                        }))
-                      }
-                    >
-                      <SelectTrigger
-                        className={
-                          formErrors.facilityType ? "border-red-500" : ""
+                    <div className="grid grid-cols-3 gap-2">
+                      <Input
+                        value={formData.city}
+                        onChange={(e) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            city: e.target.value,
+                          }))
                         }
-                      >
-                        <SelectValue placeholder="Select facility type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {facilityTypes.map((type) => (
-                          <SelectItem key={type.value} value={type.value}>
-                            {type.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    {formErrors.facilityType && (
-                      <p className="text-sm text-red-600 mt-1">
-                        {formErrors.facilityType}
-                      </p>
-                    )}
+                        placeholder="City"
+                      />
+                      <Input
+                        value={formData.state}
+                        onChange={(e) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            state: e.target.value.toUpperCase(),
+                          }))
+                        }
+                        placeholder="State"
+                        maxLength={2}
+                      />
+                      <Input
+                        value={formData.zipCode}
+                        onChange={(e) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            zipCode: e.target.value,
+                          }))
+                        }
+                        placeholder="ZIP Code"
+                        maxLength={5}
+                      />
+                    </div>
                   </div>
                 </div>
 
-                <div>
-                  <Label htmlFor="address">Street Address *</Label>
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-3">
+                    <Phone className="w-5 h-5 text-muted-foreground" />
+                    Phone
+                  </Label>
                   <Input
-                    id="address"
-                    value={formData.address}
+                    value={formData.phone}
                     onChange={(e) =>
                       setFormData((prev) => ({
                         ...prev,
-                        address: e.target.value,
+                        phone: e.target.value,
                       }))
                     }
-                    placeholder="e.g., 1234 Main Street"
-                    className={formErrors.address ? "border-red-500" : ""}
+                    placeholder="(555) 123-4567"
+                    className="ml-8"
                   />
-                  {formErrors.address && (
-                    <p className="text-sm text-red-600 mt-1">
-                      {formErrors.address}
-                    </p>
-                  )}
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div>
-                    <Label htmlFor="city">City *</Label>
-                    <Input
-                      id="city"
-                      value={formData.city}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          city: e.target.value,
-                        }))
-                      }
-                      placeholder="e.g., Springfield"
-                      className={formErrors.city ? "border-red-500" : ""}
-                    />
-                    {formErrors.city && (
-                      <p className="text-sm text-red-600 mt-1">
-                        {formErrors.city}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <Label htmlFor="state">State *</Label>
-                    <Input
-                      id="state"
-                      value={formData.state}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          state: e.target.value.toUpperCase(),
-                        }))
-                      }
-                      placeholder="e.g., IL"
-                      maxLength={2}
-                      className={formErrors.state ? "border-red-500" : ""}
-                    />
-                    {formErrors.state && (
-                      <p className="text-sm text-red-600 mt-1">
-                        {formErrors.state}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <Label htmlFor="zipCode">ZIP Code *</Label>
-                    <Input
-                      id="zipCode"
-                      value={formData.zipCode}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          zipCode: e.target.value,
-                        }))
-                      }
-                      placeholder="e.g., 62701"
-                      maxLength={5}
-                      className={formErrors.zipCode ? "border-red-500" : ""}
-                    />
-                    {formErrors.zipCode && (
-                      <p className="text-sm text-red-600 mt-1">
-                        {formErrors.zipCode}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="phone">Phone Number</Label>
-                    <Input
-                      id="phone"
-                      value={formData.phone}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          phone: e.target.value,
-                        }))
-                      }
-                      placeholder="(555) 123-4567"
-                      className={formErrors.phone ? "border-red-500" : ""}
-                    />
-                    {formErrors.phone && (
-                      <p className="text-sm text-red-600 mt-1">
-                        {formErrors.phone}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          email: e.target.value,
-                        }))
-                      }
-                      placeholder="info@facility.com"
-                      className={formErrors.email ? "border-red-500" : ""}
-                    />
-                    {formErrors.email && (
-                      <p className="text-sm text-red-600 mt-1">
-                        {formErrors.email}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="website">Website</Label>
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-3">
+                    <Mail className="w-5 h-5 text-muted-foreground" />
+                    Email
+                  </Label>
                   <Input
-                    id="website"
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        email: e.target.value,
+                      }))
+                    }
+                    placeholder="info@facility.com"
+                    className="ml-8"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-3">
+                    <Globe className="w-5 h-5 text-muted-foreground" />
+                    Website
+                  </Label>
+                  <Input
                     type="url"
                     value={formData.website}
                     onChange={(e) =>
@@ -699,38 +665,8 @@ export default function EditFacility() {
                       }))
                     }
                     placeholder="https://facility.com"
+                    className="ml-8"
                   />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="latitude">Latitude</Label>
-                    <Input
-                      id="latitude"
-                      value={formData.latitude}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          latitude: e.target.value,
-                        }))
-                      }
-                      placeholder="e.g., 40.7128"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="longitude">Longitude</Label>
-                    <Input
-                      id="longitude"
-                      value={formData.longitude}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          longitude: e.target.value,
-                        }))
-                      }
-                      placeholder="e.g., -74.0060"
-                    />
-                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -738,156 +674,265 @@ export default function EditFacility() {
             {/* Operating Hours */}
             <Card>
               <CardHeader>
-                <CardTitle>Operating Hours</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <Clock className="w-5 h-5" />
+                  Operating Hours
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {operatingHours.map((hour, index) => (
-                    <div key={hour.day} className="flex items-center gap-4">
-                      <div className="w-20">
-                        <Label className="text-sm">{hour.dayName}</Label>
+                    <div
+                      key={hour.day}
+                      className="flex justify-between items-center"
+                    >
+                      <span className="font-medium w-24">{hour.dayName}</span>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          checked={hour.isClosed}
+                          onCheckedChange={(checked) =>
+                            handleHoursChange(
+                              index,
+                              "isClosed",
+                              checked as boolean,
+                            )
+                          }
+                        />
+                        <Label className="text-sm">Closed</Label>
+                        {!hour.isClosed && (
+                          <>
+                            <Input
+                              type="time"
+                              value={hour.openTime}
+                              onChange={(e) =>
+                                handleHoursChange(
+                                  index,
+                                  "openTime",
+                                  e.target.value,
+                                )
+                              }
+                              className="w-32"
+                            />
+                            <span>to</span>
+                            <Input
+                              type="time"
+                              value={hour.closeTime}
+                              onChange={(e) =>
+                                handleHoursChange(
+                                  index,
+                                  "closeTime",
+                                  e.target.value,
+                                )
+                              }
+                              className="w-32"
+                            />
+                          </>
+                        )}
                       </div>
-                      <Checkbox
-                        checked={hour.isClosed}
-                        onCheckedChange={(checked) =>
-                          handleHoursChange(
-                            index,
-                            "isClosed",
-                            checked as boolean,
-                          )
-                        }
-                      />
-                      <Label className="text-sm">Closed</Label>
-                      {!hour.isClosed && (
-                        <>
-                          <Input
-                            type="time"
-                            value={hour.openTime}
-                            onChange={(e) =>
-                              handleHoursChange(
-                                index,
-                                "openTime",
-                                e.target.value,
-                              )
-                            }
-                            className="w-32"
-                          />
-                          <span>to</span>
-                          <Input
-                            type="time"
-                            value={hour.closeTime}
-                            onChange={(e) =>
-                              handleHoursChange(
-                                index,
-                                "closeTime",
-                                e.target.value,
-                              )
-                            }
-                            className="w-32"
-                          />
-                        </>
-                      )}
                     </div>
                   ))}
                 </div>
               </CardContent>
             </Card>
 
-            {/* Services & Payment */}
+            {/* Accepted Materials with Pricing */}
             <Card>
               <CardHeader>
-                <CardTitle>Services & Payment</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <DollarSign className="w-5 h-5" />
+                  Accepted Materials & Pricing
+                </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div>
-                  <Label className="text-base font-medium">
-                    Payment Methods Accepted
-                  </Label>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-3">
-                    {paymentOptions.map((payment) => (
-                      <div
-                        key={payment}
-                        className="flex items-center space-x-2"
-                      >
-                        <Checkbox
-                          id={payment}
-                          checked={formData.paymentTypes.includes(payment)}
-                          onCheckedChange={(checked) =>
-                            handlePaymentChange(payment, checked as boolean)
-                          }
-                        />
-                        <Label
-                          htmlFor={payment}
-                          className="text-sm font-normal"
-                        >
-                          {payment}
-                        </Label>
-                      </div>
-                    ))}
+              <CardContent>
+                <div className="space-y-4">
+                  <div>
+                    <Label className="text-base font-medium">
+                      Debris Types Accepted
+                    </Label>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-3">
+                      {debrisOptions.map((debris) => (
+                        <div key={debris} className="flex items-center space-x-2">
+                          <Checkbox
+                            id={debris}
+                            checked={formData.debrisTypes.includes(debris)}
+                            onCheckedChange={(checked) =>
+                              handleDebrisChange(debris, checked as boolean)
+                            }
+                          />
+                          <Label htmlFor={debris} className="text-sm font-normal">
+                            {debris}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-
-                <div>
-                  <Label className="text-base font-medium">
-                    Debris Types Accepted
-                  </Label>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-3">
-                    {debrisOptions.map((debris) => (
-                      <div key={debris} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={debris}
-                          checked={formData.debrisTypes.includes(debris)}
-                          onCheckedChange={(checked) =>
-                            handleDebrisChange(debris, checked as boolean)
-                          }
-                        />
-                        <Label htmlFor={debris} className="text-sm font-normal">
-                          {debris}
-                        </Label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="notes">Additional Notes</Label>
-                  <Textarea
-                    id="notes"
-                    value={formData.notes}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        notes: e.target.value,
-                      }))
-                    }
-                    placeholder="Any additional information about the facility, pricing, special services, restrictions, etc."
-                    rows={4}
-                  />
                 </div>
               </CardContent>
             </Card>
 
-            {/* Submit */}
-            <div className="flex gap-4">
-              <Button type="submit" disabled={isSubmitting} className="flex-1">
-                {isSubmitting ? (
-                  "Updating Facility..."
-                ) : (
-                  <>
-                    <Save className="w-4 h-4 mr-2" />
-                    Update Facility
-                  </>
-                )}
-              </Button>
-              <Button variant="outline" asChild>
-                <Link to="/admin">Cancel</Link>
-              </Button>
-            </div>
-          </form>
-        </div>
-      </main>
+            {/* Payment Methods */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <CreditCard className="w-5 h-5" />
+                  Payment Methods
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  {paymentOptions.map((payment) => (
+                    <div
+                      key={payment}
+                      className="flex items-center space-x-2"
+                    >
+                      <Checkbox
+                        id={payment}
+                        checked={formData.paymentTypes.includes(payment)}
+                        onCheckedChange={(checked) =>
+                          handlePaymentChange(payment, checked as boolean)
+                        }
+                      />
+                      <Label
+                        htmlFor={payment}
+                        className="text-sm font-normal"
+                      >
+                        {payment}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
 
-      <Footer />
-    </div>
+            {/* Additional Notes */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Additional Information</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Textarea
+                  value={formData.notes}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      notes: e.target.value,
+                    }))
+                  }
+                  placeholder="Any additional information about the facility, pricing, special services, restrictions, etc."
+                  rows={4}
+                />
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Quick Info */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Quick Info</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Type:</span>
+                  <Select
+                    value={formData.facilityType}
+                    onValueChange={(value) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        facilityType: value,
+                      }))
+                    }
+                  >
+                    <SelectTrigger className="w-auto">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {facilityTypes.map((type) => (
+                        <SelectItem key={type.value} value={type.value}>
+                          {type.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Status:</span>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="isActive"
+                      checked={formData.isActive}
+                      onCheckedChange={(checked) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          isActive: checked as boolean,
+                        }))
+                      }
+                    />
+                    <Label htmlFor="isActive" className="text-sm">
+                      Active
+                    </Label>
+                  </div>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Rating:</span>
+                  <span>{facility?.rating || 4.5}/5</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Reviews:</span>
+                  <span>{facility?.reviewCount || 127}</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Map Placeholder */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Location</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <Label>Coordinates</Label>
+                  <div className="grid grid-cols-1 gap-2">
+                    <Input
+                      value={formData.latitude}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          latitude: e.target.value,
+                        }))
+                      }
+                      placeholder="Latitude (e.g., 40.7128)"
+                    />
+                    <Input
+                      value={formData.longitude}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          longitude: e.target.value,
+                        }))
+                      }
+                      placeholder="Longitude (e.g., -74.0060)"
+                    />
+                  </div>
+                </div>
+                <div className="aspect-square bg-muted rounded-lg flex items-center justify-center mt-4">
+                  <div className="text-center">
+                    <MapPin className="w-12 h-12 text-muted-foreground mx-auto mb-2" />
+                    <p className="text-sm text-muted-foreground">
+                      Interactive Map
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Preview Location
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+      </form>
+    </AdminLayout>
   );
 }
