@@ -86,7 +86,7 @@ export interface LocationSearchRequest {
   latitude?: number;
   longitude?: number;
   radius?: number; // Miles
-  facilityTypes?: Location["facilityType"][];
+  locationTypes?: Location["locationType"][];
   debrisTypes?: string[];
 }
 
