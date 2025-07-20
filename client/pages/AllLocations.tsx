@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import FacebookCTA from "@/components/FacebookCTA";
 import LocationCard from "@/components/LocationCard";
 import MultiSelectInput from "@/components/MultiSelectInput";
 import MapPlaceholder from "@/components/MapPlaceholder";
