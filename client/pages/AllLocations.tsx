@@ -19,126 +19,65 @@ import {
 import { Location } from "@shared/api";
 import { Search, SlidersHorizontal, MapPin, Loader2 } from "lucide-react";
 
-// Mock geocoding service that covers all US ZIP codes
-// In a real app, this would be replaced with a proper geocoding API like Google Maps or Mapbox
-
-// Known ZIP code coordinates for accuracy
-const knownZipCodes: Record<string, { lat: number; lng: number }> = {
-  // Major cities for accurate results
-  "10001": { lat: 40.7505, lng: -73.9934 }, // NYC Manhattan
-  "10002": { lat: 40.7156, lng: -73.9874 }, // NYC Lower East Side
-  "10003": { lat: 40.7316, lng: -73.9891 }, // NYC East Village
-  "90210": { lat: 34.0901, lng: -118.4065 }, // Beverly Hills
-  "90211": { lat: 34.0836, lng: -118.4003 }, // Beverly Hills
-  "60601": { lat: 41.8781, lng: -87.6298 }, // Chicago Downtown
-  "60602": { lat: 41.8789, lng: -87.6359 }, // Chicago Loop
-  "33101": { lat: 25.7617, lng: -80.1918 }, // Miami Downtown
-  "33102": { lat: 25.7743, lng: -80.1937 }, // Miami Beach
-  "02101": { lat: 42.3601, lng: -71.0589 }, // Boston Downtown
-  "02102": { lat: 42.3467, lng: -71.0395 }, // Boston
-  "77001": { lat: 29.7604, lng: -95.3698 }, // Houston Downtown
-  "77002": { lat: 29.7518, lng: -95.3635 }, // Houston
-  "98101": { lat: 47.6062, lng: -122.3321 }, // Seattle Downtown
-  "98102": { lat: 47.6323, lng: -122.3215 }, // Seattle
-
-  // Cleveland, OH area (existing facilities)
-  "44102": { lat: 41.4919, lng: -81.7357 }, // Cleveland East
-  "44111": { lat: 41.4458, lng: -81.7799 }, // Cleveland West
-  "44113": { lat: 41.4897, lng: -81.6934 }, // Cleveland Downtown
-  "44129": { lat: 41.3784, lng: -81.729 }, // Parma
-  "44135": { lat: 41.395, lng: -81.763 }, // Cleveland Southwest
-
-  // Additional Ohio ZIP codes
-  "44035": { lat: 41.2367, lng: -81.8552 }, // Elyria, OH (about 25 miles from Cleveland)
-  "44001": { lat: 41.6025, lng: -80.7698 }, // Ashtabula, OH
-  "44012": { lat: 41.6053, lng: -81.337 }, // Avon Lake, OH
-  "44017": { lat: 41.4034, lng: -82.1832 }, // Elyria, OH
-
-  // Springfield IL area (existing facilities)
-  "62701": { lat: 39.7817, lng: -89.6501 }, // Springfield IL
-  "62702": { lat: 39.7567, lng: -89.6301 }, // Springfield IL
-  "62703": { lat: 39.7317, lng: -89.6701 }, // Springfield IL
-};
-
-// ZIP code prefix to approximate state/region mapping (accurate US postal system)
-const zipPrefixToRegion: Record<
-  string,
-  { lat: number; lng: number; name: string }
-> = {
-  "0": {
-    lat: 42.3601,
-    lng: -71.0589,
-    name: "Connecticut/Massachusetts/Maine/New Hampshire/New Jersey/Rhode Island/Vermont",
-  },
-  "1": { lat: 40.7589, lng: -73.9851, name: "Delaware/New York/Pennsylvania" },
-  "2": {
-    lat: 38.9072,
-    lng: -77.0369,
-    name: "DC/Maryland/North Carolina/South Carolina/Virginia/West Virginia",
-  },
-  "3": {
-    lat: 33.749,
-    lng: -84.388,
-    name: "Alabama/Florida/Georgia/Mississippi/Tennessee",
-  },
-  "4": { lat: 41.4993, lng: -82.2907, name: "Indiana/Kentucky/Michigan/Ohio" }, // Fixed for Ohio!
-  "5": {
-    lat: 44.2619,
-    lng: -96.7853,
-    name: "Iowa/Minnesota/Montana/North Dakota/South Dakota/Wisconsin",
-  },
-  "6": {
-    lat: 41.8781,
-    lng: -87.6298,
-    name: "Illinois/Kansas/Missouri/Nebraska",
-  },
-  "7": {
-    lat: 31.9686,
-    lng: -99.9018,
-    name: "Arkansas/Louisiana/Oklahoma/Texas",
-  },
-  "8": {
-    lat: 39.7392,
-    lng: -104.9903,
-    name: "Arizona/Colorado/Idaho/New Mexico/Nevada/Utah/Wyoming",
-  },
-  "9": {
-    lat: 36.7783,
-    lng: -119.4179,
-    name: "Alaska/California/Hawaii/Oregon/Washington",
-  },
-};
-
-// Function to get coordinates for any ZIP code
+// Mock geocoding service for US ZIP codes
 const getZipCodeCoordinates = (
   zipCode: string,
 ): { lat: number; lng: number } | null => {
-  // First check known ZIP codes for accuracy
+  // Known ZIP codes for accuracy
+  const knownZipCodes: Record<string, { lat: number; lng: number }> = {
+    // Cleveland, OH area
+    "44035": { lat: 41.2367, lng: -81.8552 }, // Elyria, OH
+    "44102": { lat: 41.4919, lng: -81.7357 }, // Cleveland East
+    "44111": { lat: 41.4458, lng: -81.7799 }, // Cleveland West
+    "44113": { lat: 41.4897, lng: -81.6934 }, // Cleveland Downtown
+    "44129": { lat: 41.3784, lng: -81.729 }, // Parma
+    "44135": { lat: 41.395, lng: -81.763 }, // Cleveland Southwest
+
+    // Springfield IL area
+    "62701": { lat: 39.7817, lng: -89.6501 },
+    "62702": { lat: 39.7567, lng: -89.6301 },
+    "62703": { lat: 39.7317, lng: -89.6701 },
+
+    // Other cities
+    "60601": { lat: 41.8781, lng: -87.6298 }, // Chicago
+    "10001": { lat: 40.7505, lng: -73.9934 }, // NYC
+  };
+
   if (knownZipCodes[zipCode]) {
     return knownZipCodes[zipCode];
   }
 
-  // For unknown ZIP codes, estimate based on prefix
+  // Estimate based on ZIP prefix for unknown codes
   const prefix = zipCode.charAt(0);
-  const regionInfo = zipPrefixToRegion[prefix];
+  const regionMap: Record<string, { lat: number; lng: number }> = {
+    "0": { lat: 42.3601, lng: -71.0589 }, // New England
+    "1": { lat: 40.7589, lng: -73.9851 }, // NY/NJ/PA
+    "2": { lat: 38.9072, lng: -77.0369 }, // DC/MD/VA
+    "3": { lat: 33.749, lng: -84.388 }, // Southeast
+    "4": { lat: 41.4993, lng: -82.2907 }, // OH/IN/KY/MI
+    "5": { lat: 44.2619, lng: -96.7853 }, // Upper Midwest
+    "6": { lat: 41.8781, lng: -87.6298 }, // IL/KS/MO/NE
+    "7": { lat: 31.9686, lng: -99.9018 }, // South Central
+    "8": { lat: 39.7392, lng: -104.9903 }, // Mountain West
+    "9": { lat: 36.7783, lng: -119.4179 }, // West Coast
+  };
 
-  if (regionInfo) {
-    // Add reasonable variation within the region based on the full ZIP code
+  const region = regionMap[prefix];
+  if (region) {
     const zipNum = parseInt(zipCode);
-    // More conservative variations to stay within realistic bounds
-    const latVariation = ((zipNum % 1000) - 500) * 0.002; // ±1 degree variation (about 70 miles)
-    const lngVariation = ((zipNum % 1000) - 500) * 0.003; // ±1.5 degree variation (about 85 miles)
+    const latVar = ((zipNum % 1000) - 500) * 0.002;
+    const lngVar = ((zipNum % 1000) - 500) * 0.003;
 
     return {
-      lat: Math.max(-90, Math.min(90, regionInfo.lat + latVariation)), // Clamp to valid lat range
-      lng: Math.max(-180, Math.min(180, regionInfo.lng + lngVariation)), // Clamp to valid lng range
+      lat: region.lat + latVar,
+      lng: region.lng + lngVar,
     };
   }
 
   return null;
 };
 
-// Calculate distance between two points using Haversine formula
+// Calculate distance using Haversine formula
 const calculateDistance = (
   lat1: number,
   lng1: number,
@@ -155,7 +94,7 @@ const calculateDistance = (
       Math.sin(dLng / 2) *
       Math.sin(dLng / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c; // Distance in miles
+  return R * c;
 };
 
 export default function AllLocations() {
@@ -164,7 +103,7 @@ export default function AllLocations() {
   const [filteredLocations, setFilteredLocations] = useState<Location[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchRadius, setSearchRadius] = useState(50); // Default 50 miles
+  const [searchRadius, setSearchRadius] = useState(50);
   const [sortBy, setSortBy] = useState("distance");
   const [filterType, setFilterType] = useState("all");
   const [selectedDebrisTypes, setSelectedDebrisTypes] = useState<string[]>([]);
@@ -174,7 +113,7 @@ export default function AllLocations() {
   }, []);
 
   useEffect(() => {
-    // Populate search query and radius from URL params if present
+    // Get search params
     const zipFromParams = searchParams.get("zipCode");
     const radiusFromParams = searchParams.get("radius");
 
@@ -187,7 +126,9 @@ export default function AllLocations() {
   }, [searchParams]);
 
   useEffect(() => {
-    filterAndSortLocations();
+    if (locations.length > 0) {
+      filterAndSortLocations();
+    }
   }, [
     locations,
     searchQuery,
@@ -200,11 +141,9 @@ export default function AllLocations() {
   const loadAllLocations = async () => {
     setIsLoading(true);
     try {
-      // Mock data including the new 44111 listing
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       const mockLocations: Location[] = [
-        // Cleveland, OH (44111) location
         {
           id: "cleveland-1",
           name: "Cleveland West Municipal Landfill",
@@ -293,11 +232,9 @@ export default function AllLocations() {
               isClosed: true,
             },
           ],
-          notes:
-            "Cleveland's primary municipal waste facility. Accepts most household waste and recycling. Special drop-off events for hazardous materials.",
+          notes: "Cleveland's primary municipal waste facility.",
           rating: 4.2,
           reviewCount: 89,
-          distance: 2.1,
           isActive: true,
           createdAt: "2024-01-01T00:00:00Z",
           updatedAt: "2024-01-15T00:00:00Z",
@@ -382,11 +319,9 @@ export default function AllLocations() {
               isClosed: true,
             },
           ],
-          notes:
-            "Specialized recycling center with comprehensive electronics recycling program.",
+          notes: "Specialized recycling center.",
           rating: 4.6,
           reviewCount: 142,
-          distance: 1.8,
           isActive: true,
           createdAt: "2024-01-01T00:00:00Z",
           updatedAt: "2024-01-18T00:00:00Z",
@@ -466,12 +401,10 @@ export default function AllLocations() {
           ],
           rating: 3.8,
           reviewCount: 67,
-          distance: 8.4,
           isActive: true,
           createdAt: "2024-01-01T00:00:00Z",
           updatedAt: "2024-01-10T00:00:00Z",
         },
-        // Springfield, IL locations (existing)
         {
           id: "springfield-1",
           name: "Green Valley Municipal Landfill",
@@ -480,14 +413,13 @@ export default function AllLocations() {
           state: "IL",
           zipCode: "62701",
           phone: "(555) 123-4567",
-          email: "info@greenvalley.gov",
-          website: "https://greenvalley.gov",
           latitude: 39.7817,
           longitude: -89.6501,
           facilityType: "landfill",
           paymentTypes: [
             { id: "1", name: "Cash" },
             { id: "2", name: "Credit Card" },
+            { id: "3", name: "Check" },
           ],
           debrisTypes: [
             {
@@ -547,333 +479,11 @@ export default function AllLocations() {
               isClosed: true,
             },
           ],
-          notes:
-            "Accepts most household and commercial waste. Recycling available on-site.",
           rating: 4.5,
           reviewCount: 127,
           isActive: true,
           createdAt: "2024-01-01T00:00:00Z",
           updatedAt: "2024-01-15T00:00:00Z",
-        },
-        {
-          id: "springfield-2",
-          name: "Metro Transfer Station",
-          address: "5678 Industrial Boulevard",
-          city: "Springfield",
-          state: "IL",
-          zipCode: "62702",
-          phone: "(555) 987-6543",
-          latitude: 39.7567,
-          longitude: -89.6301,
-          facilityType: "transfer_station",
-          paymentTypes: [
-            { id: "1", name: "Cash" },
-            { id: "3", name: "Check" },
-          ],
-          debrisTypes: [
-            {
-              id: "1",
-              name: "General Waste",
-              category: "general",
-              pricePerTon: 55,
-            },
-            {
-              id: "3",
-              name: "Electronics",
-              category: "recyclable",
-              priceNote: "Free drop-off",
-            },
-          ],
-          operatingHours: [
-            {
-              dayOfWeek: 1,
-              openTime: "06:00",
-              closeTime: "18:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 2,
-              openTime: "06:00",
-              closeTime: "18:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 3,
-              openTime: "06:00",
-              closeTime: "18:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 4,
-              openTime: "06:00",
-              closeTime: "18:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 5,
-              openTime: "06:00",
-              closeTime: "18:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 6,
-              openTime: "07:00",
-              closeTime: "16:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 0,
-              openTime: "00:00",
-              closeTime: "00:00",
-              isClosed: true,
-            },
-          ],
-          rating: 4.2,
-          reviewCount: 89,
-          distance: 5.7,
-          isActive: true,
-          createdAt: "2024-01-01T00:00:00Z",
-          updatedAt: "2024-01-10T00:00:00Z",
-        },
-        {
-          id: "springfield-3",
-          name: "Capitol Construction Landfill",
-          address: "9012 Construction Way",
-          city: "Springfield",
-          state: "IL",
-          zipCode: "62703",
-          phone: "(555) 456-7890",
-          latitude: 39.7317,
-          longitude: -89.6701,
-          facilityType: "construction_landfill",
-          paymentTypes: [
-            { id: "1", name: "Cash" },
-            { id: "2", name: "Credit Card" },
-            { id: "3", name: "Check" },
-          ],
-          debrisTypes: [
-            {
-              id: "4",
-              name: "Construction Debris",
-              category: "construction",
-              pricePerTon: 95,
-            },
-            {
-              id: "5",
-              name: "Concrete",
-              category: "construction",
-              pricePerTon: 45,
-            },
-          ],
-          operatingHours: [
-            {
-              dayOfWeek: 1,
-              openTime: "07:00",
-              closeTime: "16:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 2,
-              openTime: "07:00",
-              closeTime: "16:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 3,
-              openTime: "07:00",
-              closeTime: "16:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 4,
-              openTime: "07:00",
-              closeTime: "16:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 5,
-              openTime: "07:00",
-              closeTime: "16:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 6,
-              openTime: "00:00",
-              closeTime: "00:00",
-              isClosed: true,
-            },
-            {
-              dayOfWeek: 0,
-              openTime: "00:00",
-              closeTime: "00:00",
-              isClosed: true,
-            },
-          ],
-          rating: 4.8,
-          reviewCount: 156,
-          isActive: true,
-          createdAt: "2024-01-01T00:00:00Z",
-          updatedAt: "2024-01-20T00:00:00Z",
-        },
-        // Additional Cleveland area locations for distance testing
-        {
-          id: "cleveland-4",
-          name: "East Side Transfer Station",
-          address: "2100 E 55th Street",
-          city: "Cleveland",
-          state: "OH",
-          zipCode: "44102",
-          phone: "(216) 431-2100",
-          latitude: 41.4919,
-          longitude: -81.7357,
-          facilityType: "transfer_station",
-          paymentTypes: [
-            { id: "1", name: "Cash" },
-            { id: "2", name: "Credit Card" },
-          ],
-          debrisTypes: [
-            {
-              id: "1",
-              name: "General Household Waste",
-              category: "general",
-              pricePerTon: 58,
-            },
-            {
-              id: "2",
-              name: "Yard Waste",
-              category: "general",
-              pricePerTon: 32,
-            },
-          ],
-          operatingHours: [
-            {
-              dayOfWeek: 1,
-              openTime: "07:00",
-              closeTime: "17:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 2,
-              openTime: "07:00",
-              closeTime: "17:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 3,
-              openTime: "07:00",
-              closeTime: "17:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 4,
-              openTime: "07:00",
-              closeTime: "17:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 5,
-              openTime: "07:00",
-              closeTime: "17:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 6,
-              openTime: "08:00",
-              closeTime: "15:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 0,
-              openTime: "00:00",
-              closeTime: "00:00",
-              isClosed: true,
-            },
-          ],
-          rating: 4.1,
-          reviewCount: 73,
-          isActive: true,
-          createdAt: "2024-01-01T00:00:00Z",
-          updatedAt: "2024-01-12T00:00:00Z",
-        },
-        {
-          id: "cleveland-5",
-          name: "Downtown Waste Management",
-          address: "1850 E 55th Street",
-          city: "Cleveland",
-          state: "OH",
-          zipCode: "44113",
-          phone: "(216) 664-2200",
-          latitude: 41.4897,
-          longitude: -81.6934,
-          facilityType: "transfer_station",
-          paymentTypes: [
-            { id: "1", name: "Cash" },
-            { id: "2", name: "Credit Card" },
-            { id: "3", name: "Check" },
-          ],
-          debrisTypes: [
-            {
-              id: "1",
-              name: "General Household Waste",
-              category: "general",
-              pricePerTon: 62,
-            },
-            {
-              id: "4",
-              name: "Electronics",
-              category: "recyclable",
-              priceNote: "Free drop-off",
-            },
-          ],
-          operatingHours: [
-            {
-              dayOfWeek: 1,
-              openTime: "06:00",
-              closeTime: "18:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 2,
-              openTime: "06:00",
-              closeTime: "18:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 3,
-              openTime: "06:00",
-              closeTime: "18:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 4,
-              openTime: "06:00",
-              closeTime: "18:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 5,
-              openTime: "06:00",
-              closeTime: "18:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 6,
-              openTime: "07:00",
-              closeTime: "16:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 0,
-              openTime: "00:00",
-              closeTime: "00:00",
-              isClosed: true,
-            },
-          ],
-          rating: 3.9,
-          reviewCount: 45,
-          isActive: true,
-          createdAt: "2024-01-01T00:00:00Z",
-          updatedAt: "2024-01-08T00:00:00Z",
         },
       ];
 
@@ -886,96 +496,46 @@ export default function AllLocations() {
   };
 
   const filterAndSortLocations = () => {
-    console.log("Starting filterAndSortLocations with:", {
-      searchQuery,
-      searchRadius,
-      locationsCount: locations.length,
-    });
-
     let filtered = [...locations];
-    let searchCoordinates: { lat: number; lng: number } | null = null;
 
-    // Handle zip code-based distance search
-    if (searchQuery.trim()) {
-      const query = searchQuery.trim();
-      console.log("Processing search query:", query);
+    // ZIP code distance search
+    if (searchQuery.trim() && /^\d{5}$/.test(searchQuery.trim())) {
+      const coords = getZipCodeCoordinates(searchQuery.trim());
 
-      // Check if it's a zip code (5 digits)
-      if (/^\d{5}$/.test(query)) {
-        console.log("Detected ZIP code, getting coordinates...");
-        const coords = getZipCodeCoordinates(query);
-        console.log("ZIP code coordinates:", coords);
-
-        if (coords) {
-          searchCoordinates = coords;
-          console.log(
-            "Calculating distances from:",
-            coords,
-            "within radius:",
-            searchRadius,
-          );
-
-          // Calculate distances and filter within specified radius
-          filtered = filtered
-            .map((location) => {
-              const distance = calculateDistance(
-                coords.lat,
-                coords.lng,
-                location.latitude,
-                location.longitude,
-              );
-              console.log(
-                `Distance to ${location.name}: ${distance.toFixed(2)} miles`,
-              );
-              return {
-                ...location,
-                distance: distance,
-              };
-            })
-            .filter((location) => {
-              const withinRadius = (location.distance || 0) <= searchRadius;
-              console.log(
-                `${location.name} within ${searchRadius} miles: ${withinRadius}`,
-              );
-              return withinRadius;
-            });
-
-          console.log("Filtered results count:", filtered.length);
-        } else {
-          // If zip code not in lookup, fall back to text search
-          filtered = filtered.filter(
-            (location) =>
-              location.name.toLowerCase().includes(query.toLowerCase()) ||
-              location.city.toLowerCase().includes(query.toLowerCase()) ||
-              location.state.toLowerCase().includes(query.toLowerCase()) ||
-              location.address.toLowerCase().includes(query.toLowerCase()) ||
-              location.zipCode.includes(query),
-          );
-        }
-      } else {
-        // Text-based search for non-zip queries
-        const queryLower = query.toLowerCase();
-        filtered = filtered.filter(
-          (location) =>
-            location.name.toLowerCase().includes(queryLower) ||
-            location.city.toLowerCase().includes(queryLower) ||
-            location.state.toLowerCase().includes(queryLower) ||
-            location.address.toLowerCase().includes(queryLower) ||
-            location.zipCode.includes(query) ||
-            // Also search for partial zip code matches (e.g., "441" would match "44111")
-            (query.length >= 3 && location.zipCode.startsWith(query)),
-        );
+      if (coords) {
+        // Calculate distances and filter by radius
+        filtered = filtered
+          .map((location) => ({
+            ...location,
+            distance: calculateDistance(
+              coords.lat,
+              coords.lng,
+              location.latitude,
+              location.longitude,
+            ),
+          }))
+          .filter((location) => (location.distance || 0) <= searchRadius)
+          .sort((a, b) => (a.distance || 0) - (b.distance || 0)); // Sort by distance
       }
+    } else if (searchQuery.trim()) {
+      // Text search fallback
+      const query = searchQuery.trim().toLowerCase();
+      filtered = filtered.filter(
+        (location) =>
+          location.name.toLowerCase().includes(query) ||
+          location.city.toLowerCase().includes(query) ||
+          location.state.toLowerCase().includes(query) ||
+          location.zipCode.includes(searchQuery.trim()),
+      );
     }
 
-    // Filter by facility type
+    // Apply other filters
     if (filterType !== "all") {
       filtered = filtered.filter(
         (location) => location.facilityType === filterType,
       );
     }
 
-    // Filter by debris types
     if (selectedDebrisTypes.length > 0) {
       filtered = filtered.filter((location) =>
         selectedDebrisTypes.some((selectedType) =>
@@ -986,36 +546,21 @@ export default function AllLocations() {
       );
     }
 
-    // Sort locations - prioritize distance for zip code searches
-    filtered.sort((a, b) => {
-      // If we have search coordinates and distances, prioritize distance sorting
-      if (
-        searchCoordinates &&
-        a.distance !== undefined &&
-        b.distance !== undefined
-      ) {
-        if (sortBy === "distance" || sortBy === "name") {
-          // Default to distance for zip searches
-          return a.distance - b.distance;
+    // Sort if not already sorted by distance
+    if (!searchQuery.trim() || !/^\d{5}$/.test(searchQuery.trim())) {
+      filtered.sort((a, b) => {
+        switch (sortBy) {
+          case "name":
+            return a.name.localeCompare(b.name);
+          case "rating":
+            return b.rating - a.rating;
+          case "city":
+            return a.city.localeCompare(b.city);
+          default:
+            return 0;
         }
-      }
-
-      // Regular sorting
-      switch (sortBy) {
-        case "name":
-          return a.name.localeCompare(b.name);
-        case "rating":
-          return b.rating - a.rating;
-        case "distance":
-          return (a.distance || 999) - (b.distance || 999);
-        case "city":
-          return a.city.localeCompare(b.city);
-        case "state":
-          return a.state.localeCompare(b.state);
-        default:
-          return 0;
-      }
-    });
+      });
+    }
 
     setFilteredLocations(filtered);
   };
@@ -1026,12 +571,7 @@ export default function AllLocations() {
     "Construction Debris",
     "Appliances",
     "Electronics",
-    "Tires",
-    "Concrete",
-    "Asphalt",
-    "Metal",
-    "Wood",
-    "Hazardous Materials",
+    "Recyclables",
   ];
 
   if (isLoading) {
@@ -1069,7 +609,7 @@ export default function AllLocations() {
             <h1 className="text-3xl font-bold mb-4">All Facilities</h1>
             <p className="text-muted-foreground">
               Browse our complete database of {locations.length} waste disposal
-              facilities across the United States
+              facilities
               {searchQuery &&
               /^\d{5}$/.test(searchQuery) &&
               getZipCodeCoordinates(searchQuery)
@@ -1112,38 +652,22 @@ export default function AllLocations() {
                     </div>
                   </div>
 
-                  {/* Sort */}
+                  {/* Sort By */}
                   <div>
                     <label className="text-sm font-medium mb-2 block">
-                      Sort by
+                      Sort By
                     </label>
                     <Select value={sortBy} onValueChange={setSortBy}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="name">Name A-Z</SelectItem>
-                        <SelectItem value="rating">Highest Rating</SelectItem>
-                        <SelectItem value="distance">
-                          Closest Distance
-                        </SelectItem>
-                        <SelectItem value="city">City A-Z</SelectItem>
-                        <SelectItem value="state">State A-Z</SelectItem>
+                        <SelectItem value="distance">Distance</SelectItem>
+                        <SelectItem value="name">Name</SelectItem>
+                        <SelectItem value="rating">Rating</SelectItem>
+                        <SelectItem value="city">City</SelectItem>
                       </SelectContent>
                     </Select>
-                  </div>
-
-                  {/* Debris Type Filter */}
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">
-                      Debris Types
-                    </label>
-                    <MultiSelectInput
-                      options={availableDebrisTypes}
-                      selectedValues={selectedDebrisTypes}
-                      onSelectionChange={setSelectedDebrisTypes}
-                      placeholder="Search debris types..."
-                    />
                   </div>
 
                   {/* Facility Type Filter */}
@@ -1157,23 +681,28 @@ export default function AllLocations() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="all">All Types</SelectItem>
-                        <SelectItem value="landfill">Landfills</SelectItem>
+                        <SelectItem value="landfill">Landfill</SelectItem>
                         <SelectItem value="transfer_station">
-                          Transfer Stations
+                          Transfer Station
                         </SelectItem>
                         <SelectItem value="construction_landfill">
-                          Construction Landfills
+                          Construction Landfill
                         </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
-                  {/* Results Count */}
-                  <div className="pt-4 border-t">
-                    <div className="text-sm text-muted-foreground">
-                      Showing {filteredLocations.length} of {locations.length}{" "}
-                      facilities
-                    </div>
+                  {/* Debris Types */}
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">
+                      Accepted Debris
+                    </label>
+                    <MultiSelectInput
+                      options={availableDebrisTypes}
+                      value={selectedDebrisTypes}
+                      onChange={setSelectedDebrisTypes}
+                      placeholder="Select debris types"
+                    />
                   </div>
                 </CardContent>
               </Card>
@@ -1181,29 +710,32 @@ export default function AllLocations() {
 
             {/* Results */}
             <div className="lg:col-span-3">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-4">
+                  <span className="text-sm text-muted-foreground">
+                    {filteredLocations.length} facilities found
+                  </span>
+                  {searchQuery && /^\d{5}$/.test(searchQuery) && (
+                    <Badge variant="outline">
+                      Within {searchRadius} miles of {searchQuery}
+                    </Badge>
+                  )}
+                </div>
+              </div>
+
               {filteredLocations.length === 0 ? (
-                <Card>
-                  <CardContent className="py-16 text-center">
-                    <MapPin className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">
-                      No facilities found
-                    </h3>
-                    <p className="text-muted-foreground mb-4">
-                      Try adjusting your search criteria or filters
-                    </p>
-                    <Button
-                      onClick={() => {
-                        setSearchQuery("");
-                        setFilterType("all");
-                        setSelectedDebrisTypes([]);
-                      }}
-                    >
-                      Clear Filters
-                    </Button>
-                  </CardContent>
-                </Card>
+                <div className="text-center py-16">
+                  <MapPin className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">
+                    No facilities found
+                  </h3>
+                  <p className="text-muted-foreground">
+                    Try adjusting your search criteria or expanding your search
+                    radius.
+                  </p>
+                </div>
               ) : (
-                <div className="space-y-6">
+                <div className="grid grid-cols-1 gap-6">
                   {filteredLocations.map((location) => (
                     <LocationCard key={location.id} location={location} />
                   ))}
