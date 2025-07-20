@@ -1175,7 +1175,11 @@ export default function AdminSettings() {
                                   onChange={(e) =>
                                     setNewCustomAd({
                                       ...newCustomAd,
-                                      placement: e.target.value as any,
+                                      placement: e.target.value as
+                                        | "home"
+                                        | "search"
+                                        | "location"
+                                        | "all",
                                     })
                                   }
                                   className="w-full px-3 py-2 border border-border rounded-md"
