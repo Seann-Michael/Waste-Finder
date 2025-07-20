@@ -36,7 +36,6 @@ interface LocationSearchResponse {
 
 // Mock data for fallback when API is unavailable
 
-// Mock data for fallback when API is unavailable
 const getMockData = (query?: string): Location[] => {
   const allMockData: Location[] = [
     {
@@ -115,7 +114,6 @@ const getMockData = (query?: string): Location[] => {
       notes: "Cleveland's primary municipal waste facility.",
       rating: 4.2,
       reviewCount: 89,
-      distance: query === "44035" ? 25.3 : undefined,
       isActive: true,
       createdAt: "2024-01-01T00:00:00Z",
       updatedAt: "2024-01-15T00:00:00Z",
@@ -198,7 +196,6 @@ const getMockData = (query?: string): Location[] => {
       notes: "Specialized recycling center.",
       rating: 4.6,
       reviewCount: 142,
-      distance: query === "44035" ? 24.8 : undefined,
       isActive: true,
       createdAt: "2024-01-01T00:00:00Z",
       updatedAt: "2024-01-18T00:00:00Z",
@@ -273,69 +270,14 @@ const getMockData = (query?: string): Location[] => {
       ],
       rating: 3.8,
       reviewCount: 67,
-      distance: query === "44035" ? 28.1 : undefined,
       isActive: true,
       createdAt: "2024-01-01T00:00:00Z",
       updatedAt: "2024-01-10T00:00:00Z",
     },
   ];
 
-  if (query && /^\d{5}$/.test(query)) {
-    const distanceToArea = calculateMockDistance(query);
-    console.log(`Distance from ${query} to Cleveland area:`, distanceToArea);
-
-    // Show Cleveland facilities if within 200 miles (reasonable driving distance)
-    if (distanceToArea <= 200) {
-      // Calculate individual distances from the query ZIP to each facility
-      const queryCoords = estimateZipCodeCoordinates(query);
-
-      const facilitiesWithDistance = allMockData.map((facility) => {
-        let facilityDistance = distanceToArea;
-
-        // If we have facility coordinates, calculate exact distance
-        if (queryCoords && facility.latitude && facility.longitude) {
-          facilityDistance = calculateDistance(
-            queryCoords.lat,
-            queryCoords.lng,
-            facility.latitude,
-            facility.longitude,
-          );
-        } else {
-          // Fallback: use base distance plus small variation
-          facilityDistance = distanceToArea + (Math.random() - 0.5) * 10;
-        }
-
-        return {
-          ...facility,
-          distance: Math.round(facilityDistance * 10) / 10, // Round to 1 decimal
-        };
-      });
-
-      console.log(
-        "Returning Cleveland area mock data for:",
-        query,
-        "Base distance:",
-        distanceToArea,
-        "Facilities:",
-        facilitiesWithDistance.length,
-      );
-
-      return facilitiesWithDistance.sort(
-        (a, b) => (a.distance || 0) - (b.distance || 0),
-      );
-    } else {
-      console.log(
-        "ZIP code too far from Cleveland area:",
-        query,
-        "Distance:",
-        distanceToArea,
-      );
-      return []; // No results for very distant ZIP codes
-    }
-  }
-
-  // Return all data if no specific filter
-  console.log("Returning all mock data for query:", query);
+  // Return basic mock data without any frontend distance calculations
+  // Let the backend handle all ZIP code and distance logic
   return allMockData;
 };
 
