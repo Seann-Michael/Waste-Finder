@@ -16,7 +16,7 @@ export interface Location {
   googleBusinessUrl?: string; // Google My Business profile URL
   latitude: number;
   longitude: number;
-  facilityType: "landfill" | "transfer_station" | "construction_landfill";
+  locationType: "landfill" | "transfer_station" | "construction_landfill";
   paymentTypes: PaymentType[];
   debrisTypes: DebrisType[];
   operatingHours: OperatingHours[];
