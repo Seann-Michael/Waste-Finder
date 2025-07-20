@@ -105,29 +105,48 @@ export default function Admin() {
 
   // Real metrics calculations
   const getTotalLocations = () => {
-    // In real app, this would be from API. For now, get from localStorage or default
-    const savedLocations = localStorage.getItem("locations");
-    if (savedLocations) {
-      return JSON.parse(savedLocations).length;
+    try {
+      // In real app, this would be from API. For now, get from localStorage or default
+      const savedLocations = localStorage.getItem("locations");
+      if (savedLocations) {
+        const parsed = JSON.parse(savedLocations);
+        return Array.isArray(parsed) ? parsed.length : 0;
+      }
+      return 0; // No locations loaded yet
+    } catch (error) {
+      console.error("Error getting total locations:", error);
+      return 0;
     }
-    return 0; // No locations loaded yet
   };
 
   const getPendingSuggestions = () => {
-    // Get from localStorage or default
-    const savedSuggestions = localStorage.getItem("pendingSuggestions");
-    if (savedSuggestions) {
-      return JSON.parse(savedSuggestions).length;
+    try {
+      // Get from localStorage or default
+      const savedSuggestions = localStorage.getItem("pendingSuggestions");
+      if (savedSuggestions) {
+        const parsed = JSON.parse(savedSuggestions);
+        return Array.isArray(parsed) ? parsed.length : 0;
+      }
+      // Use mock data if available, otherwise return 0
+      return Array.isArray(mockPendingSuggestions) ? mockPendingSuggestions.length : 0;
+    } catch (error) {
+      console.error("Error getting pending suggestions:", error);
+      return 0;
     }
-    return pendingSuggestions.length; // Use mock data
   };
 
   const getMonthlySearches = () => {
-    // Get from localStorage or default
-    const currentMonth = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
-    const searchKey = `searches_${currentYear}_${currentMonth}`;
-    return parseInt(localStorage.getItem(searchKey) || "0");
+    try {
+      // Get from localStorage or default
+      const currentMonth = new Date().getMonth();
+      const currentYear = new Date().getFullYear();
+      const searchKey = `searches_${currentYear}_${currentMonth}`;
+      const searchCount = localStorage.getItem(searchKey) || "0";
+      return parseInt(searchCount) || 0;
+    } catch (error) {
+      console.error("Error getting monthly searches:", error);
+      return 0;
+    }
   };
 
   const stats = [
@@ -153,7 +172,7 @@ export default function Admin() {
     },
   ];
 
-  const pendingSuggestions = [
+  const mockPendingSuggestions = [
     {
       id: "1",
       type: "New Location",
