@@ -316,6 +316,12 @@ export default function AllLocations() {
     const facilityTypeFromParams = searchParams.get("facilityTypes");
     const debrisTypesFromParams = searchParams.get("debrisTypes");
 
+    console.log("URL params:", {
+      zipFromParams,
+      radiusFromParams,
+      facilityTypeFromParams,
+    });
+
     if (zipFromParams) {
       setSearchQuery(zipFromParams);
     }
@@ -327,6 +333,25 @@ export default function AllLocations() {
     }
     if (debrisTypesFromParams) {
       setSelectedDebrisTypes(debrisTypesFromParams.split(","));
+    }
+
+    // If we have URL params, immediately show mock data as fallback
+    if (zipFromParams) {
+      console.log("Loading immediate fallback data for ZIP:", zipFromParams);
+      const mockData = getMockData(zipFromParams);
+      setLocations(mockData);
+      setSearchLocation({
+        zipCode: zipFromParams,
+        lat: 41.2367,
+        lng: -81.8552,
+        city: "Elyria",
+        state: "OH",
+        radius: parseInt(radiusFromParams || "50", 10),
+      });
+      setSearchMessage(
+        `Found ${mockData.length} facilities within ${radiusFromParams || "50"} miles of ${zipFromParams}`,
+      );
+      setIsLoading(false);
     }
   }, [searchParams]);
 
