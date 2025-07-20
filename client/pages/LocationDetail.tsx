@@ -12,6 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import StarRating from "@/components/ui/star-rating";
 import {
   Select,
   SelectContent,
@@ -734,22 +735,17 @@ export default function LocationDetail() {
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <Label>Rating</Label>
-              <Select
-                value={reviewRating.toString()}
-                onValueChange={(value) => setReviewRating(parseInt(value))}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="5">5 Stars - Excellent</SelectItem>
-                  <SelectItem value="4">4 Stars - Good</SelectItem>
-                  <SelectItem value="3">3 Stars - Average</SelectItem>
-                  <SelectItem value="2">2 Stars - Poor</SelectItem>
-                  <SelectItem value="1">1 Star - Terrible</SelectItem>
-                </SelectContent>
-              </Select>
+              <Label className="block mb-2">Rating</Label>
+              <div className="flex items-center gap-3">
+                <StarRating
+                  rating={reviewRating}
+                  onRatingChange={setReviewRating}
+                  size="lg"
+                />
+                <span className="text-sm text-muted-foreground">
+                  {reviewRating > 0 ? `${reviewRating} star${reviewRating > 1 ? 's' : ''}` : 'Click to rate'}
+                </span>
+              </div>
             </div>
             <div>
               <Label htmlFor="review-title">Title</Label>
