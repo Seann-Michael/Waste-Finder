@@ -415,8 +415,8 @@ export default function AllLocations() {
 
       // Fallback to mock data for development
       console.log("Using fallback mock data");
-      const mockData = getMockData(searchQuery);
-      setLocations(mockData);
+      const data = await fetchLocations(searchQuery);
+      setLocations(data);
 
       if (searchQuery && /^\d{5}$/.test(searchQuery)) {
         setSearchLocation({
