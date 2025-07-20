@@ -472,13 +472,34 @@ export default function LocationDetail() {
               </div>
 
               {/* Edit button for super admin only */}
-              {localStorage.getItem("adminLoggedIn") && (
-                <Button variant="outline" size="sm" asChild>
-                  <Link to={`/admin/edit-location/${location.id}`}>
-                    <Edit className="w-4 h-4 mr-2" />
-                    Edit
-                  </Link>
+              {localStorage.getItem("adminLoggedIn") && !isEditMode && (
+                <Button variant="outline" size="sm" onClick={handleEditMode}>
+                  <Edit className="w-4 h-4 mr-2" />
+                  Edit
                 </Button>
+              )}
+
+              {/* Save/Cancel buttons when in edit mode */}
+              {localStorage.getItem("adminLoggedIn") && isEditMode && (
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleCancelEdit}
+                    disabled={isSubmitting}
+                  >
+                    <X className="w-4 h-4 mr-2" />
+                    Cancel
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={handleSaveEdit}
+                    disabled={isSubmitting}
+                  >
+                    <Save className="w-4 h-4 mr-2" />
+                    {isSubmitting ? "Saving..." : "Save"}
+                  </Button>
+                </div>
               )}
             </div>
           </div>
