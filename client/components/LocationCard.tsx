@@ -19,7 +19,7 @@ interface LocationCardProps {
   location: Location;
 }
 
-const getFacilityIcon = (type: Location["facilityType"]) => {
+const getLocationIcon = (type: Location["locationType"]) => {
   switch (type) {
     case "landfill":
       return <Trash2 className="w-4 h-4" />;
