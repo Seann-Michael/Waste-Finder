@@ -288,21 +288,25 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
   };
 
   const handleSaveApiSettings = () => {
+    localStorage.setItem("apiSettings", JSON.stringify(apiSettings));
     console.log("Saving API settings:", apiSettings);
     alert("API settings updated successfully!");
   };
 
   const handleSaveContentSettings = () => {
+    localStorage.setItem("contentSettings", JSON.stringify(contentSettings));
     console.log("Saving content settings:", contentSettings);
     alert("Content settings updated successfully!");
   };
 
   const handleSaveMarketingSettings = () => {
+    localStorage.setItem("marketingSettings", JSON.stringify(marketingSettings));
     console.log("Saving marketing settings:", marketingSettings);
     alert("Marketing settings updated successfully!");
   };
 
   const handleSaveSeoSettings = () => {
+    localStorage.setItem("seoSettings", JSON.stringify(seoSettings));
     console.log("Saving SEO settings:", seoSettings);
     alert("SEO settings updated successfully!");
   };
