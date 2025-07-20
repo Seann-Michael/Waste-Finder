@@ -148,6 +148,11 @@ export default function AdminSettings() {
     resourcesContent: "",
   });
 
+  const [marketingSettings, setMarketingSettings] = useState({
+    facebookGroupUrl: "",
+    facebookGroupEnabled: false,
+  });
+
   const [codeSettings, setCodeSettings] = useState({
     headCode: "",
     bodyCode: "",
