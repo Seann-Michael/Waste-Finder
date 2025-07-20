@@ -214,6 +214,17 @@ export default function AddLocation() {
    * Validates coordinate input to ensure proper latitude/longitude format
    */
   const validateCoordinates = (lat: string, lng: string): boolean => {
+    // If both are empty, that's valid (not required)
+    if (!lat && !lng) {
+      return true;
+    }
+
+    // If only one is provided, both must be provided
+    if ((lat && !lng) || (!lat && lng)) {
+      showError("Both latitude and longitude must be provided if either is entered");
+      return false;
+    }
+
     const latitude = parseFloat(lat);
     const longitude = parseFloat(lng);
 
@@ -242,8 +253,8 @@ export default function AddLocation() {
     try {
       setIsSubmitting(true);
 
-      // Validate coordinates
-      if (!validateCoordinates(data.latitude, data.longitude)) {
+      // Validate coordinates if provided
+      if ((data.latitude || data.longitude) && !validateCoordinates(data.latitude, data.longitude)) {
         return;
       }
 
@@ -253,16 +264,13 @@ export default function AddLocation() {
         return;
       }
 
-      if (data.debrisTypes.length === 0) {
-        showWarning("Please select at least one debris type");
-        return;
-      }
+
 
       // Prepare API payload
       const payload = {
         ...data,
-        latitude: parseFloat(data.latitude),
-        longitude: parseFloat(data.longitude),
+        latitude: data.latitude ? parseFloat(data.latitude) : undefined,
+        longitude: data.longitude ? parseFloat(data.longitude) : undefined,
         paymentTypes: data.paymentTypes.map((type, index) => ({
           id: (index + 1).toString(),
           name: type,
@@ -605,11 +613,10 @@ export default function AddLocation() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="latitude">Latitude *</Label>
+                  <Label htmlFor="latitude">Latitude</Label>
                   <Input
                     id="latitude"
                     {...register("latitude", {
-                      required: "Latitude is required",
                       pattern: {
                         value: /^-?([1-8]?\d(\.\d+)?|90(\.0+)?)$/,
                         message: "Invalid latitude format",
@@ -626,11 +633,10 @@ export default function AddLocation() {
                 </div>
 
                 <div>
-                  <Label htmlFor="longitude">Longitude *</Label>
+                  <Label htmlFor="longitude">Longitude</Label>
                   <Input
                     id="longitude"
                     {...register("longitude", {
-                      required: "Longitude is required",
                       pattern: {
                         value: /^-?((1[0-7]\d)|([1-9]?\d))(\.\d+)?$/,
                         message: "Invalid longitude format",
@@ -725,7 +731,7 @@ export default function AddLocation() {
 
               <div>
                 <Label className="text-base font-medium">
-                  Accepted Debris Types & Pricing *
+                  Accepted Debris Types & Pricing
                 </Label>
                 <div className="space-y-4 mt-2">
                   {DEBRIS_TYPES.map((debris) => (
