@@ -118,7 +118,63 @@ export default function AdminLogin() {
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? "Signing in..." : "Sign In"}
               </Button>
+
+              <div className="text-center">
+                <button
+                  type="button"
+                  onClick={() => setShowForgotPassword(true)}
+                  className="text-sm text-primary hover:underline"
+                >
+                  Forgot password?
+                </button>
+              </div>
             </form>
+
+            {showForgotPassword && (
+              <div className="mt-6 p-4 border rounded-lg bg-muted/50">
+                <h3 className="font-medium mb-3">Reset Password</h3>
+                <form onSubmit={handleForgotPassword} className="space-y-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="resetEmail">Email Address</Label>
+                    <Input
+                      id="resetEmail"
+                      type="email"
+                      value={resetEmail}
+                      onChange={(e) => setResetEmail(e.target.value)}
+                      required
+                      placeholder="Enter your email"
+                    />
+                  </div>
+                  {resetMessage && (
+                    <Alert>
+                      <AlertDescription>{resetMessage}</AlertDescription>
+                    </Alert>
+                  )}
+                  <div className="flex gap-2">
+                    <Button
+                      type="submit"
+                      size="sm"
+                      disabled={isLoading}
+                      className="flex-1"
+                    >
+                      {isLoading ? "Sending..." : "Send Reset Link"}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setShowForgotPassword(false);
+                        setResetMessage("");
+                        setResetEmail("");
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </form>
+              </div>
+            )}
 
             <div className="mt-6 text-center text-sm text-muted-foreground">
               <p>Demo credentials:</p>
