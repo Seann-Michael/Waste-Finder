@@ -37,12 +37,26 @@ export default function AddFacility() {
     phone: "",
     email: "",
     website: "",
+    googleBusinessUrl: "",
     facilityType: "",
     operatingHours: "",
     notes: "",
+    latitude: "",
+    longitude: "",
     paymentMethods: [] as string[],
     debrisTypes: [] as string[],
   });
+
+  const [debrisPricing, setDebrisPricing] = useState<
+    Record<
+      string,
+      {
+        pricePerTon?: number;
+        pricePerLoad?: number;
+        priceNote?: string;
+      }
+    >
+  >({});
 
   const facilityTypes = [
     { value: "landfill", label: "Landfill" },
