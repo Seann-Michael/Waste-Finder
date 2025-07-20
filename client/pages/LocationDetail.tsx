@@ -85,6 +85,21 @@ export default function LocationDetail() {
     operatingHours: [] as any[],
   });
 
+  // Payment and debris options for editing
+  const paymentOptions = ["Cash", "Check", "Credit/Debit", "Net Terms"];
+  const debrisOptions = [
+    "General Household Waste",
+    "Yard Waste",
+    "Construction Debris",
+    "Appliances",
+    "Electronics",
+    "Tires",
+    "Concrete",
+    "Asphalt",
+    "Metal",
+    "Hazardous Waste"
+  ];
+
   // Review form state
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewTitle, setReviewTitle] = useState("");
