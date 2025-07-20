@@ -43,6 +43,7 @@ const App = () => (
           <Route path="/admin/add-location" element={<AddFacility />} />
           <Route path="/admin/edit-location/:id" element={<EditFacility />} />
           <Route path="/admin/locations" element={<LocationDataTable />} />
+          <Route path="/admin/reviews" element={<ReviewsTable />} />
           <Route path="/admin/settings" element={<AdminSettings />} />
           <Route path="/location/:id" element={<LocationDetail />} />
           <Route path="/about" element={<About />} />
