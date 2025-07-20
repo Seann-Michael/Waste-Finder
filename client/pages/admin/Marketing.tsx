@@ -26,7 +26,11 @@ import { useToastNotifications } from "@/hooks/use-toast-notifications";
 
 interface AdConfig {
   enabled: boolean;
-  code: string;
+  adType: "adsense" | "image" | "html";
+  code: string; // For AdSense and HTML ads
+  imageUrl?: string; // For image ads
+  linkUrl?: string; // For image ads
+  altText?: string; // For image ads
   placement: string;
   displayName: string;
 }
@@ -37,30 +41,35 @@ export default function Marketing() {
   const [adConfigs, setAdConfigs] = useState<Record<string, AdConfig>>({
     homepage: {
       enabled: false,
+      adType: "adsense",
       code: "",
       placement: "homepage",
       displayName: "Homepage Banner",
     },
     searchResults: {
       enabled: false,
+      adType: "adsense",
       code: "",
       placement: "search-results",
       displayName: "Search Results Content",
     },
     searchResultsTop: {
       enabled: false,
+      adType: "adsense",
       code: "",
       placement: "search-results-top",
       displayName: "Search Results Top Banner",
     },
     locationDetail: {
       enabled: false,
+      adType: "adsense",
       code: "",
       placement: "location-detail",
       displayName: "Location Detail Content",
     },
     locationDetailTop: {
       enabled: false,
+      adType: "adsense",
       code: "",
       placement: "location-detail-top",
       displayName: "Location Detail Top Banner",
@@ -124,9 +133,33 @@ export default function Marketing() {
     }
   };
 
-  const validateAdCode = (code: string): boolean => {
-    // Basic validation for AdSense code
-    return code.includes("data-ad-client") || code.includes("google_ad_client") || code.length === 0;
+  const validateAdCode = (code: string, adType: string): boolean => {
+    if (code.length === 0) return true;
+
+    switch (adType) {
+      case "adsense":
+        return code.includes("data-ad-client") || code.includes("google_ad_client");
+      case "html":
+        return true; // Allow any HTML
+      default:
+        return true;
+    }
+  };
+
+  const validateImageAd = (config: AdConfig): boolean => {
+    return !!(config.imageUrl && config.altText);
+  };
+
+  const isAdConfigValid = (config: AdConfig): boolean => {
+    switch (config.adType) {
+      case "adsense":
+      case "html":
+        return !!config.code;
+      case "image":
+        return validateImageAd(config);
+      default:
+        return false;
+    }
   };
 
   return (
@@ -162,7 +195,7 @@ export default function Marketing() {
                 <div>
                   <p className="text-sm text-muted-foreground">Active Ads</p>
                   <p className="text-2xl font-bold">
-                    {Object.values(adConfigs).filter(config => config.enabled && config.code).length}
+                    {Object.values(adConfigs).filter(config => config.enabled && isAdConfigValid(config)).length}
                   </p>
                 </div>
               </div>
@@ -192,7 +225,7 @@ export default function Marketing() {
                 <div>
                   <p className="text-sm text-muted-foreground">Total Codes</p>
                   <p className="text-2xl font-bold">
-                    {Object.values(adConfigs).filter(config => config.code).length}
+                    {Object.values(adConfigs).filter(config => isAdConfigValid(config)).length}
                   </p>
                 </div>
               </div>
@@ -230,38 +263,115 @@ export default function Marketing() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor={`${placement}-code`}>AdSense Code</Label>
-                  <div className="relative mt-1">
-                    <Textarea
-                      id={`${placement}-code`}
-                      placeholder="Paste your Google AdSense code here..."
-                      value={config.code}
-                      onChange={(e) => updateAdConfig(placement, "code", e.target.value)}
-                      rows={6}
-                      className={`font-mono text-sm ${
-                        config.code && !validateAdCode(config.code) ? "border-red-500" : ""
-                      }`}
-                    />
-                    {config.code && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="absolute top-2 right-2"
-                        onClick={() => copyToClipboard(config.code)}
-                      >
-                        <Copy className="w-3 h-3" />
-                      </Button>
+                  <Label htmlFor={`${placement}-adtype`}>Ad Type</Label>
+                  <Select
+                    value={config.adType}
+                    onValueChange={(value) => updateAdConfig(placement, "adType", value as "adsense" | "image" | "html")}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select ad type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="adsense">Google AdSense</SelectItem>
+                      <SelectItem value="image">Image Ad</SelectItem>
+                      <SelectItem value="html">Custom HTML</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {config.adType === "adsense" && (
+                  <div>
+                    <Label htmlFor={`${placement}-code`}>AdSense Code</Label>
+                    <div className="relative mt-1">
+                      <Textarea
+                        id={`${placement}-code`}
+                        placeholder="Paste your Google AdSense code here..."
+                        value={config.code}
+                        onChange={(e) => updateAdConfig(placement, "code", e.target.value)}
+                        rows={6}
+                        className={`font-mono text-sm ${
+                          config.code && !validateAdCode(config.code, config.adType) ? "border-red-500" : ""
+                        }`}
+                      />
+                      {config.code && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="absolute top-2 right-2"
+                          onClick={() => copyToClipboard(config.code)}
+                        >
+                          <Copy className="w-3 h-3" />
+                        </Button>
+                      )}
+                    </div>
+                    {config.code && !validateAdCode(config.code, config.adType) && (
+                      <Alert className="mt-2">
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertDescription>
+                          This doesn't appear to be a valid AdSense code. Please check the format.
+                        </AlertDescription>
+                      </Alert>
                     )}
                   </div>
-                  {config.code && !validateAdCode(config.code) && (
-                    <Alert className="mt-2">
-                      <AlertCircle className="h-4 w-4" />
-                      <AlertDescription>
-                        This doesn't appear to be a valid AdSense code. Please check the format.
-                      </AlertDescription>
-                    </Alert>
-                  )}
-                </div>
+                )}
+
+                {config.adType === "image" && (
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor={`${placement}-image-url`}>Image URL</Label>
+                      <Input
+                        id={`${placement}-image-url`}
+                        placeholder="https://example.com/banner.jpg"
+                        value={config.imageUrl || ""}
+                        onChange={(e) => updateAdConfig(placement, "imageUrl", e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor={`${placement}-link-url`}>Link URL (Optional)</Label>
+                      <Input
+                        id={`${placement}-link-url`}
+                        placeholder="https://example.com/landing-page"
+                        value={config.linkUrl || ""}
+                        onChange={(e) => updateAdConfig(placement, "linkUrl", e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor={`${placement}-alt-text`}>Alt Text</Label>
+                      <Input
+                        id={`${placement}-alt-text`}
+                        placeholder="Advertisement description"
+                        value={config.altText || ""}
+                        onChange={(e) => updateAdConfig(placement, "altText", e.target.value)}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {config.adType === "html" && (
+                  <div>
+                    <Label htmlFor={`${placement}-html-code`}>Custom HTML Code</Label>
+                    <div className="relative mt-1">
+                      <Textarea
+                        id={`${placement}-html-code`}
+                        placeholder="Paste your custom HTML/JS code here..."
+                        value={config.code}
+                        onChange={(e) => updateAdConfig(placement, "code", e.target.value)}
+                        rows={6}
+                        className="font-mono text-sm"
+                      />
+                      {config.code && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="absolute top-2 right-2"
+                          onClick={() => copyToClipboard(config.code)}
+                        >
+                          <Copy className="w-3 h-3" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                )}
 
                 <div className="flex items-center gap-4 text-sm text-muted-foreground">
                   <div className="flex items-center gap-1">
@@ -284,15 +394,35 @@ export default function Marketing() {
             <CardTitle>AdSense Integration Instructions</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <h4 className="font-medium">How to get your AdSense code:</h4>
-              <ol className="list-decimal list-inside space-y-1 text-sm text-muted-foreground ml-4">
-                <li>Go to your Google AdSense dashboard</li>
-                <li>Navigate to "Ads" → "Overview"</li>
-                <li>Click "Get code" next to your ad unit</li>
-                <li>Copy the HTML code provided</li>
-                <li>Paste it in the appropriate placement above</li>
-              </ol>
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-medium">Google AdSense:</h4>
+                <ol className="list-decimal list-inside space-y-1 text-sm text-muted-foreground ml-4">
+                  <li>Go to your Google AdSense dashboard</li>
+                  <li>Navigate to "Ads" → "Overview"</li>
+                  <li>Click "Get code" next to your ad unit</li>
+                  <li>Copy the HTML code and paste it in the placement</li>
+                </ol>
+              </div>
+
+              <div>
+                <h4 className="font-medium">Image Ads:</h4>
+                <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground ml-4">
+                  <li>Upload your banner image to a hosting service</li>
+                  <li>Enter the direct image URL (must be publicly accessible)</li>
+                  <li>Add a destination URL where clicks should go</li>
+                  <li>Provide descriptive alt text for accessibility</li>
+                </ul>
+              </div>
+
+              <div>
+                <h4 className="font-medium">Custom HTML:</h4>
+                <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground ml-4">
+                  <li>Use for other ad networks (Media.net, PropellerAds, etc.)</li>
+                  <li>Paste the HTML/JavaScript code provided by your ad network</li>
+                  <li>Ensure code is from trusted sources only</li>
+                </ul>
+              </div>
             </div>
 
             <div className="space-y-2">
