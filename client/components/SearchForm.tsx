@@ -65,7 +65,7 @@ export default function SearchForm({
     const searchParams: SearchParams = {
       zipCode: zipCode.trim(),
       radius,
-      facilityTypes,
+      locationTypes,
       debrisTypes,
     };
 
