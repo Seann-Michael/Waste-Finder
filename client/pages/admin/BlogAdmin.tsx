@@ -284,6 +284,8 @@ export default function BlogAdmin() {
   };
 
   const handleEditPost = (post: BlogPost) => {
+    if (!post) return;
+
     setEditingPost(post);
 
     // Parse publish date and time
@@ -296,14 +298,14 @@ export default function BlogAdmin() {
     }
 
     setFormData({
-      title: post.title,
-      excerpt: post.excerpt,
-      content: post.content,
-      author: post.author,
-      status: post.status,
-      featured: post.featured,
-      tags: post.tags.join(", "),
-      categories: post.categories,
+      title: post.title || "",
+      excerpt: post.excerpt || "",
+      content: post.content || "",
+      author: post.author || "Sean Webb",
+      status: post.status || "draft",
+      featured: post.featured || false,
+      tags: (post.tags || []).join(", "),
+      categories: post.categories || [],
       featuredImage: post.featuredImage || "",
       publishDate,
       publishTime,
@@ -385,7 +387,7 @@ export default function BlogAdmin() {
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Total Posts</p>
-                  <p className="text-2xl font-bold">{posts.length}</p>
+                  <p className="text-2xl font-bold">{(posts || []).length}</p>
                 </div>
               </div>
             </CardContent>
@@ -400,7 +402,7 @@ export default function BlogAdmin() {
                 <div>
                   <p className="text-sm text-muted-foreground">Published</p>
                   <p className="text-2xl font-bold">
-                    {posts.filter(post => post.status === "published").length}
+                    {(posts || []).filter(post => post && post.status === "published").length}
                   </p>
                 </div>
               </div>
@@ -416,7 +418,7 @@ export default function BlogAdmin() {
                 <div>
                   <p className="text-sm text-muted-foreground">Drafts</p>
                   <p className="text-2xl font-bold">
-                    {posts.filter(post => post.status === "draft").length}
+                    {(posts || []).filter(post => post && post.status === "draft").length}
                   </p>
                 </div>
               </div>
@@ -432,7 +434,7 @@ export default function BlogAdmin() {
                 <div>
                   <p className="text-sm text-muted-foreground">Featured</p>
                   <p className="text-2xl font-bold">
-                    {posts.filter(post => post.featured).length}
+                    {(posts || []).filter(post => post && post.featured).length}
                   </p>
                 </div>
               </div>
@@ -457,13 +459,15 @@ export default function BlogAdmin() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {posts.map((post) => (
+                {(posts || []).map((post) => {
+                  if (!post || !post.id) return null;
+                  return (
                   <TableRow key={post.id}>
                     <TableCell>
                       <div>
-                        <div className="font-medium">{post.title}</div>
+                        <div className="font-medium">{post.title || "Untitled"}</div>
                         <div className="text-sm text-muted-foreground">
-                          {post.excerpt.substring(0, 60)}...
+                          {post.excerpt ? post.excerpt.substring(0, 60) + "..." : "No excerpt available"}
                         </div>
                         {post.featured && (
                           <Badge variant="outline" className="mt-1 text-xs">
@@ -472,8 +476,8 @@ export default function BlogAdmin() {
                         )}
                       </div>
                     </TableCell>
-                    <TableCell>{getStatusBadge(post.status)}</TableCell>
-                    <TableCell>{post.author}</TableCell>
+                    <TableCell>{getStatusBadge(post.status || "draft")}</TableCell>
+                    <TableCell>{post.author || "Unknown"}</TableCell>
                     <TableCell>
                       {post.publishedAt
                         ? new Date(post.publishedAt).toLocaleDateString()
@@ -501,7 +505,8 @@ export default function BlogAdmin() {
                       </div>
                     </TableCell>
                   </TableRow>
-                ))}
+                  );
+                })}
               </TableBody>
             </Table>
           </CardContent>
