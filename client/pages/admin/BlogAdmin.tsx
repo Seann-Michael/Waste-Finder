@@ -461,6 +461,15 @@ export default function BlogAdmin() {
           </DialogHeader>
 
           <div className="space-y-4">
+            {/* Photo Upload at Top */}
+            <div>
+              <ImageUpload
+                value={formData.featuredImage}
+                onChange={(url) => setFormData(prev => ({ ...prev, featuredImage: url }))}
+                className="mb-6"
+              />
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="title">Title *</Label>
@@ -503,22 +512,14 @@ export default function BlogAdmin() {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <Label htmlFor="tags">Tags</Label>
-                <Input
-                  id="tags"
-                  value={formData.tags}
-                  onChange={(e) => setFormData(prev => ({ ...prev, tags: e.target.value }))}
-                  placeholder="tag1, tag2, tag3"
-                />
-              </div>
-              <div>
-                <ImageUpload
-                  value={formData.featuredImage}
-                  onChange={(url) => setFormData(prev => ({ ...prev, featuredImage: url }))}
-                />
-              </div>
+            <div>
+              <Label htmlFor="tags">Tags</Label>
+              <Input
+                id="tags"
+                value={formData.tags}
+                onChange={(e) => setFormData(prev => ({ ...prev, tags: e.target.value }))}
+                placeholder="tag1, tag2, tag3"
+              />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

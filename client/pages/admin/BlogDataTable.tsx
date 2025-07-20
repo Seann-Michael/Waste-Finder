@@ -37,94 +37,113 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import {
-  MapPin,
+  PenTool,
   Search,
   Download,
-  Upload,
   RefreshCw,
   ChevronUp,
   ChevronDown,
   ArrowUpDown,
+  Eye,
+  Edit,
+  Trash2,
   Settings,
+  Plus,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { Location } from "@/shared/api";
+import { useToastNotifications } from "@/hooks/use-toast-notifications";
 
-// Fetch locations from server API
-const fetchLocations = async (): Promise<Location[]> => {
-  try {
-    const response = await fetch("/api/locations/all");
-    if (!response.ok) {
-      throw new Error("Failed to fetch locations");
-    }
-    const data = await response.json();
-    return data.data || [];
-  } catch (error) {
-    console.error("Error fetching locations:", error);
-    return [];
-  }
-};
+interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  author: string;
+  status: "draft" | "published" | "scheduled";
+  featured: boolean;
+  tags: string[];
+  featuredImage?: string;
+  publishedAt?: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
-// Mock data removed - now fetching from API
-
-type SortField = keyof Location;
+type SortField = keyof BlogPost;
 type SortDirection = "asc" | "desc";
 
-export default function LocationDataTable() {
+interface VisibleColumns {
+  title: boolean;
+  author: boolean;
+  status: boolean;
+  featured: boolean;
+  tags: boolean;
+  publishedAt: boolean;
+  createdAt: boolean;
+  updatedAt: boolean;
+}
+
+export default function BlogDataTable() {
   const navigate = useNavigate();
-  const [locations, setLocations] = useState<Location[]>([]);
-  const [filteredLocations, setFilteredLocations] = useState<Location[]>([]);
+  const { showSuccess, showError } = useToastNotifications();
+  
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [filteredPosts, setFilteredPosts] = useState<BlogPost[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [typeFilter, setTypeFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [stateFilter, setStateFilter] = useState("all");
+  const [featuredFilter, setFeaturedFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedLocation, setSelectedLocation] = useState<Location | null>(
-    null,
-  );
+  const [selectedPosts, setSelectedPosts] = useState<string[]>([]);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [sortField, setSortField] = useState<SortField>("name");
-  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+  const [postToDelete, setPostToDelete] = useState<BlogPost | null>(null);
+  const [sortField, setSortField] = useState<SortField>("updatedAt");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
   const [pageSize, setPageSize] = useState(25);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
-  const [visibleColumns, setVisibleColumns] = useState({
-    name: true,
-    address: true,
-    type: true,
+
+  const [visibleColumns, setVisibleColumns] = useState<VisibleColumns>({
+    title: true,
+    author: true,
     status: true,
-    phone: true,
-    lastUpdated: true,
+    featured: true,
+    tags: false,
+    publishedAt: true,
+    createdAt: false,
+    updatedAt: true,
   });
 
   useEffect(() => {
-    const loadLocations = async () => {
-      setIsLoading(true);
-      try {
-        const data = await fetchLocations();
-        setLocations(data);
-        setFilteredLocations(data);
-      } catch (error) {
-        console.error("Failed to load locations:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadLocations();
+    loadPosts();
   }, []);
 
-  const typeOptions = [
-    { value: "all", label: "All Types" },
-    { value: "landfill", label: "Landfill" },
-    { value: "transfer_station", label: "Transfer Station" },
-    { value: "construction_landfill", label: "Construction Landfill" },
-  ];
+  const loadPosts = () => {
+    setIsLoading(true);
+    try {
+      const savedPosts = localStorage.getItem("blogPosts");
+      if (savedPosts) {
+        const parsedPosts = JSON.parse(savedPosts);
+        setPosts(parsedPosts);
+        setFilteredPosts(parsedPosts);
+      }
+    } catch (error) {
+      console.error("Failed to load posts:", error);
+      showError("Failed to load blog posts");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const statusOptions = [
     { value: "all", label: "All Status" },
-    { value: "active", label: "Active" },
-    { value: "inactive", label: "Inactive" },
+    { value: "published", label: "Published" },
+    { value: "draft", label: "Draft" },
+    { value: "scheduled", label: "Scheduled" },
+  ];
+
+  const featuredOptions = [
+    { value: "all", label: "All Posts" },
+    { value: "featured", label: "Featured Only" },
+    { value: "not-featured", label: "Not Featured" },
   ];
 
   const pageSizeOptions = [
@@ -132,17 +151,6 @@ export default function LocationDataTable() {
     { value: 25, label: "25 per page" },
     { value: 50, label: "50 per page" },
     { value: 100, label: "100 per page" },
-  ];
-
-  const usStates = [
-    { value: "all", label: "All States" },
-    { value: "AL", label: "AL" },
-    { value: "AK", label: "AK" },
-    { value: "AZ", label: "AZ" },
-    // ... (abbreviated for brevity, would include all states)
-    { value: "IL", label: "IL" },
-    { value: "TX", label: "TX" },
-    { value: "CA", label: "CA" },
   ];
 
   const handleSort = (field: SortField) => {
@@ -165,14 +173,16 @@ export default function LocationDataTable() {
     );
   };
 
-  const sortLocations = (locations: Location[]) => {
-    return [...locations].sort((a, b) => {
+  const sortPosts = (posts: BlogPost[]) => {
+    return [...posts].sort((a, b) => {
       const aValue = a[sortField];
       const bValue = b[sortField];
 
       let comparison = 0;
       if (typeof aValue === "string" && typeof bValue === "string") {
         comparison = aValue.localeCompare(bValue);
+      } else if (aValue instanceof Date && bValue instanceof Date) {
+        comparison = aValue.getTime() - bValue.getTime();
       } else if (aValue < bValue) {
         comparison = -1;
       } else if (aValue > bValue) {
@@ -183,120 +193,117 @@ export default function LocationDataTable() {
     });
   };
 
-  const filterLocations = () => {
-    let filtered = [...locations];
+  const filterPosts = () => {
+    let filtered = [...posts];
 
     // Search filter
     if (searchQuery.trim()) {
       filtered = filtered.filter(
-        (location) =>
-          location.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          location.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          location.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          location.zipCode.includes(searchQuery) ||
-          location.phone.includes(searchQuery),
+        (post) =>
+          post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          post.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          post.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
       );
-    }
-
-    // Type filter
-    if (typeFilter !== "all") {
-      filtered = filtered.filter((location) => location.locationType === typeFilter);
     }
 
     // Status filter
     if (statusFilter !== "all") {
-      if (statusFilter === "active") {
-        filtered = filtered.filter((location) => location.isActive);
-      } else if (statusFilter === "inactive") {
-        filtered = filtered.filter((location) => !location.isActive);
+      filtered = filtered.filter((post) => post.status === statusFilter);
+    }
+
+    // Featured filter
+    if (featuredFilter !== "all") {
+      if (featuredFilter === "featured") {
+        filtered = filtered.filter((post) => post.featured);
+      } else if (featuredFilter === "not-featured") {
+        filtered = filtered.filter((post) => !post.featured);
       }
     }
 
-    // State filter
-    if (stateFilter !== "all") {
-      filtered = filtered.filter((location) => location.state === stateFilter);
-    }
-
     // Sort the filtered results
-    filtered = sortLocations(filtered);
+    filtered = sortPosts(filtered);
 
-    setFilteredLocations(filtered);
+    setFilteredPosts(filtered);
     setCurrentPage(1);
   };
 
   useEffect(() => {
-    filterLocations();
+    filterPosts();
   }, [
     searchQuery,
-    typeFilter,
     statusFilter,
-    stateFilter,
-    locations,
+    featuredFilter,
+    posts,
     sortField,
     sortDirection,
   ]);
 
-  const handleRowClick = (location: Location) => {
-    navigate(`/admin/edit-location/${location.id}`);
+  const handleRowClick = (post: BlogPost) => {
+    navigate(`/admin/blog`);
   };
 
-  const getStatusBadge = (isActive: boolean) => {
-    if (isActive) {
-      return (
-        <Badge className="bg-green-100 text-green-800 border-green-200">
-          Active
-        </Badge>
-      );
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedPosts(currentItems.map(post => post.id));
     } else {
-      return (
-        <Badge className="bg-red-100 text-red-800 border-red-200">
-          Inactive
-        </Badge>
-      );
+      setSelectedPosts([]);
     }
   };
 
-  const getTypeBadge = (type: Location["locationType"]) => {
-    switch (type) {
-      case "landfill":
-        return <Badge variant="outline">Landfill</Badge>;
-      case "transfer_station":
-        return <Badge variant="outline">Transfer Station</Badge>;
-      case "construction_landfill":
-        return <Badge variant="outline">Construction Landfill</Badge>;
-      default:
-        return <Badge variant="outline">{type}</Badge>;
+  const handleSelectPost = (postId: string, checked: boolean) => {
+    if (checked) {
+      setSelectedPosts(prev => [...prev, postId]);
+    } else {
+      setSelectedPosts(prev => prev.filter(id => id !== postId));
     }
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "published":
+        return <Badge className="bg-green-500">Published</Badge>;
+      case "draft":
+        return <Badge variant="secondary">Draft</Badge>;
+      case "scheduled":
+        return <Badge variant="outline">Scheduled</Badge>;
+      default:
+        return <Badge variant="secondary">{status}</Badge>;
+    }
+  };
+
+  const handleBulkDelete = () => {
+    const updatedPosts = posts.filter(post => !selectedPosts.includes(post.id));
+    setPosts(updatedPosts);
+    localStorage.setItem("blogPosts", JSON.stringify(updatedPosts));
+    setSelectedPosts([]);
+    showSuccess(`${selectedPosts.length} posts deleted successfully!`);
   };
 
   const exportData = () => {
     const csvContent = [
       [
         "ID",
-        "Name",
-        "Address",
-        "City",
-        "State",
-        "ZIP",
-        "Type",
-        "Phone",
+        "Title",
+        "Author",
         "Status",
+        "Featured",
+        "Tags",
+        "Published",
         "Created",
-        "Last Updated",
+        "Updated",
       ].join(","),
-      ...filteredLocations.map((location) =>
+      ...filteredPosts.map((post) =>
         [
-          location.id,
-          `"${location.name}"`,
-          `"${location.address}"`,
-          location.city,
-          location.state,
-          location.zipCode,
-          location.locationType,
-          location.phone,
-          location.isActive ? "active" : "inactive",
-          new Date(location.createdAt).toISOString().split("T")[0],
-          new Date(location.updatedAt).toISOString().split("T")[0],
+          post.id,
+          `"${post.title}"`,
+          post.author,
+          post.status,
+          post.featured ? "Yes" : "No",
+          `"${post.tags.join(", ")}"`,
+          post.publishedAt ? new Date(post.publishedAt).toISOString().split("T")[0] : "",
+          new Date(post.createdAt).toISOString().split("T")[0],
+          new Date(post.updatedAt).toISOString().split("T")[0],
         ].join(","),
       ),
     ].join("\n");
@@ -305,58 +312,18 @@ export default function LocationDataTable() {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `locations-export-${new Date().toISOString().split("T")[0]}.csv`;
+    a.download = `blog-posts-export-${new Date().toISOString().split("T")[0]}.csv`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
   };
 
-  const handleImport = () => {
-    navigate("/admin/bulk-upload");
-  };
-
-  const handleDelete = (location: Location) => {
-    setSelectedLocation(location);
-    setDeleteDialogOpen(true);
-  };
-
-  const confirmDelete = () => {
-    if (selectedLocation) {
-      setLocations(locations.filter((loc) => loc.id !== selectedLocation.id));
-      setDeleteDialogOpen(false);
-      setSelectedLocation(null);
-    }
-  };
-
-  const handleSelectAll = (checked: boolean) => {
-    if (checked) {
-      setSelectedLocations(currentItems.map(location => location.id));
-    } else {
-      setSelectedLocations([]);
-    }
-  };
-
-  const handleSelectLocation = (locationId: string, checked: boolean) => {
-    if (checked) {
-      setSelectedLocations(prev => [...prev, locationId]);
-    } else {
-      setSelectedLocations(prev => prev.filter(id => id !== locationId));
-    }
-  };
-
-  const handleBulkDelete = () => {
-    const updatedLocations = locations.filter(location => !selectedLocations.includes(location.id));
-    setLocations(updatedLocations);
-    setSelectedLocations([]);
-    // In a real app, you'd make an API call here
-  };
-
   // Pagination
-  const totalPages = Math.ceil(filteredLocations.length / pageSize);
+  const totalPages = Math.ceil(filteredPosts.length / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
-  const currentItems = filteredLocations.slice(startIndex, endIndex);
+  const currentItems = filteredPosts.slice(startIndex, endIndex);
 
   return (
     <AdminLayout>
@@ -364,25 +331,27 @@ export default function LocationDataTable() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold">Location Data Table</h1>
+            <h1 className="text-3xl font-bold">Blog Data Table</h1>
             <p className="text-muted-foreground">
-              Manage all facility locations and their information
+              Manage and view all blog posts with sorting and filtering
             </p>
           </div>
-          <Button asChild>
-            <Link to="/admin/add-location">
-              <MapPin className="w-4 h-4 mr-2" />
-              Add New Location
-            </Link>
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button asChild>
+              <Link to="/admin/blog">
+                <Plus className="w-4 h-4 mr-2" />
+                Create Post
+              </Link>
+            </Button>
+          </div>
         </div>
 
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-2">
-                <MapPin className="w-5 h-5" />
-                All Locations ({filteredLocations.length})
+                <PenTool className="w-5 h-5" />
+                All Blog Posts ({filteredPosts.length})
               </CardTitle>
               <div className="flex items-center gap-2">
                 <DropdownMenu>
@@ -408,10 +377,6 @@ export default function LocationDataTable() {
                     ))}
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <Button variant="outline" size="sm" onClick={handleImport}>
-                  <Upload className="w-4 h-4 mr-2" />
-                  Import
-                </Button>
                 <Button variant="outline" size="sm" onClick={exportData}>
                   <Download className="w-4 h-4 mr-2" />
                   Export
@@ -419,7 +384,7 @@ export default function LocationDataTable() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => window.location.reload()}
+                  onClick={loadPosts}
                 >
                   <RefreshCw className="w-4 h-4 mr-2" />
                   Refresh
@@ -429,30 +394,18 @@ export default function LocationDataTable() {
           </CardHeader>
           <CardContent className="space-y-4">
             {/* Filters */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-              <div className="lg:col-span-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="lg:col-span-1">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
-                    placeholder="Search locations..."
+                    placeholder="Search posts..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="pl-10"
                   />
                 </div>
               </div>
-              <Select value={typeFilter} onValueChange={setTypeFilter}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {typeOptions.map((type) => (
-                    <SelectItem key={type.value} value={type.value}>
-                      {type.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger>
                   <SelectValue />
@@ -465,81 +418,68 @@ export default function LocationDataTable() {
                   ))}
                 </SelectContent>
               </Select>
-              <Select value={stateFilter} onValueChange={setStateFilter}>
+              <Select value={featuredFilter} onValueChange={setFeaturedFilter}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {usStates.map((state) => (
-                    <SelectItem key={state.value} value={state.value}>
-                      {state.label}
+                  {featuredOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-            </div>
-
-            {/* Results summary and bulk actions */}
-            <div className="flex items-center justify-between">
-              <div className="text-sm text-muted-foreground">
-                Showing {startIndex + 1}-
-                {Math.min(endIndex, filteredLocations.length)} of{" "}
-                {filteredLocations.length} locations
-                {selectedLocations.length > 0 && (
-                  <span className="ml-2 text-primary">
-                    • {selectedLocations.length} selected
-                  </span>
-                )}
-              </div>
-              {selectedLocations.length > 0 && (
-                <div className="flex gap-2">
+              <div className="flex gap-2">
+                {selectedPosts.length > 0 && (
                   <Button
                     variant="destructive"
                     size="sm"
                     onClick={handleBulkDelete}
                   >
-                    Delete ({selectedLocations.length})
+                    Delete ({selectedPosts.length})
                   </Button>
-                </div>
-              )}
+                )}
+              </div>
             </div>
 
-            {/* Location Table */}
+            {/* Results summary */}
+            <div className="text-sm text-muted-foreground">
+              Showing {startIndex + 1}-
+              {Math.min(endIndex, filteredPosts.length)} of{" "}
+              {filteredPosts.length} posts
+            </div>
+
+            {/* Posts Table */}
             <div className="border rounded-lg overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-12">
                       <Checkbox
-                        checked={selectedLocations.length === currentItems.length && currentItems.length > 0}
+                        checked={selectedPosts.length === currentItems.length && currentItems.length > 0}
                         onCheckedChange={handleSelectAll}
                       />
                     </TableHead>
+                    {visibleColumns.title && (
+                      <TableHead
+                        className="cursor-pointer hover:bg-muted/50"
+                        onClick={() => handleSort("title")}
+                      >
                         <div className="flex items-center">
-                          Name
-                          {getSortIcon("name")}
+                          Title
+                          {getSortIcon("title")}
                         </div>
                       </TableHead>
                     )}
-                    {visibleColumns.address && (
+                    {visibleColumns.author && (
                       <TableHead
                         className="cursor-pointer hover:bg-muted/50"
-                        onClick={() => handleSort("address")}
+                        onClick={() => handleSort("author")}
                       >
                         <div className="flex items-center">
-                          Address
-                          {getSortIcon("address")}
-                        </div>
-                      </TableHead>
-                    )}
-                    {visibleColumns.type && (
-                      <TableHead
-                        className="cursor-pointer hover:bg-muted/50"
-                        onClick={() => handleSort("type")}
-                      >
-                        <div className="flex items-center">
-                          Type
-                          {getSortIcon("type")}
+                          Author
+                          {getSortIcon("author")}
                         </div>
                       </TableHead>
                     )}
@@ -554,25 +494,42 @@ export default function LocationDataTable() {
                         </div>
                       </TableHead>
                     )}
-                    {visibleColumns.phone && (
+                    {visibleColumns.featured && (
+                      <TableHead>Featured</TableHead>
+                    )}
+                    {visibleColumns.tags && (
+                      <TableHead>Tags</TableHead>
+                    )}
+                    {visibleColumns.publishedAt && (
                       <TableHead
                         className="cursor-pointer hover:bg-muted/50"
-                        onClick={() => handleSort("phone")}
+                        onClick={() => handleSort("publishedAt")}
                       >
                         <div className="flex items-center">
-                          Phone
-                          {getSortIcon("phone")}
+                          Published
+                          {getSortIcon("publishedAt")}
                         </div>
                       </TableHead>
                     )}
-                    {visibleColumns.lastUpdated && (
+                    {visibleColumns.createdAt && (
                       <TableHead
                         className="cursor-pointer hover:bg-muted/50"
-                        onClick={() => handleSort("lastUpdated")}
+                        onClick={() => handleSort("createdAt")}
                       >
                         <div className="flex items-center">
-                          Last Updated
-                          {getSortIcon("lastUpdated")}
+                          Created
+                          {getSortIcon("createdAt")}
+                        </div>
+                      </TableHead>
+                    )}
+                    {visibleColumns.updatedAt && (
+                      <TableHead
+                        className="cursor-pointer hover:bg-muted/50"
+                        onClick={() => handleSort("updatedAt")}
+                      >
+                        <div className="flex items-center">
+                          Updated
+                          {getSortIcon("updatedAt")}
                         </div>
                       </TableHead>
                     )}
@@ -583,63 +540,85 @@ export default function LocationDataTable() {
                   {currentItems.length === 0 ? (
                     <TableRow>
                       <TableCell
-                        colSpan={8}
+                        colSpan={10}
                         className="text-center py-8 text-muted-foreground"
                       >
-                        No locations found matching your criteria
+                        No posts found matching your criteria
                       </TableCell>
                     </TableRow>
                   ) : (
-                    currentItems.map((location) => (
+                    currentItems.map((post) => (
                       <TableRow
-                        key={location.id}
+                        key={post.id}
                         className="hover:bg-muted/50"
                       >
                         <TableCell>
                           <Checkbox
-                            checked={selectedLocations.includes(location.id)}
-                            onCheckedChange={(checked) => handleSelectLocation(location.id, checked as boolean)}
+                            checked={selectedPosts.includes(post.id)}
+                            onCheckedChange={(checked) => handleSelectPost(post.id, checked as boolean)}
                           />
                         </TableCell>
-                        {visibleColumns.name && (
-                          <TableCell
-                            className="cursor-pointer"
-                            onClick={() => handleRowClick(location)}
-                          >
-                            <div className="font-medium text-primary">
-                              {location.name}
-                            </div>
-                            <div className="text-sm text-muted-foreground">
-                              ID: {location.id}
-                            </div>
-                          </TableCell>
-                        )}
-                        {visibleColumns.address && (
+                        {visibleColumns.title && (
                           <TableCell>
-                            <div className="text-sm">
-                              {location.address}
-                              <br />
-                              {location.city}, {location.state} {location.zipCode}
+                            <div className="font-medium text-primary cursor-pointer" onClick={() => handleRowClick(post)}>
+                              {post.title}
+                            </div>
+                            <div className="text-sm text-muted-foreground line-clamp-1">
+                              {post.excerpt}
                             </div>
                           </TableCell>
                         )}
-                        {visibleColumns.type && (
-                          <TableCell>{getTypeBadge(location.locationType)}</TableCell>
+                        {visibleColumns.author && (
+                          <TableCell>{post.author}</TableCell>
                         )}
                         {visibleColumns.status && (
-                          <TableCell>{getStatusBadge(location.isActive)}</TableCell>
+                          <TableCell>{getStatusBadge(post.status)}</TableCell>
                         )}
-                        {visibleColumns.phone && (
+                        {visibleColumns.featured && (
                           <TableCell>
-                            <div className="text-sm">{location.phone}</div>
+                            {post.featured ? (
+                              <Badge variant="outline">Featured</Badge>
+                            ) : (
+                              <span className="text-muted-foreground">-</span>
+                            )}
                           </TableCell>
                         )}
-                        {visibleColumns.lastUpdated && (
+                        {visibleColumns.tags && (
+                          <TableCell>
+                            <div className="flex flex-wrap gap-1">
+                              {post.tags.slice(0, 2).map((tag) => (
+                                <Badge key={tag} variant="outline" className="text-xs">
+                                  {tag}
+                                </Badge>
+                              ))}
+                              {post.tags.length > 2 && (
+                                <Badge variant="outline" className="text-xs">
+                                  +{post.tags.length - 2}
+                                </Badge>
+                              )}
+                            </div>
+                          </TableCell>
+                        )}
+                        {visibleColumns.publishedAt && (
+                          <TableCell>
+                            <div className="text-sm">
+                              {post.publishedAt
+                                ? new Date(post.publishedAt).toLocaleDateString()
+                                : "-"}
+                            </div>
+                          </TableCell>
+                        )}
+                        {visibleColumns.createdAt && (
                           <TableCell>
                             <div className="text-sm text-muted-foreground">
-                              {new Date(
-                                location.updatedAt,
-                              ).toLocaleDateString()}
+                              {new Date(post.createdAt).toLocaleDateString()}
+                            </div>
+                          </TableCell>
+                        )}
+                        {visibleColumns.updatedAt && (
+                          <TableCell>
+                            <div className="text-sm text-muted-foreground">
+                              {new Date(post.updatedAt).toLocaleDateString()}
                             </div>
                           </TableCell>
                         )}
@@ -648,9 +627,26 @@ export default function LocationDataTable() {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => handleRowClick(location)}
+                              onClick={() => navigate(`/blog/${post.slug}`)}
                             >
-                              Edit
+                              <Eye className="w-3 h-3" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => navigate(`/admin/blog`)}
+                            >
+                              <Edit className="w-3 h-3" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                setPostToDelete(post);
+                                setDeleteDialogOpen(true);
+                              }}
+                            >
+                              <Trash2 className="w-3 h-3" />
                             </Button>
                           </div>
                         </TableCell>
@@ -721,10 +717,9 @@ export default function LocationDataTable() {
         <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Delete Location</DialogTitle>
+              <DialogTitle>Delete Blog Post</DialogTitle>
               <DialogDescription>
-                Are you sure you want to delete "{selectedLocation?.name}"? This
-                action cannot be undone.
+                Are you sure you want to delete "{postToDelete?.title}"? This action cannot be undone.
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
@@ -734,8 +729,20 @@ export default function LocationDataTable() {
               >
                 Cancel
               </Button>
-              <Button variant="destructive" onClick={confirmDelete}>
-                Delete Location
+              <Button
+                variant="destructive"
+                onClick={() => {
+                  if (postToDelete) {
+                    const updatedPosts = posts.filter(post => post.id !== postToDelete.id);
+                    setPosts(updatedPosts);
+                    localStorage.setItem("blogPosts", JSON.stringify(updatedPosts));
+                    setDeleteDialogOpen(false);
+                    setPostToDelete(null);
+                    showSuccess("Post deleted successfully!");
+                  }
+                }}
+              >
+                Delete
               </Button>
             </DialogFooter>
           </DialogContent>

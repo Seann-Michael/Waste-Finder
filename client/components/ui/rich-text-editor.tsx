@@ -59,7 +59,7 @@ export default function RichTextEditor({
   const [linkText, setLinkText] = useState("");
   const [fontSize, setFontSize] = useState("16");
   const [fontFamily, setFontFamily] = useState("Arial");
-  
+
   const editorRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -171,7 +171,7 @@ export default function RichTextEditor({
                 <SelectItem value="Courier New">Courier New</SelectItem>
               </SelectContent>
             </Select>
-            
+
             <Select value={fontSize} onValueChange={setFontSize}>
               <SelectTrigger className="w-16 h-8">
                 <SelectValue />
@@ -184,6 +184,29 @@ export default function RichTextEditor({
                 <SelectItem value="20">20px</SelectItem>
                 <SelectItem value="24">24px</SelectItem>
                 <SelectItem value="32">32px</SelectItem>
+              </SelectContent>
+            </Select>
+
+            {/* Heading Selector */}
+            <Select
+              value="paragraph"
+              onValueChange={(value) => {
+                if (!isHtmlMode) {
+                  executeCommand("formatBlock", value === "paragraph" ? "div" : value);
+                }
+              }}
+            >
+              <SelectTrigger className="w-24 h-8">
+                <SelectValue placeholder="Format" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="paragraph">Paragraph</SelectItem>
+                <SelectItem value="h1">Heading 1</SelectItem>
+                <SelectItem value="h2">Heading 2</SelectItem>
+                <SelectItem value="h3">Heading 3</SelectItem>
+                <SelectItem value="h4">Heading 4</SelectItem>
+                <SelectItem value="h5">Heading 5</SelectItem>
+                <SelectItem value="h6">Heading 6</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -301,7 +324,7 @@ export default function RichTextEditor({
             onChange={handleFileUpload}
             className="hidden"
           />
-          
+
           <Button
             variant="ghost"
             size="sm"
