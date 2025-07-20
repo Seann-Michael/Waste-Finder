@@ -50,6 +50,7 @@ export interface DebrisType {
   category: "general" | "construction" | "hazardous" | "recyclable";
   price?: number;
   priceDetails?: string; // e.g., "per ton", "per load", "per cubic yard"
+  additionalDetails?: string; // Special requirements, restrictions, etc.
 }
 
 export interface Review {
