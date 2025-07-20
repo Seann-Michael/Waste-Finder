@@ -31,6 +31,7 @@ export default function Admin() {
   const navigate = useNavigate();
   const [selectedSuggestion, setSelectedSuggestion] = useState<any>(null);
   const [selectedReview, setSelectedReview] = useState<any>(null);
+  const [pendingReviewsList, setPendingReviewsList] = useState(pendingReviews);
 
   useEffect(() => {
     // Check if user is logged in
