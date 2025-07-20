@@ -177,16 +177,14 @@ export default function RecentActivity() {
 
   const getActivityIcon = (type: ActivityItem["type"]) => {
     switch (type) {
-      case "facility_created":
+      case "location_created":
         return <Plus className="w-4 h-4 text-green-600" />;
-      case "facility_updated":
+      case "location_updated":
         return <Edit className="w-4 h-4 text-blue-600" />;
       case "review_submitted":
         return <MessageSquare className="w-4 h-4 text-purple-600" />;
       case "suggestion_submitted":
         return <MapPin className="w-4 h-4 text-orange-600" />;
-      case "user_registered":
-        return <User className="w-4 h-4 text-teal-600" />;
       default:
         return <Activity className="w-4 h-4 text-gray-600" />;
     }
