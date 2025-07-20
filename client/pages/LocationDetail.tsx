@@ -216,7 +216,7 @@ export default function LocationDetail() {
         },
       ];
 
-      setLocation(mockLocation);
+      setLocation(fetchedLocation);
       setReviews(mockReviews);
     } catch (error) {
       console.error("Error loading location:", error);
