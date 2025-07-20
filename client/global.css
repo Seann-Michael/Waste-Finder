@@ -111,3 +111,19 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Video embed styles */
+.video-embed {
+  @apply my-4;
+}
+
+.video-embed iframe {
+  @apply w-full rounded-lg;
+  height: 315px;
+}
+
+@media (max-width: 768px) {
+  .video-embed iframe {
+    height: 200px;
+  }
+}
