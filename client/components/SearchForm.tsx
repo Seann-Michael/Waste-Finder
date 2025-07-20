@@ -145,6 +145,26 @@ export default function SearchForm({
           {/* Advanced Options */}
           {showAdvanced && showAdvancedOptions && (
             <div className="space-y-6 pt-4 border-t">
+              {/* Search Radius */}
+              <div className="space-y-2">
+                <Label htmlFor="radius">Search Radius</Label>
+                <Select
+                  value={radius.toString()}
+                  onValueChange={(value) => setRadius(parseInt(value))}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="10">Within 10 miles</SelectItem>
+                    <SelectItem value="25">Within 25 miles</SelectItem>
+                    <SelectItem value="50">Within 50 miles</SelectItem>
+                    <SelectItem value="75">Within 75 miles</SelectItem>
+                    <SelectItem value="100">Within 100 miles</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
               {/* Facility Types */}
               <div className="space-y-3">
                 <Label>Facility Types</Label>
