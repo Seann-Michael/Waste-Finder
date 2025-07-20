@@ -115,7 +115,6 @@ const webhookEvents = [
 export default function AdminSettings() {
   const [activeTab, setActiveTab] = useState("profile");
 
-
   const [adminUsers, setAdminUsers] = useState<AdminUser[]>(mockAdminUsers);
   const [pendingLocationsList, setPendingLocationsList] =
     useState<PendingLocation[]>(mockPendingLocations);
@@ -896,263 +895,234 @@ export default function AdminSettings() {
               </Card>
             )}
 
+            <h3 className="text-lg font-medium">Google AdSense</h3>
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="adsenseEnabled"
+                  checked={adSettings.adsenseEnabled}
+                  onCheckedChange={(checked) =>
+                    setAdSettings({
+                      ...adSettings,
+                      adsenseEnabled: checked,
+                    })
+                  }
+                />
+                <Label htmlFor="adsenseEnabled">Enable Google AdSense</Label>
+              </div>
+              {adSettings.adsenseEnabled && (
+                <div className="space-y-2">
+                  <Label htmlFor="adsenseCode">AdSense Publisher ID</Label>
+                  <Input
+                    id="adsenseCode"
+                    value={adSettings.adsenseCode}
+                    onChange={(e) =>
+                      setAdSettings({
+                        ...adSettings,
+                        adsenseCode: e.target.value,
+                      })
+                    }
+                    placeholder="ca-pub-1234567890123456"
+                  />
+                  <p className="text-sm text-muted-foreground">
+                    Enter your Google AdSense publisher ID
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
 
+          <Separator />
 
-
-                <CardContent className="space-y-6">
-                  {/* Google AdSense */}
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Google AdSense</h3>
-                    <div className="space-y-4">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="adsenseEnabled"
-                          checked={adSettings.adsenseEnabled}
-                          onCheckedChange={(checked) =>
-                            setAdSettings({
-                              ...adSettings,
-                              adsenseEnabled: checked,
-                            })
-                          }
-                        />
-                        <Label htmlFor="adsenseEnabled">
-                          Enable Google AdSense
-                        </Label>
-                      </div>
-                      {adSettings.adsenseEnabled && (
-                        <div className="space-y-2">
-                          <Label htmlFor="adsenseCode">
-                            AdSense Publisher ID
-                          </Label>
-                          <Input
-                            id="adsenseCode"
-                            value={adSettings.adsenseCode}
-                            onChange={(e) =>
-                              setAdSettings({
-                                ...adSettings,
-                                adsenseCode: e.target.value,
-                              })
-                            }
-                            placeholder="ca-pub-1234567890123456"
-                          />
-                          <p className="text-sm text-muted-foreground">
-                            Enter your Google AdSense publisher ID
-                          </p>
-                        </div>
-                      )}
-                    </div>
+          {/* Facebook Group */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium">Facebook Community</h3>
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="facebookGroupEnabled"
+                  checked={adSettings.facebookGroupEnabled}
+                  onCheckedChange={(checked) =>
+                    setAdSettings({
+                      ...adSettings,
+                      facebookGroupEnabled: checked,
+                    })
+                  }
+                />
+                <Label htmlFor="facebookGroupEnabled">
+                  Show Facebook Group CTA
+                </Label>
+              </div>
+              {adSettings.facebookGroupEnabled && (
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="facebookGroupUrl">Facebook Group URL</Label>
+                    <Input
+                      id="facebookGroupUrl"
+                      value={adSettings.facebookGroupUrl}
+                      onChange={(e) =>
+                        setAdSettings({
+                          ...adSettings,
+                          facebookGroupUrl: e.target.value,
+                        })
+                      }
+                      placeholder="https://facebook.com/groups/yourgroup"
+                    />
                   </div>
-
-                  <Separator />
-
-                  {/* Facebook Group */}
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Facebook Community</h3>
-                    <div className="space-y-4">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="facebookGroupEnabled"
-                          checked={adSettings.facebookGroupEnabled}
-                          onCheckedChange={(checked) =>
-                            setAdSettings({
-                              ...adSettings,
-                              facebookGroupEnabled: checked,
-                            })
-                          }
-                        />
-                        <Label htmlFor="facebookGroupEnabled">
-                          Show Facebook Group CTA
-                        </Label>
-                      </div>
-                      {adSettings.facebookGroupEnabled && (
-                        <>
-                          <div className="space-y-2">
-                            <Label htmlFor="facebookGroupUrl">
-                              Facebook Group URL
-                            </Label>
-                            <Input
-                              id="facebookGroupUrl"
-                              value={adSettings.facebookGroupUrl}
-                              onChange={(e) =>
-                                setAdSettings({
-                                  ...adSettings,
-                                  facebookGroupUrl: e.target.value,
-                                })
-                              }
-                              placeholder="https://facebook.com/groups/yourgroup"
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="facebookGroupCta">
-                              Call to Action Text
-                            </Label>
-                            <Textarea
-                              id="facebookGroupCta"
-                              value={adSettings.facebookGroupCta}
-                              onChange={(e) =>
-                                setAdSettings({
-                                  ...adSettings,
-                                  facebookGroupCta: e.target.value,
-                                })
-                              }
-                              placeholder="Join our Facebook community..."
-                              rows={3}
-                            />
-                          </div>
-                        </>
-                      )}
-                    </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="facebookGroupCta">
+                      Call to Action Text
+                    </Label>
+                    <Textarea
+                      id="facebookGroupCta"
+                      value={adSettings.facebookGroupCta}
+                      onChange={(e) =>
+                        setAdSettings({
+                          ...adSettings,
+                          facebookGroupCta: e.target.value,
+                        })
+                      }
+                      placeholder="Join our Facebook community..."
+                      rows={3}
+                    />
                   </div>
+                </>
+              )}
+            </div>
+          </div>
 
-                  <Separator />
+          <Separator />
 
-                  {/* Custom Ads */}
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium">
-                      Custom Advertisements
-                    </h3>
-                    <div className="space-y-4">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="customAdsEnabled"
-                          checked={adSettings.customAdsEnabled}
-                          onCheckedChange={(checked) =>
-                            setAdSettings({
-                              ...adSettings,
-                              customAdsEnabled: checked,
+          {/* Custom Ads */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium">Custom Advertisements</h3>
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="customAdsEnabled"
+                  checked={adSettings.customAdsEnabled}
+                  onCheckedChange={(checked) =>
+                    setAdSettings({
+                      ...adSettings,
+                      customAdsEnabled: checked,
+                    })
+                  }
+                />
+                <Label htmlFor="customAdsEnabled">Enable Custom Ads</Label>
+              </div>
+
+              {adSettings.customAdsEnabled && (
+                <div className="space-y-4">
+                  {/* Add New Custom Ad */}
+                  <div className="border rounded-lg p-4 space-y-4">
+                    <h4 className="font-medium">Add New Custom Ad</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="newAdTitle">Title</Label>
+                        <Input
+                          id="newAdTitle"
+                          value={newCustomAd.title}
+                          onChange={(e) =>
+                            setNewCustomAd({
+                              ...newCustomAd,
+                              title: e.target.value,
+                            })
+                          }
+                          placeholder="Advertisement title"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="newAdPlacement">Placement</Label>
+                        <select
+                          id="newAdPlacement"
+                          value={newCustomAd.placement}
+                          onChange={(e) =>
+                            setNewCustomAd({
+                              ...newCustomAd,
+                              placement: e.target.value as
+                                | "home"
+                                | "search"
+                                | "location"
+                                | "all",
+                            })
+                          }
+                          className="w-full px-3 py-2 border border-border rounded-md"
+                        >
+                          <option value="all">All Pages</option>
+                          <option value="home">Home Page Only</option>
+                          <option value="search">Search Results Only</option>
+                          <option value="location">Location Pages Only</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="newAdContent">Content</Label>
+                      <Textarea
+                        id="newAdContent"
+                        value={newCustomAd.content}
+                        onChange={(e) =>
+                          setNewCustomAd({
+                            ...newCustomAd,
+                            content: e.target.value,
+                          })
+                        }
+                        placeholder="Advertisement content"
+                        rows={3}
+                      />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="newAdImage">Image URL (optional)</Label>
+                        <Input
+                          id="newAdImage"
+                          value={newCustomAd.imageUrl}
+                          onChange={(e) =>
+                            setNewCustomAd({
+                              ...newCustomAd,
+                              imageUrl: e.target.value,
+                            })
+                          }
+                          placeholder="https://..."
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="newAdLink">Link URL (optional)</Label>
+                        <Input
+                          id="newAdLink"
+                          value={newCustomAd.linkUrl}
+                          onChange={(e) =>
+                            setNewCustomAd({
+                              ...newCustomAd,
+                              linkUrl: e.target.value,
+                            })
+                          }
+                          placeholder="https://..."
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="newAdPriority">Priority</Label>
+                        <Input
+                          id="newAdPriority"
+                          type="number"
+                          min="1"
+                          max="10"
+                          value={newCustomAd.priority}
+                          onChange={(e) =>
+                            setNewCustomAd({
+                              ...newCustomAd,
+                              priority: parseInt(e.target.value) || 1,
                             })
                           }
                         />
-                        <Label htmlFor="customAdsEnabled">
-                          Enable Custom Ads
-                        </Label>
                       </div>
-
-                      {adSettings.customAdsEnabled && (
-                        <div className="space-y-4">
-                          {/* Add New Custom Ad */}
-                          <div className="border rounded-lg p-4 space-y-4">
-                            <h4 className="font-medium">Add New Custom Ad</h4>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <div className="space-y-2">
-                                <Label htmlFor="newAdTitle">Title</Label>
-                                <Input
-                                  id="newAdTitle"
-                                  value={newCustomAd.title}
-                                  onChange={(e) =>
-                                    setNewCustomAd({
-                                      ...newCustomAd,
-                                      title: e.target.value,
-                                    })
-                                  }
-                                  placeholder="Advertisement title"
-                                />
-                              </div>
-                              <div className="space-y-2">
-                                <Label htmlFor="newAdPlacement">
-                                  Placement
-                                </Label>
-                                <select
-                                  id="newAdPlacement"
-                                  value={newCustomAd.placement}
-                                  onChange={(e) =>
-                                    setNewCustomAd({
-                                      ...newCustomAd,
-                                      placement: e.target.value as
-                                        | "home"
-                                        | "search"
-                                        | "location"
-                                        | "all",
-                                    })
-                                  }
-                                  className="w-full px-3 py-2 border border-border rounded-md"
-                                >
-                                  <option value="all">All Pages</option>
-                                  <option value="home">Home Page Only</option>
-                                  <option value="search">
-                                    Search Results Only
-                                  </option>
-                                  <option value="location">
-                                    Location Pages Only
-                                  </option>
-                                </select>
-                              </div>
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="newAdContent">Content</Label>
-                              <Textarea
-                                id="newAdContent"
-                                value={newCustomAd.content}
-                                onChange={(e) =>
-                                  setNewCustomAd({
-                                    ...newCustomAd,
-                                    content: e.target.value,
-                                  })
-                                }
-                                placeholder="Advertisement content"
-                                rows={3}
-                              />
-                            </div>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                              <div className="space-y-2">
-                                <Label htmlFor="newAdImage">
-                                  Image URL (optional)
-                                </Label>
-                                <Input
-                                  id="newAdImage"
-                                  value={newCustomAd.imageUrl}
-                                  onChange={(e) =>
-                                    setNewCustomAd({
-                                      ...newCustomAd,
-                                      imageUrl: e.target.value,
-                                    })
-                                  }
-                                  placeholder="https://..."
-                                />
-                              </div>
-                              <div className="space-y-2">
-                                <Label htmlFor="newAdLink">
-                                  Link URL (optional)
-                                </Label>
-                                <Input
-                                  id="newAdLink"
-                                  value={newCustomAd.linkUrl}
-                                  onChange={(e) =>
-                                    setNewCustomAd({
-                                      ...newCustomAd,
-                                      linkUrl: e.target.value,
-                                    })
-                                  }
-                                  placeholder="https://..."
-                                />
-                              </div>
-                              <div className="space-y-2">
-                                <Label htmlFor="newAdPriority">Priority</Label>
-                                <Input
-                                  id="newAdPriority"
-                                  type="number"
-                                  min="1"
-                                  max="10"
-                                  value={newCustomAd.priority}
-                                  onChange={(e) =>
-                                    setNewCustomAd({
-                                      ...newCustomAd,
-                                      priority: parseInt(e.target.value) || 1,
-                                    })
-                                  }
-                                />
-                              </div>
-                            </div>
-                            <Button
-                              onClick={handleAddCustomAd}
-                              className="w-full"
-                            >
-                              Add Custom Ad
-                            </Button>
-                          </div>
-                        </div>
-                      )}
                     </div>
+                    <Button onClick={handleAddCustomAd} className="w-full">
+                      Add Custom Ad
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
             {activeTab === "system" && (
               <Card>
                 <CardHeader>
