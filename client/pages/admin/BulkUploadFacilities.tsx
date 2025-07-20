@@ -6,10 +6,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -27,10 +33,37 @@ import {
   AlertTriangle,
   X,
   FileText,
+  MapPin,
+  ArrowRight,
 } from "lucide-react";
+
+interface ColumnMapping {
+  csvColumn: string;
+  systemField: string;
+}
+
+const systemFields = [
+  { value: "", label: "Skip this column" },
+  { value: "name", label: "Location Name" },
+  { value: "address", label: "Street Address" },
+  { value: "city", label: "City" },
+  { value: "state", label: "State" },
+  { value: "zipCode", label: "ZIP Code" },
+  { value: "phone", label: "Phone Number" },
+  { value: "email", label: "Email" },
+  { value: "website", label: "Website" },
+  { value: "facilityType", label: "Location Type" },
+  { value: "paymentTypes", label: "Payment Methods" },
+  { value: "debrisTypes", label: "Debris Types" },
+  { value: "operatingHours", label: "Operating Hours" },
+  { value: "notes", label: "Notes" },
+];
 
 export default function BulkUploadFacilities() {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [csvData, setCsvData] = useState<string[][]>([]);
+  const [columnMappings, setColumnMappings] = useState<ColumnMapping[]>([]);
+  const [showMapping, setShowMapping] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadResults, setUploadResults] = useState<any>(null);
@@ -43,11 +76,84 @@ export default function BulkUploadFacilities() {
       setUploadedFile(file);
       setUploadResults(null);
       setValidationErrors([]);
+      setShowMapping(false);
+      parseCsvFile(file);
     }
   };
 
+  const parseCsvFile = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const text = e.target?.result as string;
+      const lines = text.split("\n").filter((line) => line.trim());
+      const data = lines.map((line) => {
+        // Simple CSV parsing - would need more robust parsing for production
+        return line.split(",").map((cell) => cell.trim().replace(/"/g, ""));
+      });
+      setCsvData(data);
+
+      // Initialize column mappings with smart defaults
+      if (data.length > 0) {
+        const headers = data[0];
+        const mappings = headers.map((header) => {
+          const smartMapping = getSmartMapping(header.toLowerCase());
+          return {
+            csvColumn: header,
+            systemField: smartMapping,
+          };
+        });
+        setColumnMappings(mappings);
+        setShowMapping(true);
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const getSmartMapping = (header: string): string => {
+    const mappings: { [key: string]: string } = {
+      name: "name",
+      "location name": "name",
+      facility: "name",
+      "facility name": "name",
+      address: "address",
+      "street address": "address",
+      city: "city",
+      state: "state",
+      zip: "zipCode",
+      zipcode: "zipCode",
+      "zip code": "zipCode",
+      postal: "zipCode",
+      phone: "phone",
+      "phone number": "phone",
+      email: "email",
+      website: "website",
+      url: "website",
+      type: "facilityType",
+      "facility type": "facilityType",
+      "location type": "facilityType",
+      payment: "paymentTypes",
+      "payment methods": "paymentTypes",
+      "payment types": "paymentTypes",
+      debris: "debrisTypes",
+      "debris types": "debrisTypes",
+      waste: "debrisTypes",
+      hours: "operatingHours",
+      "operating hours": "operatingHours",
+      notes: "notes",
+      description: "notes",
+    };
+
+    return mappings[header] || "";
+  };
+
+  const updateColumnMapping = (index: number, systemField: string) => {
+    const updatedMappings = [...columnMappings];
+    updatedMappings[index].systemField = systemField;
+    setColumnMappings(updatedMappings);
+  };
+
   const handleUpload = async () => {
-    if (!uploadedFile) return;
+    if (!uploadedFile || !showMapping) return;
 
     setIsUploading(true);
     setUploadProgress(0);
@@ -64,7 +170,7 @@ export default function BulkUploadFacilities() {
         });
       }, 300);
 
-      // Mock API call
+      // Mock API call with column mappings
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       clearInterval(progressInterval);
@@ -72,8 +178,8 @@ export default function BulkUploadFacilities() {
 
       // Mock validation results
       const mockResults = {
-        totalRows: 150,
-        successfulImports: 143,
+        totalRows: csvData.length - 1, // Exclude header
+        successfulImports: Math.max(0, csvData.length - 1 - 7),
         errors: 7,
         warnings: 12,
         duplicates: 3,
@@ -91,7 +197,7 @@ export default function BulkUploadFacilities() {
           field: "facilityType",
           value: "waste_center",
           error:
-            "Invalid facility type. Must be: landfill, transfer_station, or construction_landfill",
+            "Invalid location type. Must be: landfill, transfer_station, or construction_landfill",
         },
         {
           row: 23,
@@ -123,7 +229,7 @@ export default function BulkUploadFacilities() {
   };
 
   const downloadTemplate = () => {
-    // Mock CSV template
+    // Updated template with location terminology
     const csvContent = `name,address,city,state,zipCode,phone,email,website,facilityType,paymentTypes,debrisTypes,operatingHours,notes
 "Sample Landfill","123 Main St","Springfield","IL","62701","(555) 123-4567","info@sample.com","https://sample.com","landfill","Cash,Credit Card","General Waste,Yard Waste","Mon-Fri 7AM-5PM","Sample notes"
 "Sample Transfer Station","456 Oak Ave","Springfield","IL","62702","(555) 987-6543","contact@transfer.com","","transfer_station","Cash,Check","General Waste,Electronics","Mon-Sat 6AM-6PM","Transfer station example"`;
@@ -132,7 +238,7 @@ export default function BulkUploadFacilities() {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "facility_upload_template.csv";
+    a.download = "location_upload_template.csv";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -154,9 +260,9 @@ export default function BulkUploadFacilities() {
               </Link>
             </Button>
             <div>
-              <h1 className="text-3xl font-bold">Bulk Upload Facilities</h1>
+              <h1 className="text-3xl font-bold">Bulk Upload Locations</h1>
               <p className="text-muted-foreground">
-                Upload multiple facilities at once using CSV or Excel files
+                Upload multiple locations at once using CSV or Excel files
               </p>
             </div>
           </div>
@@ -195,13 +301,19 @@ export default function BulkUploadFacilities() {
                           {uploadedFile.name}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          {(uploadedFile.size / 1024 / 1024).toFixed(2)} MB
+                          {(uploadedFile.size / 1024 / 1024).toFixed(2)} MB •{" "}
+                          {csvData.length > 0 ? csvData.length - 1 : 0} data
+                          rows
                         </p>
                       </div>
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => setUploadedFile(null)}
+                        onClick={() => {
+                          setUploadedFile(null);
+                          setShowMapping(false);
+                          setCsvData([]);
+                        }}
                       >
                         <X className="w-4 h-4" />
                       </Button>
@@ -221,7 +333,7 @@ export default function BulkUploadFacilities() {
                   <div className="flex gap-2">
                     <Button
                       onClick={handleUpload}
-                      disabled={!uploadedFile || isUploading}
+                      disabled={!showMapping || isUploading}
                       className="flex-1"
                     >
                       <Upload className="w-4 h-4 mr-2" />
@@ -234,6 +346,67 @@ export default function BulkUploadFacilities() {
                   </div>
                 </CardContent>
               </Card>
+
+              {/* Column Mapping */}
+              {showMapping && csvData.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <MapPin className="w-5 h-5" />
+                      Column Mapping
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Map your CSV columns to system fields. Mappings are
+                      auto-detected but can be adjusted.
+                    </p>
+                    <div className="space-y-3">
+                      {columnMappings.map((mapping, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center gap-4 p-3 border rounded-lg"
+                        >
+                          <div className="flex-1">
+                            <div className="font-medium text-sm">
+                              {mapping.csvColumn}
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              Sample:{" "}
+                              {csvData[1] && csvData[1][index]
+                                ? csvData[1][index]
+                                : "N/A"}
+                            </div>
+                          </div>
+                          <ArrowRight className="w-4 h-4 text-muted-foreground" />
+                          <div className="flex-1">
+                            <Select
+                              value={mapping.systemField}
+                              onValueChange={(value) =>
+                                updateColumnMapping(index, value)
+                              }
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select field" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {systemFields.map((field) => (
+                                  <SelectItem
+                                    key={field.value}
+                                    value={field.value}
+                                  >
+                                    {field.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
 
               {/* Upload Results */}
               {uploadResults && (
@@ -292,7 +465,7 @@ export default function BulkUploadFacilities() {
                         <CheckCircle className="h-4 w-4 text-green-600" />
                         <AlertDescription className="text-green-800">
                           Successfully imported{" "}
-                          {uploadResults.successfulImports} facilities into the
+                          {uploadResults.successfulImports} locations into the
                           database.
                         </AlertDescription>
                       </Alert>
@@ -375,7 +548,7 @@ export default function BulkUploadFacilities() {
                   </div>
 
                   <div>
-                    <h4 className="font-medium mb-2">Facility Types</h4>
+                    <h4 className="font-medium mb-2">Location Types</h4>
                     <ul className="text-sm text-muted-foreground space-y-1">
                       <li>• landfill</li>
                       <li>• transfer_station</li>
