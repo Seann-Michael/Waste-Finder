@@ -18,6 +18,7 @@ export interface Location {
   longitude: number;
   locationType: "landfill" | "transfer_station" | "construction_landfill";
   paymentTypes: PaymentType[];
+  additionalPaymentDetails?: string;
   debrisTypes: DebrisType[];
   operatingHours: OperatingHours[];
   notes?: string;
