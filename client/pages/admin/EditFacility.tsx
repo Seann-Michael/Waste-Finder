@@ -158,10 +158,19 @@ export default function EditFacility() {
   const loadFacility = async () => {
     setIsLoading(true);
     try {
-      // Mock API call - in real app, fetch from /api/facilities/:id
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Fetch facility data from server API
+      const response = await fetch(`/api/locations/${id}`);
 
-      const mockFacility: Location = {
+      if (!response.ok) {
+        throw new Error('Failed to fetch facility data');
+      }
+
+      const data = await response.json();
+      const facility = data.data;
+
+      if (!facility) {
+        throw new Error('Facility not found');
+      }
         id: id || "1",
         name: "Green Valley Municipal Landfill",
         address: "1234 Waste Management Drive",
