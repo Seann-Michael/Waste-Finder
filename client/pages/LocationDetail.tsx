@@ -296,8 +296,18 @@ export default function LocationDetail() {
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
 
-      <main className="flex-1">
-        <div className="max-w-7xl mx-auto px-4 py-8">
+      <main className="flex-1 relative">
+        {/* Left Sidebar Ad */}
+        <div className="hidden xl:block fixed left-4 top-1/2 transform -translate-y-1/2 w-32 z-10">
+          <AdSense placement="location-detail-left" className="sticky top-32" />
+        </div>
+
+        {/* Right Sidebar Ad */}
+        <div className="hidden xl:block fixed right-4 top-1/2 transform -translate-y-1/2 w-32 z-10">
+          <AdSense placement="location-detail-right" className="sticky top-32" />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 xl:px-40 py-8">
           {/* Back to Results & Breadcrumb */}
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
