@@ -269,7 +269,7 @@ export default function Admin() {
                   </p>
                 </div>
                 <Button variant="outline" className="w-full" size="sm" asChild>
-                  <Link to="/admin/suggestions">View All Pending</Link>
+                  <Link to="/admin/suggestions?tab=locations">View All Pending</Link>
                 </Button>
               </CardContent>
             </Card>

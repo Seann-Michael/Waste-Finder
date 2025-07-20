@@ -16,6 +16,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import LocationCard from "../components/LocationCard";
 import AdSense from "../components/AdSense";
+import GoogleMapsEmbed from "../components/GoogleMapsEmbed";
 import { Location } from "../shared/api";
 
 interface SearchLocation {
@@ -165,137 +166,164 @@ export default function AllLocations() {
         <AdSense placement="search-results-top" className="py-4" />
 
         <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-4">
-            All Waste Disposal Facilities
-          </h1>
-          {searchLocation && (
-            <div className="flex items-center gap-2 text-muted-foreground mb-2">
-              <MapPin className="w-4 h-4" />
-              <span>
-                Within {searchLocation.radius} miles of {searchLocation.zipCode}
-              </span>
-            </div>
-          )}
-          <p className="text-muted-foreground">{searchMessage}</p>
-        </div>
-
-        {/* Search and Filters */}
-        <Card className="mb-8">
-          <CardContent className="p-6">
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                  <Input
-                    placeholder="Search by name, city, or ZIP code..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10"
-                    onKeyPress={(e) => e.key === "Enter" && handleSearch()}
-                  />
-                </div>
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold mb-4">
+              All Waste Disposal Facilities
+            </h1>
+            {searchLocation && (
+              <div className="flex items-center gap-2 text-muted-foreground mb-2">
+                <MapPin className="w-4 h-4" />
+                <span>
+                  Within {searchLocation.radius} miles of {searchLocation.zipCode}
+                </span>
               </div>
-              <Button onClick={handleSearch} disabled={isLoading}>
-                Search
-              </Button>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-4 mt-4">
-              <div className="flex items-center gap-2">
-                <Filter className="w-4 h-4 text-muted-foreground" />
-                <Select value={filterBy} onValueChange={setFilterBy}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Filter by type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Types</SelectItem>
-                    <SelectItem value="landfill">Landfills</SelectItem>
-                    <SelectItem value="transfer_station">
-                      Transfer Stations
-                    </SelectItem>
-                    <SelectItem value="construction_landfill">
-                      Construction Landfills
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <SortAsc className="w-4 h-4 text-muted-foreground" />
-                <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Sort by" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="name">Name</SelectItem>
-                    <SelectItem value="rating">Rating</SelectItem>
-                    <SelectItem value="city">City</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Error State */}
-        {error.hasError && (
-          <Card className="mb-8 border-destructive">
-            <CardContent className="p-6">
-              <p className="text-destructive">{error.message}</p>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Loading State */}
-        {isLoading && (
-          <div className="text-center py-8">
-            <p className="text-muted-foreground">Loading facilities...</p>
+            )}
+            <p className="text-muted-foreground">{searchMessage}</p>
           </div>
-        )}
 
-        {/* Results */}
-        {!isLoading && !error.hasError && (
-          <div className="space-y-6">
-            {filteredAndSortedLocations.length === 0 ? (
-              <Card>
-                <CardContent className="p-8 text-center">
-                  <p className="text-muted-foreground">
-                    No facilities found matching your criteria.
-                  </p>
+          {/* Google Maps */}
+          <GoogleMapsEmbed
+            locations={filteredAndSortedLocations}
+            searchQuery={searchLocation?.zipCode || searchQuery}
+            className="mb-8"
+          />
+
+          {/* Layout with Search/Filters on Left and Results on Right */}
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            {/* Search and Filters - Left Sidebar */}
+            <div className="lg:col-span-1">
+              <Card className="sticky top-24">
+                <CardContent className="p-6">
+                  <h3 className="font-semibold mb-4">Search & Filter</h3>
+
+                  <div className="space-y-4">
+                    <div>
+                      <div className="relative">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                        <Input
+                          placeholder="Search by name, city, or ZIP code..."
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="pl-10"
+                          onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+                        />
+                      </div>
+                      <Button
+                        onClick={handleSearch}
+                        disabled={isLoading}
+                        className="w-full mt-2"
+                        size="sm"
+                      >
+                        Search
+                      </Button>
+                    </div>
+
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <Filter className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-sm font-medium">Filter by Type</span>
+                      </div>
+                      <Select value={filterBy} onValueChange={setFilterBy}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Filter by type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">All Types</SelectItem>
+                          <SelectItem value="landfill">Landfills</SelectItem>
+                          <SelectItem value="transfer_station">
+                            Transfer Stations
+                          </SelectItem>
+                          <SelectItem value="construction_landfill">
+                            Construction Landfills
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <SortAsc className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-sm font-medium">Sort by</span>
+                      </div>
+                      <Select value={sortBy} onValueChange={setSortBy}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Sort by" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="name">Name</SelectItem>
+                          <SelectItem value="rating">Rating</SelectItem>
+                          <SelectItem value="city">City</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
-            ) : (
-              <>
-                <div className="flex items-center justify-between">
-                  <p className="text-sm text-muted-foreground">
-                    Showing {filteredAndSortedLocations.length} of{" "}
-                    {locations.length} facilities
-                  </p>
-                  {filterBy !== "all" && (
-                    <Badge variant="secondary">
-                      {filterBy.replace("_", " ")}
-                    </Badge>
+            </div>
+
+            {/* Results - Right Side */}
+            <div className="lg:col-span-3">
+
+              {/* Error State */}
+              {error.hasError && (
+                <Card className="mb-8 border-destructive">
+                  <CardContent className="p-6">
+                    <p className="text-destructive">{error.message}</p>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Loading State */}
+              {isLoading && (
+                <div className="text-center py-8">
+                  <p className="text-muted-foreground">Loading facilities...</p>
+                </div>
+              )}
+
+              {/* Results */}
+              {!isLoading && !error.hasError && (
+                <div className="space-y-6">
+                  {filteredAndSortedLocations.length === 0 ? (
+                    <Card>
+                      <CardContent className="p-8 text-center">
+                        <p className="text-muted-foreground">
+                          No facilities found matching your criteria.
+                        </p>
+                      </CardContent>
+                    </Card>
+                  ) : (
+                    <>
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm text-muted-foreground">
+                          Showing {filteredAndSortedLocations.length} of{" "}
+                          {locations.length} facilities
+                        </p>
+                        {filterBy !== "all" && (
+                          <Badge variant="secondary">
+                            {filterBy.replace("_", " ")}
+                          </Badge>
+                        )}
+                      </div>
+
+                      <div className="space-y-6">
+                        {filteredAndSortedLocations.map((location) => (
+                          <LocationCard
+                            key={location.id}
+                            location={location}
+                            onClick={() => handleLocationClick(location)}
+                          />
+                        ))}
+                      </div>
+
+                      {/* Bottom Ad - Full Width */}
+                      <AdSense placement="search-results" className="my-8" />
+                    </>
                   )}
                 </div>
-
-                {/* AdSense for Search Results */}
-                <AdSense placement="search-results" className="my-6" />
-
-                <div className="space-y-6">
-                  {filteredAndSortedLocations.map((location) => (
-                    <LocationCard
-                      key={location.id}
-                      location={location}
-                      onClick={() => handleLocationClick(location)}
-                    />
-                  ))}
-                </div>
-              </>
-            )}
+              )}
+            </div>
           </div>
-        )}
         </div>
       </div>
 
