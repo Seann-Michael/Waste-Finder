@@ -489,11 +489,16 @@ export default function AllLocations() {
 
     // Filter by search query
     if (searchQuery.trim()) {
+      const query = searchQuery.trim().toLowerCase();
       filtered = filtered.filter(
         (location) =>
-          location.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          location.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          location.zipCode.includes(searchQuery.trim()),
+          location.name.toLowerCase().includes(query) ||
+          location.city.toLowerCase().includes(query) ||
+          location.state.toLowerCase().includes(query) ||
+          location.address.toLowerCase().includes(query) ||
+          location.zipCode.includes(searchQuery.trim()) ||
+          // Also search for partial zip code matches (e.g., "441" would match "44111")
+          (query.length >= 3 && location.zipCode.startsWith(query)),
       );
     }
 
