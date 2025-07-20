@@ -141,6 +141,20 @@ export default function AllLocations() {
 
   const filteredAndSortedLocations = locations
     .filter((location) => {
+      // Apply search filter first
+      if (searchQuery.trim()) {
+        const query = searchQuery.toLowerCase().trim();
+        const matchesSearch =
+          location.name.toLowerCase().includes(query) ||
+          location.city.toLowerCase().includes(query) ||
+          location.zipCode.toLowerCase().includes(query) ||
+          location.address.toLowerCase().includes(query) ||
+          location.state.toLowerCase().includes(query);
+
+        if (!matchesSearch) return false;
+      }
+
+      // Then apply type filter
       if (filterBy === "all") return true;
       return location.locationType === filterBy;
     })
