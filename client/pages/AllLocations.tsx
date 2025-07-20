@@ -679,8 +679,21 @@ export default function AllLocations() {
       );
     }
 
-    // Sort locations
+    // Sort locations - prioritize distance for zip code searches
     filtered.sort((a, b) => {
+      // If we have search coordinates and distances, prioritize distance sorting
+      if (
+        searchCoordinates &&
+        a.distance !== undefined &&
+        b.distance !== undefined
+      ) {
+        if (sortBy === "distance" || sortBy === "name") {
+          // Default to distance for zip searches
+          return a.distance - b.distance;
+        }
+      }
+
+      // Regular sorting
       switch (sortBy) {
         case "name":
           return a.name.localeCompare(b.name);
