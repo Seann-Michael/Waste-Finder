@@ -27,6 +27,48 @@ import {
   LogOut,
 } from "lucide-react";
 
+const pendingReviews = [
+  {
+    id: "1",
+    location: "Green Valley Landfill",
+    locationId: "loc_1",
+    author: "John D.",
+    email: "john.d@email.com",
+    rating: 4,
+    title: "Good service overall",
+    content:
+      "Great service and fair pricing. The staff was helpful and the facility was well-organized. Only complaint is the wait time during peak hours can be a bit long, but that's understandable given how busy they are. Would definitely recommend for general waste disposal.",
+    date: "2024-01-20T12:30:00Z",
+    status: "pending",
+  },
+  {
+    id: "2",
+    location: "Metro Transfer Station",
+    locationId: "loc_2",
+    author: "Sarah M.",
+    email: "sarah.m@email.com",
+    rating: 5,
+    title: "Excellent facility",
+    content:
+      "Very clean facility with helpful staff. They have clear signage and the pricing is transparent. The electronic waste recycling program is particularly impressive. Quick service and convenient location. Highly recommend!",
+    date: "2024-01-20T10:15:00Z",
+    status: "pending",
+  },
+  {
+    id: "3",
+    location: "Capitol Construction Landfill",
+    locationId: "loc_3",
+    author: "Mike R.",
+    email: "mike.r@email.com",
+    rating: 2,
+    title: "Poor experience",
+    content:
+      "Long wait times and poor signage made this visit frustrating. The staff seemed overwhelmed and weren't very helpful. The pricing structure is confusing and they don't accept credit cards. The facility itself looks dated and could use some improvements.",
+    date: "2024-01-20T08:45:00Z",
+    status: "pending",
+  },
+];
+
 export default function Admin() {
   const navigate = useNavigate();
   const [selectedSuggestion, setSelectedSuggestion] = useState<any>(null);
