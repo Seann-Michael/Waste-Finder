@@ -178,6 +178,26 @@ export default function AdminSettings() {
     twitterImage: "",
   });
 
+  const [adSettings, setAdSettings] = useState({
+    adsenseEnabled: false,
+    adsenseCode: "",
+    customAdsEnabled: false,
+    customAds: [],
+    facebookGroupEnabled: false,
+    facebookGroupUrl: "",
+    facebookGroupCta:
+      "Join our Facebook community to connect with other users, get waste disposal tips, and stay updated on new facilities!",
+  });
+
+  const [newCustomAd, setNewCustomAd] = useState({
+    title: "",
+    content: "",
+    imageUrl: "",
+    linkUrl: "",
+    placement: "all" as "home" | "search" | "location" | "all",
+    priority: 1,
+  });
+
   const [newUser, setNewUser] = useState({
     name: "",
     email: "",
