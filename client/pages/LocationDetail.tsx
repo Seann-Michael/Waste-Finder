@@ -64,6 +64,27 @@ export default function LocationDetail() {
   const [showSuggestionForm, setShowSuggestionForm] = useState(false);
   const [pageViews, setPageViews] = useState(0);
 
+  // Admin inline editing state
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [editFormData, setEditFormData] = useState({
+    name: "",
+    address: "",
+    city: "",
+    state: "",
+    zipCode: "",
+    phone: "",
+    email: "",
+    website: "",
+    googleBusinessUrl: "",
+    facilityType: "",
+    paymentTypes: [] as string[],
+    additionalPaymentDetails: "",
+    debrisTypes: [] as string[],
+    notes: "",
+    operatingHours: [] as any[],
+  });
+
   // Review form state
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewTitle, setReviewTitle] = useState("");
