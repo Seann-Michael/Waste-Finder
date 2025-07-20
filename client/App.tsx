@@ -39,8 +39,10 @@ const App = () => (
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/admin/bulk-upload" element={<BulkUploadFacilities />} />
-          <Route path="/admin/add-facility" element={<AddFacility />} />
-          <Route path="/admin/edit-facility/:id" element={<EditFacility />} />
+          <Route path="/admin/add-location" element={<AddFacility />} />
+          <Route path="/admin/edit-location/:id" element={<EditFacility />} />
+          <Route path="/admin/locations" element={<LocationDataTable />} />
+          <Route path="/admin/settings" element={<AdminSettings />} />
           <Route path="/location/:id" element={<LocationDetail />} />
           <Route path="/about" element={<About />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
