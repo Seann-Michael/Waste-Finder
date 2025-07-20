@@ -66,6 +66,9 @@ interface BlogPost {
   publishedAt?: string;
   createdAt: string;
   updatedAt: string;
+  customSeoTitle?: string;
+  customSeoDescription?: string;
+  customSeoKeywords?: string;
 }
 
 interface BlogCategory {
@@ -609,6 +612,53 @@ export default function BlogAdmin() {
                     ))}
                   </SelectContent>
                 </Select>
+              </div>
+            </div>
+
+            {/* SEO Settings for this post */}
+            <div className="border rounded-lg p-4 bg-muted/30">
+              <h4 className="font-medium mb-3 flex items-center gap-2">
+                <Tag className="w-4 h-4" />
+                SEO Settings for this Post
+              </h4>
+              <div className="grid grid-cols-1 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="seoTitle">Custom SEO Title</Label>
+                  <Input
+                    id="seoTitle"
+                    value={formData.customSeoTitle || ""}
+                    onChange={(e) => setFormData(prev => ({ ...prev, customSeoTitle: e.target.value }))}
+                    placeholder="Leave empty to use default template"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Default: {formData.title ? `${formData.title} | WasteFinder Learn` : "Uses blog title template"}
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="seoDescription">Custom SEO Description</Label>
+                  <Textarea
+                    id="seoDescription"
+                    value={formData.customSeoDescription || ""}
+                    onChange={(e) => setFormData(prev => ({ ...prev, customSeoDescription: e.target.value }))}
+                    placeholder="Leave empty to use post excerpt"
+                    rows={2}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Default: Uses post excerpt
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="seoKeywords">Custom SEO Keywords</Label>
+                  <Input
+                    id="seoKeywords"
+                    value={formData.customSeoKeywords || ""}
+                    onChange={(e) => setFormData(prev => ({ ...prev, customSeoKeywords: e.target.value }))}
+                    placeholder="Leave empty to use default template"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Default: waste management, {formData.tags || "post tags"}, environmental blog
+                  </p>
+                </div>
               </div>
             </div>
 
