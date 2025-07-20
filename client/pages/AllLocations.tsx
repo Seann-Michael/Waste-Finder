@@ -61,6 +61,7 @@ export default function AllLocations() {
   const [filteredLocations, setFilteredLocations] = useState<Location[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchRadius, setSearchRadius] = useState(50); // Default 50 miles
   const [sortBy, setSortBy] = useState("distance");
   const [filterType, setFilterType] = useState("all");
   const [selectedDebrisTypes, setSelectedDebrisTypes] = useState<string[]>([]);
@@ -70,16 +71,28 @@ export default function AllLocations() {
   }, []);
 
   useEffect(() => {
-    // Populate search query from URL params if present
+    // Populate search query and radius from URL params if present
     const zipFromParams = searchParams.get("zipCode");
+    const radiusFromParams = searchParams.get("radius");
+
     if (zipFromParams) {
       setSearchQuery(zipFromParams);
+    }
+    if (radiusFromParams) {
+      setSearchRadius(parseInt(radiusFromParams, 10) || 50);
     }
   }, [searchParams]);
 
   useEffect(() => {
     filterAndSortLocations();
-  }, [locations, searchQuery, sortBy, filterType, selectedDebrisTypes]);
+  }, [
+    locations,
+    searchQuery,
+    searchRadius,
+    sortBy,
+    filterType,
+    selectedDebrisTypes,
+  ]);
 
   const loadAllLocations = async () => {
     setIsLoading(true);
