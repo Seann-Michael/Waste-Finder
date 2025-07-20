@@ -105,13 +105,7 @@ const mockPendingLocations: PendingLocation[] = [
   },
 ];
 
-const webhookEvents = [
-  { value: "resource_downloaded", label: "Resource Downloaded" },
-  { value: "location_viewed", label: "Location Viewed" },
-  { value: "review_submitted", label: "Review Submitted" },
-  { value: "suggestion_submitted", label: "Suggestion Submitted" },
-  { value: "user_search", label: "User Search" },
-];
+
 
 export default function AdminSettings() {
   const [activeTab, setActiveTab] = useState("profile");
@@ -133,9 +127,6 @@ export default function AdminSettings() {
   });
 
   const [apiSettings, setApiSettings] = useState({
-    ghlApiKey: "",
-    webhookUrl: "",
-    webhookEvents: ["resource_downloaded"],
     googleMapsApiKey: "",
   });
 
@@ -145,7 +136,6 @@ export default function AdminSettings() {
     privacyPolicy: "",
     termsOfService: "",
     footerContent: "",
-    resourcesContent: "",
   });
 
   const [marketingSettings, setMarketingSettings] = useState({
