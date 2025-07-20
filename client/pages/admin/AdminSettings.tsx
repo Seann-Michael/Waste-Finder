@@ -116,6 +116,19 @@ const webhookEvents = [
 
 export default function AdminSettings() {
   const [activeTab, setActiveTab] = useState("profile");
+
+  useEffect(() => {
+    // Load advertisement settings from localStorage on component mount
+    const savedAdSettings = localStorage.getItem("adSettings");
+    if (savedAdSettings) {
+      try {
+        const settings = JSON.parse(savedAdSettings);
+        setAdSettings(settings);
+      } catch (error) {
+        console.error("Error loading ad settings:", error);
+      }
+    }
+  }, []);
   const [adminUsers, setAdminUsers] = useState<AdminUser[]>(mockAdminUsers);
   const [pendingLocationsList, setPendingLocationsList] =
     useState<PendingLocation[]>(mockPendingLocations);
