@@ -47,6 +47,26 @@ export default function AdminLogin() {
     }
   };
 
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setResetMessage("");
+
+    try {
+      // Mock password reset - in real app, this would call an API
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      setResetMessage(
+        "If an account with that email exists, a password reset link has been sent.",
+      );
+      setResetEmail("");
+    } catch (err) {
+      setResetMessage("Failed to send reset email. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
