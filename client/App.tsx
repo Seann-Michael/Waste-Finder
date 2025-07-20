@@ -18,6 +18,7 @@ import LocationDataTable from "./pages/admin/LocationDataTable";
 import AdminSettings from "./pages/admin/AdminSettings";
 import ReviewsTable from "./pages/admin/ReviewsTable";
 import SuggestionsTable from "./pages/admin/SuggestionsTable";
+import AdminRoute from "./components/admin/AdminRoute";
 import About from "./pages/About";
 import LocationDetail from "./pages/LocationDetail";
 import SuggestLocation from "./pages/SuggestLocation";
