@@ -40,14 +40,15 @@ export default function Locations() {
   const searchLocations = async () => {
     setIsLoading(true);
     try {
-      // Simulate API call with mock data
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Fetch locations from server API
+      const response = await fetch(`/api/locations/search?zipCode=${zipCode}&radius=${radius}&locationType=${locationTypes.join(',')}&debrisTypes=${debrisTypes.join(',')}&sortBy=${sortBy}`);
 
-      // Check if searching for Cleveland area (44111)
-      const isClevelendSearch =
-        zipCode === "44111" || zipCode.startsWith("441");
+      if (!response.ok) {
+        throw new Error('Failed to fetch locations');
+      }
 
-      const mockLocations: Location[] = isClevelendSearch
+      const data = await response.json();
+      const mockLocations = data.locations || [];
         ? [
             {
               id: "cleveland-1",
