@@ -1170,6 +1170,13 @@ export default function AdminSettings() {
                               Add Custom Ad
                             </Button>
                           </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             {activeTab === "system" && (
               <Card>
