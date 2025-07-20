@@ -70,8 +70,16 @@ export default function AllLocations() {
   }, [searchParams]);
 
   useEffect(() => {
-    // Load locations whenever search parameters change
-    loadLocations();
+    // Only load locations when we have a valid ZIP code or when other filters change
+    // Debounce text searches to avoid excessive API calls
+    const timeoutId = setTimeout(
+      () => {
+        loadLocations();
+      },
+      searchQuery && !/^\d{5}$/.test(searchQuery) ? 1000 : 100,
+    ); // 1 second debounce for text, immediate for ZIP
+
+    return () => clearTimeout(timeoutId);
   }, [searchQuery, searchRadius, filterType, selectedDebrisTypes, sortBy]);
 
   const loadLocations = async () => {
