@@ -159,6 +159,25 @@ export default function AdminSettings() {
     maintenanceMode: false,
   });
 
+  const [websiteSettings, setWebsiteSettings] = useState({
+    siteUrl: "https://wastefinder.com",
+    siteLogo: "",
+    favicon: "",
+    metaTitle: "WasteFinder - Find Waste Disposal Facilities Near You",
+    metaDescription:
+      "Search our comprehensive database of landfills, transfer stations, and construction facilities across the United States.",
+    metaKeywords:
+      "waste disposal, landfill, transfer station, construction debris, recycling",
+    ogTitle: "WasteFinder - Find Waste Disposal Facilities Near You",
+    ogDescription:
+      "Search our comprehensive database of landfills, transfer stations, and construction facilities across the United States.",
+    ogImage: "",
+    twitterTitle: "WasteFinder - Find Waste Disposal Facilities Near You",
+    twitterDescription:
+      "Search our comprehensive database of landfills, transfer stations, and construction facilities across the United States.",
+    twitterImage: "",
+  });
+
   const [newUser, setNewUser] = useState({
     name: "",
     email: "",
@@ -171,9 +190,10 @@ export default function AdminSettings() {
     { id: "profile", label: "Profile & Password", icon: User },
     { id: "users", label: "Admin Users", icon: Users },
     { id: "locations", label: "Pending Locations", icon: MapPin },
+    { id: "website", label: "Website Settings", icon: Globe },
     { id: "system", label: "System Settings", icon: Settings },
     { id: "api", label: "API & Webhooks", icon: Key },
-    { id: "content", label: "Content Management", icon: Globe },
+    { id: "content", label: "Content Management", icon: FileText },
     { id: "code", label: "Custom Code", icon: Code },
   ];
 
@@ -195,6 +215,11 @@ export default function AdminSettings() {
   const handleSaveCodeSettings = () => {
     console.log("Saving code settings:", codeSettings);
     alert("Code settings updated successfully!");
+  };
+
+  const handleSaveWebsiteSettings = () => {
+    console.log("Saving website settings:", websiteSettings);
+    alert("Website settings updated successfully!");
   };
 
   const handleSaveSystemSettings = () => {
