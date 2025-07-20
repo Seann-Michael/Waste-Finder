@@ -303,13 +303,13 @@ export default function LocationDetail() {
               <div>
                 <div className="flex items-center gap-3 mb-4">
                   <div className="text-primary">
-                    {getFacilityIcon(location.facilityType)}
+                    {getLocationIcon(location.locationType)}
                   </div>
                   <Badge
                     variant="secondary"
                     className="flex items-center gap-1"
                   >
-                    {getFacilityLabel(location.facilityType)}
+                    {getLocationLabel(location.locationType)}
                   </Badge>
                 </div>
 
@@ -595,7 +595,7 @@ export default function LocationDetail() {
                 <CardContent className="space-y-4">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Type:</span>
-                    <span>{getFacilityLabel(location.facilityType)}</span>
+                    <span>{getLocationLabel(location.locationType)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Rating:</span>
