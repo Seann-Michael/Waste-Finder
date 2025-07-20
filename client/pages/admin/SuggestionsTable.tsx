@@ -871,7 +871,7 @@ export default function SuggestionsTable() {
                       {editsCurrentItems.length === 0 ? (
                         <TableRow>
                           <TableCell
-                            colSpan={6}
+                            colSpan={7}
                             className="text-center py-8 text-muted-foreground"
                           >
                             No suggested edits found matching your criteria
@@ -879,12 +879,19 @@ export default function SuggestionsTable() {
                         </TableRow>
                       ) : (
                         editsCurrentItems.map((edit) => (
-                          <TableRow
-                            key={edit.id}
-                            className="hover:bg-muted/50 cursor-pointer"
-                            onClick={() => handleEditRowClick(edit)}
-                          >
-                            <TableCell>
+                          <TableRow key={edit.id} className="hover:bg-muted/50">
+                            <TableCell onClick={(e) => e.stopPropagation()}>
+                              <Checkbox
+                                checked={selectedEdits.includes(edit.id)}
+                                onCheckedChange={(checked) =>
+                                  handleSelectEdit(edit.id, checked as boolean)
+                                }
+                              />
+                            </TableCell>
+                            <TableCell
+                              className="cursor-pointer"
+                              onClick={() => handleEditRowClick(edit)}
+                            >
                               <div className="font-medium text-primary">
                                 {edit.locationName}
                               </div>
