@@ -246,8 +246,8 @@ export default function LocationDetail() {
     return (
       <div className="min-h-screen bg-background flex flex-col">
         <Header />
-        <main className="flex-1">
-          <div className="max-w-7xl mx-auto px-4 py-8">
+        <main className="flex-1 relative">
+          <div className="max-w-7xl mx-auto px-4 xl:px-40 py-8">
             <div className="animate-pulse space-y-8">
               <div className="h-8 bg-muted rounded w-1/4"></div>
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -272,8 +272,8 @@ export default function LocationDetail() {
     return (
       <div className="min-h-screen bg-background flex flex-col">
         <Header />
-        <main className="flex-1">
-          <div className="max-w-7xl mx-auto px-4 py-8">
+        <main className="flex-1 relative">
+          <div className="max-w-7xl mx-auto px-4 xl:px-40 py-8">
             <div className="text-center py-16">
               <AlertCircle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
               <h1 className="text-2xl font-bold mb-2">Facility Not Found</h1>
