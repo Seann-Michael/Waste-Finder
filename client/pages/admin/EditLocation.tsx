@@ -194,22 +194,26 @@ export default function EditFacility() {
       });
 
       // Convert operating hours
-      const hoursMap = facility.operatingHours.reduce(
-        (acc, hour) => {
-          acc[hour.dayOfWeek] = hour;
-          return acc;
-        },
-        {} as Record<number, any>,
-      );
+      if (facility.operatingHours && Array.isArray(facility.operatingHours)) {
+        const hoursMap = facility.operatingHours.reduce(
+          (acc, hour) => {
+            if (hour && typeof hour.dayOfWeek !== 'undefined') {
+              acc[hour.dayOfWeek] = hour;
+            }
+            return acc;
+          },
+          {} as Record<number, any>,
+        );
 
-      setOperatingHours((prev) =>
-        prev.map((hour) => ({
-          ...hour,
-          openTime: hoursMap[hour.day]?.openTime || "",
-          closeTime: hoursMap[hour.day]?.closeTime || "",
-          isClosed: hoursMap[hour.day]?.isClosed || false,
-        })),
-      );
+        setOperatingHours((prev) =>
+          prev.map((hour) => ({
+            ...hour,
+            openTime: hoursMap[hour.day]?.openTime || "",
+            closeTime: hoursMap[hour.day]?.closeTime || "",
+            isClosed: hoursMap[hour.day]?.isClosed || false,
+          })),
+        );
+      }
     } catch (error) {
       console.error("Error loading facility:", error);
       setFormErrors({ general: "Failed to load facility data. Please try again." });
