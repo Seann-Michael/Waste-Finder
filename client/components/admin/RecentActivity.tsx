@@ -125,11 +125,10 @@ export default function RecentActivity() {
 
   const activityTypes = [
     { value: "all", label: "All Activities" },
-    { value: "facility_created", label: "Facility Created" },
-    { value: "facility_updated", label: "Facility Updated" },
+    { value: "location_created", label: "Location Created" },
+    { value: "location_updated", label: "Location Updated" },
     { value: "review_submitted", label: "Review Submitted" },
     { value: "suggestion_submitted", label: "Suggestion Submitted" },
-    { value: "user_registered", label: "User Registered" },
   ];
 
   const statusOptions = [
