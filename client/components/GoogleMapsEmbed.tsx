@@ -71,7 +71,6 @@ export default function GoogleMapsEmbed({
 
     // Build the Google Maps embed URL
     const baseUrl = "https://www.google.com/maps/embed/v1/view";
-    const apiKey = "AIzaSyBFw0Qbyq9zTFTd-tUY6dQHuFW6mZWRJRI"; // You'll need to replace with actual key
 
     // For demo purposes, create a simple map centered on the calculated location
     const params = new URLSearchParams({
