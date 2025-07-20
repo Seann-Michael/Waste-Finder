@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -24,6 +24,50 @@ import {
 export default function Index() {
   const navigate = useNavigate();
   const [isSearching, setIsSearching] = useState(false);
+  const [locationCounts, setLocationCounts] = useState({
+    total: 0,
+    landfills: 0,
+    transferStations: 0,
+    constructionLandfills: 0,
+  });
+  const [contentSettings, setContentSettings] = useState({
+    homeMarketingButtonText: "Marketing for Dumpster Rentals",
+    homeMarketingButtonUrl: "https://yourmarketingagency.com",
+  });
+
+  useEffect(() => {
+    // Load real location counts from localStorage
+    const savedLocations = localStorage.getItem("locations");
+    if (savedLocations) {
+      try {
+        const locations = JSON.parse(savedLocations);
+        const total = locations.length;
+        const landfills = locations.filter((loc: any) => loc.facilityType === "landfill").length;
+        const transferStations = locations.filter((loc: any) => loc.facilityType === "transfer_station").length;
+        const constructionLandfills = locations.filter((loc: any) => loc.facilityType === "construction_landfill").length;
+
+        setLocationCounts({
+          total,
+          landfills,
+          transferStations,
+          constructionLandfills,
+        });
+      } catch (error) {
+        console.error("Error loading location counts:", error);
+      }
+    }
+
+    // Load content settings
+    const savedContentSettings = localStorage.getItem("contentSettings");
+    if (savedContentSettings) {
+      try {
+        const parsed = JSON.parse(savedContentSettings);
+        setContentSettings(prev => ({ ...prev, ...parsed }));
+      } catch (error) {
+        console.error("Error loading content settings:", error);
+      }
+    }
+  }, []);
 
   const handleSearch = async (searchParams: SearchParams) => {
     setIsSearching(true);
