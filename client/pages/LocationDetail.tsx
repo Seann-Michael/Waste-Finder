@@ -333,6 +333,7 @@ export default function LocationDetail() {
       paymentTypes: [],
       additionalPaymentDetails: "",
       debrisTypes: [],
+      debrisPricing: {},
       notes: "",
       operatingHours: [],
     });
