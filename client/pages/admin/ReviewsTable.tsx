@@ -512,6 +512,46 @@ export default function ReviewsTable() {
               {filteredReviews.length} reviews
             </div>
 
+            {/* Bulk Actions */}
+            {selectedReviews.length > 0 && (
+              <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg">
+                <span className="text-sm font-medium">
+                  {selectedReviews.length} selected
+                </span>
+                <Button
+                  size="sm"
+                  onClick={() => handleBulkAction("approve")}
+                  className="bg-green-600 hover:bg-green-700"
+                >
+                  <CheckCircle className="w-4 h-4 mr-1" />
+                  Approve
+                </Button>
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  onClick={() => handleBulkAction("reject")}
+                >
+                  <AlertTriangle className="w-4 h-4 mr-1" />
+                  Reject
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => handleBulkAction("delete")}
+                >
+                  <Trash2 className="w-4 h-4 mr-1" />
+                  Delete
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setSelectedReviews([])}
+                >
+                  Clear Selection
+                </Button>
+              </div>
+            )}
+
             {/* Reviews Table */}
             <div className="border rounded-lg overflow-x-auto">
               <Table>
