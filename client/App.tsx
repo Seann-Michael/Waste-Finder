@@ -98,6 +98,14 @@ const App = () => (
             }
           />
           <Route
+            path="/admin/preview-location/:id"
+            element={
+              <AdminRoute>
+                <PreviewLocation />
+              </AdminRoute>
+            }
+          />
+          <Route
             path="/admin/settings"
             element={
               <AdminRoute>
