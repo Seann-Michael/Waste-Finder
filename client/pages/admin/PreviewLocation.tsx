@@ -385,10 +385,14 @@ export default function PreviewLocation() {
             <div>
               <div className="flex items-center gap-3 mb-4">
                 <div className="text-primary">
-                  {getFacilityIcon(currentLocation.details.facilityType)}
+                  {getFacilityIcon(
+                    currentLocation.details?.facilityType || "landfill",
+                  )}
                 </div>
                 <Badge variant="secondary" className="flex items-center gap-1">
-                  {getFacilityLabel(currentLocation.details.facilityType)}
+                  {getFacilityLabel(
+                    currentLocation.details?.facilityType || "landfill",
+                  )}
                 </Badge>
               </div>
 
