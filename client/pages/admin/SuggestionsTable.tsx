@@ -214,6 +214,14 @@ export default function SuggestionsTable() {
     useState<SortDirection>("desc");
   const [locationsPageSize, setLocationsPageSize] = useState(25);
 
+  // Bulk selection for locations
+  const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
+  const [locationsBulkActionDialogOpen, setLocationsBulkActionDialogOpen] =
+    useState(false);
+  const [locationsBulkAction, setLocationsBulkAction] = useState<
+    "approve" | "reject" | "delete" | null
+  >(null);
+
   const statusOptions = [
     { value: "all", label: "All Status" },
     { value: "pending", label: "Pending" },
