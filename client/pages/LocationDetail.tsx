@@ -521,7 +521,20 @@ export default function LocationDetail() {
                   </Badge>
                 </div>
 
-                <h1 className="text-3xl font-bold mb-4">{location.name}</h1>
+                {isEditMode ? (
+                  <div className="mb-4">
+                    <Label htmlFor="edit-name" className="text-sm font-medium">Facility Name</Label>
+                    <Input
+                      id="edit-name"
+                      value={editFormData.name}
+                      onChange={(e) => handleFormChange("name", e.target.value)}
+                      className="text-3xl font-bold border-2 border-primary/30 focus:border-primary"
+                      placeholder="Enter facility name"
+                    />
+                  </div>
+                ) : (
+                  <h1 className="text-3xl font-bold mb-4">{location.name}</h1>
+                )}
 
                 <div className="flex items-center gap-2 mb-4">
                   {renderStars(reviews.length > 0 ? reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length : 0, "w-5 h-5")}
