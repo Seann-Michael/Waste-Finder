@@ -248,7 +248,7 @@ export function handleLocationsSearch(req: Request, res: Response) {
     const {
       zipCode,
       radius = "50",
-      facilityType,
+      locationType,
       debrisTypes,
       sortBy = "name",
     } = req.query;
