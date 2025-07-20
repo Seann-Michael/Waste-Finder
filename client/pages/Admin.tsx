@@ -399,6 +399,102 @@ export default function Admin() {
         </div>
       </main>
 
+      {/* Review Detail Dialog */}
+      <Dialog
+        open={!!selectedReview}
+        onOpenChange={() => setSelectedReview(null)}
+      >
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Review Details</DialogTitle>
+            <DialogDescription>
+              Review submitted for {selectedReview?.location} by{" "}
+              {selectedReview?.author} •{" "}
+              {selectedReview?.date &&
+                new Date(selectedReview.date).toLocaleDateString()}
+            </DialogDescription>
+          </DialogHeader>
+
+          {selectedReview && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <h4 className="font-medium">Author</h4>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedReview.author}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedReview.email}
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-medium">Rating</h4>
+                  <div className="flex items-center gap-2">
+                    <div className="flex">
+                      {Array.from({ length: selectedReview.rating }, (_, i) => (
+                        <div
+                          key={i}
+                          className="w-4 h-4 bg-yellow-400 rounded-full mr-1"
+                        ></div>
+                      ))}
+                    </div>
+                    <span className="text-sm">
+                      {selectedReview.rating}/5 stars
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="font-medium">Review Title</h4>
+                <p className="text-sm text-muted-foreground">
+                  {selectedReview.title}
+                </p>
+              </div>
+
+              <div>
+                <h4 className="font-medium">Review Content</h4>
+                <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                  {selectedReview.content}
+                </p>
+              </div>
+
+              <div>
+                <h4 className="font-medium">Location</h4>
+                <p className="text-sm text-muted-foreground">
+                  {selectedReview.location}
+                </p>
+              </div>
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setSelectedReview(null)}>
+              Close
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                // Handle rejection
+                setSelectedReview(null);
+              }}
+            >
+              <AlertTriangle className="w-4 h-4 mr-2" />
+              Reject Review
+            </Button>
+            <Button
+              onClick={() => {
+                // Handle approval
+                setSelectedReview(null);
+              }}
+            >
+              <CheckCircle className="w-4 h-4 mr-2" />
+              Approve Review
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {/* Suggestion Detail Dialog */}
       <Dialog
         open={!!selectedSuggestion}
