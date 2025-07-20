@@ -611,20 +611,54 @@ export default function AllLocations() {
 
   const filterAndSortLocations = () => {
     let filtered = [...locations];
+    let searchCoordinates: { lat: number; lng: number } | null = null;
 
-    // Filter by search query
+    // Handle zip code-based distance search
     if (searchQuery.trim()) {
-      const query = searchQuery.trim().toLowerCase();
-      filtered = filtered.filter(
-        (location) =>
-          location.name.toLowerCase().includes(query) ||
-          location.city.toLowerCase().includes(query) ||
-          location.state.toLowerCase().includes(query) ||
-          location.address.toLowerCase().includes(query) ||
-          location.zipCode.includes(searchQuery.trim()) ||
-          // Also search for partial zip code matches (e.g., "441" would match "44111")
-          (query.length >= 3 && location.zipCode.startsWith(query)),
-      );
+      const query = searchQuery.trim();
+
+      // Check if it's a zip code (5 digits)
+      if (/^\d{5}$/.test(query)) {
+        const coords = zipCodeLookup[query];
+        if (coords) {
+          searchCoordinates = coords;
+          // Calculate distances and filter within 50 miles
+          filtered = filtered
+            .map((location) => ({
+              ...location,
+              distance: calculateDistance(
+                coords.lat,
+                coords.lng,
+                location.latitude,
+                location.longitude,
+              ),
+            }))
+            .filter((location) => (location.distance || 0) <= 50);
+        } else {
+          // If zip code not in lookup, fall back to text search
+          filtered = filtered.filter(
+            (location) =>
+              location.name.toLowerCase().includes(query.toLowerCase()) ||
+              location.city.toLowerCase().includes(query.toLowerCase()) ||
+              location.state.toLowerCase().includes(query.toLowerCase()) ||
+              location.address.toLowerCase().includes(query.toLowerCase()) ||
+              location.zipCode.includes(query),
+          );
+        }
+      } else {
+        // Text-based search for non-zip queries
+        const queryLower = query.toLowerCase();
+        filtered = filtered.filter(
+          (location) =>
+            location.name.toLowerCase().includes(queryLower) ||
+            location.city.toLowerCase().includes(queryLower) ||
+            location.state.toLowerCase().includes(queryLower) ||
+            location.address.toLowerCase().includes(queryLower) ||
+            location.zipCode.includes(query) ||
+            // Also search for partial zip code matches (e.g., "441" would match "44111")
+            (query.length >= 3 && location.zipCode.startsWith(query)),
+        );
+      }
     }
 
     // Filter by facility type
