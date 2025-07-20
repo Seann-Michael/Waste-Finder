@@ -10,11 +10,11 @@ import { Checkbox } from "../components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import { Alert, AlertDescription } from "../components/ui/alert";
 import { Badge } from "../components/ui/badge";
-import { 
-  MapPin, 
-  Phone, 
-  Clock, 
-  DollarSign, 
+import {
+  MapPin,
+  Phone,
+  Clock,
+  DollarSign,
   CreditCard,
   Trash2,
   Building2,
@@ -155,7 +155,7 @@ export default function SuggestLocation() {
   const navigate = useNavigate();
   const { showSuccess, showError } = useToastNotifications();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showSuccess, setShowSuccessAlert] = useState(false);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
   const {
     register,
@@ -200,11 +200,11 @@ export default function SuggestLocation() {
 
   const onSubmit = async (data: SuggestLocationFormData) => {
     setIsSubmitting(true);
-    
+
     try {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
+
       // Save to localStorage for admin review
       const existingSuggestions = JSON.parse(localStorage.getItem("pendingSuggestions") || "[]");
       const newSuggestion = {
@@ -213,17 +213,17 @@ export default function SuggestLocation() {
         status: "pending",
         submittedAt: new Date().toISOString(),
       };
-      
+
       localStorage.setItem("pendingSuggestions", JSON.stringify([...existingSuggestions, newSuggestion]));
-      
+
       setShowSuccessAlert(true);
       showSuccess("Location suggestion submitted successfully! We'll review it and add it to our database.");
-      
+
       // Reset form or redirect after success
       setTimeout(() => {
         navigate("/all-locations");
       }, 2000);
-      
+
     } catch (error) {
       showError("Failed to submit suggestion. Please try again.");
     } finally {
@@ -241,13 +241,13 @@ export default function SuggestLocation() {
       setValue(fieldName, [...currentValues, value]);
     } else {
       setValue(fieldName, currentValues.filter((item) => item !== value));
-      
+
       // Clear pricing data if debris type is unchecked
       if (fieldName === "debrisTypes") {
         const currentPricing = watchedValues.debrisPricing || {};
         delete currentPricing[value];
         setValue("debrisPricing", currentPricing);
-        
+
         // Clear additional details if no debris types selected
         if (watchedValues.debrisTypes?.length === 1) {
           setValue("debrisAdditionalDetails", "");
@@ -260,7 +260,7 @@ export default function SuggestLocation() {
   const updateDebrisPricing = (debrisType: string, field: "price" | "priceDetails", value: string | number) => {
     const currentPricing = watchedValues.debrisPricing || {};
     const currentDebrisData = currentPricing[debrisType] || {};
-    
+
     setValue("debrisPricing", {
       ...currentPricing,
       [debrisType]: {
@@ -282,7 +282,7 @@ export default function SuggestLocation() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
-      
+
       <main className="flex-1">
         <div className="max-w-4xl mx-auto px-4 py-8">
           {/* Header */}
@@ -295,7 +295,7 @@ export default function SuggestLocation() {
             </div>
           </div>
 
-          {showSuccess && (
+          {showSuccessAlert && (
             <Alert className="mb-6 border-green-200 bg-green-50">
               <CheckCircle className="h-4 w-4 text-green-600" />
               <AlertDescription className="text-green-800">
@@ -644,7 +644,7 @@ export default function SuggestLocation() {
                         {...register("debrisAdditionalDetails")}
                       />
                     </div>
-                    
+
                     <div>
                       <Label htmlFor="additionalDebrisPricingDetails">Additional Debris Type Pricing Details</Label>
                       <Textarea
