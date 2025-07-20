@@ -458,7 +458,7 @@ export default function PreviewLocation() {
                   {isEditing ? (
                     <div className="space-y-2 mt-1">
                       <Input
-                        value={currentLocation.details.address}
+                        value={currentLocation.details?.address || ""}
                         onChange={(e) =>
                           handleFieldChange("details.address", e.target.value)
                         }
@@ -466,14 +466,14 @@ export default function PreviewLocation() {
                       />
                       <div className="grid grid-cols-3 gap-2">
                         <Input
-                          value={currentLocation.details.city}
+                          value={currentLocation.details?.city || ""}
                           onChange={(e) =>
                             handleFieldChange("details.city", e.target.value)
                           }
                           placeholder="City"
                         />
                         <Select
-                          value={currentLocation.details.state}
+                          value={currentLocation.details?.state || ""}
                           onValueChange={(value) =>
                             handleFieldChange("details.state", value)
                           }
@@ -535,7 +535,7 @@ export default function PreviewLocation() {
                           </SelectContent>
                         </Select>
                         <Input
-                          value={currentLocation.details.zipCode}
+                          value={currentLocation.details?.zipCode || ""}
                           onChange={(e) =>
                             handleFieldChange("details.zipCode", e.target.value)
                           }
@@ -545,11 +545,12 @@ export default function PreviewLocation() {
                     </div>
                   ) : (
                     <p className="text-sm">
-                      {currentLocation.details.address}
+                      {currentLocation.details?.address ||
+                        "No address provided"}
                       <br />
-                      {currentLocation.details.city},{" "}
-                      {currentLocation.details.state}{" "}
-                      {currentLocation.details.zipCode}
+                      {currentLocation.details?.city || ""},{" "}
+                      {currentLocation.details?.state || ""}{" "}
+                      {currentLocation.details?.zipCode || ""}
                     </p>
                   )}
                 </div>
