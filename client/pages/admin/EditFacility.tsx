@@ -171,9 +171,6 @@ export default function EditFacility() {
       if (!facility) {
         throw new Error('Facility not found');
       }
-        name: "Green Valley Municipal Landfill",
-        address: "1234 Waste Management Drive",
-        city: "Springfield",
         state: "IL",
         zipCode: "62701",
         phone: "(555) 123-4567",
