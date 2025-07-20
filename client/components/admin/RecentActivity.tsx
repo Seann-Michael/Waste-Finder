@@ -50,8 +50,8 @@ interface ActivityItem {
 const mockActivities: ActivityItem[] = [
   {
     id: "1",
-    type: "facility_created",
-    description: "New facility added to database",
+    type: "location_created",
+    description: "New location added to database",
     user: "Admin",
     entity: "Green Valley Landfill",
     timestamp: "2024-01-20T14:30:00Z",
@@ -68,8 +68,8 @@ const mockActivities: ActivityItem[] = [
   },
   {
     id: "3",
-    type: "facility_updated",
-    description: "Facility information updated",
+    type: "location_updated",
+    description: "Location information updated",
     user: "Admin",
     entity: "Capitol Construction Landfill",
     timestamp: "2024-01-20T12:15:00Z",
@@ -86,15 +86,7 @@ const mockActivities: ActivityItem[] = [
   },
   {
     id: "5",
-    type: "user_registered",
-    description: "New user account created",
-    user: "mike@email.com",
-    timestamp: "2024-01-20T10:45:00Z",
-    status: "success",
-  },
-  {
-    id: "6",
-    type: "facility_updated",
+    type: "location_updated",
     description: "Operating hours updated",
     user: "Admin",
     entity: "Downtown Transfer Station",
@@ -102,7 +94,7 @@ const mockActivities: ActivityItem[] = [
     status: "success",
   },
   {
-    id: "7",
+    id: "6",
     type: "review_submitted",
     description: "Review submitted for moderation",
     user: "Jennifer R.",
@@ -111,11 +103,11 @@ const mockActivities: ActivityItem[] = [
     status: "pending",
   },
   {
-    id: "8",
-    type: "facility_created",
+    id: "7",
+    type: "location_created",
     description: "Bulk upload completed",
     user: "Admin",
-    entity: "15 new facilities",
+    entity: "15 new locations",
     timestamp: "2024-01-19T16:30:00Z",
     status: "success",
   },
