@@ -19,103 +19,41 @@ import {
 import { Location } from "@shared/api";
 import { Search, SlidersHorizontal, MapPin, Loader2 } from "lucide-react";
 
-// Mock geocoding service for US ZIP codes
-const getZipCodeCoordinates = (
-  zipCode: string,
-): { lat: number; lng: number } | null => {
-  // Known ZIP codes for accuracy
-  const knownZipCodes: Record<string, { lat: number; lng: number }> = {
-    // Cleveland, OH area
-    "44035": { lat: 41.2367, lng: -81.8552 }, // Elyria, OH
-    "44102": { lat: 41.4919, lng: -81.7357 }, // Cleveland East
-    "44111": { lat: 41.4458, lng: -81.7799 }, // Cleveland West
-    "44113": { lat: 41.4897, lng: -81.6934 }, // Cleveland Downtown
-    "44129": { lat: 41.3784, lng: -81.729 }, // Parma
-    "44135": { lat: 41.395, lng: -81.763 }, // Cleveland Southwest
-
-    // Springfield IL area
-    "62701": { lat: 39.7817, lng: -89.6501 },
-    "62702": { lat: 39.7567, lng: -89.6301 },
-    "62703": { lat: 39.7317, lng: -89.6701 },
-
-    // Other cities
-    "60601": { lat: 41.8781, lng: -87.6298 }, // Chicago
-    "10001": { lat: 40.7505, lng: -73.9934 }, // NYC
+interface LocationSearchResponse {
+  success: boolean;
+  data: Location[];
+  total: number;
+  searchLocation?: {
+    zipCode: string;
+    lat: number;
+    lng: number;
+    city: string;
+    state: string;
+    radius: number;
   };
-
-  if (knownZipCodes[zipCode]) {
-    return knownZipCodes[zipCode];
-  }
-
-  // Estimate based on ZIP prefix for unknown codes
-  const prefix = zipCode.charAt(0);
-  const regionMap: Record<string, { lat: number; lng: number }> = {
-    "0": { lat: 42.3601, lng: -71.0589 }, // New England
-    "1": { lat: 40.7589, lng: -73.9851 }, // NY/NJ/PA
-    "2": { lat: 38.9072, lng: -77.0369 }, // DC/MD/VA
-    "3": { lat: 33.749, lng: -84.388 }, // Southeast
-    "4": { lat: 41.4993, lng: -82.2907 }, // OH/IN/KY/MI
-    "5": { lat: 44.2619, lng: -96.7853 }, // Upper Midwest
-    "6": { lat: 41.8781, lng: -87.6298 }, // IL/KS/MO/NE
-    "7": { lat: 31.9686, lng: -99.9018 }, // South Central
-    "8": { lat: 39.7392, lng: -104.9903 }, // Mountain West
-    "9": { lat: 36.7783, lng: -119.4179 }, // West Coast
-  };
-
-  const region = regionMap[prefix];
-  if (region) {
-    const zipNum = parseInt(zipCode);
-    const latVar = ((zipNum % 1000) - 500) * 0.002;
-    const lngVar = ((zipNum % 1000) - 500) * 0.003;
-
-    return {
-      lat: region.lat + latVar,
-      lng: region.lng + lngVar,
-    };
-  }
-
-  return null;
-};
-
-// Calculate distance using Haversine formula
-const calculateDistance = (
-  lat1: number,
-  lng1: number,
-  lat2: number,
-  lng2: number,
-): number => {
-  const R = 3959; // Earth's radius in miles
-  const dLat = ((lat2 - lat1) * Math.PI) / 180;
-  const dLng = ((lng2 - lng1) * Math.PI) / 180;
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLng / 2) *
-      Math.sin(dLng / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-};
+  message: string;
+}
 
 export default function AllLocations() {
   const [searchParams] = useSearchParams();
   const [locations, setLocations] = useState<Location[]>([]);
-  const [filteredLocations, setFilteredLocations] = useState<Location[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchRadius, setSearchRadius] = useState(50);
   const [sortBy, setSortBy] = useState("distance");
   const [filterType, setFilterType] = useState("all");
   const [selectedDebrisTypes, setSelectedDebrisTypes] = useState<string[]>([]);
+  const [searchLocation, setSearchLocation] = useState<
+    LocationSearchResponse["searchLocation"] | null
+  >(null);
+  const [searchMessage, setSearchMessage] = useState("");
 
   useEffect(() => {
-    loadAllLocations();
-  }, []);
-
-  useEffect(() => {
-    // Get search params
+    // Get search params and update state
     const zipFromParams = searchParams.get("zipCode");
     const radiusFromParams = searchParams.get("radius");
+    const facilityTypeFromParams = searchParams.get("facilityTypes");
+    const debrisTypesFromParams = searchParams.get("debrisTypes");
 
     if (zipFromParams) {
       setSearchQuery(zipFromParams);
@@ -123,446 +61,69 @@ export default function AllLocations() {
     if (radiusFromParams) {
       setSearchRadius(parseInt(radiusFromParams, 10) || 50);
     }
+    if (facilityTypeFromParams) {
+      setFilterType(facilityTypeFromParams);
+    }
+    if (debrisTypesFromParams) {
+      setSelectedDebrisTypes(debrisTypesFromParams.split(","));
+    }
   }, [searchParams]);
 
   useEffect(() => {
-    if (locations.length > 0) {
-      filterAndSortLocations();
-    }
-  }, [
-    locations,
-    searchQuery,
-    searchRadius,
-    sortBy,
-    filterType,
-    selectedDebrisTypes,
-  ]);
+    // Load locations whenever search parameters change
+    loadLocations();
+  }, [searchQuery, searchRadius, filterType, selectedDebrisTypes, sortBy]);
 
-  const loadAllLocations = async () => {
+  const loadLocations = async () => {
     setIsLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Build query parameters
+      const params = new URLSearchParams();
 
-      const mockLocations: Location[] = [
-        {
-          id: "cleveland-1",
-          name: "Cleveland West Municipal Landfill",
-          address: "15600 Triskett Road",
-          city: "Cleveland",
-          state: "OH",
-          zipCode: "44111",
-          phone: "(216) 664-3060",
-          email: "waste@clevelandohio.gov",
-          website: "https://www.clevelandohio.gov",
-          latitude: 41.4458,
-          longitude: -81.7799,
-          facilityType: "landfill",
-          paymentTypes: [
-            { id: "1", name: "Cash" },
-            { id: "2", name: "Credit Card" },
-            { id: "3", name: "Check" },
-          ],
-          debrisTypes: [
-            {
-              id: "1",
-              name: "General Household Waste",
-              category: "general",
-              pricePerTon: 65,
-            },
-            {
-              id: "2",
-              name: "Yard Waste",
-              category: "general",
-              pricePerTon: 35,
-            },
-            {
-              id: "3",
-              name: "Appliances",
-              category: "general",
-              pricePerLoad: 25,
-            },
-            {
-              id: "4",
-              name: "Electronics",
-              category: "recyclable",
-              priceNote: "Free drop-off",
-            },
-          ],
-          operatingHours: [
-            {
-              dayOfWeek: 1,
-              openTime: "07:00",
-              closeTime: "16:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 2,
-              openTime: "07:00",
-              closeTime: "16:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 3,
-              openTime: "07:00",
-              closeTime: "16:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 4,
-              openTime: "07:00",
-              closeTime: "16:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 5,
-              openTime: "07:00",
-              closeTime: "16:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 6,
-              openTime: "08:00",
-              closeTime: "14:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 0,
-              openTime: "00:00",
-              closeTime: "00:00",
-              isClosed: true,
-            },
-          ],
-          notes: "Cleveland's primary municipal waste facility.",
-          rating: 4.2,
-          reviewCount: 89,
-          isActive: true,
-          createdAt: "2024-01-01T00:00:00Z",
-          updatedAt: "2024-01-15T00:00:00Z",
-        },
-        {
-          id: "cleveland-2",
-          name: "West Side Recycling Center",
-          address: "3200 W 65th Street",
-          city: "Cleveland",
-          state: "OH",
-          zipCode: "44111",
-          phone: "(216) 961-4700",
-          latitude: 41.4419,
-          longitude: -81.7879,
-          facilityType: "transfer_station",
-          paymentTypes: [
-            { id: "1", name: "Cash" },
-            { id: "2", name: "Credit Card" },
-            { id: "3", name: "Check" },
-          ],
-          debrisTypes: [
-            {
-              id: "1",
-              name: "General Household Waste",
-              category: "general",
-              pricePerTon: 60,
-            },
-            {
-              id: "4",
-              name: "Electronics",
-              category: "recyclable",
-              priceNote: "Free drop-off",
-            },
-            {
-              id: "6",
-              name: "Recyclables",
-              category: "recyclable",
-              priceNote: "Free drop-off",
-            },
-          ],
-          operatingHours: [
-            {
-              dayOfWeek: 1,
-              openTime: "08:00",
-              closeTime: "17:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 2,
-              openTime: "08:00",
-              closeTime: "17:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 3,
-              openTime: "08:00",
-              closeTime: "17:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 4,
-              openTime: "08:00",
-              closeTime: "17:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 5,
-              openTime: "08:00",
-              closeTime: "17:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 6,
-              openTime: "09:00",
-              closeTime: "14:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 0,
-              openTime: "00:00",
-              closeTime: "00:00",
-              isClosed: true,
-            },
-          ],
-          notes: "Specialized recycling center.",
-          rating: 4.6,
-          reviewCount: 142,
-          isActive: true,
-          createdAt: "2024-01-01T00:00:00Z",
-          updatedAt: "2024-01-18T00:00:00Z",
-        },
-        {
-          id: "cleveland-3",
-          name: "Parma Transfer Station",
-          address: "6161 Ackley Road",
-          city: "Parma",
-          state: "OH",
-          zipCode: "44129",
-          phone: "(440) 885-8181",
-          latitude: 41.3784,
-          longitude: -81.729,
-          facilityType: "transfer_station",
-          paymentTypes: [
-            { id: "1", name: "Cash" },
-            { id: "2", name: "Credit Card" },
-          ],
-          debrisTypes: [
-            {
-              id: "1",
-              name: "General Waste",
-              category: "general",
-              pricePerTon: 55,
-            },
-            {
-              id: "5",
-              name: "Construction Debris",
-              category: "construction",
-              pricePerTon: 85,
-            },
-          ],
-          operatingHours: [
-            {
-              dayOfWeek: 1,
-              openTime: "06:00",
-              closeTime: "18:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 2,
-              openTime: "06:00",
-              closeTime: "18:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 3,
-              openTime: "06:00",
-              closeTime: "18:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 4,
-              openTime: "06:00",
-              closeTime: "18:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 5,
-              openTime: "06:00",
-              closeTime: "18:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 6,
-              openTime: "07:00",
-              closeTime: "15:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 0,
-              openTime: "00:00",
-              closeTime: "00:00",
-              isClosed: true,
-            },
-          ],
-          rating: 3.8,
-          reviewCount: 67,
-          isActive: true,
-          createdAt: "2024-01-01T00:00:00Z",
-          updatedAt: "2024-01-10T00:00:00Z",
-        },
-        {
-          id: "springfield-1",
-          name: "Green Valley Municipal Landfill",
-          address: "1234 Waste Management Drive",
-          city: "Springfield",
-          state: "IL",
-          zipCode: "62701",
-          phone: "(555) 123-4567",
-          latitude: 39.7817,
-          longitude: -89.6501,
-          facilityType: "landfill",
-          paymentTypes: [
-            { id: "1", name: "Cash" },
-            { id: "2", name: "Credit Card" },
-            { id: "3", name: "Check" },
-          ],
-          debrisTypes: [
-            {
-              id: "1",
-              name: "General Waste",
-              category: "general",
-              pricePerTon: 60,
-            },
-            {
-              id: "2",
-              name: "Yard Waste",
-              category: "general",
-              pricePerTon: 30,
-            },
-          ],
-          operatingHours: [
-            {
-              dayOfWeek: 1,
-              openTime: "07:00",
-              closeTime: "17:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 2,
-              openTime: "07:00",
-              closeTime: "17:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 3,
-              openTime: "07:00",
-              closeTime: "17:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 4,
-              openTime: "07:00",
-              closeTime: "17:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 5,
-              openTime: "07:00",
-              closeTime: "17:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 6,
-              openTime: "08:00",
-              closeTime: "15:00",
-              isClosed: false,
-            },
-            {
-              dayOfWeek: 0,
-              openTime: "00:00",
-              closeTime: "00:00",
-              isClosed: true,
-            },
-          ],
-          rating: 4.5,
-          reviewCount: 127,
-          isActive: true,
-          createdAt: "2024-01-01T00:00:00Z",
-          updatedAt: "2024-01-15T00:00:00Z",
-        },
-      ];
+      if (searchQuery && /^\d{5}$/.test(searchQuery)) {
+        params.set("zipCode", searchQuery);
+        params.set("radius", searchRadius.toString());
+      }
 
-      setLocations(mockLocations);
+      if (filterType && filterType !== "all") {
+        params.set("facilityType", filterType);
+      }
+
+      if (selectedDebrisTypes.length > 0) {
+        params.set("debrisTypes", selectedDebrisTypes.join(","));
+      }
+
+      if (sortBy) {
+        params.set("sortBy", sortBy);
+      }
+
+      // Call backend API
+      const response = await fetch(`/api/locations?${params.toString()}`);
+      const data: LocationSearchResponse = await response.json();
+
+      if (data.success) {
+        setLocations(data.data);
+        setSearchLocation(data.searchLocation || null);
+        setSearchMessage(data.message);
+      } else {
+        console.error("API error:", data);
+        setLocations([]);
+        setSearchLocation(null);
+        setSearchMessage("Error loading locations");
+      }
     } catch (error) {
       console.error("Error loading locations:", error);
+      setLocations([]);
+      setSearchLocation(null);
+      setSearchMessage("Error loading locations");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const filterAndSortLocations = () => {
-    let filtered = [...locations];
-
-    // ZIP code distance search
-    if (searchQuery.trim() && /^\d{5}$/.test(searchQuery.trim())) {
-      const coords = getZipCodeCoordinates(searchQuery.trim());
-
-      if (coords) {
-        // Calculate distances and filter by radius
-        filtered = filtered
-          .map((location) => ({
-            ...location,
-            distance: calculateDistance(
-              coords.lat,
-              coords.lng,
-              location.latitude,
-              location.longitude,
-            ),
-          }))
-          .filter((location) => (location.distance || 0) <= searchRadius)
-          .sort((a, b) => (a.distance || 0) - (b.distance || 0)); // Sort by distance
-      }
-    } else if (searchQuery.trim()) {
-      // Text search fallback
-      const query = searchQuery.trim().toLowerCase();
-      filtered = filtered.filter(
-        (location) =>
-          location.name.toLowerCase().includes(query) ||
-          location.city.toLowerCase().includes(query) ||
-          location.state.toLowerCase().includes(query) ||
-          location.zipCode.includes(searchQuery.trim()),
-      );
-    }
-
-    // Apply other filters
-    if (filterType !== "all") {
-      filtered = filtered.filter(
-        (location) => location.facilityType === filterType,
-      );
-    }
-
-    if (selectedDebrisTypes.length > 0) {
-      filtered = filtered.filter((location) =>
-        selectedDebrisTypes.some((selectedType) =>
-          location.debrisTypes.some((debris) =>
-            debris.name.toLowerCase().includes(selectedType.toLowerCase()),
-          ),
-        ),
-      );
-    }
-
-    // Sort if not already sorted by distance
-    if (!searchQuery.trim() || !/^\d{5}$/.test(searchQuery.trim())) {
-      filtered.sort((a, b) => {
-        switch (sortBy) {
-          case "name":
-            return a.name.localeCompare(b.name);
-          case "rating":
-            return b.rating - a.rating;
-          case "city":
-            return a.city.localeCompare(b.city);
-          default:
-            return 0;
-        }
-      });
-    }
-
-    setFilteredLocations(filtered);
+  // Handle search input changes (for manual text input, not URL params)
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
   };
 
   const availableDebrisTypes = [
@@ -608,21 +169,14 @@ export default function AllLocations() {
           <div className="mb-8">
             <h1 className="text-3xl font-bold mb-4">All Facilities</h1>
             <p className="text-muted-foreground">
-              Browse our complete database of {locations.length} waste disposal
-              facilities
-              {searchQuery &&
-              /^\d{5}$/.test(searchQuery) &&
-              getZipCodeCoordinates(searchQuery)
-                ? ` • Showing ${filteredLocations.length} facilities within ${searchRadius} miles of ${searchQuery}`
-                : searchQuery
-                  ? ` • Showing ${filteredLocations.length} results for "${searchQuery}"`
-                  : ` • Showing all ${filteredLocations.length} facilities`}
+              {searchMessage ||
+                `Browse our complete database of waste disposal facilities`}
             </p>
           </div>
 
           {/* Map Section */}
           <div className="mb-8">
-            <MapPlaceholder locations={filteredLocations} />
+            <MapPlaceholder locations={locations} />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -646,7 +200,7 @@ export default function AllLocations() {
                       <Input
                         placeholder="Name, city, or ZIP code"
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onChange={(e) => handleSearchChange(e.target.value)}
                         className="pl-10"
                       />
                     </div>
@@ -713,30 +267,32 @@ export default function AllLocations() {
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-4">
                   <span className="text-sm text-muted-foreground">
-                    {filteredLocations.length} facilities found
+                    {locations.length} facilities found
                   </span>
-                  {searchQuery && /^\d{5}$/.test(searchQuery) && (
+                  {searchLocation && (
                     <Badge variant="outline">
-                      Within {searchRadius} miles of {searchQuery}
+                      Within {searchLocation.radius} miles of{" "}
+                      {searchLocation.zipCode}
                     </Badge>
                   )}
                 </div>
               </div>
 
-              {filteredLocations.length === 0 ? (
+              {locations.length === 0 ? (
                 <div className="text-center py-16">
                   <MapPin className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
                   <h3 className="text-lg font-semibold mb-2">
                     No facilities found
                   </h3>
                   <p className="text-muted-foreground">
-                    Try adjusting your search criteria or expanding your search
-                    radius.
+                    {searchQuery && /^\d{5}$/.test(searchQuery)
+                      ? "No facilities found within the specified radius. Try expanding your search radius or try a different ZIP code."
+                      : "Try adjusting your search criteria or enter a ZIP code for distance-based search."}
                   </p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 gap-6">
-                  {filteredLocations.map((location) => (
+                  {locations.map((location) => (
                     <LocationCard key={location.id} location={location} />
                   ))}
                 </div>
