@@ -297,16 +297,20 @@ export default function AdminSettings() {
   const handleRemoveCustomAd = (adId: string) => {
     setAdSettings((prev) => ({
       ...prev,
-      customAds: prev.customAds.filter((ad: any) => ad.id !== adId),
+      customAds: Array.isArray(prev.customAds)
+        ? prev.customAds.filter((ad) => ad.id !== adId)
+        : [],
     }));
   };
 
   const handleToggleCustomAd = (adId: string) => {
     setAdSettings((prev) => ({
       ...prev,
-      customAds: prev.customAds.map((ad: any) =>
-        ad.id === adId ? { ...ad, isActive: !ad.isActive } : ad,
-      ),
+      customAds: Array.isArray(prev.customAds)
+        ? prev.customAds.map((ad) =>
+            ad.id === adId ? { ...ad, isActive: !ad.isActive } : ad,
+          )
+        : [],
     }));
   };
 
