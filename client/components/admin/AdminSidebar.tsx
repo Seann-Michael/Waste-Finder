@@ -13,6 +13,7 @@ import {
   Home,
   Database,
   DollarSign,
+  PenTool,
 } from "lucide-react";
 
 const adminNavItems = [
@@ -40,6 +41,11 @@ const adminNavItems = [
     title: "Marketing",
     href: "/admin/marketing",
     icon: DollarSign,
+  },
+  {
+    title: "Blog Posts",
+    href: "/admin/blog",
+    icon: PenTool,
   },
   {
     title: "Settings",
