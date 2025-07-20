@@ -742,11 +742,63 @@ export default function SuggestionsTable() {
                   {filteredEdits.length} suggested edits
                 </div>
 
+                {/* Bulk Actions for Edits */}
+                {selectedEdits.length > 0 && (
+                  <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg">
+                    <span className="text-sm font-medium">
+                      {selectedEdits.length} selected
+                    </span>
+                    <Button
+                      size="sm"
+                      onClick={() => handleEditsBulkAction("approve")}
+                      className="bg-green-600 hover:bg-green-700"
+                    >
+                      <CheckCircle className="w-4 h-4 mr-1" />
+                      Approve
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={() => handleEditsBulkAction("reject")}
+                    >
+                      <AlertTriangle className="w-4 h-4 mr-1" />
+                      Reject
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleEditsBulkAction("delete")}
+                    >
+                      <Trash2 className="w-4 h-4 mr-1" />
+                      Delete
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setSelectedEdits([])}
+                    >
+                      Clear Selection
+                    </Button>
+                  </div>
+                )}
+
                 {/* Edits Table */}
                 <div className="border rounded-lg overflow-x-auto">
                   <Table>
                     <TableHeader>
                       <TableRow>
+                        <TableHead className="w-12">
+                          <Checkbox
+                            checked={
+                              selectedEdits.length ===
+                                editsCurrentItems.length &&
+                              editsCurrentItems.length > 0
+                            }
+                            onCheckedChange={(checked) =>
+                              handleSelectAllEdits(checked as boolean)
+                            }
+                          />
+                        </TableHead>
                         <TableHead
                           className="cursor-pointer hover:bg-muted/50"
                           onClick={() => handleEditsSort("locationName")}
