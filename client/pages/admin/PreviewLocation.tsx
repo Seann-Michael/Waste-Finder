@@ -149,7 +149,7 @@ export default function PreviewLocation() {
       setEditedLocation({
         ...editedLocation,
         details: {
-          ...editedLocation.details,
+          ...(editedLocation.details || {}),
           [detailField]: value,
         },
       });
