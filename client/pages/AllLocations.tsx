@@ -157,10 +157,21 @@ export default function AllLocations() {
     });
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <Header />
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="flex-1 relative">
+        {/* Left Sidebar Ad */}
+        <div className="hidden xl:block fixed left-4 top-1/2 transform -translate-y-1/2 w-32 z-10">
+          <AdSense placement="search-results-left" className="sticky top-32" />
+        </div>
+
+        {/* Right Sidebar Ad */}
+        <div className="hidden xl:block fixed right-4 top-1/2 transform -translate-y-1/2 w-32 z-10">
+          <AdSense placement="search-results-right" className="sticky top-32" />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 xl:px-40 py-8">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-4">
