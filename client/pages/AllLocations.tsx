@@ -699,8 +699,8 @@ export default function AllLocations() {
                     </label>
                     <MultiSelectInput
                       options={availableDebrisTypes}
-                      value={selectedDebrisTypes}
-                      onChange={setSelectedDebrisTypes}
+                      selectedValues={selectedDebrisTypes}
+                      onSelectionChange={setSelectedDebrisTypes}
                       placeholder="Select debris types"
                     />
                   </div>
