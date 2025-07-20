@@ -22,7 +22,6 @@
  */
 
 import { Request, Response } from "express";
-import { authenticateToken, requirePermission } from "./auth";
 
 /**
  * Calculates distance between two coordinates using Haversine formula
@@ -54,10 +53,7 @@ function calculateDistance(
 /**
  * Validates location data for creation/update
  */
-function validateLocationData(data: any): {
-  isValid: boolean;
-  errors: string[];
-} {
+function validateLocationData(data: any): { isValid: boolean; errors: string[] } {
   const errors: string[] = [];
 
   // Required fields validation
@@ -114,20 +110,12 @@ function validateLocationData(data: any): {
   }
 
   // Payment types validation
-  if (
-    !data.paymentTypes ||
-    !Array.isArray(data.paymentTypes) ||
-    data.paymentTypes.length === 0
-  ) {
+  if (!data.paymentTypes || !Array.isArray(data.paymentTypes) || data.paymentTypes.length === 0) {
     errors.push("At least one payment type is required");
   }
 
   // Debris types validation
-  if (
-    !data.debrisTypes ||
-    !Array.isArray(data.debrisTypes) ||
-    data.debrisTypes.length === 0
-  ) {
+  if (!data.debrisTypes || !Array.isArray(data.debrisTypes) || data.debrisTypes.length === 0) {
     errors.push("At least one debris type is required");
   }
 
@@ -312,7 +300,7 @@ const mockLocations = [
     state: "IL",
     zipCode: "62704",
     phone: "(555) 456-7890",
-    latitude: 39.789,
+    latitude: 39.7890,
     longitude: -89.6234,
     locationType: "transfer_station",
     paymentTypes: [
@@ -521,10 +509,7 @@ export function handleAllLocations(req: Request, res: Response) {
 
     // Apply pagination
     const pageNum = Math.max(1, parseInt(page as string) || 1);
-    const limitNum = Math.min(
-      100,
-      Math.max(1, parseInt(limit as string) || 50),
-    );
+    const limitNum = Math.min(100, Math.max(1, parseInt(limit as string) || 50));
     const startIndex = (pageNum - 1) * limitNum;
     const endIndex = startIndex + limitNum;
 
