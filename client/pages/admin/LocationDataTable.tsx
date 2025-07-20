@@ -126,6 +126,24 @@ export default function LocationDataTable() {
   const [sortField, setSortField] = useState<SortField>("name");
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
   const [pageSize, setPageSize] = useState(25);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadLocations = async () => {
+      setIsLoading(true);
+      try {
+        const data = await fetchLocations();
+        setLocations(data);
+        setFilteredLocations(data);
+      } catch (error) {
+        console.error("Failed to load locations:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadLocations();
+  }, []);
 
   const typeOptions = [
     { value: "all", label: "All Types" },
