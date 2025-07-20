@@ -238,6 +238,55 @@ export default function AdminSettings() {
     alert("Code settings updated successfully!");
   };
 
+  const handleSaveAdSettings = () => {
+    localStorage.setItem("adSettings", JSON.stringify(adSettings));
+    console.log("Saving ad settings:", adSettings);
+    alert("Advertisement settings updated successfully!");
+  };
+
+  const handleAddCustomAd = () => {
+    if (!newCustomAd.title || !newCustomAd.content) {
+      alert("Please fill in title and content for the custom ad.");
+      return;
+    }
+
+    const customAd = {
+      id: Date.now().toString(),
+      ...newCustomAd,
+      isActive: true,
+    };
+
+    setAdSettings((prev) => ({
+      ...prev,
+      customAds: [...prev.customAds, customAd],
+    }));
+
+    setNewCustomAd({
+      title: "",
+      content: "",
+      imageUrl: "",
+      linkUrl: "",
+      placement: "all",
+      priority: 1,
+    });
+  };
+
+  const handleRemoveCustomAd = (adId: string) => {
+    setAdSettings((prev) => ({
+      ...prev,
+      customAds: prev.customAds.filter((ad: any) => ad.id !== adId),
+    }));
+  };
+
+  const handleToggleCustomAd = (adId: string) => {
+    setAdSettings((prev) => ({
+      ...prev,
+      customAds: prev.customAds.map((ad: any) =>
+        ad.id === adId ? { ...ad, isActive: !ad.isActive } : ad,
+      ),
+    }));
+  };
+
   const handleSaveWebsiteSettings = () => {
     console.log("Saving website settings:", websiteSettings);
     alert("Website settings updated successfully!");
