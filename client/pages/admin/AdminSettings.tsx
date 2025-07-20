@@ -220,6 +220,11 @@ export default function AdminSettings() {
     alert("Content settings updated successfully!");
   };
 
+  const handleSaveMarketingSettings = () => {
+    console.log("Saving marketing settings:", marketingSettings);
+    alert("Marketing settings updated successfully!");
+  };
+
   const handleSaveCodeSettings = () => {
     console.log("Saving code settings:", codeSettings);
     alert("Code settings updated successfully!");
