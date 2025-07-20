@@ -74,8 +74,10 @@ interface LocationFormData {
   longitude: string;
   locationType: "landfill" | "transfer_station" | "construction_landfill";
   paymentTypes: string[];
+  additionalPaymentDetails?: string;
   debrisTypes: string[];
-  notes?: string;
+  debrisPricing: Record<string, { pricePerTon?: number; pricePerLoad?: number; priceNote?: string; }>;
+  additionalLocationDetails?: string;
   isActive: boolean;
 }
 
@@ -91,11 +93,9 @@ const LOCATION_TYPES = [
 
 const PAYMENT_TYPES = [
   "Cash",
-  "Credit Card",
-  "Debit Card",
   "Check",
-  "ACH Transfer",
-  "Corporate Account",
+  "Credit/Debit",
+  "New Terms",
 ] as const;
 
 const DEBRIS_TYPES = [
@@ -197,8 +197,10 @@ export default function AddLocation() {
       longitude: "",
       locationType: "landfill",
       paymentTypes: [],
+      additionalPaymentDetails: "",
       debrisTypes: [],
-      notes: "",
+      debrisPricing: {},
+      additionalLocationDetails: "",
       isActive: true,
     },
   });
@@ -263,11 +265,14 @@ export default function AddLocation() {
           id: (index + 1).toString(),
           name: type,
         })),
+        additionalPaymentDetails: data.additionalPaymentDetails,
         debrisTypes: data.debrisTypes.map((type, index) => ({
           id: (index + 1).toString(),
           name: type,
           category: "general", // Default category, could be made configurable
+          ...(data.debrisPricing[type] || {}),
         })),
+        notes: data.additionalLocationDetails,
         // Add default operating hours (Monday-Friday 7AM-5PM)
         operatingHours: [
           {
@@ -571,6 +576,59 @@ export default function AddLocation() {
                   )}
                 </div>
               </div>
+
+              <div>
+                <Label htmlFor="googleBusinessUrl">Google Business URL</Label>
+                <Input
+                  id="googleBusinessUrl"
+                  {...register("googleBusinessUrl")}
+                  placeholder="https://maps.google.com/maps/place/..."
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="latitude">Latitude *</Label>
+                  <Input
+                    id="latitude"
+                    {...register("latitude", {
+                      required: "Latitude is required",
+                      pattern: {
+                        value: /^-?([1-8]?\d(\.\d+)?|90(\.0+)?)$/,
+                        message: "Invalid latitude format",
+                      },
+                    })}
+                    placeholder="e.g., 39.7817"
+                    className={errors.latitude ? "border-red-500" : ""}
+                  />
+                  {errors.latitude && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.latitude.message}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <Label htmlFor="longitude">Longitude *</Label>
+                  <Input
+                    id="longitude"
+                    {...register("longitude", {
+                      required: "Longitude is required",
+                      pattern: {
+                        value: /^-?((1[0-7]\d)|([1-9]?\d))(\.\d+)?$/,
+                        message: "Invalid longitude format",
+                      },
+                    })}
+                    placeholder="e.g., -89.6501"
+                    className={errors.longitude ? "border-red-500" : ""}
+                  />
+                  {errors.longitude && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.longitude.message}
+                    </p>
+                  )}
+                </div>
+              </div>
             </CardContent>
           </Card>
 
@@ -639,31 +697,111 @@ export default function AddLocation() {
               </div>
 
               <div>
+                <Label htmlFor="additionalPaymentDetails">Additional Payment Details</Label>
+                <Textarea
+                  id="additionalPaymentDetails"
+                  {...register("additionalPaymentDetails")}
+                  placeholder="Any additional payment information, terms, or special arrangements..."
+                  rows={3}
+                />
+              </div>
+
+              <div>
                 <Label className="text-base font-medium">
-                  Accepted Debris Types *
+                  Accepted Debris Types & Pricing *
                 </Label>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
+                <div className="space-y-4 mt-2">
                   {DEBRIS_TYPES.map((debris) => (
-                    <div key={debris} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={`debris-${debris}`}
-                        checked={
-                          watchedValues.debrisTypes?.includes(debris) || false
-                        }
-                        onCheckedChange={(checked) =>
-                          handleArrayFieldChange(
-                            "debrisTypes",
-                            debris,
-                            checked as boolean,
-                          )
-                        }
-                      />
-                      <Label
-                        htmlFor={`debris-${debris}`}
-                        className="text-sm font-normal cursor-pointer"
-                      >
-                        {debris}
-                      </Label>
+                    <div key={debris} className="border rounded-lg p-4">
+                      <div className="flex items-center space-x-2 mb-3">
+                        <Checkbox
+                          id={`debris-${debris}`}
+                          checked={
+                            watchedValues.debrisTypes?.includes(debris) || false
+                          }
+                          onCheckedChange={(checked) => {
+                            handleArrayFieldChange(
+                              "debrisTypes",
+                              debris,
+                              checked as boolean,
+                            );
+                            if (!checked) {
+                              // Clear pricing data when unchecked
+                              const currentPricing = watchedValues.debrisPricing || {};
+                              delete currentPricing[debris];
+                              setValue("debrisPricing", currentPricing);
+                            }
+                          }}
+                        />
+                        <Label
+                          htmlFor={`debris-${debris}`}
+                          className="text-sm font-medium cursor-pointer"
+                        >
+                          {debris}
+                        </Label>
+                      </div>
+
+                      {watchedValues.debrisTypes?.includes(debris) && (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 ml-6">
+                          <div>
+                            <Label className="text-xs">Price per Ton ($)</Label>
+                            <Input
+                              type="number"
+                              step="0.01"
+                              placeholder="65.00"
+                              value={watchedValues.debrisPricing?.[debris]?.pricePerTon || ""}
+                              onChange={(e) => {
+                                const currentPricing = watchedValues.debrisPricing || {};
+                                setValue("debrisPricing", {
+                                  ...currentPricing,
+                                  [debris]: {
+                                    ...currentPricing[debris],
+                                    pricePerTon: e.target.value ? parseFloat(e.target.value) : undefined,
+                                  },
+                                });
+                              }}
+                            />
+                          </div>
+
+                          <div>
+                            <Label className="text-xs">Price per Load ($)</Label>
+                            <Input
+                              type="number"
+                              step="0.01"
+                              placeholder="25.00"
+                              value={watchedValues.debrisPricing?.[debris]?.pricePerLoad || ""}
+                              onChange={(e) => {
+                                const currentPricing = watchedValues.debrisPricing || {};
+                                setValue("debrisPricing", {
+                                  ...currentPricing,
+                                  [debris]: {
+                                    ...currentPricing[debris],
+                                    pricePerLoad: e.target.value ? parseFloat(e.target.value) : undefined,
+                                  },
+                                });
+                              }}
+                            />
+                          </div>
+
+                          <div>
+                            <Label className="text-xs">Price Note</Label>
+                            <Input
+                              placeholder="Free drop-off"
+                              value={watchedValues.debrisPricing?.[debris]?.priceNote || ""}
+                              onChange={(e) => {
+                                const currentPricing = watchedValues.debrisPricing || {};
+                                setValue("debrisPricing", {
+                                  ...currentPricing,
+                                  [debris]: {
+                                    ...currentPricing[debris],
+                                    priceNote: e.target.value,
+                                  },
+                                });
+                              }}
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -671,75 +809,20 @@ export default function AddLocation() {
             </CardContent>
           </Card>
 
-          {/* Coordinates and Additional Info */}
+          {/* Additional Location Details */}
           <Card>
             <CardHeader>
-              <CardTitle>
-                Geographic Coordinates & Additional Information
-              </CardTitle>
+              <CardTitle>Additional Location Details</CardTitle>
               <CardDescription>
-                Precise location coordinates and optional details
+                Optional additional information about the location
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="latitude">Latitude *</Label>
-                  <Input
-                    id="latitude"
-                    {...register("latitude", {
-                      required: "Latitude is required",
-                      pattern: {
-                        value: /^-?([1-8]?\d(\.\d+)?|90(\.0+)?)$/,
-                        message: "Invalid latitude format",
-                      },
-                    })}
-                    placeholder="e.g., 39.7817"
-                    className={errors.latitude ? "border-red-500" : ""}
-                  />
-                  {errors.latitude && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.latitude.message}
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <Label htmlFor="longitude">Longitude *</Label>
-                  <Input
-                    id="longitude"
-                    {...register("longitude", {
-                      required: "Longitude is required",
-                      pattern: {
-                        value: /^-?((1[0-7]\d)|([1-9]?\d))(\.\d+)?$/,
-                        message: "Invalid longitude format",
-                      },
-                    })}
-                    placeholder="e.g., -89.6501"
-                    className={errors.longitude ? "border-red-500" : ""}
-                  />
-                  {errors.longitude && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.longitude.message}
-                    </p>
-                  )}
-                </div>
-              </div>
-
               <div>
-                <Label htmlFor="googleBusinessUrl">Google Business URL</Label>
-                <Input
-                  id="googleBusinessUrl"
-                  {...register("googleBusinessUrl")}
-                  placeholder="https://maps.google.com/maps/place/..."
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="notes">Additional Notes</Label>
+                <Label htmlFor="additionalLocationDetails">Additional Location Details</Label>
                 <Textarea
-                  id="notes"
-                  {...register("notes")}
+                  id="additionalLocationDetails"
+                  {...register("additionalLocationDetails")}
                   placeholder="Any additional information about the location, special services, restrictions, etc."
                   rows={4}
                 />
