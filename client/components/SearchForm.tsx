@@ -27,7 +27,7 @@ export interface SearchParams {
   debrisTypes: string[];
 }
 
-const facilityTypeOptions = [
+const locationTypeOptions = [
   { value: "landfill", label: "Landfills" },
   { value: "transfer_station", label: "Transfer Stations" },
   { value: "construction_landfill", label: "Construction Landfills" },
