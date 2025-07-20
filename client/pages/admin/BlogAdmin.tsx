@@ -143,7 +143,38 @@ export default function BlogAdmin() {
       .trim();
   };
 
+  const validateForm = () => {
+    if (!formData.title.trim()) {
+      showError("Title is required");
+      return false;
+    }
+    if (!formData.excerpt.trim()) {
+      showError("Excerpt is required");
+      return false;
+    }
+    if (!formData.content.trim()) {
+      showError("Content is required");
+      return false;
+    }
+    if (formData.status === "scheduled") {
+      if (!formData.publishDate || !formData.publishTime) {
+        showError("Schedule date and time are required for scheduled posts");
+        return false;
+      }
+      const scheduledDate = new Date(`${formData.publishDate}T${formData.publishTime}`);
+      if (scheduledDate <= new Date()) {
+        showError("Scheduled date must be in the future");
+        return false;
+      }
+    }
+    return true;
+  };
+
   const handleSavePost = async () => {
+    if (!validateForm()) {
+      return;
+    }
+
     setIsLoading(true);
     try {
       const slug = generateSlug(formData.title);
@@ -570,7 +601,10 @@ export default function BlogAdmin() {
             <Button variant="outline" onClick={() => setShowEditor(false)}>
               Cancel
             </Button>
-            <Button onClick={handleSavePost} disabled={isLoading}>
+            <Button
+              onClick={handleSavePost}
+              disabled={isLoading || !formData.title.trim() || !formData.excerpt.trim() || !formData.content.trim()}
+            >
               <Save className="w-4 h-4 mr-2" />
               {isLoading ? "Saving..." : editingPost ? "Update Post" : "Create Post"}
             </Button>
