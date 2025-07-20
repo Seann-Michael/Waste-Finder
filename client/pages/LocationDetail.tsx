@@ -124,48 +124,6 @@ export default function LocationDetail() {
 
       setLocation(fetchedLocation);
       setReviews(mockReviews);
-
-      const mockReviews: Review[] = [
-        {
-          id: "1",
-          locationId: id || "1",
-          rating: 5,
-          title: "Excellent service and fair pricing",
-          content:
-            "Very professional staff and clean facility. The scale house process was quick and efficient. Prices are reasonable compared to other facilities in the area.",
-          authorName: "Mike T.",
-          isApproved: true,
-          isModerated: true,
-          createdAt: "2024-01-10T00:00:00Z",
-        },
-        {
-          id: "2",
-          locationId: id || "1",
-          rating: 4,
-          title: "Good facility, long wait times",
-          content:
-            "The facility is well-maintained and staff is helpful. However, there can be long wait times during peak hours, especially on Saturdays.",
-          authorName: "Sarah L.",
-          isApproved: true,
-          isModerated: true,
-          createdAt: "2024-01-05T00:00:00Z",
-        },
-        {
-          id: "3",
-          locationId: id || "1",
-          rating: 5,
-          title: "Great recycling options",
-          content:
-            "Love that they have a comprehensive recycling center. Staff helped me properly dispose of old electronics and appliances.",
-          authorName: "Jennifer R.",
-          isApproved: true,
-          isModerated: true,
-          createdAt: "2023-12-28T00:00:00Z",
-        },
-      ];
-
-      setLocation(fetchedLocation);
-      setReviews(mockReviews);
     } catch (error) {
       console.error("Error loading location:", error);
     } finally {
