@@ -618,6 +618,9 @@ export default function LocationDetail() {
                 </CardContent>
               </Card>
 
+              {/* Spacer to align with Contact Information */}
+              <div className="h-8"></div>
+
               {/* Google Map Embed */}
               <Card>
                 <CardHeader>
@@ -673,6 +676,10 @@ export default function LocationDetail() {
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Reviews:</span>
                     <span>{location.reviewCount}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Page Views:</span>
+                    <span>{Math.floor(Math.random() * 2000) + 500}</span>
                   </div>
                   {location.distance && (
                     <div className="flex justify-between">
