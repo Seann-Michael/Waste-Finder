@@ -906,6 +906,97 @@ export default function AdminSettings() {
                 </CardContent>
               </Card>
             )}
+
+            {activeTab === "marketing" && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Marketing Settings</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* Facebook Group Settings */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium flex items-center gap-2">
+                      <MessageSquare className="w-5 h-5" />
+                      Facebook Community
+                    </h3>
+
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="facebookGroupEnabled"
+                        checked={marketingSettings.facebookGroupEnabled}
+                        onCheckedChange={(checked) =>
+                          setMarketingSettings({
+                            ...marketingSettings,
+                            facebookGroupEnabled: checked as boolean,
+                          })
+                        }
+                      />
+                      <Label htmlFor="facebookGroupEnabled">
+                        Show Facebook Group CTA across the site
+                      </Label>
+                    </div>
+
+                    {marketingSettings.facebookGroupEnabled && (
+                      <div className="space-y-4 ml-6">
+                        <div className="space-y-2">
+                          <Label htmlFor="facebookGroupUrl">
+                            Facebook Group URL
+                          </Label>
+                          <Input
+                            id="facebookGroupUrl"
+                            value={marketingSettings.facebookGroupUrl}
+                            onChange={(e) =>
+                              setMarketingSettings({
+                                ...marketingSettings,
+                                facebookGroupUrl: e.target.value,
+                              })
+                            }
+                            placeholder="https://facebook.com/groups/yourgroup"
+                          />
+                          <p className="text-sm text-muted-foreground">
+                            Enter the full URL to your Facebook group
+                          </p>
+                        </div>
+
+                        <div className="p-4 border rounded-lg bg-muted/50">
+                          <h4 className="font-medium mb-2">Preview</h4>
+                          <div className="border-blue-200 bg-blue-50 p-4 rounded-lg">
+                            <div className="flex items-center gap-4">
+                              <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+                                <MessageSquare className="w-6 h-6 text-white" />
+                              </div>
+                              <div>
+                                <h3 className="font-semibold text-blue-900 mb-1">
+                                  Join Our Community!
+                                </h3>
+                                <p className="text-sm text-blue-700 mb-2">
+                                  Connect with other waste management
+                                  professionals and get tips, updates, and
+                                  industry insights.
+                                </p>
+                                <div className="bg-blue-600 text-white px-3 py-1 rounded text-sm inline-flex items-center gap-1">
+                                  <Users className="w-4 h-4" />
+                                  Join Facebook Group
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <Button
+                    onClick={handleSaveMarketingSettings}
+                    className="w-full"
+                  >
+                    <Save className="w-4 h-4 mr-2" />
+                    Save Marketing Settings
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+
             {activeTab === "system" && (
               <Card>
                 <CardHeader>
