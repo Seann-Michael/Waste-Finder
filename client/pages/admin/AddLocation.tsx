@@ -278,12 +278,16 @@ export default function AddLocation() {
           name: type,
         })),
         additionalPaymentDetails: data.additionalPaymentDetails,
-        debrisTypes: data.debrisTypes.map((type, index) => ({
-          id: (index + 1).toString(),
-          name: type,
-          category: "general", // Default category, could be made configurable
-          ...(data.debrisPricing[type] || {}),
-        })),
+        debrisTypes: data.debrisTypes.map((type, index) => {
+          const pricing = data.debrisPricing[type] || {};
+          return {
+            id: (index + 1).toString(),
+            name: type,
+            category: "general", // Default category, could be made configurable
+            price: pricing.pricePerTon ? parseFloat(pricing.pricePerTon.toString()) : undefined,
+            priceDetails: pricing.priceNote || "",
+          };
+        }),
         debrisAdditionalDetails: data.debrisAdditionalDetails,
         notes: data.additionalLocationDetails,
         // Add default operating hours (Monday-Friday 7AM-5PM)
