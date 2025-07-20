@@ -281,7 +281,9 @@ export default function AdminSettings() {
 
     setAdSettings((prev) => ({
       ...prev,
-      customAds: [...prev.customAds, customAd],
+      customAds: Array.isArray(prev.customAds)
+        ? [...prev.customAds, customAd]
+        : [customAd],
     }));
 
     setNewCustomAd({
