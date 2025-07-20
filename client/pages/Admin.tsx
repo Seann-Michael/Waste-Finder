@@ -70,7 +70,7 @@ export default function Admin() {
     },
     {
       label: "Pending Reviews",
-      value: "23",
+      value: pendingReviewsList.length.toString(),
       icon: <MessageSquare className="w-5 h-5" />,
     },
     {
