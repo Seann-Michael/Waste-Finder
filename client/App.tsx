@@ -100,6 +100,14 @@ const App = () => (
             }
           />
           <Route
+            path="/admin/marketing"
+            element={
+              <AdminRoute>
+                <Marketing />
+              </AdminRoute>
+            }
+          />
+          <Route
             path="/admin/preview-location/:id"
             element={
               <AdminRoute>
