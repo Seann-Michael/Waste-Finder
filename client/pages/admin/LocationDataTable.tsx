@@ -222,32 +222,23 @@ export default function LocationDataTable() {
     navigate(`/admin/edit-location/${location.id}`);
   };
 
-  const getStatusBadge = (status: Location["status"]) => {
-    switch (status) {
-      case "active":
-        return (
-          <Badge className="bg-green-100 text-green-800 border-green-200">
-            Active
-          </Badge>
-        );
-      case "inactive":
-        return (
-          <Badge className="bg-red-100 text-red-800 border-red-200">
-            Inactive
-          </Badge>
-        );
-      case "pending":
-        return (
-          <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200">
-            Pending
-          </Badge>
-        );
-      default:
-        return <Badge variant="secondary">{status}</Badge>;
+  const getStatusBadge = (isActive: boolean) => {
+    if (isActive) {
+      return (
+        <Badge className="bg-green-100 text-green-800 border-green-200">
+          Active
+        </Badge>
+      );
+    } else {
+      return (
+        <Badge className="bg-red-100 text-red-800 border-red-200">
+          Inactive
+        </Badge>
+      );
     }
   };
 
-  const getTypeBadge = (type: Location["type"]) => {
+  const getTypeBadge = (type: Location["locationType"]) => {
     switch (type) {
       case "landfill":
         return <Badge variant="outline">Landfill</Badge>;
@@ -524,15 +515,15 @@ export default function LocationDataTable() {
                             {location.city}, {location.state} {location.zipCode}
                           </div>
                         </TableCell>
-                        <TableCell>{getTypeBadge(location.type)}</TableCell>
-                        <TableCell>{getStatusBadge(location.status)}</TableCell>
+                        <TableCell>{getTypeBadge(location.locationType)}</TableCell>
+                        <TableCell>{getStatusBadge(location.isActive)}</TableCell>
                         <TableCell>
                           <div className="text-sm">{location.phone}</div>
                         </TableCell>
                         <TableCell>
                           <div className="text-sm text-muted-foreground">
                             {new Date(
-                              location.lastUpdated,
+                              location.updatedAt,
                             ).toLocaleDateString()}
                           </div>
                         </TableCell>
