@@ -143,7 +143,7 @@ export default function Admin() {
               <div>
                 <h1 className="text-3xl font-bold">Admin Dashboard</h1>
                 <p className="text-muted-foreground">
-                  Manage facilities, reviews, and user suggestions
+                  Manage locations, reviews, and suggestions
                 </p>
               </div>
             </div>
