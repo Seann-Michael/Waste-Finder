@@ -106,6 +106,11 @@ export default function Blog() {
   };
 
   const filterPosts = () => {
+    if (!posts || !Array.isArray(posts)) {
+      setFilteredPosts([]);
+      return;
+    }
+
     let filtered = [...posts];
 
     // Search filter
@@ -113,17 +118,18 @@ export default function Blog() {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
         (post) =>
-          post.title.toLowerCase().includes(query) ||
-          post.excerpt.toLowerCase().includes(query) ||
-          post.tags.some(tag => tag.toLowerCase().includes(query)) ||
-          post.author.toLowerCase().includes(query)
+          post &&
+          ((post.title && post.title.toLowerCase().includes(query)) ||
+          (post.excerpt && post.excerpt.toLowerCase().includes(query)) ||
+          (post.tags && Array.isArray(post.tags) && post.tags.some(tag => tag && tag.toLowerCase().includes(query))) ||
+          (post.author && post.author.toLowerCase().includes(query)))
       );
     }
 
     // Category filter
     if (selectedCategory !== "all") {
-      filtered = filtered.filter(post => 
-        post.categories.includes(selectedCategory)
+      filtered = filtered.filter(post =>
+        post && post.categories && Array.isArray(post.categories) && post.categories.includes(selectedCategory)
       );
     }
 
@@ -131,7 +137,10 @@ export default function Blog() {
   };
 
   const getCategoryName = (categoryId: string) => {
-    const category = categories.find(cat => cat.id === categoryId);
+    if (!categories || !Array.isArray(categories) || !categoryId) {
+      return "Unknown";
+    }
+    const category = categories.find(cat => cat && cat.id === categoryId);
     return category?.name || "Unknown";
   };
 
@@ -143,10 +152,10 @@ export default function Blog() {
     });
   };
 
-  const featuredPosts = filteredPosts.filter(post => post.featured).slice(0, 2);
-  const regularPosts = filteredPosts.filter(post => !post.featured);
-  const recentPosts = posts.slice(0, 5);
-  const popularTags = [...new Set(posts.flatMap(post => post.tags))].slice(0, 10);
+  const featuredPosts = (filteredPosts || []).filter(post => post && post.featured).slice(0, 2);
+  const regularPosts = (filteredPosts || []).filter(post => post && !post.featured);
+  const recentPosts = (posts || []).slice(0, 5);
+  const popularTags = [...new Set((posts || []).flatMap(post => post && post.tags ? post.tags : []))].slice(0, 10);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -211,11 +220,12 @@ export default function Blog() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
-                    {categories.map((category) => {
-                      const postCount = posts.filter(post => 
-                        post.categories.includes(category.id)
+                    {(categories || []).map((category) => {
+                      if (!category || !category.id) return null;
+                      const postCount = (posts || []).filter(post =>
+                        post && post.categories && Array.isArray(post.categories) && post.categories.includes(category.id)
                       ).length;
-                      
+
                       return (
                         <button
                           key={category.id}
@@ -266,7 +276,9 @@ export default function Blog() {
                 <div>
                   <h2 className="text-2xl font-bold mb-6">Featured Articles</h2>
                   <div className="space-y-6">
-                    {featuredPosts.map((post) => (
+                    {featuredPosts.map((post) => {
+                      if (!post || !post.id) return null;
+                      return (
                       <Card key={post.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                         <div className="md:flex">
                           {post.featuredImage && (
@@ -281,7 +293,7 @@ export default function Blog() {
                           <div className={`p-6 ${post.featuredImage ? "md:w-2/3" : "w-full"}`}>
                             <div className="flex items-center gap-2 mb-2">
                               <Badge variant="default">Featured</Badge>
-                              {post.categories.map((categoryId) => (
+                              {(post.categories || []).map((categoryId) => (
                                 <Badge key={categoryId} variant="outline">
                                   {getCategoryName(categoryId)}
                                 </Badge>
@@ -318,7 +330,8 @@ export default function Blog() {
                           </div>
                         </div>
                       </Card>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               )}
@@ -328,7 +341,7 @@ export default function Blog() {
                 {featuredPosts.length > 0 && (
                   <h2 className="text-2xl font-bold mb-6">Latest Articles</h2>
                 )}
-                
+
                 {filteredPosts.length === 0 ? (
                   <Card>
                     <CardContent className="py-12 text-center">
@@ -341,11 +354,13 @@ export default function Blog() {
                   </Card>
                 ) : (
                   <div className="grid gap-6">
-                    {regularPosts.map((post) => (
+                    {regularPosts.map((post) => {
+                      if (!post || !post.id) return null;
+                      return (
                       <Card key={post.id} className="hover:shadow-lg transition-shadow">
                         <CardContent className="p-6">
                           <div className="flex items-center gap-2 mb-3">
-                            {post.categories.map((categoryId) => (
+                            {(post.categories || []).map((categoryId) => (
                               <Badge key={categoryId} variant="outline">
                                 {getCategoryName(categoryId)}
                               </Badge>
@@ -381,7 +396,8 @@ export default function Blog() {
                           </div>
                         </CardContent>
                       </Card>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -396,7 +412,9 @@ export default function Blog() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {recentPosts.map((post) => (
+                    {recentPosts.map((post) => {
+                      if (!post || !post.id) return null;
+                      return (
                       <div key={post.id} className="pb-4 border-b border-border last:border-0">
                         <h4 className="font-medium mb-2">
                           <Link
@@ -411,7 +429,8 @@ export default function Blog() {
                           <span>{formatDate(post.publishedAt || post.createdAt)}</span>
                         </div>
                       </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </CardContent>
               </Card>
