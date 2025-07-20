@@ -60,17 +60,28 @@ interface BlogPost {
   status: "draft" | "published" | "scheduled";
   featured: boolean;
   tags: string[];
+  categories: string[];
   featuredImage?: string;
   publishedAt?: string;
   createdAt: string;
   updatedAt: string;
 }
 
+interface BlogCategory {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  createdAt: string;
+}
+
 export default function BlogAdmin() {
   const { showSuccess, showError } = useToastNotifications();
   const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [categories, setCategories] = useState<BlogCategory[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showEditor, setShowEditor] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [postToDelete, setPostToDelete] = useState<BlogPost | null>(null);
@@ -83,6 +94,7 @@ export default function BlogAdmin() {
     status: "draft" as "draft" | "published" | "scheduled",
     featured: false,
     tags: "",
+    categories: [] as string[],
     featuredImage: "",
     publishDate: "",
     publishTime: "",
@@ -90,7 +102,49 @@ export default function BlogAdmin() {
 
   useEffect(() => {
     loadPosts();
+    loadCategories();
   }, []);
+
+  const loadCategories = () => {
+    // Load from localStorage or initialize default categories
+    const savedCategories = localStorage.getItem("blogCategories");
+    if (savedCategories) {
+      setCategories(JSON.parse(savedCategories));
+    } else {
+      const defaultCategories: BlogCategory[] = [
+        {
+          id: "1",
+          name: "Waste Management",
+          slug: "waste-management",
+          description: "Tips and guides for proper waste management",
+          createdAt: "2024-01-01T00:00:00Z",
+        },
+        {
+          id: "2",
+          name: "Environmental Impact",
+          slug: "environmental-impact",
+          description: "Articles about environmental effects and sustainability",
+          createdAt: "2024-01-01T00:00:00Z",
+        },
+        {
+          id: "3",
+          name: "Industry News",
+          slug: "industry-news",
+          description: "Latest news and updates in the waste disposal industry",
+          createdAt: "2024-01-01T00:00:00Z",
+        },
+        {
+          id: "4",
+          name: "How-to Guides",
+          slug: "how-to-guides",
+          description: "Step-by-step guides for waste disposal procedures",
+          createdAt: "2024-01-01T00:00:00Z",
+        },
+      ];
+      setCategories(defaultCategories);
+      localStorage.setItem("blogCategories", JSON.stringify(defaultCategories));
+    }
+  };
 
   const loadPosts = () => {
     // Load from localStorage (in production, this would be from API)
