@@ -57,11 +57,38 @@ const adminNavItems = [
   },
 ];
 
-export default function AdminSidebar() {
+interface AdminSidebarProps {
+  isOpen: boolean;
+  onToggle: (open: boolean) => void;
+}
+
+export default function AdminSidebar({ isOpen, onToggle }: AdminSidebarProps) {
   const location = useLocation();
 
   return (
-    <div className="fixed left-0 top-0 h-full w-64 bg-white border-r border-border shadow-sm z-30 overflow-y-auto">
+    <>
+      {/* Mobile menu button */}
+      <div className="lg:hidden fixed top-4 left-4 z-50">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => onToggle(!isOpen)}
+          className="bg-white shadow-md"
+        >
+          {isOpen ? (
+            <X className="w-4 h-4" />
+          ) : (
+            <Menu className="w-4 h-4" />
+          )}
+        </Button>
+      </div>
+
+      {/* Sidebar */}
+      <div className={cn(
+        "fixed left-0 top-0 h-full w-64 bg-white border-r border-border shadow-sm z-30 overflow-y-auto transition-transform duration-300",
+        "lg:translate-x-0", // Always visible on large screens
+        isOpen ? "translate-x-0" : "-translate-x-full" // Hidden on mobile unless open
+      )}>
       {/* Header */}
       <div className="p-6 border-b border-border">
         <Link to="/admin" className="flex items-center gap-3">
