@@ -210,19 +210,19 @@ export default function Admin() {
     <AdminLayout>
       <div className="space-y-8">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
               <Shield className="w-6 h-6 text-primary-foreground" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold">Admin Dashboard</h1>
               <p className="text-muted-foreground">
                 Manage locations, reviews, and suggestions
               </p>
             </div>
           </div>
-          <Button variant="outline" onClick={handleLogout}>
+          <Button variant="outline" onClick={handleLogout} className="w-full sm:w-auto">
             <LogOut className="w-4 h-4 mr-2" />
             Logout
           </Button>
