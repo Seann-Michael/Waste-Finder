@@ -157,5 +157,6 @@ export default function AdminSidebar({ isOpen, onToggle }: AdminSidebarProps) {
         </div>
       </div>
     </div>
+    </>
   );
 }
