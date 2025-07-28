@@ -135,6 +135,7 @@ export default function AdminSidebar({ isOpen, onToggle }: AdminSidebarProps) {
           </h3>
           <Link
             to="/"
+            onClick={() => onToggle(false)} // Close mobile sidebar on navigation
             className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
           >
             <Home className="w-4 h-4" />
@@ -142,6 +143,7 @@ export default function AdminSidebar({ isOpen, onToggle }: AdminSidebarProps) {
           </Link>
           <Link
             to="/all-locations"
+            onClick={() => onToggle(false)} // Close mobile sidebar on navigation
             className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
           >
             <MapPin className="w-4 h-4" />
