@@ -414,12 +414,12 @@ export default function LocationDataTable() {
 
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <CardTitle className="flex items-center gap-2">
                 <MapPin className="w-5 h-5" />
                 All Locations ({filteredLocations.length})
               </CardTitle>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm">
