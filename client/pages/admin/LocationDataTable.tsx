@@ -397,14 +397,14 @@ export default function LocationDataTable() {
     <AdminLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold">Location Data Table</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold">Location Data Table</h1>
             <p className="text-muted-foreground">
               Manage all facility locations and their information
             </p>
           </div>
-          <Button asChild>
+          <Button asChild className="w-full sm:w-auto">
             <Link to="/admin/add-location">
               <MapPin className="w-4 h-4 mr-2" />
               Add New Location
