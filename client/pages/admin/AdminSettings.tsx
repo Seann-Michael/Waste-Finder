@@ -483,14 +483,15 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+                  className={`flex items-center gap-2 py-4 px-2 sm:px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
                     activeTab === tab.id
                       ? "border-primary text-primary"
                       : "border-transparent text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   <Icon className="w-4 h-4" />
-                  {tab.label}
+                  <span className="hidden sm:inline">{tab.label}</span>
+                  <span className="sm:hidden text-xs">{tab.label.split(' ')[0]}</span>
                 </button>
               );
             })}
