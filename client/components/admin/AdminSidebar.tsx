@@ -111,6 +111,7 @@ export default function AdminSidebar({ isOpen, onToggle }: AdminSidebarProps) {
               <Link
                 key={item.href}
                 to={item.href}
+                onClick={() => onToggle(false)} // Close mobile sidebar on navigation
                 className={cn(
                   "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                   isActive
