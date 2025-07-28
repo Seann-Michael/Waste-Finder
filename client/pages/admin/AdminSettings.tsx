@@ -476,7 +476,7 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
 
         {/* Navigation Tabs */}
         <div className="border-b border-border">
-          <nav className="flex space-x-8">
+          <nav className="flex overflow-x-auto space-x-2 sm:space-x-8">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               return (
