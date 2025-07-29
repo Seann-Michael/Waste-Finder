@@ -314,7 +314,7 @@ export default function Index() {
           </h2>
           <div className="flex justify-center">
             <Button size="lg" variant="secondary" className="text-lg px-8">
-              Search Facilities
+              Search Locations
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
           </div>
