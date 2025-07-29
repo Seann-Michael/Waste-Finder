@@ -212,6 +212,21 @@ const AppRoutes = () => (
   </Routes>
 );
 
+const RouterWrapper = ({ children }: { children: React.ReactNode }) => {
+  try {
+    return (
+      <BrowserRouter>
+        {children}
+      </BrowserRouter>
+    );
+  } catch (error) {
+    console.error('Router initialization error:', error);
+    // Fallback to hash router or refresh page
+    window.location.reload();
+    return <PageLoading message="Reloading application..." />;
+  }
+};
+
 const App = () => (
   <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
@@ -220,11 +235,11 @@ const App = () => (
           <TooltipProvider>
             <Toaster />
             <Sonner />
-            <BrowserRouter>
+            <RouterWrapper>
               <Suspense fallback={<PageLoading message="Loading application..." />}>
                 <AppRoutes />
               </Suspense>
-            </BrowserRouter>
+            </RouterWrapper>
           </TooltipProvider>
         </MonitoringProvider>
       </AuthProvider>
