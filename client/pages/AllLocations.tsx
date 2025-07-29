@@ -156,7 +156,7 @@ export default function AllLocations() {
       const data = await fetchLocations(searchQuery);
       setLocations(data);
       setSearchMessage(
-        `Found ${data.length} facilities matching "${searchQuery}"`,
+        `Found ${data.length} locations matching "${searchQuery}"`,
       );
     } catch (err) {
       console.error("Error searching locations:", err);
