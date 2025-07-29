@@ -585,7 +585,7 @@ export default function Admin() {
                     <div>
                       <h4 className="font-medium">Contact</h4>
                       <p className="text-sm text-muted-foreground">
-                        Phone: {selectedSuggestion.details.phone}
+                        Phone: {formatPhoneNumber(selectedSuggestion.details.phone)}
                       </p>
                       <p className="text-sm text-muted-foreground">
                         Email: {selectedSuggestion.details.submitterEmail}
