@@ -52,7 +52,7 @@ WasteFinder is a comprehensive web application that serves as a searchable publi
 ```typescript
 // ZIP code validation and radius search
 // Integrates with Google Places API for address validation
-// Returns facilities within 50-mile radius
+// Returns locations within 50-mile radius
 ```
 
 ### 2. Google Maps Integration
