@@ -58,46 +58,85 @@ interface JobEstimate {
   distance: number;
   additionalFees: number;
   notes: string;
+  walkingDistance: number; // feet from truck to pickup location
+  hasSteps: boolean;
+  numberOfSteps: number;
+  percentageRequiringSteps: number; // percentage of debris that needs to go up/down steps
 }
 
 const DEBRIS_ITEMS: DebrisItem[] = [
-  // Furniture
-  { id: "sofa", name: "Sofa/Couch", category: "Furniture", weightPerItem: 0.05, volumePerItem: 0.5, loadingTimePerItem: 8 },
+  // Hot Tubs
+  { id: "hot_tub_4", name: "4 Person Hot Tub", category: "Hot Tubs", weightPerItem: 0.8, volumePerItem: 1.2, loadingTimePerItem: 45 },
+  { id: "hot_tub_6", name: "6 Person Hot Tub", category: "Hot Tubs", weightPerItem: 1.2, volumePerItem: 1.8, loadingTimePerItem: 60 },
+  { id: "hot_tub_8", name: "8 Person Hot Tub", category: "Hot Tubs", weightPerItem: 1.6, volumePerItem: 2.4, loadingTimePerItem: 75 },
+
+  // Couches & Seating
+  { id: "couch_3_person", name: "Couch (3 Person)", category: "Furniture", weightPerItem: 0.06, volumePerItem: 0.6, loadingTimePerItem: 10 },
+  { id: "couch_sectional", name: "Sectional Couch", category: "Furniture", weightPerItem: 0.12, volumePerItem: 1.2, loadingTimePerItem: 18 },
+  { id: "sofa_bed", name: "Sofa Bed", category: "Furniture", weightPerItem: 0.08, volumePerItem: 0.7, loadingTimePerItem: 12 },
   { id: "chair", name: "Chair", category: "Furniture", weightPerItem: 0.015, volumePerItem: 0.15, loadingTimePerItem: 3 },
-  { id: "dresser", name: "Dresser", category: "Furniture", weightPerItem: 0.08, volumePerItem: 0.4, loadingTimePerItem: 6 },
-  { id: "mattress", name: "Mattress", category: "Furniture", weightPerItem: 0.03, volumePerItem: 0.6, loadingTimePerItem: 5 },
-  { id: "table", name: "Dining Table", category: "Furniture", weightPerItem: 0.04, volumePerItem: 0.25, loadingTimePerItem: 4 },
-  { id: "desk", name: "Desk", category: "Furniture", weightPerItem: 0.035, volumePerItem: 0.2, loadingTimePerItem: 4 },
-  
+
+  // Beds & Mattresses
+  { id: "twin_mattress", name: "Twin Mattress", category: "Furniture", weightPerItem: 0.02, volumePerItem: 0.4, loadingTimePerItem: 4 },
+  { id: "full_mattress", name: "Full Mattress", category: "Furniture", weightPerItem: 0.025, volumePerItem: 0.5, loadingTimePerItem: 5 },
+  { id: "queen_mattress", name: "Queen Mattress", category: "Furniture", weightPerItem: 0.03, volumePerItem: 0.6, loadingTimePerItem: 6 },
+  { id: "king_mattress", name: "King Mattress", category: "Furniture", weightPerItem: 0.04, volumePerItem: 0.8, loadingTimePerItem: 8 },
+  { id: "twin_box_spring", name: "Twin Box Spring", category: "Furniture", weightPerItem: 0.015, volumePerItem: 0.4, loadingTimePerItem: 4 },
+  { id: "full_box_spring", name: "Full Box Spring", category: "Furniture", weightPerItem: 0.02, volumePerItem: 0.5, loadingTimePerItem: 5 },
+  { id: "queen_box_spring", name: "Queen Box Spring", category: "Furniture", weightPerItem: 0.025, volumePerItem: 0.6, loadingTimePerItem: 6 },
+  { id: "king_box_spring", name: "King Box Spring", category: "Furniture", weightPerItem: 0.03, volumePerItem: 0.8, loadingTimePerItem: 8 },
+  { id: "bed_frame", name: "Bed Frame", category: "Furniture", weightPerItem: 0.04, volumePerItem: 0.3, loadingTimePerItem: 6 },
+
+  // Dressers & Storage
+  { id: "dresser_chest", name: "Dresser of Drawers", category: "Furniture", weightPerItem: 0.08, volumePerItem: 0.4, loadingTimePerItem: 8 },
+  { id: "dresser", name: "Dresser", category: "Furniture", weightPerItem: 0.06, volumePerItem: 0.35, loadingTimePerItem: 6 },
+  { id: "nightstand", name: "Night Stand", category: "Furniture", weightPerItem: 0.025, volumePerItem: 0.15, loadingTimePerItem: 3 },
+
+  // Desks & Tables
+  { id: "computer_desk", name: "Computer Desk", category: "Furniture", weightPerItem: 0.04, volumePerItem: 0.25, loadingTimePerItem: 5 },
+  { id: "dining_table", name: "Dining Table", category: "Furniture", weightPerItem: 0.06, volumePerItem: 0.3, loadingTimePerItem: 6 },
+
   // Appliances
-  { id: "refrigerator", name: "Refrigerator", category: "Appliances", weightPerItem: 0.15, volumePerItem: 0.4, loadingTimePerItem: 12 },
-  { id: "washer", name: "Washing Machine", category: "Appliances", weightPerItem: 0.125, volumePerItem: 0.3, loadingTimePerItem: 10 },
-  { id: "dryer", name: "Dryer", category: "Appliances", weightPerItem: 0.075, volumePerItem: 0.25, loadingTimePerItem: 8 },
-  { id: "stove", name: "Stove/Oven", category: "Appliances", weightPerItem: 0.1, volumePerItem: 0.35, loadingTimePerItem: 10 },
-  { id: "dishwasher", name: "Dishwasher", category: "Appliances", weightPerItem: 0.06, volumePerItem: 0.2, loadingTimePerItem: 8 },
+  { id: "refrigerator", name: "Refrigerator", category: "Appliances", weightPerItem: 0.15, volumePerItem: 0.4, loadingTimePerItem: 15 },
+  { id: "sub_zero_fridge", name: "Sub Zero Refrigerator", category: "Appliances", weightPerItem: 0.25, volumePerItem: 0.6, loadingTimePerItem: 25 },
+  { id: "deep_freezer", name: "Deep Freezer", category: "Appliances", weightPerItem: 0.12, volumePerItem: 0.35, loadingTimePerItem: 12 },
+  { id: "washer", name: "Washing Machine", category: "Appliances", weightPerItem: 0.125, volumePerItem: 0.3, loadingTimePerItem: 12 },
+  { id: "dryer", name: "Dryer", category: "Appliances", weightPerItem: 0.075, volumePerItem: 0.25, loadingTimePerItem: 10 },
+  { id: "stove", name: "Stove/Oven", category: "Appliances", weightPerItem: 0.1, volumePerItem: 0.35, loadingTimePerItem: 12 },
+  { id: "dishwasher", name: "Dishwasher", category: "Appliances", weightPerItem: 0.06, volumePerItem: 0.2, loadingTimePerItem: 10 },
   { id: "microwave", name: "Microwave", category: "Appliances", weightPerItem: 0.02, volumePerItem: 0.05, loadingTimePerItem: 2 },
-  
+
   // Electronics
+  { id: "dlp_tv", name: "DLP TV", category: "Electronics", weightPerItem: 0.06, volumePerItem: 0.2, loadingTimePerItem: 8 },
   { id: "tv_large", name: "Large TV (50\"+)", category: "Electronics", weightPerItem: 0.04, volumePerItem: 0.15, loadingTimePerItem: 6 },
   { id: "tv_small", name: "Small TV (32\" or less)", category: "Electronics", weightPerItem: 0.015, volumePerItem: 0.08, loadingTimePerItem: 3 },
   { id: "computer", name: "Desktop Computer", category: "Electronics", weightPerItem: 0.01, volumePerItem: 0.05, loadingTimePerItem: 2 },
   { id: "monitor", name: "Computer Monitor", category: "Electronics", weightPerItem: 0.008, volumePerItem: 0.04, loadingTimePerItem: 2 },
-  
-  // Construction Debris
+
+  // Construction Materials
+  { id: "brick", name: "Brick", category: "Construction", weightPerItem: 0.0025, volumePerItem: 0.001, loadingTimePerItem: 0.5 },
+  { id: "cinderblock", name: "Cinder Block", category: "Construction", weightPerItem: 0.02, volumePerItem: 0.008, loadingTimePerItem: 2 },
+  { id: "shingles", name: "Shingles (bundle)", category: "Construction", weightPerItem: 0.04, volumePerItem: 0.02, loadingTimePerItem: 3 },
+  { id: "cut_decking", name: "Cut Decking (board)", category: "Construction", weightPerItem: 0.01, volumePerItem: 0.015, loadingTimePerItem: 2 },
+  { id: "cut_2x4", name: "Cut 2x4 (piece)", category: "Construction", weightPerItem: 0.005, volumePerItem: 0.008, loadingTimePerItem: 1 },
   { id: "drywall_sheet", name: "Drywall Sheet", category: "Construction", weightPerItem: 0.025, volumePerItem: 0.02, loadingTimePerItem: 3 },
-  { id: "lumber_2x4", name: "2x4 Lumber (8ft)", category: "Construction", weightPerItem: 0.005, volumePerItem: 0.01, loadingTimePerItem: 1 },
-  { id: "concrete_block", name: "Concrete Block", category: "Construction", weightPerItem: 0.02, volumePerItem: 0.008, loadingTimePerItem: 2 },
   { id: "carpet_roll", name: "Carpet Roll (12x10ft)", category: "Construction", weightPerItem: 0.04, volumePerItem: 0.3, loadingTimePerItem: 8 },
-  
+
+  // Bathroom Items
+  { id: "bathtub", name: "Bathtub", category: "Bathroom", weightPerItem: 0.15, volumePerItem: 0.5, loadingTimePerItem: 20 },
+
+  // Miscellaneous Items
+  { id: "books", name: "Books (box)", category: "Miscellaneous", weightPerItem: 0.03, volumePerItem: 0.05, loadingTimePerItem: 2 },
+  { id: "dirt", name: "Dirt (cubic yard)", category: "Miscellaneous", weightPerItem: 1.3, volumePerItem: 1.0, loadingTimePerItem: 15 },
+  { id: "clothes", name: "Clothes (bag)", category: "Miscellaneous", weightPerItem: 0.01, volumePerItem: 0.1, loadingTimePerItem: 1 },
+  { id: "moving_boxes", name: "Moving Boxes", category: "Miscellaneous", weightPerItem: 0.02, volumePerItem: 0.05, loadingTimePerItem: 1 },
+  { id: "exercise_equipment", name: "Exercise Equipment", category: "Miscellaneous", weightPerItem: 0.06, volumePerItem: 0.2, loadingTimePerItem: 8 },
+  { id: "water_heater", name: "Water Heater", category: "Miscellaneous", weightPerItem: 0.065, volumePerItem: 0.15, loadingTimePerItem: 12 },
+
   // Yard Waste
   { id: "tree_branch", name: "Tree Branch (large)", category: "Yard Waste", weightPerItem: 0.015, volumePerItem: 0.2, loadingTimePerItem: 4 },
-  { id: "lawn_mower", name: "Lawn Mower", category: "Yard Waste", weightPerItem: 0.04, volumePerItem: 0.15, loadingTimePerItem: 5 },
+  { id: "lawn_mower", name: "Lawn Mower", category: "Yard Waste", weightPerItem: 0.04, volumePerItem: 0.15, loadingTimePerItem: 6 },
   { id: "bag_leaves", name: "Bag of Leaves", category: "Yard Waste", weightPerItem: 0.01, volumePerItem: 0.1, loadingTimePerItem: 1 },
-  
-  // Miscellaneous
-  { id: "box_books", name: "Box of Books", category: "Miscellaneous", weightPerItem: 0.025, volumePerItem: 0.05, loadingTimePerItem: 2 },
-  { id: "exercise_equipment", name: "Exercise Equipment", category: "Miscellaneous", weightPerItem: 0.06, volumePerItem: 0.2, loadingTimePerItem: 6 },
-  { id: "water_heater", name: "Water Heater", category: "Miscellaneous", weightPerItem: 0.065, volumePerItem: 0.15, loadingTimePerItem: 10 },
 ];
 
 const TRUCK_CONFIGURATIONS: TruckConfig[] = [
@@ -130,6 +169,10 @@ export default function PricingCalculator() {
     distance: 0,
     additionalFees: 0,
     notes: "",
+    walkingDistance: 50, // default 50 feet
+    hasSteps: false,
+    numberOfSteps: 0,
+    percentageRequiringSteps: 0,
   });
 
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
@@ -159,8 +202,8 @@ export default function PricingCalculator() {
   const addJobItem = (debrisItem: DebrisItem) => {
     const existingItem = jobItems.find(item => item.debrisItem.id === debrisItem.id);
     if (existingItem) {
-      setJobItems(jobItems.map(item => 
-        item.debrisItem.id === debrisItem.id 
+      setJobItems(jobItems.map(item =>
+        item.debrisItem.id === debrisItem.id
           ? { ...item, quantity: item.quantity + 1 }
           : item
       ));
@@ -173,8 +216,8 @@ export default function PricingCalculator() {
     if (newQuantity <= 0) {
       setJobItems(jobItems.filter(item => item.debrisItem.id !== itemId));
     } else {
-      setJobItems(jobItems.map(item => 
-        item.debrisItem.id === itemId 
+      setJobItems(jobItems.map(item =>
+        item.debrisItem.id === itemId
           ? { ...item, quantity: newQuantity }
           : item
       ));
@@ -182,24 +225,39 @@ export default function PricingCalculator() {
   };
 
   const calculateJobTotals = () => {
-    const totalWeight = jobItems.reduce((sum, item) => 
+    const totalWeight = jobItems.reduce((sum, item) =>
       sum + (item.debrisItem.weightPerItem * item.quantity), 0
     );
-    
-    const totalVolume = jobItems.reduce((sum, item) => 
+
+    const totalVolume = jobItems.reduce((sum, item) =>
       sum + (item.debrisItem.volumePerItem * item.quantity), 0
     );
-    
-    const totalLoadingTime = jobItems.reduce((sum, item) => 
+
+    let baseLoadingTime = jobItems.reduce((sum, item) =>
       sum + (item.debrisItem.loadingTimePerItem * item.quantity), 0
     );
+
+    // Calculate walking time: 2 mph average walking speed
+    // Each item needs to be carried from pickup location to truck
+    const totalItems = jobItems.reduce((sum, item) => sum + item.quantity, 0);
+    const walkingTimePerTrip = (estimate.walkingDistance / 5280) / 2 * 60; // minutes per round trip
+    const walkingTime = totalItems * walkingTimePerTrip;
+
+    // Calculate steps time: Add 30 seconds per step for items requiring steps
+    let stepsTime = 0;
+    if (estimate.hasSteps && estimate.numberOfSteps > 0) {
+      const itemsRequiringSteps = totalItems * (estimate.percentageRequiringSteps / 100);
+      stepsTime = itemsRequiringSteps * estimate.numberOfSteps * 0.5; // 30 seconds per step
+    }
+
+    const totalLoadingTime = baseLoadingTime + walkingTime + stepsTime;
 
     const tripsNeeded = Math.ceil(Math.max(
       totalVolume / truckConfig.capacity,
       totalWeight / truckConfig.payload
     ));
 
-    const dumpFee = config.useTonRate 
+    const dumpFee = config.useTonRate
       ? totalWeight * config.dumpRatePerTon
       : totalVolume * config.dumpRatePerCubicYard;
 
@@ -214,6 +272,9 @@ export default function PricingCalculator() {
     return {
       totalWeight,
       totalVolume,
+      baseLoadingTime,
+      walkingTime,
+      stepsTime,
       totalLoadingTime,
       tripsNeeded,
       dumpFee,
@@ -230,8 +291,8 @@ export default function PricingCalculator() {
 
   const totals = calculateJobTotals();
   const categories = ["All", ...Array.from(new Set(DEBRIS_ITEMS.map(item => item.category)))];
-  const filteredItems = selectedCategory === "All" 
-    ? DEBRIS_ITEMS 
+  const filteredItems = selectedCategory === "All"
+    ? DEBRIS_ITEMS
     : DEBRIS_ITEMS.filter(item => item.category === selectedCategory);
 
   return (
@@ -363,7 +424,7 @@ export default function PricingCalculator() {
                           value={config.useTonRate ? config.dumpRatePerTon : config.dumpRatePerCubicYard}
                           onChange={(e) => setConfig({
                             ...config,
-                            ...(config.useTonRate 
+                            ...(config.useTonRate
                               ? { dumpRatePerTon: Number(e.target.value) }
                               : { dumpRatePerCubicYard: Number(e.target.value) }
                             )
@@ -491,7 +552,7 @@ export default function PricingCalculator() {
                                 size="sm"
                                 variant="outline"
                                 onClick={() => updateJobItemQuantity(
-                                  jobItem.debrisItem.id, 
+                                  jobItem.debrisItem.id,
                                   jobItem.quantity - 1
                                 )}
                               >
@@ -502,7 +563,7 @@ export default function PricingCalculator() {
                                 size="sm"
                                 variant="outline"
                                 onClick={() => updateJobItemQuantity(
-                                  jobItem.debrisItem.id, 
+                                  jobItem.debrisItem.id,
                                   jobItem.quantity + 1
                                 )}
                               >
@@ -533,17 +594,31 @@ export default function PricingCalculator() {
                     <CardTitle>Job Details</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <div>
-                      <Label htmlFor="distance">Distance to Dump (miles)</Label>
-                      <Input
-                        id="distance"
-                        type="number"
-                        value={estimate.distance}
-                        onChange={(e) => setEstimate({
-                          ...estimate,
-                          distance: Number(e.target.value)
-                        })}
-                      />
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="distance">Distance to Dump (miles)</Label>
+                        <Input
+                          id="distance"
+                          type="number"
+                          value={estimate.distance}
+                          onChange={(e) => setEstimate({
+                            ...estimate,
+                            distance: Number(e.target.value)
+                          })}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="walkingDistance">Walking Distance (feet)</Label>
+                        <Input
+                          id="walkingDistance"
+                          type="number"
+                          value={estimate.walkingDistance}
+                          onChange={(e) => setEstimate({
+                            ...estimate,
+                            walkingDistance: Number(e.target.value)
+                          })}
+                        />
+                      </div>
                     </div>
 
                     <div>
@@ -557,6 +632,57 @@ export default function PricingCalculator() {
                           additionalFees: Number(e.target.value)
                         })}
                       />
+                    </div>
+
+                    <Separator />
+
+                    <div className="space-y-4">
+                      <h4 className="font-medium">Steps & Access</h4>
+
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          id="hasSteps"
+                          checked={estimate.hasSteps}
+                          onChange={(e) => setEstimate({
+                            ...estimate,
+                            hasSteps: e.target.checked,
+                            numberOfSteps: e.target.checked ? estimate.numberOfSteps || 10 : 0,
+                            percentageRequiringSteps: e.target.checked ? estimate.percentageRequiringSteps || 50 : 0
+                          })}
+                        />
+                        <Label htmlFor="hasSteps">Job involves steps</Label>
+                      </div>
+
+                      {estimate.hasSteps && (
+                        <div className="grid grid-cols-2 gap-4 ml-6">
+                          <div>
+                            <Label htmlFor="numberOfSteps">Number of Steps</Label>
+                            <Input
+                              id="numberOfSteps"
+                              type="number"
+                              value={estimate.numberOfSteps}
+                              onChange={(e) => setEstimate({
+                                ...estimate,
+                                numberOfSteps: Number(e.target.value)
+                              })}
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="percentageRequiringSteps">% of Items Using Steps</Label>
+                            <Input
+                              id="percentageRequiringSteps"
+                              type="number"
+                              max="100"
+                              value={estimate.percentageRequiringSteps}
+                              onChange={(e) => setEstimate({
+                                ...estimate,
+                                percentageRequiringSteps: Number(e.target.value)
+                              })}
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -627,6 +753,11 @@ export default function PricingCalculator() {
                         <span>Labor ({(totals.totalLoadingTime / 60).toFixed(1)}h):</span>
                         <span className="font-medium">${totals.laborCost.toFixed(2)}</span>
                       </div>
+                      <div className="ml-4 text-sm text-muted-foreground">
+                        <div>• Loading: {Math.ceil(totals.baseLoadingTime)}min</div>
+                        <div>• Walking: {Math.ceil(totals.walkingTime)}min</div>
+                        {totals.stepsTime > 0 && <div>• Steps: {Math.ceil(totals.stepsTime)}min</div>}
+                      </div>
                       <div className="flex justify-between">
                         <span>Fuel ({estimate.distance} mi × {totals.tripsNeeded} trips):</span>
                         <span className="font-medium">${totals.fuelCost.toFixed(2)}</span>
@@ -658,7 +789,7 @@ export default function PricingCalculator() {
                           ${totals.total.toFixed(2)}
                         </div>
                         <div className="text-lg text-muted-foreground mb-4">Total Job Price</div>
-                        
+
                         <div className="grid grid-cols-2 gap-4 text-sm">
                           <div className="text-center">
                             <div className="flex items-center justify-center gap-1 mb-1">
