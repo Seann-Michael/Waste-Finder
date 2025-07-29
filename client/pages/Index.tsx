@@ -112,7 +112,7 @@ export default function Index() {
       icon: <Shield className="w-6 h-6" />,
       title: "Verified Listings",
       description:
-        "All facilities are verified and regularly updated by our team",
+        "All locations are verified and regularly updated by our team",
     },
     {
       icon: <Users className="w-6 h-6" />,
