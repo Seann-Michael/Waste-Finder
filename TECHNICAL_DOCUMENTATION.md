@@ -21,10 +21,10 @@ WasteFinder is a comprehensive web application that serves as a searchable publi
 
 #### Public Users (No Login Required)
 
-- **Primary Function**: Search for waste disposal facilities by ZIP code
+- **Primary Function**: Search for waste disposal locations by ZIP code
 - **Secondary Functions**:
-  - View facility details with Google Maps integration
-  - Leave reviews and ratings for facilities
+  - View location details with Google Maps integration
+  - Leave reviews and ratings for locations
   - Suggest new locations or corrections to existing ones
   - Read educational blog content
 - **Search Radius**: 50-mile radius from entered ZIP code
