@@ -119,24 +119,15 @@ const US_STATES = [
 const PAYMENT_TYPES = ["Cash", "Check", "Credit/Debit", "Net Terms"] as const;
 
 const DEBRIS_TYPES = [
-  "General Household Waste",
-  "Construction & Demolition",
-  "Yard Waste & Organics",
-  "Electronics & E-Waste",
+  "Municipal Waste",
+  "Yard Waste",
+  "Construction Debris",
   "Appliances",
-  "Furniture",
-  "Mattresses",
   "Tires",
-  "Automotive Parts",
-  "Metal Scrap",
-  "Wood Waste",
-  "Concrete & Masonry",
+  "Concrete",
   "Asphalt",
-  "Roofing Materials",
-  "Drywall",
-  "Insulation",
-  "Paint & Chemicals",
-  "Batteries",
+  "Metal",
+  "Hazardous Materials",
   "Fluorescent Bulbs",
   "Hazardous Materials"
 ];
