@@ -329,7 +329,7 @@ export default function AllLocations() {
               {/* Loading State */}
               {isLoading && (
                 <div className="text-center py-8">
-                  <p className="text-muted-foreground">Loading facilities...</p>
+                  <p className="text-muted-foreground">Loading locations...</p>
                 </div>
               )}
 
