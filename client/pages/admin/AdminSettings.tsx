@@ -1059,7 +1059,7 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                             searchDescriptionTemplate: e.target.value,
                           })
                         }
-                        placeholder="Find waste disposal facilities near {search_term}..."
+                        placeholder="Find waste disposal locations near {search_term}..."
                         rows={2}
                       />
                     </div>
