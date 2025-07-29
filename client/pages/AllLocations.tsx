@@ -349,7 +349,7 @@ export default function AllLocations() {
                       <div className="flex items-center justify-between">
                         <p className="text-sm text-muted-foreground">
                           Showing {filteredAndSortedLocations.length} of{" "}
-                          {locations.length} facilities
+                          {locations.length} locations
                         </p>
                         {filterBy !== "all" && (
                           <Badge variant="secondary">
