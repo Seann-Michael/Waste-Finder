@@ -178,7 +178,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   /**
-   * Secure login with rate limiting and proper error handling
+   * Secure login with proper error handling
    */
   const login = async (
     username: string,
@@ -186,14 +186,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   ): Promise<boolean> => {
     try {
       setIsLoading(true);
-
-      // Check rate limiting
-      if (!checkRateLimit("login")) {
-        showError(
-          "Too many login attempts. Please wait 1 minute before trying again.",
-        );
-        return false;
-      }
 
       // Sanitize inputs
       const sanitizedUsername = username.trim().toLowerCase();
@@ -266,9 +258,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.warn('Monitoring tracking failed:', monitoringError);
         // Don't fail login if monitoring fails
       }
-
-      // Clear rate limiting on successful login
-      sessionStorage.removeItem("rateLimit_login");
 
       return true;
     } catch (error) {

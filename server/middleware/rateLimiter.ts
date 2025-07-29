@@ -194,13 +194,13 @@ export function createRateLimitMiddleware(
 }
 
 /**
- * Strict rate limiter for authentication endpoints
+ * Lenient rate limiter for authentication endpoints - allows admin access
  */
 export const authRateLimit = createRateLimitMiddleware({
-  maxRequests: 5,
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  blockDurationMs: 30 * 60 * 1000, // 30 minutes
-  message: "Too many authentication attempts. Please try again in 30 minutes.",
+  maxRequests: 100, // Much higher limit
+  windowMs: 60 * 1000, // 1 minute window
+  blockDurationMs: 10 * 1000, // 10 second block (very short)
+  message: "Please wait a moment before trying again.",
 });
 
 /**
