@@ -135,24 +135,23 @@ export default function Header() {
 
               {/* Business Owner CTA - Fixed visibility */}
               <div className="hidden sm:flex items-center space-x-2 md:space-x-4">
-                <Button
-                  variant="default"
-                  size="sm"
-                  asChild
-                  className="text-xs sm:text-sm bg-green-600 text-white hover:bg-green-700 border-green-600"
+              <Button
+                variant="default"
+                size="sm"
+                asChild
+                className="text-xs sm:text-sm bg-green-600 text-white hover:bg-green-700 border-green-600 px-3 sm:px-4"
+              >
+                <a
+                  href={contentSettings.marketingButtonUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  <a
-                    href={contentSettings.marketingButtonUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-2 sm:px-3"
-                  >
-                    <span className="hidden md:inline">
-                      {contentSettings.marketingButtonText}
-                    </span>
-                    <span className="md:hidden">Get Customers</span>
-                  </a>
-                </Button>
+                  <span className="hidden md:inline">
+                    📈 Click for Marketing Help
+                  </span>
+                  <span className="md:hidden">Get Marketing</span>
+                </a>
+              </Button>
               </div>
 
               {/* Mobile menu button */}
