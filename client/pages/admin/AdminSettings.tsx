@@ -156,7 +156,8 @@ export default function AdminSettings() {
   const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
 
   const [profileData, setProfileData] = useState({
-    name: "Sean Webb",
+    firstName: "Sean",
+    lastName: "Webb",
     email: "sean@wastefinder.com",
     currentPassword: "",
     newPassword: "",
