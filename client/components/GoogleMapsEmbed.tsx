@@ -169,7 +169,7 @@ export default function GoogleMapsEmbed({
             allowFullScreen
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-            title="Waste Disposal Facilities Map"
+            title="Waste Disposal Locations Map"
             className="rounded-lg"
           />
 
