@@ -90,6 +90,9 @@ const App = () => (
                   <Route path="/news" element={<News />} />
                   <Route path="/news/article/:id" element={<NewsArticle />} />
 
+                  {/* Legacy route redirects */}
+                  <Route path="/search-test" element={<Navigate to="/all-locations" replace />} />
+
                   {/* Admin routes with separate loading */}
                   <Route
                     path="/admin-login"
