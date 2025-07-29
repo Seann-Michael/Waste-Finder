@@ -119,9 +119,9 @@ export default function Locations() {
           </h1>
 
           {/* Active Filters */}
-          {(facilityTypes.length > 0 || debrisTypes.length > 0) && (
+          {(locationTypes.length > 0 || debrisTypes.length > 0) && (
             <div className="flex flex-wrap gap-2 mb-4">
-              {facilityTypes.map((type) => (
+              {locationTypes.map((type) => (
                 <Badge key={type} variant="secondary">
                   {type
                     .replace("_", " ")
