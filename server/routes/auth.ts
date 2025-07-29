@@ -5,6 +5,9 @@ import { Request, Response } from "express";
  * In production, these would integrate with a proper authentication system
  */
 
+// Simple in-memory session store for demo
+const activeSessions = new Map<string, any>();
+
 // Mock user database
 const mockUsers = [
   {
