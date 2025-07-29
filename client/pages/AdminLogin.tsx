@@ -34,12 +34,26 @@ export default function AdminLogin() {
 
   const { login, isAuthenticated, isLoading } = useAuth();
 
-  // Redirect if already authenticated
+  // Don't render if currently checking auth or already authenticated
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  // Redirect if already authenticated (prevent infinite loops)
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/admin");
+    if (isAuthenticated && !isLoading) {
+      // Add small delay to prevent rapid redirects
+      const redirectTimer = setTimeout(() => {
+        navigate("/admin", { replace: true });
+      }, 100);
+
+      return () => clearTimeout(redirectTimer);
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, isLoading, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,7 +82,8 @@ export default function AdminLogin() {
     const success = await login(sanitizedUsername, sanitizedPassword);
 
     if (success) {
-      navigate("/admin");
+      // Don't navigate here - let the useEffect handle it to prevent race conditions
+      // navigate("/admin");
     } else {
       // Error is handled by AuthContext and shown via toast
       setPassword(""); // Clear password on failed attempt
