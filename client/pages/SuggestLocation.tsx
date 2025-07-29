@@ -189,7 +189,18 @@ export default function SuggestLocation() {
 
   const watchedValues = watch();
 
+  const validatePhoneNumber = (phone: string): boolean => {
+    const cleanPhone = phone.replace(/\D/g, "");
+    return cleanPhone.length >= 10 && cleanPhone.length <= 15;
+  };
+
   const onSubmit = async (data: SuggestLocationFormData) => {
+    // Validate phone number if provided
+    if (data.phone && !validatePhoneNumber(data.phone)) {
+      showError("Please enter a valid phone number (10-15 digits)");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
