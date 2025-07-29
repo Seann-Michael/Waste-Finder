@@ -508,14 +508,24 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                 <CardTitle>Profile & Password</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="name">Full Name</Label>
+                    <Label htmlFor="firstName">First Name</Label>
                     <Input
-                      id="name"
-                      value={profileData.name}
+                      id="firstName"
+                      value={profileData.firstName}
                       onChange={(e) =>
-                        setProfileData({ ...profileData, name: e.target.value })
+                        setProfileData({ ...profileData, firstName: e.target.value })
+                      }
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="lastName">Last Name</Label>
+                    <Input
+                      id="lastName"
+                      value={profileData.lastName}
+                      onChange={(e) =>
+                        setProfileData({ ...profileData, lastName: e.target.value })
                       }
                     />
                   </div>
