@@ -1043,7 +1043,7 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                             searchTitleTemplate: e.target.value,
                           })
                         }
-                        placeholder="Waste Disposal Facilities near {search_term} | WasteFinder"
+                        placeholder="Waste Disposal Locations near {search_term} | WasteFinder"
                       />
                     </div>
                     <div className="space-y-2">
