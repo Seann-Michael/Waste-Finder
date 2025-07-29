@@ -161,14 +161,14 @@ export default function News() {
 
   const filteredArticles = articles
     .filter(article => {
-      const matchesSearch = searchQuery === "" || 
+      const matchesSearch = searchQuery === "" ||
         article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         article.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
         article.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-      
+
       const matchesCategory = selectedCategory === "all" || article.category === selectedCategory;
       const matchesSource = selectedSource === "all" || article.source === selectedSource;
-      
+
       return matchesSearch && matchesCategory && matchesSource;
     })
     .sort((a, b) => {
@@ -197,7 +197,7 @@ export default function News() {
     const date = new Date(dateString);
     const now = new Date();
     const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
-    
+
     if (diffInMinutes < 60) {
       return `${diffInMinutes}m ago`;
     } else if (diffInMinutes < 1440) {
@@ -221,7 +221,7 @@ export default function News() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-primary/10 via-background to-accent/5 py-12">
         <div className="max-w-7xl mx-auto px-4">
@@ -288,7 +288,7 @@ export default function News() {
                     />
                   </div>
                 </div>
-                
+
                 <div>
                   <label className="text-sm font-medium mb-2 block">Category</label>
                   <Select value={selectedCategory} onValueChange={setSelectedCategory}>
@@ -352,8 +352,8 @@ export default function News() {
           ) : filteredArticles.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-muted-foreground">No articles found matching your criteria.</p>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => {
                   setSearchQuery("");
                   setSelectedCategory("all");
@@ -371,7 +371,7 @@ export default function News() {
                   Showing {filteredArticles.length} of {articles.length} articles
                 </p>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredArticles.map((article) => (
                   <Card key={article.id} className="hover:shadow-lg transition-shadow">
@@ -389,7 +389,7 @@ export default function News() {
                         </div>
                       </div>
                     )}
-                    
+
                     <CardHeader className="pb-3">
                       <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
                         <span>{article.source}</span>
@@ -397,23 +397,23 @@ export default function News() {
                         <span>{getTimeAgo(article.publishedAt)}</span>
                       </div>
                       <CardTitle className="text-lg leading-tight hover:text-primary transition-colors">
-                        <a href={article.url} target="_blank" rel="noopener noreferrer">
+                        <Link to={`/news/article/${article.id}`}>
                           {article.title}
-                        </a>
+                        </Link>
                       </CardTitle>
                     </CardHeader>
-                    
+
                     <CardContent>
                       <p className="text-muted-foreground mb-4 line-clamp-3">
                         {article.description}
                       </p>
-                      
+
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           <Calendar className="w-4 h-4" />
                           {formatDate(article.publishedAt)}
                         </div>
-                        
+
                         <Button asChild variant="ghost" size="sm">
                           <a
                             href={article.url}
@@ -426,7 +426,7 @@ export default function News() {
                           </a>
                         </Button>
                       </div>
-                      
+
                       {article.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1 mt-3">
                           {article.tags.slice(0, 3).map((tag) => (
