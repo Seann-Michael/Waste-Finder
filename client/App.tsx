@@ -49,7 +49,6 @@ const BulkUploadFacilities = lazy(
 );
 const RSSManager = lazy(() => import("./pages/admin/RSSManager"));
 const PricingCalculator = lazy(() => import("./pages/PricingCalculator"));
-const TestCalculator = lazy(() => import("./pages/TestCalculator"));
 
 import AdminRoute from "./components/admin/AdminRoute";
 
