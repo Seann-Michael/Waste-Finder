@@ -2,7 +2,7 @@
 
 ## System Overview
 
-WasteFinder is a comprehensive web application that serves as a searchable public database for waste disposal facilities. The system enables business owners and individuals to find local waste management locations, leave reviews, and suggest new facilities or improvements.
+WasteFinder is a comprehensive web application that serves as a searchable public database for waste disposal locations. The system enables business owners and individuals to find local waste management locations, leave reviews, and suggest new locations or improvements.
 
 ## Core Architecture
 
