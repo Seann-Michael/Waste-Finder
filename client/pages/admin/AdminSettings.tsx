@@ -777,17 +777,28 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                     <div className="space-y-2">
                       <Label htmlFor="siteLogo">Site Logo</Label>
                       <div className="space-y-2">
-                        <Input
-                          id="siteLogo"
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) {
-                              handleFileUpload(file, "logo");
-                            }
-                          }}
-                        />
+                        <div className="relative">
+                          <Input
+                            id="siteLogo"
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                handleFileUpload(file, "logo");
+                              }
+                            }}
+                            className="hidden"
+                          />
+                          <Button
+                            variant="outline"
+                            onClick={() => document.getElementById('siteLogo')?.click()}
+                            className="w-full"
+                          >
+                            <Upload className="w-4 h-4 mr-2" />
+                            Choose Logo File
+                          </Button>
+                        </div>
                         {websiteSettings.siteLogo && (
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
                             <span>Current: </span>
@@ -806,17 +817,28 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                     <div className="space-y-2">
                       <Label htmlFor="favicon">Favicon</Label>
                       <div className="space-y-2">
-                        <Input
-                          id="favicon"
-                          type="file"
-                          accept="image/*,.ico"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) {
-                              handleFileUpload(file, "favicon");
-                            }
-                          }}
-                        />
+                        <div className="relative">
+                          <Input
+                            id="favicon"
+                            type="file"
+                            accept="image/*,.ico"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                handleFileUpload(file, "favicon");
+                              }
+                            }}
+                            className="hidden"
+                          />
+                          <Button
+                            variant="outline"
+                            onClick={() => document.getElementById('favicon')?.click()}
+                            className="w-full"
+                          >
+                            <Upload className="w-4 h-4 mr-2" />
+                            Choose Favicon File
+                          </Button>
+                        </div>
                         {websiteSettings.favicon && (
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
                             <span>Current: </span>
