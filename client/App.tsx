@@ -45,6 +45,7 @@ const BlogAdmin = lazy(() => import("./pages/admin/BlogAdmin"));
 const BulkUploadFacilities = lazy(
   () => import("./pages/admin/BulkUploadFacilities"),
 );
+const RSSManager = lazy(() => import("./pages/admin/RSSManager"));
 
 import AdminRoute from "./components/admin/AdminRoute";
 
