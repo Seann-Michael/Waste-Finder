@@ -106,7 +106,7 @@ export default function Index() {
     {
       icon: <Clock className="w-6 h-6" />,
       title: "Real-Time Information",
-      description: "Get up-to-date hours, contact details, and facility status",
+      description: "Get up-to-date hours, contact details, and location status",
     },
     {
       icon: <Shield className="w-6 h-6" />,
