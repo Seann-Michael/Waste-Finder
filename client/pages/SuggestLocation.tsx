@@ -27,7 +27,7 @@ import {
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useToastNotifications } from "../hooks/use-toast-notifications";
-import { validatePhoneNumber, formatPhoneNumber } from "../lib/utils";
+import { validatePhoneNumber, formatPhoneNumber, validateAndFormatUrl } from "../lib/utils";
 
 // Form data interface matching AddLocation
 interface SuggestLocationFormData {
