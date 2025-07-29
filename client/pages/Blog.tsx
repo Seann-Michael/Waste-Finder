@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -13,7 +13,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../components/ui/select";
-import { Search, Calendar, User, Tag, ChevronRight, BookOpen } from "lucide-react";
+import { Search, Calendar, User, Tag, ChevronRight, BookOpen, AlertCircle } from "lucide-react";
+import { useBlogPosts } from "../hooks/useApi";
+import { BlogPostSkeleton, ContentSkeleton } from "../components/LoadingStates";
+import { ErrorBoundary } from "../components/ErrorBoundary";
 
 interface BlogPost {
   id: string;
@@ -41,11 +44,18 @@ interface BlogCategory {
 }
 
 export default function Blog() {
-  const [posts, setPosts] = useState<BlogPost[]>([]);
-  const [categories, setCategories] = useState<BlogCategory[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [filteredPosts, setFilteredPosts] = useState<BlogPost[]>([]);
+
+  // Use React Query for data fetching
+  const { data: blogData, isLoading, error, isError } = useBlogPosts();
+
+  // Extract posts and categories from API response
+  const posts = blogData?.posts || [];
+  const categories = blogData?.categories || [];
+
+  // Memoized filtered posts to prevent unnecessary recalculations
+  const filteredPosts = useMemo(() => {
 
   useEffect(() => {
     loadBlogData();
