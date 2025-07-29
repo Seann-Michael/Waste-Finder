@@ -176,6 +176,10 @@ export default function PricingCalculator() {
   });
 
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [searchTerm, setSearchTerm] = useState<string>("");
+
+  // Sort items alphabetically
+  const sortedItems = [...DEBRIS_ITEMS].sort((a, b) => a.name.localeCompare(b.name));
 
   useEffect(() => {
     // Load saved configuration
@@ -290,10 +294,16 @@ export default function PricingCalculator() {
   };
 
   const totals = calculateJobTotals();
-  const categories = ["All", ...Array.from(new Set(DEBRIS_ITEMS.map(item => item.category)))];
-  const filteredItems = selectedCategory === "All"
-    ? DEBRIS_ITEMS
-    : DEBRIS_ITEMS.filter(item => item.category === selectedCategory);
+  const categories = ["All", ...Array.from(new Set(sortedItems.map(item => item.category)))];
+
+  // Filter items by category and search term
+  const filteredItems = sortedItems.filter(item => {
+    const matchesCategory = selectedCategory === "All" || item.category === selectedCategory;
+    const matchesSearch = searchTerm === "" ||
+      item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.category.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -483,14 +493,28 @@ export default function PricingCalculator() {
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Package className="w-5 h-5" />
-                      Item Library
+                      Item Library ({filteredItems.length} items)
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
+                      {/* Search Input */}
+                      <div>
+                        <Label htmlFor="searchItems">Search Items</Label>
+                        <Input
+                          id="searchItems"
+                          type="text"
+                          placeholder="Type to search items..."
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          className="w-full"
+                        />
+                      </div>
+
+                      {/* Category Filter */}
                       <Select value={selectedCategory} onValueChange={setSelectedCategory}>
                         <SelectTrigger>
-                          <SelectValue />
+                          <SelectValue placeholder="Filter by category" />
                         </SelectTrigger>
                         <SelectContent>
                           {categories.map((category) => (
@@ -501,24 +525,49 @@ export default function PricingCalculator() {
                         </SelectContent>
                       </Select>
 
-                      <div className="space-y-2 max-h-96 overflow-y-auto">
-                        {filteredItems.map((item) => (
-                          <div
-                            key={item.id}
-                            className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 cursor-pointer"
-                            onClick={() => addJobItem(item)}
-                          >
-                            <div>
-                              <div className="font-medium">{item.name}</div>
-                              <div className="text-sm text-muted-foreground">
-                                {item.weightPerItem} tons • {item.volumePerItem} yd³ • {item.loadingTimePerItem}min
-                              </div>
-                            </div>
-                            <Button size="sm" variant="outline">
-                              <Plus className="w-3 h-3" />
-                            </Button>
+                      {/* Clear Filters */}
+                      {(searchTerm || selectedCategory !== "All") && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setSearchTerm("");
+                            setSelectedCategory("All");
+                          }}
+                          className="w-full"
+                        >
+                          Clear Filters
+                        </Button>
+                      )}
+
+                      {/* Items List */}
+                      <div className="space-y-2 max-h-80 overflow-y-auto">
+                        {filteredItems.length === 0 ? (
+                          <div className="text-center py-8 text-muted-foreground">
+                            No items found matching your search
                           </div>
-                        ))}
+                        ) : (
+                          filteredItems.map((item) => (
+                            <div
+                              key={item.id}
+                              className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
+                              onClick={() => addJobItem(item)}
+                            >
+                              <div className="flex-1">
+                                <div className="font-medium">{item.name}</div>
+                                <div className="text-sm text-muted-foreground">
+                                  <Badge variant="outline" className="mr-1 text-xs">
+                                    {item.category}
+                                  </Badge>
+                                  {item.weightPerItem} tons • {item.volumePerItem} yd³ • {item.loadingTimePerItem}min
+                                </div>
+                              </div>
+                              <Button size="sm" variant="outline" className="ml-2">
+                                <Plus className="w-3 h-3" />
+                              </Button>
+                            </div>
+                          ))
+                        )}
                       </div>
                     </div>
                   </CardContent>
@@ -529,56 +578,93 @@ export default function PricingCalculator() {
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Calculator className="w-5 h-5" />
-                      Job Items
+                      Job Items ({jobItems.length} types, {jobItems.reduce((sum, item) => sum + item.quantity, 0)} total)
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
                       {jobItems.length === 0 ? (
-                        <p className="text-muted-foreground text-center py-8">
-                          Add items from the library to build your job
-                        </p>
+                        <div className="text-center py-8">
+                          <Package className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                          <p className="text-muted-foreground">
+                            Add items from the library to build your job
+                          </p>
+                          <p className="text-sm text-muted-foreground mt-2">
+                            Click on any item to add it to your job
+                          </p>
+                        </div>
                       ) : (
-                        jobItems.map((jobItem) => (
-                          <div key={jobItem.debrisItem.id} className="flex items-center justify-between p-3 border rounded-lg">
-                            <div className="flex-1">
-                              <div className="font-medium">{jobItem.debrisItem.name}</div>
-                              <div className="text-sm text-muted-foreground">
-                                {jobItem.debrisItem.category}
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => updateJobItemQuantity(
-                                  jobItem.debrisItem.id,
-                                  jobItem.quantity - 1
-                                )}
-                              >
-                                <Minus className="w-3 h-3" />
-                              </Button>
-                              <span className="w-8 text-center">{jobItem.quantity}</span>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => updateJobItemQuantity(
-                                  jobItem.debrisItem.id,
-                                  jobItem.quantity + 1
-                                )}
-                              >
-                                <Plus className="w-3 h-3" />
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="destructive"
-                                onClick={() => updateJobItemQuantity(jobItem.debrisItem.id, 0)}
-                              >
-                                <Trash2 className="w-3 h-3" />
-                              </Button>
-                            </div>
+                        <>
+                          {/* Clear All Button */}
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-muted-foreground">
+                              Total Weight: {totals.totalWeight.toFixed(2)} tons | Volume: {totals.totalVolume.toFixed(1)} yd³
+                            </span>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => setJobItems([])}
+                            >
+                              Clear All
+                            </Button>
                           </div>
-                        ))
+
+                          {/* Items List */}
+                          <div className="space-y-2 max-h-80 overflow-y-auto">
+                            {jobItems.map((jobItem) => (
+                              <div key={jobItem.debrisItem.id} className="flex items-center justify-between p-3 border rounded-lg bg-muted/20">
+                                <div className="flex-1">
+                                  <div className="font-medium">{jobItem.debrisItem.name}</div>
+                                  <div className="text-sm text-muted-foreground">
+                                    <Badge variant="outline" className="mr-1 text-xs">
+                                      {jobItem.debrisItem.category}
+                                    </Badge>
+                                    {(jobItem.debrisItem.weightPerItem * jobItem.quantity).toFixed(2)} tons • {(jobItem.debrisItem.volumePerItem * jobItem.quantity).toFixed(1)} yd³ • {(jobItem.debrisItem.loadingTimePerItem * jobItem.quantity)}min
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => updateJobItemQuantity(
+                                      jobItem.debrisItem.id,
+                                      jobItem.quantity - 1
+                                    )}
+                                  >
+                                    <Minus className="w-3 h-3" />
+                                  </Button>
+                                  <Input
+                                    type="number"
+                                    min="1"
+                                    value={jobItem.quantity}
+                                    onChange={(e) => updateJobItemQuantity(
+                                      jobItem.debrisItem.id,
+                                      Math.max(1, Number(e.target.value))
+                                    )}
+                                    className="w-16 text-center"
+                                  />
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => updateJobItemQuantity(
+                                      jobItem.debrisItem.id,
+                                      jobItem.quantity + 1
+                                    )}
+                                  >
+                                    <Plus className="w-3 h-3" />
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="destructive"
+                                    onClick={() => updateJobItemQuantity(jobItem.debrisItem.id, 0)}
+                                  >
+                                    <Trash2 className="w-3 h-3" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </>
                       )}
                     </div>
                   </CardContent>
