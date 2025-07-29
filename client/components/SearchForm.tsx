@@ -1,18 +1,18 @@
 /**
  * SearchForm Component - Primary Search Interface
  *
- * PURPOSE: Main search functionality for discovering waste disposal facilities
+ * PURPOSE: Main search functionality for discovering waste disposal locations
  *
  * CORE FUNCTIONALITY:
  * - ZIP code-based location search with 50-mile radius
- * - Advanced filtering by facility type (landfill, transfer station, etc.)
+ * - Advanced filtering by location type (landfill, transfer station, etc.)
  * - Debris type filtering (construction, hazardous, electronics, etc.)
  * - Radius customization (5-100 miles)
  * - Real-time search with loading states
  *
  * INTEGRATION POINTS:
  * - Google Places API: ZIP code validation and geocoding
- * - Database: Facility search with geographic proximity
+ * - Database: Location search with geographic proximity
  * - Google Maps: Visual display of search results
  * - Analytics: Search query tracking for business intelligence
  *
@@ -26,7 +26,7 @@
  * 1. Validate ZIP code format (5 digits)
  * 2. Geocode ZIP to latitude/longitude coordinates
  * 3. Database query within specified radius
- * 4. Apply facility type and debris type filters
+ * 4. Apply location type and debris type filters
  * 5. Sort results by distance from search center
  * 6. Return paginated results with Google Maps integration
  */
