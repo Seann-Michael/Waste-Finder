@@ -209,11 +209,16 @@ export default function Blog() {
  */
 const BlogPostCard = React.memo<{ post: BlogPost }>(({ post }) => {
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+    if (!dateString) return "Unknown date";
+    try {
+      return new Date(dateString).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    } catch (error) {
+      return "Invalid date";
+    }
   };
 
   return (
@@ -222,7 +227,7 @@ const BlogPostCard = React.memo<{ post: BlogPost }>(({ post }) => {
         <div className="aspect-video w-full overflow-hidden rounded-t-lg">
           <img
             src={post.featuredImage}
-            alt={post.title}
+            alt={post.title || "Blog post image"}
             className="w-full h-full object-cover"
             loading="lazy"
           />
@@ -230,7 +235,7 @@ const BlogPostCard = React.memo<{ post: BlogPost }>(({ post }) => {
       )}
       <CardHeader className="flex-grow">
         <div className="flex items-center gap-2 mb-2">
-          {post.categories.map((category) => (
+          {post.categories && post.categories.map((category) => (
             <Badge key={category} variant="secondary" className="text-xs">
               {category}
             </Badge>
@@ -241,23 +246,37 @@ const BlogPostCard = React.memo<{ post: BlogPost }>(({ post }) => {
             </Badge>
           )}
         </div>
-        <CardTitle className="line-clamp-2">
+        <CardTitle className="overflow-hidden">
           <Link
             to={`/blog/${post.slug}`}
-            className="hover:text-primary transition-colors"
+            className="hover:text-primary transition-colors block"
+            style={{
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
+            }}
           >
-            {post.title}
+            {post.title || "Untitled"}
           </Link>
         </CardTitle>
-        <p className="text-muted-foreground text-sm line-clamp-3">
-          {post.excerpt}
+        <p
+          className="text-muted-foreground text-sm overflow-hidden"
+          style={{
+            display: '-webkit-box',
+            WebkitLineClamp: 3,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+          }}
+        >
+          {post.excerpt || "No excerpt available"}
         </p>
       </CardHeader>
       <CardContent className="pt-0 mt-auto">
         <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
           <div className="flex items-center gap-1">
             <User className="w-4 h-4" />
-            <span>{post.author}</span>
+            <span>{post.author || "Unknown author"}</span>
           </div>
           <div className="flex items-center gap-1">
             <Calendar className="w-4 h-4" />
