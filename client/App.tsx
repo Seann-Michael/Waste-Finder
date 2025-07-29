@@ -246,6 +246,21 @@ const App = () => (
                     }
                   />
 
+                  <Route
+                    path="/admin/rss-manager"
+                    element={
+                      <Suspense
+                        fallback={
+                          <PageLoading message="Loading RSS manager..." />
+                        }
+                      >
+                        <AdminRoute>
+                          <RSSManager />
+                        </AdminRoute>
+                      </Suspense>
+                    }
+                  />
+
                   {/* Catch-all route */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
