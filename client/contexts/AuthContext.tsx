@@ -47,6 +47,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = React.useState<User | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
   const [authCheckComplete, setAuthCheckComplete] = React.useState(false);
+  const [sessionToken, setSessionToken] = React.useState<string | null>(
+    () => localStorage.getItem('demo-session-token')
+  );
   const { showSuccess, showError } = useToastNotifications();
 
   /**
@@ -82,21 +85,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   /**
-   * Secure API request with CSRF protection and rate limiting
+   * Secure API request with CSRF protection and session token
    */
   const secureRequest = async (url: string, options: RequestInit = {}, skipExpectedErrorLogging = false) => {
     try {
       const csrfToken = getCSRFToken();
 
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": csrfToken,
+        "X-Requested-With": "XMLHttpRequest",
+        ...options.headers as Record<string, string>,
+      };
+
+      // Add session token if available
+      if (sessionToken) {
+        headers["X-Session-Token"] = sessionToken;
+      }
+
       const response = await fetch(url, {
         ...options,
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-Token": csrfToken,
-          "X-Requested-With": "XMLHttpRequest",
-          ...options.headers,
-        },
-        credentials: "same-origin", // Include cookies for session management
+        headers,
+        credentials: "same-origin",
       });
 
       if (!response.ok) {
@@ -239,7 +249,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         throw new Error('Invalid response from login server');
       }
 
-      // Set user state (server manages session via HTTP-only cookies)
+      // Store session token for demo auth
+      if (data.sessionToken) {
+        setSessionToken(data.sessionToken);
+        localStorage.setItem('demo-session-token', data.sessionToken);
+      }
+
+      // Set user state
       setUser(data.user);
       showSuccess(`Welcome back, ${data.user.username}!`);
 
@@ -288,6 +304,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Continue with logout even if server request fails
     } finally {
       setUser(null);
+      setSessionToken(null);
+      localStorage.removeItem('demo-session-token');
       try {
         clearUserContext();
         trackUserAction("logout");
@@ -323,13 +341,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (authCheckComplete) return;
 
       try {
-        // Check if user is authenticated via HTTP-only cookie
-        // Use a special method that doesn't log 401 as errors
+        // Check if user is authenticated via session token
+        const headers: Record<string, string> = {
+          "X-Requested-With": "XMLHttpRequest",
+        };
+
+        // Add session token if available
+        if (sessionToken) {
+          headers["X-Session-Token"] = sessionToken;
+        }
+
         const response = await fetch("/api/auth/me", {
           credentials: "same-origin",
-          headers: {
-            "X-Requested-With": "XMLHttpRequest",
-          },
+          headers,
         });
 
         if (response.ok) {
