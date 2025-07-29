@@ -1,3 +1,42 @@
+/**
+ * GoogleMapsEmbed Component - Interactive Maps Integration
+ *
+ * PURPOSE: Displays waste disposal facilities on interactive Google Maps
+ *
+ * FEATURES:
+ * - Multiple facility location display with custom markers
+ * - Different marker colors/icons for facility types
+ * - Interactive popup windows with facility information
+ * - Directions integration for route planning
+ * - Mobile-responsive map controls
+ * - Clustering for high-density areas
+ *
+ * GOOGLE MAPS API INTEGRATION:
+ * - Maps JavaScript API for interactive map rendering
+ * - Custom marker styling for different facility types
+ * - InfoWindow components for facility details
+ * - Directions service for route planning
+ * - Places service for address validation
+ *
+ * MAP FEATURES:
+ * - Auto-zoom to fit all facility markers
+ * - Search center highlighting
+ * - Traffic layer option
+ * - Satellite/terrain view switching
+ * - Street view integration for facility verification
+ *
+ * PERFORMANCE OPTIMIZATIONS:
+ * - Marker clustering for areas with many facilities
+ * - Lazy loading of map tiles
+ * - Efficient re-rendering on location updates
+ * - Memory management for large datasets
+ *
+ * ACCESSIBILITY:
+ * - Keyboard navigation support
+ * - Screen reader announcements for map changes
+ * - High contrast mode compatibility
+ * - Alternative text-based location list
+ */
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Loader2 } from "lucide-react";
