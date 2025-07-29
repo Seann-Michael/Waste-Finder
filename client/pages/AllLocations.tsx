@@ -214,7 +214,7 @@ export default function AllLocations() {
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold mb-4">
-              All Waste Disposal Facilities
+              All Waste Disposal Locations
             </h1>
             {searchLocation && (
               <div className="flex items-center gap-2 text-muted-foreground mb-2">
