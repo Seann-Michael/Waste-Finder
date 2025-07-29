@@ -213,17 +213,46 @@ const AppRoutes = () => (
 );
 
 const RouterWrapper = ({ children }: { children: React.ReactNode }) => {
+  const [routerError, setRouterError] = useState(false);
+  const [useHashRouter, setUseHashRouter] = useState(false);
+
+  useEffect(() => {
+    // Check if we should use HashRouter due to previous errors
+    const shouldUseHash = localStorage.getItem('use-hash-router') === 'true';
+    if (shouldUseHash) {
+      setUseHashRouter(true);
+    }
+  }, []);
+
+  const handleRouterError = (error: Error) => {
+    console.error('Router error:', error);
+    setRouterError(true);
+    // Switch to HashRouter for future loads
+    localStorage.setItem('use-hash-router', 'true');
+    setUseHashRouter(true);
+  };
+
+  if (routerError && !useHashRouter) {
+    return <PageLoading message="Switching router mode..." />;
+  }
+
   try {
-    return (
-      <BrowserRouter>
-        {children}
-      </BrowserRouter>
-    );
+    if (useHashRouter) {
+      return (
+        <HashRouter>
+          {children}
+        </HashRouter>
+      );
+    } else {
+      return (
+        <BrowserRouter>
+          {children}
+        </BrowserRouter>
+      );
+    }
   } catch (error) {
-    console.error('Router initialization error:', error);
-    // Fallback to hash router or refresh page
-    window.location.reload();
-    return <PageLoading message="Reloading application..." />;
+    handleRouterError(error as Error);
+    return <PageLoading message="Loading router..." />;
   }
 };
 
