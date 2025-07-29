@@ -200,7 +200,7 @@ Delete a facility (soft delete - marks as inactive).
 
 #### POST /api/admin/locations/bulk-upload
 
-Bulk upload facilities via CSV.
+Bulk upload locations via CSV.
 
 **Request:** Multipart form data with CSV file
 
