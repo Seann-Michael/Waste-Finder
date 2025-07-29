@@ -91,7 +91,7 @@ export default function Locations() {
             <div className="text-center">
               <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
               <h2 className="text-lg font-semibold mb-2">
-                Searching facilities...
+                Searching locations...
               </h2>
               <p className="text-muted-foreground">
                 Finding the best disposal options near you
