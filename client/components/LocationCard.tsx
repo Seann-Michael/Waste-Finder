@@ -129,59 +129,59 @@ export default function LocationCard({ location }: LocationCardProps) {
   };
 
   return (
-    <div className="border rounded-lg p-3 hover:shadow-md transition-shadow bg-white">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start">
+    <div className="border rounded-lg p-4 hover:shadow-md transition-shadow bg-white">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
         {/* Left Column - Basic Info */}
         <div className="lg:col-span-4">
-          <div className="flex items-center gap-2 mb-1">
-            <Badge variant="secondary" className="flex items-center gap-1 text-xs">
+          <div className="flex items-center gap-2 mb-2">
+            <Badge variant="secondary" className="flex items-center gap-1 text-sm">
               {getLocationIcon(location.locationType)}
               {getLocationLabel(location.locationType)}
             </Badge>
             {location.distance && (
-              <span className="text-xs text-muted-foreground">
+              <span className="text-sm text-muted-foreground">
                 {location.distance.toFixed(1)}mi
               </span>
             )}
           </div>
-          <h3 className="font-semibold text-sm leading-tight mb-1">
+          <h3 className="font-semibold text-base leading-snug mb-2">
             {location.name}
           </h3>
-          <div className="flex items-center gap-1 mb-2">
+          <div className="flex items-center gap-1 mb-3">
             <div className="flex">
               {renderStars(location.rating)}
             </div>
-            <span className="text-xs text-muted-foreground">
+            <span className="text-sm text-muted-foreground">
               ({location.reviewCount})
             </span>
           </div>
         </div>
 
         {/* Middle Column - Contact & Hours */}
-        <div className="lg:col-span-4 space-y-1">
-          <div className="flex items-center gap-1">
-            <MapPin className="w-3 h-3 text-muted-foreground" />
+        <div className="lg:col-span-4 space-y-2">
+          <div className="flex items-center gap-2">
+            <MapPin className="w-4 h-4 text-muted-foreground" />
             <a
               href={getDirectionsUrl()}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-primary hover:underline"
+              className="text-sm text-primary hover:underline"
             >
               {location.address}, {location.city}, {location.state}
             </a>
           </div>
-          <div className="flex items-center gap-1">
-            <Phone className="w-3 h-3 text-muted-foreground" />
+          <div className="flex items-center gap-2">
+            <Phone className="w-4 h-4 text-muted-foreground" />
             <a
               href={`tel:${location.phone}`}
-              className="text-xs text-primary hover:underline"
+              className="text-sm text-primary hover:underline"
             >
               {formatPhoneNumber(location.phone)}
             </a>
           </div>
-          <div className="flex items-center gap-1">
-            <Clock className="w-3 h-3 text-muted-foreground" />
-            <span className="text-xs text-muted-foreground">
+          <div className="flex items-center gap-2">
+            <Clock className="w-4 h-4 text-muted-foreground" />
+            <span className="text-sm text-muted-foreground">
               {location.operatingHours.length > 0
                 ? (() => {
                     const today = new Date().getDay();
@@ -205,30 +205,30 @@ export default function LocationCard({ location }: LocationCardProps) {
 
         {/* Right Column - Services & Actions */}
         <div className="lg:col-span-4">
-          <div className="flex flex-wrap gap-1 mb-2">
+          <div className="flex flex-wrap gap-1 mb-3">
             {location.debrisTypes.slice(0, 2).map((debris) => (
               <Badge
                 key={debris.id}
                 variant="outline"
-                className="text-xs px-1 py-0"
+                className="text-sm px-2 py-1"
               >
                 {debris.name}
               </Badge>
             ))}
             {location.debrisTypes.length > 2 && (
-              <Badge variant="outline" className="text-xs px-1 py-0">
+              <Badge variant="outline" className="text-sm px-2 py-1">
                 +{location.debrisTypes.length - 2}
               </Badge>
             )}
           </div>
-          <div className="flex flex-wrap gap-1 mb-2">
+          <div className="flex flex-wrap gap-1 mb-3">
             {location.paymentTypes.slice(0, 2).map((payment) => (
-              <Badge key={payment.id} variant="secondary" className="text-xs px-1 py-0">
+              <Badge key={payment.id} variant="secondary" className="text-sm px-2 py-1">
                 {payment.name}
               </Badge>
             ))}
           </div>
-          <Button asChild size="sm" className="w-full text-xs h-7">
+          <Button asChild size="sm" className="w-full text-sm h-8">
             <Link to={`/location/${location.id}`}>View Details</Link>
           </Button>
         </div>
