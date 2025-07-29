@@ -31,7 +31,7 @@ const mockUsers = [
 function validateCSRFToken(req: Request): boolean {
   const token = req.headers['x-csrf-token'] as string;
   const expectedToken = "demo-csrf-token-12345"; // In production, this would be dynamic and secure
-  
+
   return token === expectedToken;
 }
 
@@ -39,7 +39,7 @@ function validateCSRFToken(req: Request): boolean {
  * POST /api/auth/login
  * Demo login endpoint
  */
-export function handleLogin(req: Request, res: Response) {
+export async function handleLogin(req: Request, res: Response) {
   try {
     // Validate CSRF token
     if (!validateCSRFToken(req)) {
@@ -68,7 +68,7 @@ export function handleLogin(req: Request, res: Response) {
     if (!user) {
       // Simulate a delay to prevent timing attacks
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       return res.status(401).json({
         success: false,
         error: "Invalid credentials",
