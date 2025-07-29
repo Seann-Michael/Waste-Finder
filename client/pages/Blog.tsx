@@ -416,13 +416,17 @@ const BlogSidebar = React.memo<{
   posts: BlogPost[];
   selectedCategory: string;
   onCategoryChange: (category: string) => void;
-}>(({ categories, posts, selectedCategory, onCategoryChange }) => {
+}>(({ categories = [], posts = [], selectedCategory, onCategoryChange }) => {
   const recentPosts = posts
-    .filter(post => post.status === "published")
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .filter(post => post && post.status === "published")
+    .sort((a, b) => {
+      const dateA = new Date(b.createdAt || 0).getTime();
+      const dateB = new Date(a.createdAt || 0).getTime();
+      return dateA - dateB;
+    })
     .slice(0, 5);
 
-  const allTags = [...new Set(posts.flatMap(post => post.tags || []))].slice(0, 15);
+  const allTags = [...new Set(posts.flatMap(post => (post && post.tags) ? post.tags : []))].slice(0, 15);
 
   return (
     <div className="space-y-8">
@@ -443,9 +447,11 @@ const BlogSidebar = React.memo<{
           >
             All Posts
           </Button>
-          {categories.map((category) => {
+          {categories && categories.length > 0 ? categories.map((category) => {
+            if (!category || !category.id) return null;
+
             const postCount = posts.filter(post =>
-              post.categories?.includes(category.slug) && post.status === "published"
+              post && post.categories?.includes(category.slug) && post.status === "published"
             ).length;
 
             return (
@@ -456,13 +462,15 @@ const BlogSidebar = React.memo<{
                 className="w-full justify-between"
                 onClick={() => onCategoryChange(category.slug)}
               >
-                <span>{category.name}</span>
+                <span>{category.name || "Unnamed Category"}</span>
                 <Badge variant="secondary" className="text-xs">
                   {postCount}
                 </Badge>
               </Button>
             );
-          })}
+          }) : (
+            <p className="text-sm text-muted-foreground">No categories available</p>
+          )}
         </CardContent>
       </Card>
 
