@@ -220,11 +220,7 @@ export default function SuggestEdit({
     { dayOfWeek: 6, dayName: "Saturday", openTime: "08:00", closeTime: "15:00", isClosed: false },
   ];
 
-  const validatePhoneNumber = (phone: string): boolean => {
-    const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
-    const cleanPhone = phone.replace(/\D/g, "");
-    return cleanPhone.length >= 10 && cleanPhone.length <= 15;
-  };
+
 
   const handlePaymentTypeChange = (type: string, checked: boolean) => {
     const currentTypes = watchedValues.paymentTypes || [];
@@ -238,7 +234,7 @@ export default function SuggestEdit({
   const handleDebrisTypeChange = (type: string, checked: boolean) => {
     const currentTypes = watchedValues.debrisTypes || [];
     const currentPricing = watchedValues.debrisPricing || {};
-    
+
     if (checked) {
       setValue("debrisTypes", [...currentTypes, type]);
       if (!currentPricing[type]) {
@@ -302,7 +298,7 @@ export default function SuggestEdit({
 
       onSubmit(suggestion);
       setSubmitSuccess(true);
-      
+
       setTimeout(() => {
         onClose();
         reset();
@@ -553,7 +549,7 @@ export default function SuggestEdit({
                     </div>
                   ))}
                 </div>
-                
+
                 <div>
                   <Label htmlFor="additionalPaymentDetails">Additional Payment Details</Label>
                   <Textarea
@@ -686,7 +682,7 @@ export default function SuggestEdit({
                     <Input
                       id="submitterEmail"
                       type="email"
-                      {...register("submitterEmail", { 
+                      {...register("submitterEmail", {
                         required: "Email is required",
                         pattern: {
                           value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
@@ -700,7 +696,7 @@ export default function SuggestEdit({
                     )}
                   </div>
                 </div>
-                
+
                 <div>
                   <Label htmlFor="reason">Reason for Changes (Optional)</Label>
                   <Textarea
