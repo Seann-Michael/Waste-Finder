@@ -213,7 +213,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             username: sanitizedUsername,
             password: sanitizedPassword,
           }),
-        });
+        }, true); // Skip logging expected errors like 401/429
       } catch (requestError) {
         // Handle specific error types without logging expected errors
         if (requestError instanceof Error) {
