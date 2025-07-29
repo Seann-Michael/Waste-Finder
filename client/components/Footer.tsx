@@ -60,7 +60,7 @@ export default function Footer() {
                 </span>
               </div>
               <p className="text-muted-foreground text-sm">
-                The most comprehensive database of waste disposal facilities in
+                The most comprehensive database of waste disposal locations in
                 the United States.
               </p>
             </div>
