@@ -37,8 +37,17 @@ export default function AdminLogin() {
   // Redirect if already authenticated (prevent infinite loops)
   useEffect(() => {
     if (isAuthenticated && !isLoading) {
-      // Immediate redirect without delay
-      navigate("/admin", { replace: true });
+      // Use setTimeout to avoid router conflicts during rendering
+      const redirectTimer = setTimeout(() => {
+        try {
+          navigate("/admin", { replace: true });
+        } catch (error) {
+          console.warn('Navigation failed, using window.location:', error);
+          window.location.hash = "#/admin";
+        }
+      }, 0);
+
+      return () => clearTimeout(redirectTimer);
     }
   }, [isAuthenticated, isLoading, navigate]);
 
@@ -78,8 +87,8 @@ export default function AdminLogin() {
     const success = await login(sanitizedUsername, sanitizedPassword);
 
     if (success) {
-      // Force immediate navigation after successful login
-      navigate("/admin", { replace: true });
+      // Let the useEffect handle navigation to prevent router conflicts
+      // navigate("/admin", { replace: true });
     } else {
       // Error is handled by AuthContext and shown via toast
       setPassword(""); // Clear password on failed attempt

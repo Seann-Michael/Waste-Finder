@@ -14,8 +14,7 @@ interface SessionRecordingConfig {
  * Initialize session recording based on configuration
  */
 export function initSessionRecording() {
-  // Temporarily disable session recording to prevent script errors
-  console.log("Session recording disabled to prevent script errors");
+  // Completely disable session recording to prevent router conflicts
   return;
 
   const config: SessionRecordingConfig = {
