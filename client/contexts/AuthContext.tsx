@@ -108,6 +108,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             status: response.status
           };
         }
+
+        // Don't log 401 errors for auth checks as they're expected when not logged in
+        if (response.status === 401 && skipAuthErrorLogging) {
+          const error = new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
+          (error as any).status = response.status;
+          throw error;
+        }
+
         throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
       }
 
