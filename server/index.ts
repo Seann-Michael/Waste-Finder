@@ -18,6 +18,11 @@ import {
   handleLocationById,
   handleAllLocations,
 } from "./routes/locations";
+import {
+  handleLogin,
+  handleLogout,
+  handleAuthMe,
+} from "./routes/auth";
 import { authRateLimit, apiRateLimit, publicRateLimit } from "./middleware/rateLimiter";
 
 export function createServer() {
@@ -47,25 +52,9 @@ export function createServer() {
   app.get("/api/demo", publicRateLimit, handleDemo);
 
   // Authentication routes with strict rate limiting
-  app.post("/api/auth/login", authRateLimit, (req, res) => {
-    res.status(501).json({
-      success: false,
-      error: "Authentication endpoint not implemented",
-      message: "This is a demo application. Use the frontend login form.",
-    });
-  });
-
-  app.post("/api/auth/logout", apiRateLimit, (req, res) => {
-    res.json({ success: true, message: "Logged out successfully" });
-  });
-
-  app.get("/api/auth/me", apiRateLimit, (req, res) => {
-    res.status(401).json({
-      success: false,
-      error: "Not authenticated",
-      message: "This is a demo application.",
-    });
-  });
+  app.post("/api/auth/login", authRateLimit, handleLogin);
+  app.post("/api/auth/logout", apiRateLimit, handleLogout);
+  app.get("/api/auth/me", apiRateLimit, handleAuthMe);
 
   // Public location routes with public rate limiting
   app.get("/api/locations/all", publicRateLimit, handleAllLocations);
