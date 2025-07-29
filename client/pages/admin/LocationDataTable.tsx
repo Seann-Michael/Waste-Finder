@@ -272,7 +272,7 @@ export default function LocationDataTable() {
   ]);
 
   const handleRowClick = (location: Location) => {
-    navigate(`/admin/edit-location/${location.id}`);
+    navigate(`/location/${location.id}`);
   };
 
   const getStatusBadge = (isActive: boolean) => {
