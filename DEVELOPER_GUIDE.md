@@ -326,8 +326,8 @@ describe("validateZipCode", () => {
 // Test admin approval processes
 // Test Google API integrations
 
-describe("Facility Search Workflow", () => {
-  it("should return facilities within 50 miles", async () => {
+describe("Location Search Workflow", () => {
+  it("should return locations within 50 miles", async () => {
     // Test complete search process
   });
 });
