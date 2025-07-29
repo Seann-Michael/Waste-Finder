@@ -563,7 +563,7 @@ export default function SuggestEdit({
                       id="email"
                       type="email"
                       {...register("email")}
-                      placeholder="info@facility.com"
+                      placeholder="info@location.com"
                     />
                   </div>
                   <div>
