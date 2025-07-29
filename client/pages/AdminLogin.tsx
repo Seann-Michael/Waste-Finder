@@ -34,15 +34,6 @@ export default function AdminLogin() {
 
   const { login, isAuthenticated, isLoading } = useAuth();
 
-  // Don't render if currently checking auth or already authenticated
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
   // Redirect if already authenticated (prevent infinite loops)
   useEffect(() => {
     if (isAuthenticated && !isLoading) {
