@@ -238,9 +238,9 @@ export default function AdminSettings() {
     homeOgImage: "",
 
     // All Locations Page SEO
-    allLocationsTitle: "All Waste Disposal Facilities | WasteFinder Directory",
+    allLocationsTitle: "All Waste Disposal Locations | WasteFinder Directory",
     allLocationsDescription:
-      "Browse our complete directory of waste disposal facilities including landfills, transfer stations, and construction debris sites.",
+      "Browse our complete directory of waste disposal locations including landfills, transfer stations, and construction debris sites.",
     allLocationsKeywords:
       "waste disposal directory, landfill locations, transfer stations, construction landfills",
     allLocationsOgImage: "",
