@@ -59,8 +59,8 @@ export default function Header() {
 
   return (
     <>
-      {/* Sticky Header Container */}
-      <div className="sticky top-0 z-50">
+      {/* Sticky Header Container with iOS Safari fixes */}
+      <div className="sticky top-0 z-50 w-full">
         {/* Admin Editable Banner */}
         <div className="bg-primary text-primary-foreground py-2 px-4 text-center text-sm">
           <a
