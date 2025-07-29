@@ -69,7 +69,7 @@ export default function Footer() {
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>
                   <Link to="/" className="hover:text-primary">
-                    Facility Search
+                    Location Search
                   </Link>
                 </li>
                 <li>
