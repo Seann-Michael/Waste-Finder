@@ -18,6 +18,7 @@ import {
   handleLocationById,
   handleAllLocations,
 } from "./routes/locations";
+import { authRateLimit, apiRateLimit, publicRateLimit } from "./middleware/rateLimiter";
 
 export function createServer() {
   const app = express();
@@ -42,13 +43,34 @@ export function createServer() {
     res.json({ message: "Waste Finder API Server is running!" });
   });
 
-  // Demo endpoint
-  app.get("/api/demo", handleDemo);
+  // Demo endpoint with public rate limiting
+  app.get("/api/demo", publicRateLimit, handleDemo);
 
-  // Public location routes
-  app.get("/api/locations/all", handleAllLocations);
-  app.get("/api/locations", handleLocationsSearch);
-  app.get("/api/locations/:id", handleLocationById);
+  // Authentication routes with strict rate limiting
+  app.post("/api/auth/login", authRateLimit, (req, res) => {
+    res.status(501).json({
+      success: false,
+      error: "Authentication endpoint not implemented",
+      message: "This is a demo application. Use the frontend login form.",
+    });
+  });
+
+  app.post("/api/auth/logout", apiRateLimit, (req, res) => {
+    res.json({ success: true, message: "Logged out successfully" });
+  });
+
+  app.get("/api/auth/me", apiRateLimit, (req, res) => {
+    res.status(401).json({
+      success: false,
+      error: "Not authenticated",
+      message: "This is a demo application.",
+    });
+  });
+
+  // Public location routes with public rate limiting
+  app.get("/api/locations/all", publicRateLimit, handleAllLocations);
+  app.get("/api/locations", publicRateLimit, handleLocationsSearch);
+  app.get("/api/locations/:id", publicRateLimit, handleLocationById);
 
   // 404 handler for API routes
   app.use("/api/*", (_req, res) => {
