@@ -364,7 +364,7 @@ export default function LocationDetail() {
           price: editFormData.debrisPricing[name]?.price,
           priceDetails: editFormData.debrisPricing[name]?.priceDetails || "",
         })),
-        locationType: editFormData.facilityType,
+        locationType: editFormData.locationType,
         updatedAt: new Date().toISOString(),
       };
 
