@@ -66,6 +66,8 @@ export default function Marketing() {
       code: "",
       placement: "homepage",
       displayName: "Homepage Banner",
+      desktop: { enabled: false },
+      mobile: { enabled: false },
     },
     searchResults: {
       enabled: false,
@@ -73,6 +75,8 @@ export default function Marketing() {
       code: "",
       placement: "search-results",
       displayName: "Search Results Content",
+      desktop: { enabled: false },
+      mobile: { enabled: false },
     },
     searchResultsTop: {
       enabled: false,
@@ -80,6 +84,8 @@ export default function Marketing() {
       code: "",
       placement: "search-results-top",
       displayName: "Search Results Top Banner",
+      desktop: { enabled: false },
+      mobile: { enabled: false },
     },
     locationDetail: {
       enabled: false,
@@ -87,6 +93,8 @@ export default function Marketing() {
       code: "",
       placement: "location-detail",
       displayName: "Location Detail Content",
+      desktop: { enabled: false },
+      mobile: { enabled: false },
     },
     locationDetailTop: {
       enabled: false,
@@ -94,6 +102,8 @@ export default function Marketing() {
       code: "",
       placement: "location-detail-top",
       displayName: "Location Detail Top Banner",
+      desktop: { enabled: false },
+      mobile: { enabled: false },
     },
   });
 
