@@ -96,6 +96,7 @@ export default function Admin() {
   };
 
   const handleApproveReview = (reviewId: string) => {
+    console.log("Approving review:", reviewId);
     setPendingReviewsList(
       pendingReviewsList.filter((review) => review.id !== reviewId),
     );
@@ -104,11 +105,23 @@ export default function Admin() {
   };
 
   const handleRejectReview = (reviewId: string) => {
+    console.log("Rejecting review:", reviewId);
     setPendingReviewsList(
       pendingReviewsList.filter((review) => review.id !== reviewId),
     );
     setSelectedReview(null);
     alert("Review rejected successfully!");
+  };
+
+  // Add debug logging for click events
+  const handleReviewClick = (review: any) => {
+    console.log("Review clicked:", review.id);
+    setSelectedReview(review);
+  };
+
+  const handleSuggestionClick = (suggestion: any) => {
+    console.log("Suggestion clicked:", suggestion.id);
+    setSelectedSuggestion(suggestion);
   };
 
   // Real metrics calculations
@@ -234,7 +247,10 @@ export default function Admin() {
           </div>
           <Button
             variant="outline"
-            onClick={handleLogout}
+            onClick={() => {
+              console.log("Logout button clicked");
+              handleLogout();
+            }}
             className="w-full sm:w-auto"
           >
             <LogOut className="w-4 h-4 mr-2" />
@@ -352,7 +368,7 @@ export default function Admin() {
                   <div
                     key={review.id}
                     className="border rounded-lg p-3 space-y-2 cursor-pointer hover:bg-muted/50 transition-colors"
-                    onClick={() => setSelectedReview(review)}
+                    onClick={() => handleReviewClick(review)}
                   >
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium text-sm">{review.location}</h4>
