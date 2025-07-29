@@ -11,7 +11,7 @@ WasteFinder is a comprehensive web application that serves as a searchable publi
 - **🔍 Location Search**: Find waste disposal locations within 50 miles of any ZIP code
 - **🗺️ Interactive Maps**: Google Maps integration with location details and directions
 - **�� Reviews & Ratings**: Leave reviews and ratings for facilities
-- **📝 Suggest Facilities**: Recommend new locations or corrections to existing ones
+- **📝 Suggest Locations**: Recommend new locations or corrections to existing ones
 - **📚 Educational Blog**: Read waste management tips and industry news
 
 ### For Administrators (Login Required)
