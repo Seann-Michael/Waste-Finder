@@ -63,19 +63,9 @@ const MonitoringProvider = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
-const App = () => (
-  <ErrorBoundary>
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <MonitoringProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <Suspense
-                fallback={<PageLoading message="Loading application..." />}
-              >
-                <Routes>
+const AppRoutes = () => (
+  <Suspense fallback={<PageLoading message="Loading application..." />}>
+    <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/locations" element={<Locations />} />
                   <Route path="/all-locations" element={<AllLocations />} />
