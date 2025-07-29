@@ -32,19 +32,19 @@ WasteFinder is a **public waste facility database** with **admin-only authentica
 
 ##### Facility Search Workflow
 ```
-User enters ZIP → Google Places API validates → 
+User enters ZIP → Google Places API validates →
 Database search within 50 miles → Google Maps displays results
 ```
 
 ##### Review Submission Workflow
 ```
-User writes review → reCAPTCHA validation → 
+User writes review → reCAPTCHA validation →
 Database storage → Admin moderation → Public display
 ```
 
 ##### Suggestion Approval Workflow
 ```
-User suggests facility → reCAPTCHA validation → 
+User suggests facility → reCAPTCHA validation →
 Admin review → Approval/Rejection → Database update
 ```
 
@@ -168,21 +168,21 @@ interface Location {
   city: string;
   state: string;
   zipCode: string;
-  
+
   // Geographic Data
   latitude: number;
   longitude: number;
-  
+
   // Facility Classification
   facilityType: 'landfill' | 'transfer_station' | 'construction_landfill';
   acceptedWasteTypes: string[];
   restrictions: string[];
-  
+
   // Operational Information
   operatingHours: OperatingHours[];
   contactInfo: ContactInfo;
   pricing: PricingInfo;
-  
+
   // Administrative Fields
   isActive: boolean;
   verificationStatus: 'verified' | 'pending' | 'unverified';
@@ -200,7 +200,7 @@ interface Location {
 // Rate limiting to prevent brute force attacks
 
 // Example: Protected admin route
-<AdminRoute requiredRole="admin">
+<AdminRoute>
   <LocationDataTable />
 </AdminRoute>
 ```
@@ -264,7 +264,7 @@ const NewPublicPage = () => {
 // 5. Add audit logging
 
 // Example: New admin feature
-<AdminRoute requiredRole="super_admin">
+<AdminRoute>
   <NewAdminFeature />
 </AdminRoute>
 ```
@@ -328,12 +328,11 @@ describe('Facility Search Workflow', () => {
 4. Implement feature in relevant component
 5. Add error handling and fallbacks
 
-#### Adding New Admin Permission Level
-1. Update User interface with new role
-2. Modify AuthContext for new permissions
-3. Update AdminRoute component
-4. Add role checks in relevant components
-5. Update admin sidebar navigation
+#### Adding New Admin Permissions
+1. Update User interface permissions array
+2. Modify hasPermission function in AuthContext
+3. Add permission checks in relevant components
+4. Update admin sidebar navigation based on permissions
 
 ### Troubleshooting Common Issues
 

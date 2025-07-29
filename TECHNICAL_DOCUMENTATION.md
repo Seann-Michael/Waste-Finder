@@ -20,7 +20,7 @@ WasteFinder is a comprehensive web application that serves as a searchable publi
 
 #### Public Users (No Login Required)
 - **Primary Function**: Search for waste disposal facilities by ZIP code
-- **Secondary Functions**: 
+- **Secondary Functions**:
   - View facility details with Google Maps integration
   - Leave reviews and ratings for facilities
   - Suggest new locations or corrections to existing ones
@@ -29,17 +29,12 @@ WasteFinder is a comprehensive web application that serves as a searchable publi
 - **Protected Actions**: All form submissions use Google reCAPTCHA
 
 #### Admin Users (Login Required)
-- **Access Level**: Standard administrative permissions
-- **Functions**:
-  - Approve/deny user suggestions
-  - Moderate user reviews
-  - Basic facility management
-
-#### Super Admin Users (Login Required)
-- **Access Level**: Full system control
+- **Access Level**: Full system control (single admin role)
 - **Functions**:
   - Complete CRUD operations on facilities
   - Bulk upload facilities via CSV/Excel
+  - Approve/deny user suggestions
+  - Moderate user reviews
   - Blog management (create, edit, delete posts)
   - System configuration and settings
   - Marketing and AdSense management
@@ -56,7 +51,7 @@ WasteFinder is a comprehensive web application that serves as a searchable publi
 ```
 
 ### 2. Google Maps Integration
-**Files**: 
+**Files**:
 - `client/components/GoogleMapsEmbed.tsx` - Map display component
 - `client/components/LocationDetail.tsx` - Individual facility maps
 

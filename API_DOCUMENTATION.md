@@ -186,7 +186,7 @@ name,address,city,state,zipCode,facilityType,contactPhone,contactEmail,wasteType
 "City Landfill","123 Main St","Springfield","IL","62701","landfill","555-0123","info@citylandfill.com","general,construction"
 ```
 
-### Blog Management (Super Admin Only)
+### Blog Management (Admin Only)
 
 #### GET /api/blog/posts
 Get blog posts (public endpoint).
@@ -221,7 +221,7 @@ Admin login with username and password.
     user: {
       id: string,
       username: string,
-      role: 'admin' | 'super_admin',
+      role: 'admin',
       permissions: string[]
     }
   }
@@ -234,7 +234,7 @@ Logout and invalidate session.
 #### GET /api/auth/me
 Get current user information (if authenticated).
 
-### System Administration (Super Admin Only)
+### System Administration (Admin Only)
 
 #### GET /api/admin/analytics
 Get system analytics and usage statistics.

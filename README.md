@@ -9,17 +9,17 @@ WasteFinder is a comprehensive web application that serves as a searchable publi
 ### For Public Users (No Login Required)
 - **🔍 Facility Search**: Find waste disposal facilities within 50 miles of any ZIP code
 - **🗺️ Interactive Maps**: Google Maps integration with facility locations and directions
-- **⭐ Reviews & Ratings**: Leave reviews and ratings for facilities
+- **�� Reviews & Ratings**: Leave reviews and ratings for facilities
 - **📝 Suggest Facilities**: Recommend new locations or corrections to existing ones
 - **📚 Educational Blog**: Read waste management tips and industry news
 
 ### For Administrators (Login Required)
-- **👥 User Management**: Admin and Super Admin role-based access control
 - **📋 Content Moderation**: Approve/reject user reviews and facility suggestions
 - **🏢 Facility Management**: Full CRUD operations on facility database
 - **📊 Bulk Operations**: CSV upload for multiple facility additions
 - **✍️ Blog Management**: Create and manage educational content
 - **💰 Revenue Management**: Google AdSense integration and reporting
+- **⚙️ System Configuration**: Manage all aspects of the application
 
 ## 🛠️ Technology Stack
 
@@ -128,11 +128,12 @@ client/
 ## 🔧 Configuration
 
 ### Admin User Setup
-Super Admin users can:
+Admin users can:
 - Add, edit, delete facilities
 - Bulk upload facilities via CSV
+- Moderate user reviews and suggestions
 - Manage blog posts and content
-- Configure system settings
+- Configure system settings and marketing
 - View analytics and reports
 
 ### AdSense Integration

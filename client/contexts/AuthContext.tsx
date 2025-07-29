@@ -7,7 +7,7 @@ interface User {
   id: string;
   username: string;
   email: string;
-  role: "admin" | "super_admin";
+  role: "admin";
   permissions: string[];
 }
 
@@ -24,7 +24,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 /**
- * Authentication Provider for Admin/Super Admin Users
+ * Authentication Provider for Admin Users
  *
  * SECURITY FEATURES:
  * - JWT tokens stored in HTTP-only cookies (prevents XSS attacks)
@@ -33,8 +33,8 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
  * - Secure session management with automatic expiration
  *
  * USER ROLES:
- * - admin: Can moderate reviews, approve suggestions, basic facility management
- * - super_admin: Full system access including blog management, bulk uploads, system settings
+ * - admin: Full system access including facility management, blog management,
+ *          bulk uploads, system settings, review moderation, and suggestion approval
  *
  * IMPORTANT: Public users (facility searchers) do NOT use this authentication system
  * Only admin panel access requires login credentials
@@ -206,15 +206,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    */
   const hasPermission = (permission: string): boolean => {
     if (!user) return false;
-    return user.permissions.includes(permission) || user.role === "super_admin";
+    return user.permissions.includes(permission) || user.role === "admin";
   };
 
   /**
-   * Check if user has specific role
+   * Check if user has admin role
    */
-  const hasRole = (role: "admin" | "super_admin"): boolean => {
+  const hasRole = (role: "admin"): boolean => {
     if (!user) return false;
-    return user.role === role || user.role === "super_admin";
+    return user.role === "admin";
   };
 
   /**

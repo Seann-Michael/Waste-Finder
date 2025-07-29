@@ -120,7 +120,7 @@ input, textarea, select {
 - ✅ Mobile-optimized typography
 
 ### **Admin Panel**
-- ✅ Responsive admin navigation
+- ✅ Responsive admin navigation (single admin role)
 - ✅ Mobile data table scrolling
 - ✅ Touch-optimized form controls
 - ✅ Mobile modal dialogs
@@ -146,12 +146,12 @@ input, textarea, select {
 .component {
   /* Mobile styles (default) */
   padding: 1rem;
-  
+
   @media (min-width: 640px) {
     /* Tablet styles */
     padding: 1.5rem;
   }
-  
+
   @media (min-width: 1024px) {
     /* Desktop styles */
     padding: 2rem;
@@ -165,7 +165,7 @@ input, textarea, select {
 const ResponsiveComponent = () => {
   return (
     <div className="container-mobile">
-      <MobileGrid 
+      <MobileGrid
         columns={{ mobile: 1, tablet: 2, desktop: 3 }}
         gap="md"
       >
