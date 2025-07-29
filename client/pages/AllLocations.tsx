@@ -358,15 +358,15 @@ export default function AllLocations() {
                         )}
                       </div>
 
-                      <div className="space-y-6">
-                        {filteredAndSortedLocations.map((location) => (
-                          <LocationCard
-                            key={location.id}
-                            location={location}
-                            onClick={() => handleLocationClick(location)}
-                          />
-                        ))}
-                      </div>
+              <div className="space-y-4">
+                {filteredAndSortedLocations.map((location) => (
+                  <LocationCard
+                    key={location.id}
+                    location={location}
+                    onClick={() => handleLocationClick(location)}
+                  />
+                ))}
+              </div>
 
                       {/* Bottom Ad - Full Width */}
                       <AdSense placement="search-results" className="my-8" />
