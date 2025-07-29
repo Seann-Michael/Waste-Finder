@@ -23,6 +23,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Location } from "@shared/api";
+import { validatePhoneNumber, formatPhoneNumber } from "@/lib/utils";
 import {
   Edit,
   MapPin,
