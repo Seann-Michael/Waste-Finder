@@ -20,6 +20,15 @@ import {
 } from "./routes/locations";
 import { handleLogin, handleLogout, handleAuthMe } from "./routes/auth";
 import {
+  parseRSSFeed,
+  testRSSFeed,
+  getRSSFeeds,
+  createRSSFeed,
+  updateRSSFeed,
+  deleteRSSFeed,
+  getAggregatedNews
+} from "./routes/rss";
+import {
   authRateLimit,
   apiRateLimit,
   publicRateLimit,
