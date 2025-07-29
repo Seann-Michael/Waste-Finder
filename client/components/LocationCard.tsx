@@ -130,10 +130,10 @@ export default function LocationCard({ location }: LocationCardProps) {
 
   return (
     <Card className="hover:shadow-lg transition-shadow duration-200">
-      <CardHeader className="pb-3">
+      <CardHeader className="pb-2">
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex items-center gap-2 mb-1">
               <Badge variant="secondary" className="flex items-center gap-1">
                 {getLocationIcon(location.locationType)}
                 {getLocationLabel(location.locationType)}
@@ -147,7 +147,7 @@ export default function LocationCard({ location }: LocationCardProps) {
             <h3 className="text-lg font-semibold text-foreground mb-1">
               {location.name}
             </h3>
-            <div className="flex items-center gap-1 mb-2">
+            <div className="flex items-center gap-1 mb-1">
               {renderStars(location.rating)}
               <span className="text-sm text-muted-foreground ml-1">
                 ({location.reviewCount} reviews)
@@ -155,7 +155,7 @@ export default function LocationCard({ location }: LocationCardProps) {
             </div>
 
             {/* Prominent Debris Types */}
-            <div className="mb-3">
+            <div className="mb-2">
               <div className="flex flex-wrap gap-1">
                 {location.debrisTypes.slice(0, 2).map((debris) => (
                   <Badge
