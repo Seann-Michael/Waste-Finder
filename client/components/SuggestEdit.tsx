@@ -442,7 +442,7 @@ export default function SuggestEdit({
             Suggest Edit: {location.name}
           </DialogTitle>
           <DialogDescription>
-            Help us keep facility information accurate by suggesting updates
+            Help us keep location information accurate by suggesting updates
           </DialogDescription>
         </DialogHeader>
 
