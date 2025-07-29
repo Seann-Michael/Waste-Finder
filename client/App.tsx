@@ -89,7 +89,7 @@ const App = () => (
                   <Route path="/blog" element={<Blog />} />
                   <Route path="/blog/:slug" element={<BlogPost />} />
                   <Route path="/news" element={<News />} />
-                  <Route path="/search-test" element={<SearchTest />} />
+                  <Route path="/news/article/:id" element={<NewsArticle />} />
 
                   {/* Admin routes with separate loading */}
                   <Route
