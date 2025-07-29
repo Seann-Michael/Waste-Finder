@@ -209,7 +209,7 @@ export default function AllLocations() {
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
 
-      <div className="flex-1 fixed-header-spacing">
+      <div className="flex-1">
         <div className="max-w-7xl mx-auto px-4 py-8">
           {/* Header */}
           <div className="mb-8">
