@@ -19,11 +19,11 @@
  * - Places service for address validation
  *
  * MAP FEATURES:
- * - Auto-zoom to fit all facility markers
+ * - Auto-zoom to fit all location markers
  * - Search center highlighting
  * - Traffic layer option
  * - Satellite/terrain view switching
- * - Street view integration for facility verification
+ * - Street view integration for location verification
  *
  * PERFORMANCE OPTIMIZATIONS:
  * - Marker clustering for areas with many facilities
