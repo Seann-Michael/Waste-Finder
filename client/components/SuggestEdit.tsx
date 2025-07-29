@@ -812,7 +812,7 @@ export default function SuggestEdit({
                   <Textarea
                     id="additionalLocationDetails"
                     {...register("additionalLocationDetails")}
-                    placeholder="Any additional information about the facility..."
+                    placeholder="Any additional information about the location..."
                     rows={4}
                   />
                 </div>
