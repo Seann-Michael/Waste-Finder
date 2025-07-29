@@ -196,9 +196,10 @@ export default function Index() {
                 href={contentSettings.homeMarketingButtonUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2"
+                className="flex flex-col items-center justify-center"
               >
-                Click: {contentSettings.homeMarketingButtonText}
+                <span>{contentSettings.homeMarketingButtonText}</span>
+                <span className="text-sm opacity-80">Click here</span>
               </a>
             </Button>
           </div>
