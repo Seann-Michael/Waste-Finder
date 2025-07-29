@@ -281,7 +281,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await secureRequest("/api/auth/logout", { method: "POST" });
     } catch (error) {
-      console.error("Logout error:", error);
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      console.error("Logout error:", errorMsg);
       // Continue with logout even if server request fails
     } finally {
       setUser(null);
