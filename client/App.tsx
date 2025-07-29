@@ -250,26 +250,11 @@ if (!root) {
   (window as any).__react_root = root;
 }
 
-// Router reset function for debugging
-(window as any).resetRouter = () => {
-  localStorage.removeItem('use-hash-router');
-  window.location.reload();
-};
-
-// Handle HMR router issues
+// Handle HMR updates
 if (import.meta.hot) {
   import.meta.hot.dispose(() => {
-    // Clean up router state on HMR
-    if (window.history && window.history.replaceState) {
-      try {
-        const currentPath = window.location.pathname;
-        window.history.replaceState(null, '', currentPath);
-      } catch (e) {
-        console.warn('HMR router cleanup failed:', e);
-        // Switch to hash router if browser history fails
-        localStorage.setItem('use-hash-router', 'true');
-      }
-    }
+    // Simple cleanup for HashRouter
+    console.log('HMR: Cleaning up router');
   });
 }
 
