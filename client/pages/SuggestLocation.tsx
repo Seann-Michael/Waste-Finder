@@ -28,6 +28,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useToastNotifications } from "../hooks/use-toast-notifications";
 import { validatePhoneNumber, formatPhoneNumber, validateAndFormatUrl } from "../lib/utils";
+import { sanitizeInput, validateEmail, validateUrl } from "../lib/security";
 
 // Form data interface matching AddLocation
 interface SuggestLocationFormData {
@@ -193,8 +194,43 @@ export default function SuggestLocation() {
 
 
   const onSubmit = async (data: SuggestLocationFormData) => {
+    // Sanitize all inputs
+    const sanitizedData = {
+      ...data,
+      name: sanitizeInput(data.name, 100),
+      address: sanitizeInput(data.address, 200),
+      city: sanitizeInput(data.city, 100),
+      state: sanitizeInput(data.state.toUpperCase(), 2),
+      zipCode: sanitizeInput(data.zipCode, 10),
+      phone: sanitizeInput(data.phone, 20),
+      email: data.email ? sanitizeInput(data.email, 254) : "",
+      website: data.website ? sanitizeInput(data.website, 500) : "",
+      googleBusinessUrl: data.googleBusinessUrl ? sanitizeInput(data.googleBusinessUrl, 500) : "",
+      additionalLocationDetails: data.additionalLocationDetails ? sanitizeInput(data.additionalLocationDetails, 1000) : "",
+      submitterName: sanitizeInput(data.submitterName, 100),
+      submitterEmail: sanitizeInput(data.submitterEmail, 254),
+      submitterPhone: data.submitterPhone ? sanitizeInput(data.submitterPhone, 20) : "",
+    };
+
+    // Validate email formats
+    if (sanitizedData.email && !validateEmail(sanitizedData.email)) {
+      showError("Invalid facility email format");
+      return;
+    }
+
+    if (!validateEmail(sanitizedData.submitterEmail)) {
+      showError("Invalid submitter email format");
+      return;
+    }
+
+    // Validate website if provided
+    if (sanitizedData.website && !validateUrl(sanitizedData.website)) {
+      showError("Invalid website URL");
+      return;
+    }
+
     // Validate phone number if provided
-    if (data.phone && !validatePhoneNumber(data.phone)) {
+    if (sanitizedData.phone && !validatePhoneNumber(sanitizedData.phone)) {
       showError("Please enter a valid phone number (10-15 digits)");
       return;
     }
