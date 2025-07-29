@@ -288,25 +288,7 @@ export default function SearchForm({
             </div>
           )}
 
-          {/* Submit Button */}
-          <Button
-            type="submit"
-            className="w-full"
-            size="lg"
-            disabled={isLoading || !zipCode.trim()}
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Searching...
-              </>
-            ) : (
-              <>
-                <Search className="w-4 h-4 mr-2" />
-                Find Facilities
-              </>
-            )}
-          </Button>
+
         </form>
       </CardContent>
     </Card>
