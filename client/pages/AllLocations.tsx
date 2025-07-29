@@ -358,7 +358,7 @@ export default function AllLocations() {
                         )}
                       </div>
 
-              <div className="space-y-4">
+              <div className="space-y-2">
                 {filteredAndSortedLocations.map((location) => (
                   <LocationCard
                     key={location.id}

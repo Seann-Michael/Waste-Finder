@@ -129,156 +129,110 @@ export default function LocationCard({ location }: LocationCardProps) {
   };
 
   return (
-    <Card className="hover:shadow-lg transition-shadow duration-200">
-      <CardHeader className="pb-2">
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-1">
-              <Badge variant="secondary" className="flex items-center gap-1">
-                {getLocationIcon(location.locationType)}
-                {getLocationLabel(location.locationType)}
-              </Badge>
-              {location.distance && (
-                <span className="text-sm text-muted-foreground">
-                  {location.distance.toFixed(1)} miles away
-                </span>
-              )}
-            </div>
-            <h3 className="text-lg font-semibold text-foreground mb-1">
-              {location.name}
-            </h3>
-            <div className="flex items-center gap-1 mb-1">
-              {renderStars(location.rating)}
-              <span className="text-sm text-muted-foreground ml-1">
-                ({location.reviewCount} reviews)
+    <div className="border rounded-lg p-3 hover:shadow-md transition-shadow bg-white">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start">
+        {/* Left Column - Basic Info */}
+        <div className="lg:col-span-4">
+          <div className="flex items-center gap-2 mb-1">
+            <Badge variant="secondary" className="flex items-center gap-1 text-xs">
+              {getLocationIcon(location.locationType)}
+              {getLocationLabel(location.locationType)}
+            </Badge>
+            {location.distance && (
+              <span className="text-xs text-muted-foreground">
+                {location.distance.toFixed(1)}mi
               </span>
+            )}
+          </div>
+          <h3 className="font-semibold text-sm leading-tight mb-1">
+            {location.name}
+          </h3>
+          <div className="flex items-center gap-1 mb-2">
+            <div className="flex">
+              {renderStars(location.rating)}
             </div>
-
-            {/* Prominent Debris Types */}
-            <div className="mb-2">
-              <div className="flex flex-wrap gap-1">
-                {location.debrisTypes.slice(0, 2).map((debris) => (
-                  <Badge
-                    key={debris.id}
-                    variant="default"
-                    className="text-xs bg-primary/10 text-primary border-primary/20"
-                  >
-                    {debris.name}
-                  </Badge>
-                ))}
-                {location.debrisTypes.length > 2 && (
-                  <Badge
-                    variant="outline"
-                    className="text-xs text-muted-foreground"
-                  >
-                    +{location.debrisTypes.length - 2} more
-                  </Badge>
-                )}
-              </div>
-            </div>
+            <span className="text-xs text-muted-foreground">
+              ({location.reviewCount})
+            </span>
           </div>
         </div>
-      </CardHeader>
 
-      <CardContent className="space-y-2 pt-0">
-        {/* Address - Clickable for directions */}
-        <div className="flex items-start gap-2">
-          <MapPin className="w-4 h-4 text-muted-foreground mt-0.5" />
-          <a
-            href={getDirectionsUrl()}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm text-primary hover:underline"
-          >
-            <div>{location.address}</div>
-            <div>
-              {location.city}, {location.state} {location.zipCode}
-            </div>
-          </a>
-        </div>
-
-        {/* Phone */}
-        <div className="flex items-center gap-2">
-          <Phone className="w-4 h-4 text-muted-foreground" />
-          <a
-            href={`tel:${location.phone}`}
-            className="text-sm text-primary hover:underline"
-          >
-            {formatPhoneNumber(location.phone)}
-          </a>
-        </div>
-
-        {/* Operating Hours */}
-        <div className="flex items-start gap-2">
-          <Clock className="w-4 h-4 text-muted-foreground mt-0.5" />
-          <div className="text-sm text-muted-foreground">
-            {location.operatingHours.length > 0
-              ? (() => {
-                  const today = new Date().getDay();
-                  const todayHours = location.operatingHours.find(
-                    (h) => h.dayOfWeek === today,
-                  );
-                  if (todayHours) {
-                    if (todayHours.isClosed) {
-                      return "Closed today";
+        {/* Middle Column - Contact & Hours */}
+        <div className="lg:col-span-4 space-y-1">
+          <div className="flex items-center gap-1">
+            <MapPin className="w-3 h-3 text-muted-foreground" />
+            <a
+              href={getDirectionsUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-primary hover:underline"
+            >
+              {location.address}, {location.city}, {location.state}
+            </a>
+          </div>
+          <div className="flex items-center gap-1">
+            <Phone className="w-3 h-3 text-muted-foreground" />
+            <a
+              href={`tel:${location.phone}`}
+              className="text-xs text-primary hover:underline"
+            >
+              {formatPhoneNumber(location.phone)}
+            </a>
+          </div>
+          <div className="flex items-center gap-1">
+            <Clock className="w-3 h-3 text-muted-foreground" />
+            <span className="text-xs text-muted-foreground">
+              {location.operatingHours.length > 0
+                ? (() => {
+                    const today = new Date().getDay();
+                    const todayHours = location.operatingHours.find(
+                      (h) => h.dayOfWeek === today,
+                    );
+                    if (todayHours) {
+                      if (todayHours.isClosed) {
+                        return "Closed today";
+                      }
+                      const openTime = formatTo12Hour(todayHours.openTime);
+                      const closeTime = formatTo12Hour(todayHours.closeTime);
+                      return `${openTime} - ${closeTime}`;
                     }
-                    const openTime = formatTo12Hour(todayHours.openTime);
-                    const closeTime = formatTo12Hour(todayHours.closeTime);
-                    const timezone = getTimezone(location.state);
-                    return `Open ${openTime} - ${closeTime} ${timezone}`;
-                  }
-                  return "Hours vary";
-                })()
-              : "Hours not available"}
+                    return "Hours vary";
+                  })()
+                : "Call for hours"}
+            </span>
           </div>
         </div>
 
-        {/* Debris Types with Pricing */}
-        <div className="space-y-1">
-          <div className="text-sm font-medium">Accepts:</div>
-          <div className="space-y-1">
-            {location.debrisTypes.slice(0, 3).map((debris) => (
-              <div
+        {/* Right Column - Services & Actions */}
+        <div className="lg:col-span-4">
+          <div className="flex flex-wrap gap-1 mb-2">
+            {location.debrisTypes.slice(0, 2).map((debris) => (
+              <Badge
                 key={debris.id}
-                className="flex justify-between items-center text-xs"
+                variant="outline"
+                className="text-xs px-1 py-0"
               >
-                <Badge variant="outline" className="text-xs">
-                  {debris.name}
-                </Badge>
-                <span className="text-muted-foreground">
-                  {debris.price !== undefined
-                    ? `$${debris.price.toFixed(2)} ${debris.priceDetails || ""}`
-                    : "Call for pricing"}
-                </span>
-              </div>
+                {debris.name}
+              </Badge>
             ))}
-            {location.debrisTypes.length > 3 && (
-              <Badge variant="outline" className="text-xs">
-                +{location.debrisTypes.length - 3} more types
+            {location.debrisTypes.length > 2 && (
+              <Badge variant="outline" className="text-xs px-1 py-0">
+                +{location.debrisTypes.length - 2}
               </Badge>
             )}
           </div>
-        </div>
-
-        {/* Payment Methods */}
-        <div className="space-y-1">
-          <div className="text-sm font-medium">Payment Methods:</div>
-          <div className="flex flex-wrap gap-1">
-            {location.paymentTypes.map((payment) => (
-              <Badge key={payment.id} variant="secondary" className="text-xs">
+          <div className="flex flex-wrap gap-1 mb-2">
+            {location.paymentTypes.slice(0, 2).map((payment) => (
+              <Badge key={payment.id} variant="secondary" className="text-xs px-1 py-0">
                 {payment.name}
               </Badge>
             ))}
           </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex gap-2 pt-1">
-          <Button asChild className="flex-1">
+          <Button asChild size="sm" className="w-full text-xs h-7">
             <Link to={`/location/${location.id}`}>View Details</Link>
           </Button>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
