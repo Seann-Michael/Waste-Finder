@@ -91,12 +91,6 @@ const App = () => (
                   <Route path="/news" element={<News />} />
                   <Route path="/news/article/:id" element={<NewsArticle />} />
 
-                  {/* Legacy route redirects */}
-                  <Route
-                    path="/search-test"
-                    element={<RedirectPage to="/all-locations" message="This page has moved. Redirecting to All Locations..." />}
-                  />
-
                   {/* Admin routes with separate loading */}
                   <Route
                     path="/admin-login"
