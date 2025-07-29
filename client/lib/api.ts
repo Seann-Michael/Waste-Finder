@@ -1,4 +1,5 @@
 import { getSecureHeaders } from "./security";
+import { trackAPICall } from "./monitoring";
 
 /**
  * Custom error classes for better error handling
