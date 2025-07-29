@@ -586,20 +586,10 @@ export default function AddLocation() {
                     id="phone"
                     {...register("phone", {
                       required: "Phone number is required",
-                      pattern: {
-                        value: /^\d{10}$/,
-                        message: "Phone number must be exactly 10 digits",
-                      },
+                      validate: (value) => validatePhoneNumber(value) || "Please enter a valid phone number (10-15 digits)",
                     })}
-                    placeholder="5551234567"
-                    maxLength={10}
+                    placeholder="(555) 123-4567 or 5551234567"
                     className={errors.phone ? "border-red-500" : ""}
-                    onKeyPress={(e) => {
-                      // Only allow numbers
-                      if (!/\d/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'Tab') {
-                        e.preventDefault();
-                      }
-                    }}
                   />
                   {errors.phone && (
                     <p className="text-red-500 text-sm mt-1">
