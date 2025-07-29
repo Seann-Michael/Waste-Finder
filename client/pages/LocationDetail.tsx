@@ -1212,7 +1212,7 @@ export default function LocationDetail() {
                 <CardContent className="space-y-6">
                   {reviews.length === 0 ? (
                     <p className="text-center text-muted-foreground py-8">
-                      No reviews yet. Be the first to review this facility!
+                      No reviews yet. Be the first to review this location!
                     </p>
                   ) : (
                     reviews.map((review) => (
