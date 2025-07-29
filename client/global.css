@@ -52,6 +52,31 @@
 }
 
 @layer components {
+  /* iOS Safari sticky header fixes */
+  .mobile-header-fix {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 50;
+    /* Force hardware acceleration on iOS */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    /* Prevent iOS Safari layout shifts */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  /* Prevent iOS Safari from interfering with sticky positioning */
+  @supports (-webkit-touch-callout: none) {
+    .mobile-header-fix {
+      position: sticky;
+      position: -webkit-sticky;
+      /* Ensure the header stays at the very top */
+      top: env(safe-area-inset-top, 0);
+    }
+  }
+
   /* Mobile-optimized container */
   .container-mobile {
     width: 100%;
