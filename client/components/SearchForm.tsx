@@ -145,10 +145,10 @@ export default function SearchForm({
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* ZIP Code Input with Button */}
-          <div className="flex flex-col sm:flex-row gap-3 items-end">
-            <div className="flex-shrink-0 space-y-2">
-              <label htmlFor="zipCode" className="text-sm font-medium text-gray-700">
+          {/* ZIP Code Input - Centered */}
+          <div className="flex flex-col items-center gap-4">
+            <div className="space-y-2 text-center">
+              <label htmlFor="zipCode" className="text-sm font-medium text-gray-700 block">
                 ZIP Code
               </label>
               <Input
@@ -160,12 +160,19 @@ export default function SearchForm({
                 pattern="[0-9]{5}"
                 maxLength={5}
                 required
-                className="w-32 text-center text-lg font-mono border-2 focus:border-primary"
+                className="w-24 text-center text-lg font-mono border-2 focus:border-primary mx-auto"
               />
+              {zipCode.length > 0 && zipCode.length < 5 && (
+                <p className="text-xs text-gray-500">
+                  Please enter a complete 5-digit ZIP code
+                </p>
+              )}
             </div>
+
+            {/* Find Facilities Button - Centered Below */}
             <Button
               type="submit"
-              className="flex-1 h-11 bg-primary hover:bg-primary/90 text-white font-semibold"
+              className="px-8 h-11 bg-primary hover:bg-primary/90 text-white font-semibold"
               disabled={isLoading || zipCode.length !== 5}
             >
               {isLoading ? (
@@ -176,16 +183,11 @@ export default function SearchForm({
               ) : (
                 <>
                   <Search className="w-4 h-4 mr-2" />
-                  Find Facilities Near Me
+                  Find Facilities
                 </>
               )}
             </Button>
           </div>
-          {zipCode.length > 0 && zipCode.length < 5 && (
-            <p className="text-xs text-gray-500 text-center">
-              Please enter a complete 5-digit ZIP code
-            </p>
-          )}
 
           {/* Advanced Options Toggle */}
           {showAdvanced && (
