@@ -158,7 +158,7 @@ export default function LocationDetail() {
           locationId: fetchedLocation.id,
           rating: 5,
           content:
-            "Excellent facility with friendly staff. Very organized and clean. Pricing is fair and competitive.",
+            "Excellent location with friendly staff. Very organized and clean. Pricing is fair and competitive.",
           authorName: "Mike T.",
           isApproved: true,
           isModerated: true,
