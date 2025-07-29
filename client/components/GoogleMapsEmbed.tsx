@@ -130,7 +130,7 @@ export default function GoogleMapsEmbed({
       const searchUrl = "https://www.google.com/maps/embed/v1/search";
       const searchParams = new URLSearchParams({
         key: apiKey,
-        q: `waste disposal facilities near ${searchQuery}`,
+        q: `waste disposal locations near ${searchQuery}`,
         zoom: "10",
       });
       setMapUrl(`${searchUrl}?${searchParams.toString()}`);
