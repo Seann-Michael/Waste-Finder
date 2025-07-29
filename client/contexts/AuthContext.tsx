@@ -84,27 +84,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * Secure API request with CSRF protection and rate limiting
    */
   const secureRequest = async (url: string, options: RequestInit = {}) => {
-    const csrfToken = getCSRFToken();
+    try {
+      const csrfToken = getCSRFToken();
 
-    const response = await fetch(url, {
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-Token": csrfToken,
-        "X-Requested-With": "XMLHttpRequest",
-        ...options.headers,
-      },
-      credentials: "same-origin", // Include cookies for session management
-    });
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": csrfToken,
+          "X-Requested-With": "XMLHttpRequest",
+          ...options.headers,
+        },
+        credentials: "same-origin", // Include cookies for session management
+      });
 
-    if (!response.ok) {
-      const errorData = await response
-        .json()
-        .catch(() => ({ message: "Unknown error" }));
-      throw new Error(errorData.message || `HTTP ${response.status}`);
+      if (!response.ok) {
+        const errorData = await response
+          .json()
+          .catch(() => ({ message: "Unknown error" }));
+        throw new Error(errorData.message || `HTTP ${response.status}`);
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error('Secure request failed:', error);
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        throw new Error('Network error: Unable to connect to server');
+      }
+      throw error;
     }
-
-    return response.json();
   };
 
   /**
