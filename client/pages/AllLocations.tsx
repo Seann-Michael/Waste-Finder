@@ -132,7 +132,7 @@ export default function AllLocations() {
             `Found ${data.length} locations within ${radiusFromParams || "50"} miles of ${zipFromParams}`,
           );
         } else {
-          setSearchMessage(`Found ${data.length} facilities`);
+          setSearchMessage(`Found ${data.length} locations`);
         }
       } catch (err) {
         console.error("Error loading locations:", err);
