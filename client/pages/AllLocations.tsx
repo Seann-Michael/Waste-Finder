@@ -242,7 +242,7 @@ export default function AllLocations() {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* Search and Filters - Left Sidebar */}
             <div className="lg:col-span-1">
-              <Card className="sticky top-24">
+              <Card className="sticky top-32">
                 <CardContent className="p-4">
                   <h3 className="font-semibold mb-4">Search & Filter</h3>
 
