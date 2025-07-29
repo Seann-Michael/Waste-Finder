@@ -199,7 +199,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   /**
    * Check authentication status on mount
    */
-  useEffect(() => {
+  React.useEffect(() => {
     const checkAuth = async () => {
       try {
         // Check if user is authenticated via HTTP-only cookie
