@@ -12,6 +12,8 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { PageLoading } from "@/components/LoadingStates";
 import { initSentry } from "@/lib/monitoring";
 import { initSessionRecording } from "@/lib/sessionRecording";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import {
   usePerformanceMonitoring,
   useBundlePerformance,
