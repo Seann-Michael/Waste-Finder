@@ -228,10 +228,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await secureRequest("/api/auth/logout", { method: "POST" });
     } catch (error) {
       console.error("Logout error:", error);
+      // Continue with logout even if server request fails
     } finally {
       setUser(null);
-      clearUserContext();
-      trackUserAction("logout");
+      try {
+        clearUserContext();
+        trackUserAction("logout");
+      } catch (monitoringError) {
+        console.warn('Monitoring cleanup failed:', monitoringError);
+      }
       showSuccess("You have been logged out successfully");
     }
   };
