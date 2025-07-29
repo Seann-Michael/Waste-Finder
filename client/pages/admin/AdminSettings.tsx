@@ -213,18 +213,18 @@ export default function AdminSettings() {
     siteUrl: "https://wastefinder.com",
     siteLogo: "",
     favicon: "",
-    metaTitle: "WasteFinder - Find Waste Disposal Facilities Near You",
+    metaTitle: "WasteFinder - Find Waste Disposal Locations Near You",
     metaDescription:
-      "Search our comprehensive database of landfills, transfer stations, and construction facilities across the United States.",
+      "Search our comprehensive database of landfills, transfer stations, and construction locations across the United States.",
     metaKeywords:
       "waste disposal, landfill, transfer station, construction debris, recycling",
-    ogTitle: "WasteFinder - Find Waste Disposal Facilities Near You",
+    ogTitle: "WasteFinder - Find Waste Disposal Locations Near You",
     ogDescription:
-      "Search our comprehensive database of landfills, transfer stations, and construction facilities across the United States.",
+      "Search our comprehensive database of landfills, transfer stations, and construction locations across the United States.",
     ogImage: "",
-    twitterTitle: "WasteFinder - Find Waste Disposal Facilities Near You",
+    twitterTitle: "WasteFinder - Find Waste Disposal Locations Near You",
     twitterDescription:
-      "Search our comprehensive database of landfills, transfer stations, and construction facilities across the United States.",
+      "Search our comprehensive database of landfills, transfer stations, and construction locations across the United States.",
     twitterImage: "",
   });
 
