@@ -207,7 +207,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }),
         });
       } catch (requestError) {
-        console.error('Login API request failed:', requestError);
+        const errorMsg = requestError instanceof Error ? requestError.message : String(requestError);
+        console.error('Login API request failed:', errorMsg);
 
         // Handle specific error types
         if (requestError instanceof Error) {
