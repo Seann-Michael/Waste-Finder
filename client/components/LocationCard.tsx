@@ -42,7 +42,7 @@ const getLocationLabel = (type: Location["locationType"]) => {
     case "construction_landfill":
       return "Construction Landfill";
     default:
-      return "Facility";
+      return "Location";
   }
 };
 
