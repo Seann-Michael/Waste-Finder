@@ -215,25 +215,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }),
         });
       } catch (requestError) {
-        const errorMsg = requestError instanceof Error ? requestError.message : String(requestError);
-        console.error('Login API request failed:', errorMsg);
-
-        // Handle specific error types
+        // Handle specific error types without logging expected errors
         if (requestError instanceof Error) {
           if (requestError.message.includes('Network error')) {
+            console.error('Login API request failed: Network error');
             throw new Error('Unable to connect to login server. Please check your connection.');
           }
           if (requestError.message.includes('401') || requestError.message.includes('Unauthorized')) {
+            // Don't log 401 as error - it's expected for wrong credentials
             throw new Error('Invalid username or password.');
           }
           if (requestError.message.includes('429') || requestError.message.includes('Too Many')) {
+            // Don't log 429 as error - it's expected security behavior
             throw new Error('Too many login attempts. Please wait before trying again.');
           }
           if (requestError.message.includes('500')) {
+            console.error('Login API request failed: Server error');
             throw new Error('Server error. Please try again later.');
           }
         }
 
+        // Log other unexpected errors
+        const errorMsg = requestError instanceof Error ? requestError.message : String(requestError);
+        console.error('Login API request failed:', errorMsg);
         throw requestError;
       }
 
