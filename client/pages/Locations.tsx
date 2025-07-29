@@ -35,7 +35,7 @@ export default function Locations() {
     if (zipCode) {
       searchLocations();
     }
-  }, [zipCode, radius, facilityTypes, debrisTypes, sortBy]);
+  }, [zipCode, radius, locationTypes, debrisTypes, sortBy]);
 
   const searchLocations = async () => {
     setIsLoading(true);
