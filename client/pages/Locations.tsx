@@ -41,10 +41,12 @@ export default function Locations() {
     setIsLoading(true);
     try {
       // Fetch locations from server API
-      const response = await fetch(`/api/locations/search?zipCode=${zipCode}&radius=${radius}&locationType=${locationTypes.join(',')}&debrisTypes=${debrisTypes.join(',')}&sortBy=${sortBy}`);
+      const response = await fetch(
+        `/api/locations/search?zipCode=${zipCode}&radius=${radius}&locationType=${locationTypes.join(",")}&debrisTypes=${debrisTypes.join(",")}&sortBy=${sortBy}`,
+      );
 
       if (!response.ok) {
-        throw new Error('Failed to fetch locations');
+        throw new Error("Failed to fetch locations");
       }
 
       const data = await response.json();
