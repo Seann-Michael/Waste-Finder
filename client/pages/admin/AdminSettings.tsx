@@ -185,6 +185,9 @@ export default function AdminSettings() {
   const [marketingSettings, setMarketingSettings] = useState({
     facebookGroupUrl: "",
     facebookGroupEnabled: false,
+    facebookCtaTitle: "Join Our Community!",
+    facebookCtaText: "Connect with waste management professionals.",
+    facebookButtonText: "Join Group",
   });
 
   const [codeSettings, setCodeSettings] = useState({
