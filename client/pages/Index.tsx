@@ -133,7 +133,7 @@ export default function Index() {
     {
       icon: <Building2 className="w-8 h-8" />,
       title: "Transfer Stations",
-      description: "Intermediate facilities for waste sorting and transfer",
+      description: "Intermediate locations for waste sorting and transfer",
       count: locationCounts.transferStations.toLocaleString(),
     },
     {
