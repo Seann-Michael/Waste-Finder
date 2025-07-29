@@ -221,6 +221,31 @@ export default function LocationCard({ location }: LocationCardProps) {
               </Badge>
             )}
           </div>
+
+          {/* Pricing Information */}
+          <div className="mb-3">
+            {location.debrisTypes.some(debris => debris.price) ? (
+              <div className="space-y-1">
+                <span className="text-sm font-medium text-gray-700">Pricing:</span>
+                {location.debrisTypes
+                  .filter(debris => debris.price)
+                  .slice(0, 2)
+                  .map((debris) => (
+                    <div key={debris.id} className="text-sm text-gray-600">
+                      {debris.name}: ${debris.price}{debris.priceDetails ? ` ${debris.priceDetails}` : ''}
+                    </div>
+                  ))}
+                {location.debrisTypes.filter(debris => debris.price).length > 2 && (
+                  <div className="text-sm text-gray-500">
+                    +{location.debrisTypes.filter(debris => debris.price).length - 2} more
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="text-sm text-gray-500">Call for pricing</div>
+            )}
+          </div>
+
           <div className="flex flex-wrap gap-1 mb-3">
             {location.paymentTypes.slice(0, 2).map((payment) => (
               <Badge key={payment.id} variant="secondary" className="text-sm px-2 py-1">
