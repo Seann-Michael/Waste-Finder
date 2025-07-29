@@ -63,10 +63,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * Get CSRF token from meta tag (should be set by server)
    */
   const getCSRFToken = (): string => {
-    const metaTag = document.querySelector(
-      'meta[name="csrf-token"]',
-    ) as HTMLMetaElement;
-    return metaTag?.content || generateCSRFToken();
+    try {
+      // Check if document is available (SSR safety)
+      if (typeof document === 'undefined') {
+        return generateCSRFToken();
+      }
+
+      const metaTag = document.querySelector(
+        'meta[name="csrf-token"]',
+      ) as HTMLMetaElement;
+
+      return metaTag?.content || generateCSRFToken();
+    } catch (error) {
+      console.warn('CSRF token retrieval failed:', error);
+      return generateCSRFToken();
+    }
   };
 
   /**
