@@ -51,6 +51,11 @@ const adminNavItems = [
     icon: PenTool,
   },
   {
+    title: "RSS Manager",
+    href: "/admin/rss-manager",
+    icon: FileText,
+  },
+  {
     title: "Settings",
     href: "/admin/settings",
     icon: Settings,
