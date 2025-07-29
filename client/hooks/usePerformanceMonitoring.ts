@@ -1,5 +1,5 @@
 import { useEffect, useCallback } from 'react';
-import { onCLS, onFID, onFCP, onLCP, onTTFB } from 'web-vitals';
+import { onCLS, onINP, onFCP, onLCP, onTTFB } from 'web-vitals';
 import { trackEvent } from '@/lib/monitoring';
 
 interface PerformanceMetric {
@@ -40,7 +40,7 @@ export function usePerformanceMonitoring() {
   useEffect(() => {
     // Core Web Vitals
     onCLS(reportMetric);
-    onFID(reportMetric);
+    onINP(reportMetric); // INP replaced FID in newer web-vitals
     onFCP(reportMetric);
     onLCP(reportMetric);
     onTTFB(reportMetric);
