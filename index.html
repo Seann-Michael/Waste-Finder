@@ -53,6 +53,19 @@
       body {
         -webkit-overflow-scrolling: touch;
         overscroll-behavior-y: contain;
+        /* Fix iOS Safari header positioning */
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      /* iOS Safari sticky header support */
+      @supports (-webkit-touch-callout: none) {
+        html {
+          height: -webkit-fill-available;
+        }
+        body {
+          height: -webkit-fill-available;
+        }
       }
 
       /* Loading state */
