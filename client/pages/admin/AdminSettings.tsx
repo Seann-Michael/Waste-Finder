@@ -53,6 +53,7 @@ import {
   Image,
   FileText,
   Tag,
+  Upload,
 } from "lucide-react";
 
 interface AdminUser {
