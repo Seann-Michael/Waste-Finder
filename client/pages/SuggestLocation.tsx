@@ -245,7 +245,7 @@ export default function SuggestLocation() {
       const existingSuggestions = JSON.parse(localStorage.getItem("pendingSuggestions") || "[]");
       const newSuggestion = {
         id: Date.now().toString(),
-        ...data,
+        ...sanitizedData,
         status: "pending",
         submittedAt: new Date().toISOString(),
       };
