@@ -483,21 +483,27 @@ const BlogSidebar = React.memo<{
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {recentPosts.map((post) => (
-            <div key={post.id} className="border-b border-border pb-3 last:border-b-0 last:pb-0">
-              <Link
-                to={`/blog/${post.slug}`}
-                className="block hover:text-primary transition-colors"
-              >
-                <h4 className="font-medium text-sm mb-1 leading-tight">
-                  {post.title}
-                </h4>
-                <p className="text-xs text-muted-foreground">
-                  {new Date(post.createdAt).toLocaleDateString()}
-                </p>
-              </Link>
-            </div>
-          ))}
+          {recentPosts && recentPosts.length > 0 ? recentPosts.map((post) => {
+            if (!post || !post.id) return null;
+
+            return (
+              <div key={post.id} className="border-b border-border pb-3 last:border-b-0 last:pb-0">
+                <Link
+                  to={`/blog/${post.slug || '#'}`}
+                  className="block hover:text-primary transition-colors"
+                >
+                  <h4 className="font-medium text-sm mb-1 leading-tight">
+                    {post.title || "Untitled Post"}
+                  </h4>
+                  <p className="text-xs text-muted-foreground">
+                    {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : "No date"}
+                  </p>
+                </Link>
+              </div>
+            );
+          }) : (
+            <p className="text-sm text-muted-foreground">No recent posts available</p>
+          )}
         </CardContent>
       </Card>
 
@@ -511,15 +517,21 @@ const BlogSidebar = React.memo<{
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
-            {allTags.map((tag) => (
-              <Badge
-                key={tag}
-                variant="outline"
-                className="text-xs cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
-              >
-                {tag}
-              </Badge>
-            ))}
+            {allTags && allTags.length > 0 ? allTags.map((tag) => {
+              if (!tag) return null;
+
+              return (
+                <Badge
+                  key={tag}
+                  variant="outline"
+                  className="text-xs cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
+                >
+                  {tag}
+                </Badge>
+              );
+            }) : (
+              <p className="text-sm text-muted-foreground">No tags available</p>
+            )}
           </div>
         </CardContent>
       </Card>
