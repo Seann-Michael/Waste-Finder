@@ -733,7 +733,7 @@ export default function LocationDetail() {
                             onChange={(e) =>
                               handleFormChange("email", e.target.value)
                             }
-                            placeholder="info@facility.com"
+                            placeholder="info@location.com"
                           />
                         </div>
                         <div>
