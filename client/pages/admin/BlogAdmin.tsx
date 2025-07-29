@@ -181,7 +181,7 @@ export default function BlogAdmin() {
           id: "2",
           title: "Environmental Benefits of Proper Waste Sorting",
           slug: "environmental-benefits-proper-waste-sorting",
-          excerpt: "Learn how proper waste sorting at disposal facilities contributes to environmental protection and sustainability.",
+          excerpt: "Learn how proper waste sorting at disposal locations contributes to environmental protection and sustainability.",
           content: "# Environmental Benefits of Proper Waste Sorting\n\nProper waste sorting is one of the most effective ways to reduce environmental impact...",
           author: "Sean Webb",
           status: "draft",
