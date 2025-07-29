@@ -135,29 +135,57 @@ export default function SearchForm({
   };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <MapPin className="w-5 h-5 text-primary" />
+    <Card className="w-full max-w-2xl mx-auto bg-white/95 backdrop-blur-sm border-2 shadow-xl">
+      <CardHeader className="text-center pb-4">
+        <CardTitle className="flex items-center justify-center gap-2 text-gray-800">
+          <MapPin className="w-6 h-6 text-primary" />
           Find Waste Disposal Facilities
         </CardTitle>
+        <p className="text-gray-600 text-sm mt-2">Enter your ZIP code to find nearby facilities</p>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* ZIP Code Input */}
-          <div className="space-y-2">
-            <Input
-              id="zipCode"
-              type="text"
-              placeholder="Enter your ZIP code"
-              value={zipCode}
-              onChange={(e) => setZipCode(e.target.value)}
-              pattern="[0-9]{5}"
-              maxLength={5}
-              required
-              className="text-lg"
-            />
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* ZIP Code Input with Button */}
+          <div className="flex flex-col sm:flex-row gap-3 items-end">
+            <div className="flex-shrink-0 space-y-2">
+              <label htmlFor="zipCode" className="text-sm font-medium text-gray-700">
+                ZIP Code
+              </label>
+              <Input
+                id="zipCode"
+                type="text"
+                placeholder="12345"
+                value={zipCode}
+                onChange={(e) => setZipCode(e.target.value)}
+                pattern="[0-9]{5}"
+                maxLength={5}
+                required
+                className="w-32 text-center text-lg font-mono border-2 focus:border-primary"
+              />
+            </div>
+            <Button
+              type="submit"
+              className="flex-1 h-11 bg-primary hover:bg-primary/90 text-white font-semibold"
+              disabled={isLoading || zipCode.length !== 5}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Searching...
+                </>
+              ) : (
+                <>
+                  <Search className="w-4 h-4 mr-2" />
+                  Find Facilities Near Me
+                </>
+              )}
+            </Button>
           </div>
+          {zipCode.length > 0 && zipCode.length < 5 && (
+            <p className="text-xs text-gray-500 text-center">
+              Please enter a complete 5-digit ZIP code
+            </p>
+          )}
 
           {/* Advanced Options Toggle */}
           {showAdvanced && (
