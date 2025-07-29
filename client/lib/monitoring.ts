@@ -4,6 +4,10 @@ import * as Sentry from "@sentry/react";
  * Initialize Sentry for error tracking and performance monitoring
  */
 export function initSentry() {
+  // Temporarily disable Sentry to prevent script errors
+  console.log("Sentry initialization disabled to prevent script errors");
+  return;
+
   // Only initialize in production or when SENTRY_DSN is provided
   const dsn = import.meta.env.VITE_SENTRY_DSN;
   const environment = import.meta.env.VITE_ENVIRONMENT || "development";
@@ -58,23 +62,35 @@ export function initSentry() {
  * Log custom events for business metrics
  */
 export function trackEvent(eventName: string, data?: Record<string, any>) {
-  Sentry.addBreadcrumb({
-    message: eventName,
-    level: "info",
-    data,
-  });
+  try {
+    if (typeof Sentry !== 'undefined' && Sentry.addBreadcrumb) {
+      Sentry.addBreadcrumb({
+        message: eventName,
+        level: "info",
+        data,
+      });
+    }
+  } catch (error) {
+    console.warn('Failed to track event:', error);
+  }
 }
 
 /**
  * Track user interactions
  */
 export function trackUserAction(action: string, details?: Record<string, any>) {
-  Sentry.setTag("user_action", action);
-  Sentry.addBreadcrumb({
-    message: `User action: ${action}`,
-    level: "info",
-    data: details,
-  });
+  try {
+    if (typeof Sentry !== 'undefined' && Sentry.setTag && Sentry.addBreadcrumb) {
+      Sentry.setTag("user_action", action);
+      Sentry.addBreadcrumb({
+        message: `User action: ${action}`,
+        level: "info",
+        data: details,
+      });
+    }
+  } catch (error) {
+    console.warn('Failed to track user action:', error);
+  }
 }
 
 /**
@@ -104,16 +120,28 @@ export function setUserContext(user: {
   email?: string;
   role?: string;
 }) {
-  Sentry.setUser({
-    id: user.id,
-    email: user.email,
-    role: user.role,
-  });
+  try {
+    if (typeof Sentry !== 'undefined' && Sentry.setUser) {
+      Sentry.setUser({
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      });
+    }
+  } catch (error) {
+    console.warn('Failed to set user context:', error);
+  }
 }
 
 /**
  * Clear user context on logout
  */
 export function clearUserContext() {
-  Sentry.setUser(null);
+  try {
+    if (typeof Sentry !== 'undefined' && Sentry.setUser) {
+      Sentry.setUser(null);
+    }
+  } catch (error) {
+    console.warn('Failed to clear user context:', error);
+  }
 }

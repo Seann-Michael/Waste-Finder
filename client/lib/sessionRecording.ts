@@ -14,6 +14,10 @@ interface SessionRecordingConfig {
  * Initialize session recording based on configuration
  */
 export function initSessionRecording() {
+  // Temporarily disable session recording to prevent script errors
+  console.log("Session recording disabled to prevent script errors");
+  return;
+
   const config: SessionRecordingConfig = {
     provider:
       (import.meta.env.VITE_SESSION_RECORDING_PROVIDER as any) || "disabled",
