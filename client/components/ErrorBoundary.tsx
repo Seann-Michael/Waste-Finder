@@ -33,13 +33,6 @@ export class ErrorBoundary extends Component<Props, State> {
       errorInfo,
     });
 
-    // Handle router-specific errors
-    const errorMessage = error.message || error.toString();
-    if (errorMessage.includes('replaceState') || errorMessage.includes('history') || errorMessage.includes('BrowserRouter')) {
-      console.warn('Router error detected, switching to HashRouter');
-      localStorage.setItem('use-hash-router', 'true');
-    }
-
     // Call the onError callback if provided
     this.props.onError?.(error, errorInfo);
 
