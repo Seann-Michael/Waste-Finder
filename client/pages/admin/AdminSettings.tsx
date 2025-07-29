@@ -270,7 +270,7 @@ export default function AdminSettings() {
     enableSchemaMarkup: true,
     businessType: "Waste Management Service",
     businessName: "WasteFinder",
-    businessDescription: "Comprehensive directory of waste disposal facilities",
+    businessDescription: "Comprehensive directory of waste disposal locations",
 
     // Technical SEO
     robotsTxt: `User-agent: *
