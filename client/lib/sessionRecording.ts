@@ -189,38 +189,14 @@ export function trackSessionEvent(
   eventName: string,
   properties?: Record<string, any>,
 ) {
-  // Hotjar
-  if (typeof (window as any).hj === "function") {
-    (window as any).hj("event", eventName);
-  }
-
-  // FullStory
-  if (typeof (window as any).FS === "object") {
-    (window as any).FS.event(eventName, properties);
-  }
-
-  // LogRocket
-  if (typeof (window as any).LogRocket === "object") {
-    (window as any).LogRocket.track(eventName, properties);
-  }
+  // Session recording disabled
+  return;
 }
 
 /**
  * Identify user in session recording
  */
 export function identifyUser(userId: string, properties?: Record<string, any>) {
-  // Hotjar
-  if (typeof (window as any).hj === "function") {
-    (window as any).hj("identify", userId, properties);
-  }
-
-  // FullStory
-  if (typeof (window as any).FS === "object") {
-    (window as any).FS.identify(userId, properties);
-  }
-
-  // LogRocket
-  if (typeof (window as any).LogRocket === "object") {
-    (window as any).LogRocket.identify(userId, properties);
-  }
+  // Session recording disabled
+  return;
 }
