@@ -74,14 +74,7 @@ const AppRoutes = () => (
     <Route path="/blog/:slug" element={<BlogPost />} />
     <Route path="/news" element={<News />} />
     <Route path="/news/article/:id" element={<NewsArticle />} />
-    <Route
-      path="/pricing-calculator"
-      element={
-        <Suspense fallback={<PageLoading message="Loading pricing calculator..." />}>
-          <PricingCalculator />
-        </Suspense>
-      }
-    />
+    <Route path="/pricing-calculator" element={<PricingCalculator />} />
 
     {/* Admin routes with separate loading */}
     <Route
