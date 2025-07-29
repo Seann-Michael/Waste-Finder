@@ -500,7 +500,7 @@ export default function SuggestEdit({
                     <Input
                       id="name"
                       {...register("name")}
-                      placeholder="Enter facility name"
+                      placeholder="Enter location name"
                     />
                   </div>
                   <div>
