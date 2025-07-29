@@ -300,13 +300,9 @@ export default function Index() {
       {/* CTA Section */}
       <section className="py-16 px-4 bg-primary text-primary-foreground">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-4">
+          <h2 className="text-3xl font-bold mb-8">
             Ready to Find Your Nearest Facility?
           </h2>
-          <p className="text-xl opacity-90 mb-8">
-            Join thousands of users who trust WasteFinder for their disposal
-            needs
-          </p>
           <div className="flex justify-center">
             <Button size="lg" variant="secondary" className="text-lg px-8">
               Search Facilities
