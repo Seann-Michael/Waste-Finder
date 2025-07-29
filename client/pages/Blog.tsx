@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -48,7 +48,7 @@ export default function Blog() {
 
   // Load data from localStorage (in production, this would use React Query)
   const { posts, categories, isLoading, error } = useBlogData();
-  
+
   // Memoized filtered posts to prevent unnecessary recalculations
   const filteredPosts = useMemo(() => {
     let filtered = posts.filter((post) => post.status === "published");
@@ -88,7 +88,7 @@ export default function Blog() {
               <h1 className="text-4xl font-bold mb-4">Waste Management Blog</h1>
               <ContentSkeleton lines={2} className="max-w-2xl mx-auto" />
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {Array.from({ length: 6 }).map((_, i) => (
                 <BlogPostSkeleton key={i} />
@@ -288,7 +288,7 @@ function useBlogData() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     try {
       // Simulate loading delay
       setTimeout(() => {
