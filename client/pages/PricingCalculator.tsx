@@ -154,13 +154,15 @@ This estimate is valid for 30 days.
   };
 
   return (
-    <AdminLayout>
-      <div className="space-y-6">
+    <div className="min-h-screen bg-background flex flex-col">
+      <Header />
+      <main className="flex-1 container mx-auto px-4 py-8">
+        <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold">Pricing Calculator</h1>
+            <h1 className="text-3xl font-bold">Junk Removal Pricing Calculator</h1>
             <p className="text-muted-foreground">
-              Configure your costs and calculate job estimates for junk removal services
+              Free tool for junk removal business owners to calculate job estimates and pricing
             </p>
           </div>
           <Button onClick={saveConfig}>
@@ -483,7 +485,7 @@ This estimate is valid for 30 days.
                 </ul>
               </div>
               <div className="p-4 border rounded-lg">
-                <h4 className="font-semibold mb-2">Large Jobs (9+ yd��)</h4>
+                <h4 className="font-semibold mb-2">Large Jobs (9+ yd³)</h4>
                 <ul className="text-sm text-muted-foreground space-y-1">
                   <li>• Whole house cleanouts</li>
                   <li>• Construction debris</li>
@@ -494,7 +496,9 @@ This estimate is valid for 30 days.
             </div>
           </CardContent>
         </Card>
-      </div>
-    </AdminLayout>
+        </div>
+      </main>
+      <Footer />
+    </div>
   );
 }
