@@ -5,6 +5,7 @@
 /* Mobile-responsive utility classes */
 @import "./styles/mobile-responsive.css";
 @import "./styles/mobile-enhancements.css";
+@import "./styles/article.css";
 
 /* Base mobile-first responsive styles */
 @layer base {
