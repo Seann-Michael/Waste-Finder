@@ -83,8 +83,9 @@ export async function handleLogin(req: Request, res: Response) {
       });
     }
 
-    // In production, set secure HTTP-only session cookie here
-    // For demo, we'll just return user data
+    // Create a demo session token
+    const sessionToken = `demo-session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
     const userResponse = {
       id: user.id,
       username: user.username,
@@ -93,9 +94,13 @@ export async function handleLogin(req: Request, res: Response) {
       permissions: user.permissions,
     };
 
+    // Store session in memory for demo
+    activeSessions.set(sessionToken, userResponse);
+
     res.json({
       success: true,
       user: userResponse,
+      sessionToken, // Return token to client
       message: "Login successful",
     });
   } catch (error) {
@@ -114,7 +119,12 @@ export async function handleLogin(req: Request, res: Response) {
  */
 export function handleLogout(req: Request, res: Response) {
   try {
-    // In production, invalidate session cookie here
+    // Clear demo session
+    const sessionToken = req.headers['x-session-token'] as string;
+    if (sessionToken && activeSessions.has(sessionToken)) {
+      activeSessions.delete(sessionToken);
+    }
+
     res.json({
       success: true,
       message: "Logged out successfully",
@@ -128,19 +138,31 @@ export function handleLogout(req: Request, res: Response) {
   }
 }
 
+// Simple in-memory session store for demo
+const activeSessions = new Map<string, any>();
+
 /**
  * GET /api/auth/me
  * Check current authentication status
  */
 export function handleAuthMe(req: Request, res: Response) {
   try {
-    // In production, validate session cookie here
-    // For demo, always return not authenticated
-    res.status(401).json({
-      success: false,
-      error: "Not authenticated",
-      message: "No valid session found",
-    });
+    // Check for demo session token in headers
+    const sessionToken = req.headers['x-session-token'] as string;
+
+    if (sessionToken && activeSessions.has(sessionToken)) {
+      const user = activeSessions.get(sessionToken);
+      res.json({
+        success: true,
+        user,
+      });
+    } else {
+      res.status(401).json({
+        success: false,
+        error: "Not authenticated",
+        message: "No valid session found",
+      });
+    }
   } catch (error) {
     console.error("Auth check error:", error);
     res.status(500).json({
