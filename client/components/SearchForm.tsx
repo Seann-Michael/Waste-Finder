@@ -174,7 +174,7 @@ export default function SearchForm({
               )}
             </div>
 
-            {/* Find Facilities Button - Centered Below */}
+            {/* Find Locations Button - Centered Below */}
             <Button
               type="submit"
               className="px-8 h-11 bg-primary hover:bg-primary/90 text-white font-semibold"
