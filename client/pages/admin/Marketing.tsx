@@ -40,6 +40,20 @@ interface AdConfig {
   altText?: string; // For image ads
   placement: string;
   displayName: string;
+  desktop: {
+    enabled: boolean;
+    code?: string;
+    imageUrl?: string;
+    linkUrl?: string;
+    altText?: string;
+  };
+  mobile: {
+    enabled: boolean;
+    code?: string;
+    imageUrl?: string;
+    linkUrl?: string;
+    altText?: string;
+  };
 }
 
 export default function Marketing() {
