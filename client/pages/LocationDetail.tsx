@@ -604,7 +604,7 @@ export default function LocationDetail() {
                       value={editFormData.name}
                       onChange={(e) => handleFormChange("name", e.target.value)}
                       className="text-3xl font-bold border-2 border-primary/30 focus:border-primary"
-                      placeholder="Enter facility name"
+                      placeholder="Enter location name"
                     />
                   </div>
                 ) : (
