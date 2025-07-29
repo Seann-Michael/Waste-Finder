@@ -255,32 +255,68 @@ export default function AddLocation() {
     try {
       setIsSubmitting(true);
 
+      // Sanitize all text inputs
+      const sanitizedData = {
+        ...data,
+        name: sanitizeInput(data.name, 100),
+        address: sanitizeInput(data.address, 200),
+        city: sanitizeInput(data.city, 100),
+        state: sanitizeInput(data.state.toUpperCase(), 2),
+        zipCode: sanitizeInput(data.zipCode, 10),
+        phone: sanitizeInput(data.phone, 20),
+        email: data.email ? sanitizeInput(data.email, 254) : "",
+        website: data.website ? sanitizeInput(data.website, 500) : "",
+        googleBusinessUrl: data.googleBusinessUrl ? sanitizeInput(data.googleBusinessUrl, 500) : "",
+        additionalPaymentDetails: data.additionalPaymentDetails ? sanitizeInput(data.additionalPaymentDetails, 500) : "",
+        debrisAdditionalDetails: data.debrisAdditionalDetails ? sanitizeInput(data.debrisAdditionalDetails, 1000) : "",
+        additionalDebrisPricingDetails: data.additionalDebrisPricingDetails ? sanitizeInput(data.additionalDebrisPricingDetails, 1000) : "",
+        additionalLocationDetails: data.additionalLocationDetails ? sanitizeInput(data.additionalLocationDetails, 1000) : "",
+      };
+
+      // Validate email if provided
+      if (sanitizedData.email && !validateEmail(sanitizedData.email)) {
+        showError("Invalid email format");
+        return;
+      }
+
+      // Validate website if provided
+      if (sanitizedData.website && !validateUrl(sanitizedData.website)) {
+        showError("Invalid website URL");
+        return;
+      }
+
+      // Validate phone number
+      if (!validatePhoneNumber(sanitizedData.phone)) {
+        showError("Invalid phone number format");
+        return;
+      }
+
       // Validate coordinates if provided
-      if ((data.latitude || data.longitude) && !validateCoordinates(data.latitude, data.longitude)) {
+      if ((sanitizedData.latitude || sanitizedData.longitude) && !validateCoordinates(sanitizedData.latitude, sanitizedData.longitude)) {
         return;
       }
 
       // Validate required arrays
-      if (data.paymentTypes.length === 0) {
+      if (sanitizedData.paymentTypes.length === 0) {
         showWarning("Please select at least one payment method");
         return;
       }
 
 
 
-      // Prepare API payload
+      // Prepare API payload with sanitized data
       const payload = {
-        ...data,
-        facilityType: data.locationType, // Map locationType to facilityType for consistency
-        latitude: data.latitude ? parseFloat(data.latitude) : undefined,
-        longitude: data.longitude ? parseFloat(data.longitude) : undefined,
-        paymentTypes: data.paymentTypes.map((type, index) => ({
+        ...sanitizedData,
+        facilityType: sanitizedData.locationType, // Map locationType to facilityType for consistency
+        latitude: sanitizedData.latitude ? parseFloat(sanitizedData.latitude) : undefined,
+        longitude: sanitizedData.longitude ? parseFloat(sanitizedData.longitude) : undefined,
+        paymentTypes: sanitizedData.paymentTypes.map((type, index) => ({
           id: (index + 1).toString(),
           name: type,
         })),
-        additionalPaymentDetails: data.additionalPaymentDetails,
-        debrisTypes: data.debrisTypes.map((type, index) => {
-          const pricing = data.debrisPricing[type] || {};
+        additionalPaymentDetails: sanitizedData.additionalPaymentDetails,
+        debrisTypes: sanitizedData.debrisTypes.map((type, index) => {
+          const pricing = sanitizedData.debrisPricing[type] || {};
           return {
             id: (index + 1).toString(),
             name: type,
@@ -289,8 +325,8 @@ export default function AddLocation() {
             priceDetails: pricing.priceNote || "",
           };
         }),
-        debrisAdditionalDetails: data.debrisAdditionalDetails,
-        notes: data.additionalLocationDetails,
+        debrisAdditionalDetails: sanitizedData.debrisAdditionalDetails,
+        notes: sanitizedData.additionalLocationDetails,
         // Add default operating hours (Monday-Friday 7AM-5PM)
         operatingHours: [
           {
