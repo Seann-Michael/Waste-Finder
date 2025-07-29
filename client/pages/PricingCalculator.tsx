@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import AdminLayout from "@/components/admin/AdminLayout";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -482,7 +483,7 @@ This estimate is valid for 30 days.
                 </ul>
               </div>
               <div className="p-4 border rounded-lg">
-                <h4 className="font-semibold mb-2">Large Jobs (9+ yd³)</h4>
+                <h4 className="font-semibold mb-2">Large Jobs (9+ yd��)</h4>
                 <ul className="text-sm text-muted-foreground space-y-1">
                   <li>• Whole house cleanouts</li>
                   <li>• Construction debris</li>
