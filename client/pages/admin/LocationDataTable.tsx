@@ -49,6 +49,7 @@ import {
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Location } from "@/shared/api";
+import { formatPhoneNumber } from "@/lib/utils";
 
 // Fetch locations from server API with localStorage fallback
 const fetchLocations = async (): Promise<Location[]> => {
