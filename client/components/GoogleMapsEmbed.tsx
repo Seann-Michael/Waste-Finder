@@ -4,9 +4,9 @@
  * PURPOSE: Displays waste disposal locations on interactive Google Maps
  *
  * FEATURES:
- * - Multiple facility location display with custom markers
- * - Different marker colors/icons for facility types
- * - Interactive popup windows with facility information
+ * - Multiple location display with custom markers
+ * - Different marker colors/icons for location types
+ * - Interactive popup windows with location information
  * - Directions integration for route planning
  * - Mobile-responsive map controls
  * - Clustering for high-density areas
