@@ -17,6 +17,7 @@ import {
   PenTool,
   Menu,
   X,
+  Calculator,
 } from "lucide-react";
 
 const adminNavItems = [
@@ -29,6 +30,11 @@ const adminNavItems = [
     title: "Locations",
     href: "/admin/locations",
     icon: Database,
+  },
+  {
+    title: "Pricing Calculator",
+    href: "/admin/pricing-calculator",
+    icon: Calculator,
   },
   {
     title: "Reviews",
