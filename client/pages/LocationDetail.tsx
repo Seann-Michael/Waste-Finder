@@ -501,7 +501,7 @@ export default function LocationDetail() {
               <AlertCircle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
               <h1 className="text-2xl font-bold mb-2">Location Not Found</h1>
               <p className="text-muted-foreground mb-4">
-                The facility you're looking for doesn't exist or has been
+                The location you're looking for doesn't exist or has been
                 removed.
               </p>
               <Button asChild>
