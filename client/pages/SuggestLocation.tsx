@@ -130,8 +130,7 @@ const DEBRIS_TYPES = [
   "Asphalt",
   "Metal",
   "Hazardous Materials",
-  "Fluorescent Bulbs",
-  "Hazardous Materials"
+  "Fluorescent Bulbs"
 ];
 
 const LOCATION_TYPES = [
