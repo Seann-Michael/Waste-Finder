@@ -313,7 +313,7 @@ export default function LocationDetail() {
       email: location.email || "",
       website: location.website || "",
       googleBusinessUrl: location.googleBusinessUrl || "",
-      facilityType: location.locationType || "",
+      locationType: location.locationType || "",
       paymentTypes: location.paymentTypes?.map((p) => p.name) || [],
       additionalPaymentDetails: location.additionalPaymentDetails || "",
       debrisTypes: location.debrisTypes?.map((d) => d.name) || [],
