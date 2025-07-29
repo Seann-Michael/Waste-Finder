@@ -112,14 +112,7 @@ const App = () => (
               </AdminRoute>
             }
           />
-          <Route
-            path="/admin/blog-data-table"
-            element={
-              <AdminRoute>
-                <BlogDataTable />
-              </AdminRoute>
-            }
-          />
+
           <Route
             path="/admin/preview-location/:id"
             element={
