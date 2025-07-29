@@ -34,8 +34,8 @@ WasteFinder is a comprehensive web application that serves as a searchable publi
 
 - **Access Level**: Full system control (single admin role)
 - **Functions**:
-  - Complete CRUD operations on facilities
-  - Bulk upload facilities via CSV/Excel
+  - Complete CRUD operations on locations
+  - Bulk upload locations via CSV/Excel
   - Approve/deny user suggestions
   - Moderate user reviews
   - Blog management (create, edit, delete posts)
