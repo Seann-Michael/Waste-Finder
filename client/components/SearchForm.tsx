@@ -188,7 +188,7 @@ export default function SearchForm({
               ) : (
                 <>
                   <Search className="w-4 h-4 mr-2" />
-                  Find Facilities
+                  Find Locations
                 </>
               )}
             </Button>
