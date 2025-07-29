@@ -26,6 +26,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { validatePhoneNumber, formatPhoneNumber, validateAndFormatUrl } from "@/lib/utils";
+import { sanitizeInput, sanitizeHtml, validateEmail, validateUrl } from "@/lib/security";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
