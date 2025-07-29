@@ -100,6 +100,18 @@
   <body>
     <div id="root"></div>
 
+    <!-- Block FullStory to prevent router conflicts -->
+    <script>
+      // Disable FullStory completely
+      if (window.FS) {
+        window.FS.shutdown();
+        delete window.FS;
+      }
+      // Block FullStory loading
+      window._fs_disabled = true;
+      window._fs_debug = false;
+    </script>
+
     <script type="module" src="/client/App.tsx"></script>
   </body>
 </html>
