@@ -127,7 +127,7 @@ export default function Index() {
       icon: <Trash2 className="w-8 h-8" />,
       title: "Municipal Landfills",
       description:
-        "General waste disposal facilities for household and commercial waste",
+        "General waste disposal locations for household and commercial waste",
       count: locationCounts.landfills.toLocaleString(),
     },
     {
