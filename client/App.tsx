@@ -241,4 +241,19 @@ if (!root) {
   (window as any).__react_root = root;
 }
 
+// Handle HMR router issues
+if (import.meta.hot) {
+  import.meta.hot.dispose(() => {
+    // Clean up router state on HMR
+    if (window.history && window.history.replaceState) {
+      try {
+        const currentPath = window.location.pathname;
+        window.history.replaceState(null, '', currentPath);
+      } catch (e) {
+        console.warn('HMR router cleanup failed:', e);
+      }
+    }
+  });
+}
+
 root.render(<App />);
