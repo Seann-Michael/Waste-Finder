@@ -101,16 +101,14 @@ const PAYMENT_TYPES = [
 ] as const;
 
 const DEBRIS_TYPES = [
-  "General Household Waste",
+  "Municipal Waste",
   "Yard Waste",
   "Construction Debris",
-  "Electronics",
   "Appliances",
   "Tires",
   "Concrete",
   "Asphalt",
   "Metal",
-  "Wood",
   "Hazardous Materials",
 ] as const;
 
