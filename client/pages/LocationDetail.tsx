@@ -1185,7 +1185,7 @@ export default function LocationDetail() {
                           onChange={(e) =>
                             handleFormChange("notes", e.target.value)
                           }
-                          placeholder="Any additional information about the facility, directions, restrictions, etc."
+                          placeholder="Any additional information about the location, directions, restrictions, etc."
                           rows={4}
                         />
                       </div>
