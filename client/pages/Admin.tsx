@@ -77,16 +77,22 @@ export default function Admin() {
   const [pendingReviewsList, setPendingReviewsList] = useState(pendingReviews);
 
   useEffect(() => {
-    // Check if user is logged in
-    const isLoggedIn = localStorage.getItem("adminLoggedIn");
-    if (!isLoggedIn) {
-      navigate("/admin-login");
-    }
-  }, [navigate]);
+    // Authentication is handled by AdminRoute component
+    // No need for manual checks here
+  }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("adminLoggedIn");
-    navigate("/");
+  const { logout } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      // Navigate using window.location to avoid router conflicts
+      window.location.hash = "#/admin-login";
+    } catch (error) {
+      console.error("Logout failed:", error);
+      // Fallback navigation
+      window.location.hash = "#/admin-login";
+    }
   };
 
   const handleApproveReview = (reviewId: string) => {
