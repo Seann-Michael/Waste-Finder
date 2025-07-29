@@ -336,7 +336,7 @@ export default function LocationDetail() {
       email: "",
       website: "",
       googleBusinessUrl: "",
-      facilityType: "",
+      locationType: "",
       paymentTypes: [],
       additionalPaymentDetails: "",
       debrisTypes: [],
