@@ -173,6 +173,42 @@ export function handleAuthMe(req: Request, res: Response) {
 }
 
 /**
+ * POST /api/auth/forgot-password
+ * Demo forgot password endpoint
+ */
+export function handleForgotPassword(req: Request, res: Response) {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        error: "Email is required",
+        message: "Please provide an email address",
+      });
+    }
+
+    // In production, this would:
+    // 1. Check if email exists in database
+    // 2. Generate secure reset token
+    // 3. Send email with reset link
+    // 4. Store token with expiration
+
+    // For demo, just simulate success
+    res.json({
+      success: true,
+      message: "If an account with that email exists, you'll receive reset instructions",
+    });
+  } catch (error) {
+    console.error("Forgot password error:", error);
+    res.status(500).json({
+      success: false,
+      error: "Internal server error",
+    });
+  }
+}
+
+/**
  * POST /api/auth/refresh
  * Refresh authentication token (for future use)
  */
