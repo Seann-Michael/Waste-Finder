@@ -129,7 +129,7 @@ export default function AllLocations() {
             radius: parseInt(radiusFromParams || "50", 10),
           });
           setSearchMessage(
-            `Found ${data.length} facilities within ${radiusFromParams || "50"} miles of ${zipFromParams}`,
+            `Found ${data.length} locations within ${radiusFromParams || "50"} miles of ${zipFromParams}`,
           );
         } else {
           setSearchMessage(`Found ${data.length} facilities`);
