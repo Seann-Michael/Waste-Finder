@@ -134,7 +134,10 @@ export default function LocationCard({ location }: LocationCardProps) {
         {/* Left Column - Basic Info */}
         <div className="lg:col-span-4">
           <div className="flex items-center gap-2 mb-2">
-            <Badge variant="secondary" className="flex items-center gap-1 text-sm">
+            <Badge
+              variant="secondary"
+              className="flex items-center gap-1 text-sm"
+            >
               {getLocationIcon(location.locationType)}
               {getLocationLabel(location.locationType)}
             </Badge>
@@ -148,9 +151,7 @@ export default function LocationCard({ location }: LocationCardProps) {
             {location.name}
           </h3>
           <div className="flex items-center gap-1 mb-3">
-            <div className="flex">
-              {renderStars(location.rating)}
-            </div>
+            <div className="flex">{renderStars(location.rating)}</div>
             <span className="text-sm text-muted-foreground">
               ({location.reviewCount})
             </span>
@@ -224,20 +225,27 @@ export default function LocationCard({ location }: LocationCardProps) {
 
           {/* Pricing Information */}
           <div className="mb-3">
-            {location.debrisTypes.some(debris => debris.price) ? (
+            {location.debrisTypes.some((debris) => debris.price) ? (
               <div className="space-y-1">
-                <span className="text-sm font-medium text-gray-700">Pricing:</span>
+                <span className="text-sm font-medium text-gray-700">
+                  Pricing:
+                </span>
                 {location.debrisTypes
-                  .filter(debris => debris.price)
+                  .filter((debris) => debris.price)
                   .slice(0, 2)
                   .map((debris) => (
                     <div key={debris.id} className="text-sm text-gray-600">
-                      {debris.name}: ${debris.price}{debris.priceDetails ? ` ${debris.priceDetails}` : ''}
+                      {debris.name}: ${debris.price}
+                      {debris.priceDetails ? ` ${debris.priceDetails}` : ""}
                     </div>
                   ))}
-                {location.debrisTypes.filter(debris => debris.price).length > 2 && (
+                {location.debrisTypes.filter((debris) => debris.price).length >
+                  2 && (
                   <div className="text-sm text-gray-500">
-                    +{location.debrisTypes.filter(debris => debris.price).length - 2} more
+                    +
+                    {location.debrisTypes.filter((debris) => debris.price)
+                      .length - 2}{" "}
+                    more
                   </div>
                 )}
               </div>
@@ -248,7 +256,11 @@ export default function LocationCard({ location }: LocationCardProps) {
 
           <div className="flex flex-wrap gap-1 mb-3">
             {location.paymentTypes.slice(0, 2).map((payment) => (
-              <Badge key={payment.id} variant="secondary" className="text-sm px-2 py-1">
+              <Badge
+                key={payment.id}
+                variant="secondary"
+                className="text-sm px-2 py-1"
+              >
                 {payment.name}
               </Badge>
             ))}
