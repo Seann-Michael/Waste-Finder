@@ -41,12 +41,10 @@ export default function Locations() {
     setIsLoading(true);
     try {
       // Fetch locations from server API
-      const response = await fetch(
-        `/api/locations/search?zipCode=${zipCode}&radius=${radius}&locationType=${locationTypes.join(",")}&debrisTypes=${debrisTypes.join(",")}&sortBy=${sortBy}`,
-      );
+      const response = await fetch(`/api/locations/search?zipCode=${zipCode}&radius=${radius}&locationType=${locationTypes.join(',')}&debrisTypes=${debrisTypes.join(',')}&sortBy=${sortBy}`);
 
       if (!response.ok) {
-        throw new Error("Failed to fetch locations");
+        throw new Error('Failed to fetch locations');
       }
 
       const data = await response.json();
@@ -117,7 +115,7 @@ export default function Locations() {
             <span>Search results for ZIP code {zipCode}</span>
           </div>
           <h1 className="text-2xl font-bold mb-4">
-            {locations.length} facilities found within {radius} miles
+            {locations.length} locations found within {radius} miles
           </h1>
 
           {/* Active Filters */}
