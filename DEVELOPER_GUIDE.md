@@ -16,16 +16,13 @@ WasteFinder is a **public waste facility database** with **admin-only authentica
 // - Suggest new facilities or corrections
 
 // ADMIN USERS (Authentication Required)
-// - Moderate user reviews and suggestions
-// - Basic facility management
-// - View analytics and reports
-
-// SUPER ADMIN USERS (Authentication Required)
 // - Full CRUD operations on facilities
 // - Bulk upload facilities via CSV
+// - Moderate user reviews and suggestions
 // - Blog content management
 // - System configuration and settings
 // - Marketing and AdSense management
+// - View analytics and reports
 ```
 
 #### 2. Core Workflows
