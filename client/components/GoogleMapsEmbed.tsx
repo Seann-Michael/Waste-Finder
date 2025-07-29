@@ -13,8 +13,8 @@
  *
  * GOOGLE MAPS API INTEGRATION:
  * - Maps JavaScript API for interactive map rendering
- * - Custom marker styling for different facility types
- * - InfoWindow components for facility details
+ * - Custom marker styling for different location types
+ * - InfoWindow components for location details
  * - Directions service for route planning
  * - Places service for address validation
  *
