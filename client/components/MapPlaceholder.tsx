@@ -57,7 +57,7 @@ export default function MapPlaceholder({
               Interactive Map Coming Soon
             </h3>
             <p className="text-sm text-muted-foreground max-w-xs">
-              View facility locations with interactive Google Maps integration
+              View location details with interactive Google Maps integration
             </p>
             <div className="mt-4 text-xs text-muted-foreground">
               {locations.length} facilities will be shown on the map
