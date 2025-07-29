@@ -142,8 +142,8 @@ client/
 
 Admin users can:
 
-- Add, edit, delete facilities
-- Bulk upload facilities via CSV
+- Add, edit, delete locations
+- Bulk upload locations via CSV
 - Moderate user reviews and suggestions
 - Manage blog posts and content
 - Configure system settings and marketing
