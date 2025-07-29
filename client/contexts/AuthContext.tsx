@@ -319,23 +319,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const checkAuth = async () => {
       try {
         // Check if user is authenticated via HTTP-only cookie
-        const data = await secureRequest("/api/auth/me");
-        setUser(data.user);
+        // Use a special method that doesn't log 401 as errors
+        const response = await fetch("/api/auth/me", {
+          credentials: "same-origin",
+          headers: {
+            "X-Requested-With": "XMLHttpRequest",
+          },
+        });
 
-        // Track authenticated user for monitoring
-        if (data.user) {
-          setUserContext({
-            id: data.user.id,
-            email: data.user.email,
-            role: data.user.role,
-          });
-          identifyUser(data.user.id, {
-            username: data.user.username,
-            role: data.user.role,
-          });
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data.user);
+
+          // Track authenticated user for monitoring
+          if (data.user) {
+            try {
+              setUserContext({
+                id: data.user.id,
+                email: data.user.email,
+                role: data.user.role,
+              });
+              identifyUser(data.user.id, {
+                username: data.user.username,
+                role: data.user.role,
+              });
+            } catch (monitoringError) {
+              console.warn('Monitoring setup failed:', monitoringError);
+            }
+          }
+        } else {
+          // 401/403 are expected when not authenticated - don't log as errors
+          setUser(null);
+          clearUserContext();
         }
       } catch (error) {
-        // User not authenticated or session expired
+        // Network or other unexpected errors
+        console.warn('Authentication check failed:', error);
         setUser(null);
         clearUserContext();
       } finally {
