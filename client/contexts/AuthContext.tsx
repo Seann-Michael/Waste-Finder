@@ -24,8 +24,20 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 /**
- * Simplified Authentication Provider
- * Uses secure, industry-standard practices
+ * Authentication Provider for Admin/Super Admin Users
+ *
+ * SECURITY FEATURES:
+ * - JWT tokens stored in HTTP-only cookies (prevents XSS attacks)
+ * - CSRF token protection for all admin actions
+ * - Rate limiting to prevent brute force attacks
+ * - Secure session management with automatic expiration
+ *
+ * USER ROLES:
+ * - admin: Can moderate reviews, approve suggestions, basic facility management
+ * - super_admin: Full system access including blog management, bulk uploads, system settings
+ *
+ * IMPORTANT: Public users (facility searchers) do NOT use this authentication system
+ * Only admin panel access requires login credentials
  */
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = React.useState<User | null>(null);

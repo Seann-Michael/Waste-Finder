@@ -2,7 +2,37 @@ import { getSecureHeaders } from "./security";
 import { trackAPICall } from "./monitoring";
 
 /**
- * Custom error classes for better error handling
+ * API Client for WasteFinder Application
+ *
+ * PURPOSE: Centralized HTTP client with enterprise-grade error handling and monitoring
+ *
+ * FEATURES:
+ * - Automatic retry with exponential backoff for failed requests
+ * - Request/response caching with configurable TTL
+ * - Comprehensive error handling with custom error types
+ * - Request timeout management and abort signal support
+ * - Performance monitoring and API response time tracking
+ * - Security headers and CSRF protection for admin requests
+ *
+ * ERROR HANDLING STRATEGY:
+ * - Network errors: Automatic retry with backoff
+ * - 4xx errors: No retry (client errors)
+ * - 5xx errors: Retry with exponential backoff
+ * - Timeout errors: Configurable timeout with retry
+ *
+ * MONITORING INTEGRATION:
+ * - Sentry integration for error tracking
+ * - Performance metrics for API response times
+ * - Custom events for business logic tracking
+ *
+ * DEVELOPER NOTES:
+ * - All API calls should use this client for consistency
+ * - Response caching improves performance for frequently accessed data
+ * - Error boundaries will catch and display API errors to users
+ */
+
+/**
+ * Custom error classes for better error handling and user feedback
  */
 export class APIError extends Error {
   constructor(
