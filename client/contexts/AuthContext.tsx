@@ -107,11 +107,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       return response.json();
     } catch (error) {
-      console.error('Secure request failed:', error);
+      // Safe error logging to prevent console issues
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const errorType = error instanceof Error ? error.name : 'Error';
+
+      console.error('Secure request failed:', {
+        type: errorType,
+        message: errorMessage,
+        url: url,
+        method: options.method || 'GET'
+      });
+
       if (error instanceof TypeError && error.message.includes('fetch')) {
         throw new Error('Network error: Unable to connect to server');
       }
-      throw error;
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error('Request failed: ' + errorMessage);
     }
   };
 
