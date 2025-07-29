@@ -732,7 +732,7 @@ export default function LocationDetail() {
                             href={`tel:${location.phone}`}
                             className="text-primary hover:underline"
                           >
-                            {location.phone}
+                            {formatPhoneNumber(location.phone)}
                           </a>
                         </div>
                       )}
