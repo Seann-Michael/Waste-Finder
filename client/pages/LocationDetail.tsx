@@ -505,7 +505,7 @@ export default function LocationDetail() {
                 removed.
               </p>
               <Button asChild>
-                <Link to="/">Search Facilities</Link>
+                <Link to="/">Search Locations</Link>
               </Button>
             </div>
           </div>
