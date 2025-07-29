@@ -1,7 +1,7 @@
 /**
  * GoogleMapsEmbed Component - Interactive Maps Integration
  *
- * PURPOSE: Displays waste disposal facilities on interactive Google Maps
+ * PURPOSE: Displays waste disposal locations on interactive Google Maps
  *
  * FEATURES:
  * - Multiple facility location display with custom markers
