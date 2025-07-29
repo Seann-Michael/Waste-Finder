@@ -1,3 +1,44 @@
+/**
+ * AdSense Component - Revenue Generation System
+ *
+ * PURPOSE: Manages Google AdSense integration for website monetization
+ *
+ * AD PLACEMENT STRATEGY:
+ * - Homepage: Banner ads above and below search form
+ * - Search Results: Sidebar ads (300x250) and top banner (728x90)
+ * - Location Detail: In-content ads and sidebar placements
+ * - Blog Posts: In-content ads between paragraphs
+ * - Mobile: Responsive ads that adapt to screen size
+ *
+ * AD TYPES SUPPORTED:
+ * - Google AdSense: Automatic ad serving with revenue optimization
+ * - Image Ads: Custom banner advertisements for local businesses
+ * - HTML Ads: Rich media advertisements with interactive elements
+ *
+ * CONFIGURATION FEATURES:
+ * - Admin panel ad management (enable/disable by placement)
+ * - A/B testing support for ad performance optimization
+ * - Revenue tracking and reporting integration
+ * - Geographic targeting for local waste management companies
+ *
+ * COMPLIANCE & PRIVACY:
+ * - GDPR-compliant ad serving with consent management
+ * - CCPA compliance for California users
+ * - Privacy policy integration
+ * - Cookie consent for ad personalization
+ *
+ * PERFORMANCE OPTIMIZATION:
+ * - Lazy loading prevents ads from blocking page render
+ * - Async ad loading for improved page speed
+ * - Ad blocker detection with fallback content
+ * - Revenue reporting and optimization suggestions
+ *
+ * BUSINESS MODEL:
+ * - Cost-per-click (CPC) revenue from search-related ads
+ * - Display advertising for waste management companies
+ * - Sponsored content in blog sections
+ * - Local business directory advertising
+ */
 import { useEffect, useState } from "react";
 
 interface AdSenseProps {
