@@ -10,6 +10,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { PageLoading } from "@/components/LoadingStates";
+import { initSentry } from "@/lib/monitoring";
+import { initSessionRecording } from "@/lib/sessionRecording";
+import { usePerformanceMonitoring, useBundlePerformance, useMemoryMonitoring } from "@/hooks/usePerformanceMonitoring";
 
 // Lazy load pages for code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -42,11 +45,24 @@ import AdminRoute from "./components/admin/AdminRoute";
 
 const queryClient = new QueryClient();
 
+// Initialize monitoring services
+initSentry();
+initSessionRecording();
+
+// Monitoring provider component
+const MonitoringProvider = ({ children }: { children: React.ReactNode }) => {
+  usePerformanceMonitoring();
+  useBundlePerformance();
+  useMemoryMonitoring();
+  return <>{children}</>;
+};
+
 const App = () => (
   <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <TooltipProvider>
+        <MonitoringProvider>
+          <TooltipProvider>
           <Toaster />
           <Sonner />
           <BrowserRouter>
@@ -220,6 +236,7 @@ const App = () => (
             </Suspense>
           </BrowserRouter>
         </TooltipProvider>
+        </MonitoringProvider>
       </AuthProvider>
     </QueryClientProvider>
   </ErrorBoundary>

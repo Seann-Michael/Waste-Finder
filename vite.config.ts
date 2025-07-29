@@ -1,5 +1,6 @@
 import { defineConfig, Plugin } from "vite";
 import react from "@vitejs/plugin-react-swc";
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 import path from "path";
 import { createServer } from "./server";
 
@@ -32,6 +33,9 @@ export default defineConfig(({ mode }) => ({
 
           // Query and state management
           query: ["@tanstack/react-query"],
+
+          // Monitoring and analytics
+          monitoring: ["@sentry/react", "web-vitals"],
 
           // Utilities
           utils: ["clsx", "tailwind-merge", "date-fns"],
@@ -91,7 +95,15 @@ export default defineConfig(({ mode }) => ({
       tsDecorators: true,
     }),
     expressPlugin(),
-  ],
+    // Only enable Sentry plugin in production builds
+    mode === "production" && process.env.SENTRY_AUTH_TOKEN
+      ? sentryVitePlugin({
+          org: process.env.SENTRY_ORG,
+          project: process.env.SENTRY_PROJECT,
+          authToken: process.env.SENTRY_AUTH_TOKEN,
+        })
+      : null,
+  ].filter(Boolean),
 
   resolve: {
     alias: {
