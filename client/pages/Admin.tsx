@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import AdminLayout from "@/components/admin/AdminLayout";
 import RecentActivity from "@/components/admin/RecentActivity";
 import { formatPhoneNumber } from "@/lib/utils";
