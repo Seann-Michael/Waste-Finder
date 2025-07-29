@@ -83,7 +83,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   /**
    * Secure API request with CSRF protection and rate limiting
    */
-  const secureRequest = async (url: string, options: RequestInit = {}, skipAuthErrorLogging = false) => {
+  const secureRequest = async (url: string, options: RequestInit = {}, skipExpectedErrorLogging = false) => {
     try {
       const csrfToken = getCSRFToken();
 
