@@ -216,7 +216,7 @@ const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 ### 2. Screen Reader Support
 
 ```tsx
-<Button aria-label="Search for waste facilities">
+<Button aria-label="Search for waste locations">
   <Search className="w-4 h-4" />
   <span className="sr-only">Search</span>
 </Button>
