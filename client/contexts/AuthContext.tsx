@@ -260,7 +260,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       return true;
     } catch (error) {
-      console.error("Login error:", error);
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      console.error("Login error:", errorMsg);
       showError(
         error instanceof Error
           ? error.message
