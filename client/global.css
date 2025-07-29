@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Mobile-responsive utility classes */
+@import "./styles/mobile-responsive.css";
+
 @layer base {
   /**
    * Tailwind CSS theme - Modern waste management color palette
