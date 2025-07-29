@@ -71,14 +71,7 @@ const App = () => (
               </AdminRoute>
             }
           />
-          <Route
-            path="/admin/edit-location/:id"
-            element={
-              <AdminRoute>
-                <EditLocation />
-              </AdminRoute>
-            }
-          />
+
           <Route
             path="/admin/locations"
             element={
