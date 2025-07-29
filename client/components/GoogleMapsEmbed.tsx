@@ -26,7 +26,7 @@
  * - Street view integration for location verification
  *
  * PERFORMANCE OPTIMIZATIONS:
- * - Marker clustering for areas with many facilities
+ * - Marker clustering for areas with many locations
  * - Lazy loading of map tiles
  * - Efficient re-rendering on location updates
  * - Memory management for large datasets
