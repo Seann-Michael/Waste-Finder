@@ -1,5 +1,5 @@
 import { useEffect, useCallback } from 'react';
-import { getCLS, getFID, getFCP, getLCP, getTTFB } from 'web-vitals';
+import { onCLS, onFID, onFCP, onLCP, onTTFB } from 'web-vitals';
 import { trackEvent } from '@/lib/monitoring';
 
 interface PerformanceMetric {
@@ -19,7 +19,7 @@ export function usePerformanceMonitoring() {
     if (import.meta.env.DEV) {
       console.log('Performance metric:', metric);
     }
-    
+
     // Track in Sentry
     trackEvent('performance_metric', {
       metric_name: metric.name,
@@ -27,7 +27,7 @@ export function usePerformanceMonitoring() {
       rating: metric.rating,
       delta: metric.delta,
     });
-    
+
     // Send to analytics if needed
     if (typeof gtag !== 'undefined') {
       gtag('event', metric.name, {
@@ -39,11 +39,11 @@ export function usePerformanceMonitoring() {
 
   useEffect(() => {
     // Core Web Vitals
-    getCLS(reportMetric);
-    getFID(reportMetric);
-    getFCP(reportMetric);
-    getLCP(reportMetric);
-    getTTFB(reportMetric);
+    onCLS(reportMetric);
+    onFID(reportMetric);
+    onFCP(reportMetric);
+    onLCP(reportMetric);
+    onTTFB(reportMetric);
   }, [reportMetric]);
 
   return {
@@ -57,10 +57,10 @@ export function usePerformanceMonitoring() {
 export function useRenderPerformance(componentName: string) {
   useEffect(() => {
     const startTime = performance.now();
-    
+
     return () => {
       const renderTime = performance.now() - startTime;
-      
+
       if (renderTime > 100) { // Only track slow renders
         trackEvent('slow_render', {
           component: componentName,
@@ -77,14 +77,14 @@ export function useRenderPerformance(componentName: string) {
 export function useAPIPerformance() {
   const trackAPICall = useCallback((url: string, startTime: number, response: Response) => {
     const duration = performance.now() - startTime;
-    
+
     trackEvent('api_response_time', {
       url,
       duration,
       status: response.status,
       success: response.ok,
     });
-    
+
     // Log slow API calls
     if (duration > 2000) {
       console.warn(`Slow API call: ${url} took ${duration}ms`);
@@ -104,7 +104,7 @@ export function useBundlePerformance() {
       list.getEntries().forEach((entry) => {
         if (entry.entryType === 'navigation') {
           const navEntry = entry as PerformanceNavigationTiming;
-          
+
           trackEvent('page_load_timing', {
             dns_lookup: navEntry.domainLookupEnd - navEntry.domainLookupStart,
             tcp_connect: navEntry.connectEnd - navEntry.connectStart,
@@ -113,10 +113,10 @@ export function useBundlePerformance() {
             total_load_time: navEntry.loadEventEnd - navEntry.navigationStart,
           });
         }
-        
+
         if (entry.entryType === 'resource') {
           const resourceEntry = entry as PerformanceResourceTiming;
-          
+
           // Track large resources
           if (resourceEntry.transferSize > 100000) { // > 100KB
             trackEvent('large_resource', {
@@ -130,7 +130,7 @@ export function useBundlePerformance() {
     });
 
     observer.observe({ entryTypes: ['navigation', 'resource'] });
-    
+
     return () => observer.disconnect();
   }, []);
 }
@@ -143,7 +143,7 @@ export function useMemoryMonitoring() {
     const checkMemory = () => {
       if ('memory' in performance) {
         const memory = (performance as any).memory;
-        
+
         trackEvent('memory_usage', {
           used: memory.usedJSHeapSize,
           total: memory.totalJSHeapSize,
@@ -152,10 +152,10 @@ export function useMemoryMonitoring() {
         });
       }
     };
-    
+
     // Check memory usage every 30 seconds
     const interval = setInterval(checkMemory, 30000);
-    
+
     return () => clearInterval(interval);
   }, []);
 }
