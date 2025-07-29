@@ -255,9 +255,9 @@ export default function AdminSettings() {
 
     // Search Results SEO Templates
     searchTitleTemplate:
-      "Waste Disposal Facilities near {search_term} | WasteFinder",
+      "Waste Disposal Locations near {search_term} | WasteFinder",
     searchDescriptionTemplate:
-      "Find waste disposal facilities near {search_term}. Compare prices, hours, and services for landfills and transfer stations.",
+      "Find waste disposal locations near {search_term}. Compare prices, hours, and services for landfills and transfer stations.",
     searchKeywordsTemplate:
       "waste disposal {search_term}, landfill near {search_term}, transfer station {search_term}",
 
