@@ -190,14 +190,15 @@ export default function Index() {
             <Button
               asChild
               size="lg"
-              className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-6 text-lg"
+              className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-4 text-lg shadow-lg"
             >
               <a
                 href={contentSettings.homeMarketingButtonUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2"
               >
-                {contentSettings.homeMarketingButtonText}
+                📈 Click Here for Proven Marketing Strategies
               </a>
             </Button>
           </div>
