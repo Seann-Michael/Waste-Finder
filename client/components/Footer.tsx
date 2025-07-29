@@ -78,6 +78,11 @@ export default function Footer() {
                   </Link>
                 </li>
                 <li>
+                  <Link to="/news" className="hover:text-primary">
+                    Industry News
+                  </Link>
+                </li>
+                <li>
                   <Link to="/suggest-location" className="hover:text-primary">
                     Suggest Location
                   </Link>
