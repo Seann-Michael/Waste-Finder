@@ -74,7 +74,16 @@ const AppRoutes = () => (
     <Route path="/blog/:slug" element={<BlogPost />} />
     <Route path="/news" element={<News />} />
     <Route path="/news/article/:id" element={<NewsArticle />} />
-    <Route path="/pricing-calculator" element={<PricingCalculator />} />
+    <Route path="/pricing-calculator" element={
+      <div className="min-h-screen bg-background flex flex-col">
+        <Header />
+        <main className="flex-1 container mx-auto px-4 py-8">
+          <h1 className="text-3xl font-bold text-red-500">PRICING CALCULATOR TEST - IF YOU SEE THIS THE ROUTE WORKS</h1>
+          <PricingCalculator />
+        </main>
+        <Footer />
+      </div>
+    } />
 
     {/* Admin routes with separate loading */}
     <Route
