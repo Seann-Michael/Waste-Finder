@@ -132,6 +132,7 @@ export class APIClient {
   ): Promise<T> {
     const url = `${this.baseURL}${endpoint}`;
     let lastError: Error;
+    const startTime = performance.now();
 
     for (let attempt = 1; attempt <= retryConfig.maxAttempts; attempt++) {
       const controller = new AbortController();
@@ -148,6 +149,10 @@ export class APIClient {
         });
 
         clearTimeout(timeoutId);
+        const duration = performance.now() - startTime;
+
+        // Track API call performance
+        trackAPICall(endpoint, duration, response.status);
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
@@ -163,6 +168,7 @@ export class APIClient {
         return data;
       } catch (error: any) {
         clearTimeout(timeoutId);
+        const duration = performance.now() - startTime;
 
         if (error.name === "AbortError") {
           lastError = new TimeoutError(`Request timed out after ${timeout}ms`);
@@ -174,6 +180,10 @@ export class APIClient {
         } else {
           lastError = error;
         }
+
+        // Track failed API calls
+        const statusCode = lastError instanceof APIError ? lastError.status : 0;
+        trackAPICall(endpoint, duration, statusCode);
 
         // Don't retry on the last attempt or if error is not retryable
         if (
