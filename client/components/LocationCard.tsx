@@ -180,7 +180,7 @@ export default function LocationCard({ location }: LocationCardProps) {
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-2 pt-0">
         {/* Address - Clickable for directions */}
         <div className="flex items-start gap-2">
           <MapPin className="w-4 h-4 text-muted-foreground mt-0.5" />
@@ -234,7 +234,7 @@ export default function LocationCard({ location }: LocationCardProps) {
         </div>
 
         {/* Debris Types with Pricing */}
-        <div className="space-y-2">
+        <div className="space-y-1">
           <div className="text-sm font-medium">Accepts:</div>
           <div className="space-y-1">
             {location.debrisTypes.slice(0, 3).map((debris) => (
@@ -261,7 +261,7 @@ export default function LocationCard({ location }: LocationCardProps) {
         </div>
 
         {/* Payment Methods */}
-        <div className="space-y-2">
+        <div className="space-y-1">
           <div className="text-sm font-medium">Payment Methods:</div>
           <div className="flex flex-wrap gap-1">
             {location.paymentTypes.map((payment) => (
@@ -273,7 +273,7 @@ export default function LocationCard({ location }: LocationCardProps) {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-2 pt-2">
+        <div className="flex gap-2 pt-1">
           <Button asChild className="flex-1">
             <Link to={`/location/${location.id}`}>View Details</Link>
           </Button>
