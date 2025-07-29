@@ -140,7 +140,7 @@ export default function Index() {
       icon: <HardHat className="w-8 h-8" />,
       title: "Construction Landfills",
       description:
-        "Specialized facilities for construction and demolition debris",
+        "Specialized locations for construction and demolition debris",
       count: locationCounts.constructionLandfills.toLocaleString(),
     },
   ];
