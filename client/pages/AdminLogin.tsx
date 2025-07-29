@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
@@ -29,9 +28,21 @@ export default function AdminLogin() {
 
   const { login, isAuthenticated, isLoading } = useAuth();
 
-  // Simple redirect if already authenticated
-  if (isAuthenticated) {
-    return <Navigate to="/admin" replace />;
+  // Handle redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated && !isLoading) {
+      // Use window.location to avoid router conflicts
+      window.location.hash = "#/admin";
+    }
+  }, [isAuthenticated, isLoading]);
+
+  // Show loading while redirecting
+  if (isAuthenticated && !isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
   }
 
   // Show loading spinner while checking auth
@@ -83,7 +94,7 @@ export default function AdminLogin() {
     try {
       // Simulate forgot password API call
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       // For demo, just show success message
       setMode("reset-sent");
       setSuccess(`Password reset instructions sent to ${email}`);

@@ -51,15 +51,13 @@ import AdminRoute from "./components/admin/AdminRoute";
 
 const queryClient = new QueryClient();
 
-// Initialize monitoring services
-initSentry();
-initSessionRecording();
+// Monitoring services disabled to prevent router conflicts
+// initSentry();
+// initSessionRecording();
 
-// Monitoring provider component
+// Monitoring provider component - disabled to prevent conflicts
 const MonitoringProvider = ({ children }: { children: React.ReactNode }) => {
-  usePerformanceMonitoring();
-  useBundlePerformance();
-  useMemoryMonitoring();
+  // Disable monitoring to prevent router conflicts
   return <>{children}</>;
 };
 
