@@ -76,7 +76,7 @@ export default function Locations() {
     const newSearchParams = new URLSearchParams({
       zipCode: params.zipCode,
       radius: params.radius.toString(),
-      facilityTypes: params.facilityTypes.join(","),
+      locationTypes: params.locationTypes.join(","),
       debrisTypes: params.debrisTypes.join(","),
     });
     window.location.href = `/locations?${newSearchParams.toString()}`;
