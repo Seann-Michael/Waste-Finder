@@ -48,6 +48,7 @@ const BulkUploadFacilities = lazy(
 const RSSManager = lazy(() => import("./pages/admin/RSSManager"));
 
 import AdminRoute from "./components/admin/AdminRoute";
+import RedirectPage from "./components/RedirectPage";
 
 const queryClient = new QueryClient();
 
