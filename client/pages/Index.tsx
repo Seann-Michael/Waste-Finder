@@ -181,7 +181,7 @@ export default function Index() {
             </h1>
             <p className="text-xl text-muted-foreground mb-8">
               Search our comprehensive database of landfills, transfer stations,
-              and construction facilities across the United States
+              and construction locations across the United States
             </p>
           </div>
 
