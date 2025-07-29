@@ -176,7 +176,7 @@ export default function Index() {
         <div className="max-w-7xl mx-auto text-center">
           <div className="max-w-3xl mx-auto">
             <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
-              Find Waste Disposal Facilities
+              Find Waste Disposal Locations
               <span className="text-primary block">Near You</span>
             </h1>
             <p className="text-xl text-muted-foreground mb-8">
