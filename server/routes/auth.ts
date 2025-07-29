@@ -141,9 +141,6 @@ export function handleLogout(req: Request, res: Response) {
   }
 }
 
-// Simple in-memory session store for demo
-const activeSessions = new Map<string, any>();
-
 /**
  * GET /api/auth/me
  * Check current authentication status
