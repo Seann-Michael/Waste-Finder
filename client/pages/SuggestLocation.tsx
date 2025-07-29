@@ -1,3 +1,38 @@
+/**
+ * SuggestLocation Page Component
+ *
+ * PURPOSE: Public interface for suggesting new waste disposal facilities
+ *
+ * USER WORKFLOW:
+ * 1. Public user discovers missing facility in their area
+ * 2. Fills out comprehensive facility information form
+ * 3. Google reCAPTCHA validates submission (prevents spam)
+ * 4. Data stored with "pending" status for admin review
+ * 5. Admin notification sent for approval queue
+ * 6. Admin approves/rejects through admin panel
+ * 7. Approved facilities automatically added to searchable database
+ *
+ * FORM FEATURES:
+ * - Address validation with Google Places API
+ * - Facility type categorization (landfill, transfer station, etc.)
+ * - Operating hours input with day-specific schedules
+ * - Waste type acceptance multi-select
+ * - Pricing information (optional)
+ * - Contact information validation
+ * - reCAPTCHA spam protection
+ *
+ * INTEGRATION POINTS:
+ * - Google Places API: Real-time address validation
+ * - Google reCAPTCHA v3: Invisible spam protection
+ * - Admin notification system: Email alerts for new suggestions
+ * - Database: Suggestion storage with approval workflow
+ *
+ * ACCESSIBILITY:
+ * - ARIA labels for screen readers
+ * - Keyboard navigation support
+ * - Color contrast compliance
+ * - Mobile-responsive form layout
+ */
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
