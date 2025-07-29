@@ -203,7 +203,7 @@ export default function LocationCard({ location }: LocationCardProps) {
             href={`tel:${location.phone}`}
             className="text-sm text-primary hover:underline"
           >
-            {location.phone}
+            {formatPhoneNumber(location.phone)}
           </a>
         </div>
 
