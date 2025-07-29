@@ -7,16 +7,34 @@
 }
 
 /* Mobile-optimized text sizes */
-.text-mobile-xs { font-size: 0.75rem; }
-.text-mobile-sm { font-size: 0.875rem; }
-.text-mobile-base { font-size: 1rem; }
-.text-mobile-lg { font-size: 1.125rem; }
-.text-mobile-xl { font-size: 1.25rem; }
+.text-mobile-xs {
+  font-size: 0.75rem;
+}
+.text-mobile-sm {
+  font-size: 0.875rem;
+}
+.text-mobile-base {
+  font-size: 1rem;
+}
+.text-mobile-lg {
+  font-size: 1.125rem;
+}
+.text-mobile-xl {
+  font-size: 1.25rem;
+}
 
 /* Mobile spacing utilities */
-.mobile-px { padding-left: 1rem; padding-right: 1rem; }
-.mobile-py { padding-top: 0.75rem; padding-bottom: 0.75rem; }
-.mobile-p { padding: 1rem; }
+.mobile-px {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+.mobile-py {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+.mobile-p {
+  padding: 1rem;
+}
 
 /* Mobile container max-widths */
 .mobile-container {
@@ -26,9 +44,15 @@
 }
 
 /* Responsive grid gaps */
-.mobile-grid-gap { gap: 1rem; }
-.tablet-grid-gap { gap: 1.5rem; }
-.desktop-grid-gap { gap: 2rem; }
+.mobile-grid-gap {
+  gap: 1rem;
+}
+.tablet-grid-gap {
+  gap: 1.5rem;
+}
+.desktop-grid-gap {
+  gap: 2rem;
+}
 
 /* Mobile-friendly form elements */
 .mobile-input {
@@ -204,7 +228,7 @@
   .mobile-dark-bg {
     background-color: hsl(var(--background));
   }
-  
+
   .mobile-dark-text {
     color: hsl(var(--foreground));
   }

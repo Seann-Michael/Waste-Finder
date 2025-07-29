@@ -42,7 +42,12 @@
 import { useEffect, useState } from "react";
 
 interface AdSenseProps {
-  placement: "homepage" | "search-results" | "location-detail" | "search-results-top" | "location-detail-top";
+  placement:
+    | "homepage"
+    | "search-results"
+    | "location-detail"
+    | "search-results-top"
+    | "location-detail-top";
   className?: string;
 }
 
@@ -123,7 +128,7 @@ export default function AdSense({ placement, className = "" }: AdSenseProps) {
                   className="max-w-full h-auto rounded"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    target.style.display = 'none';
+                    target.style.display = "none";
                   }}
                 />
               </a>
@@ -134,7 +139,7 @@ export default function AdSense({ placement, className = "" }: AdSenseProps) {
                 className="max-w-full h-auto rounded"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
-                  target.style.display = 'none';
+                  target.style.display = "none";
                 }}
               />
             )
@@ -169,8 +174,7 @@ export default function AdSense({ placement, className = "" }: AdSenseProps) {
           <div className="text-sm">
             {!adConfig || !adConfig.enabled
               ? "Ad placement disabled"
-              : "No ad configured"
-            }
+              : "No ad configured"}
           </div>
           <div className="text-xs text-muted-foreground/70">
             Configure in Admin → Marketing

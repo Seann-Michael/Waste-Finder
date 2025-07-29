@@ -5,6 +5,7 @@
 The WasteFinder API provides endpoints for facility search, user suggestions, reviews, and admin management. The API is designed with RESTful principles and includes comprehensive error handling, caching, and performance monitoring.
 
 ## Base URL
+
 ```
 Production: https://your-domain.com/api
 Development: http://localhost:8080/api
@@ -13,12 +14,14 @@ Development: http://localhost:8080/api
 ## Authentication
 
 ### Public Endpoints (No Authentication Required)
+
 - Facility search and details
 - Review submission
 - Facility suggestions
 - Blog content access
 
 ### Protected Endpoints (Admin Authentication Required)
+
 - Facility management (CRUD operations)
 - Review moderation
 - Suggestion approval
@@ -26,6 +29,7 @@ Development: http://localhost:8080/api
 - System administration
 
 ### Authentication Method
+
 ```http
 Authorization: Bearer <jwt_token>
 Cookie: auth_token=<httponly_jwt>
@@ -37,9 +41,11 @@ X-CSRF-Token: <csrf_token>
 ### Facility Search
 
 #### GET /api/locations/search
+
 Search for waste disposal facilities by location and filters.
 
 **Parameters:**
+
 ```typescript
 {
   zipCode: string;        // 5-digit US ZIP code
@@ -52,6 +58,7 @@ Search for waste disposal facilities by location and filters.
 ```
 
 **Response:**
+
 ```typescript
 {
   success: true,
@@ -73,9 +80,11 @@ Search for waste disposal facilities by location and filters.
 ```
 
 #### GET /api/locations/:id
+
 Get detailed information for a specific facility.
 
 **Response:**
+
 ```typescript
 {
   success: true,
@@ -91,9 +100,11 @@ Get detailed information for a specific facility.
 ### Reviews
 
 #### POST /api/reviews
+
 Submit a review for a facility (public endpoint with reCAPTCHA protection).
 
 **Request Body:**
+
 ```typescript
 {
   locationId: string,
@@ -106,9 +117,11 @@ Submit a review for a facility (public endpoint with reCAPTCHA protection).
 ```
 
 #### GET /api/admin/reviews
+
 Get reviews for moderation (admin only).
 
 **Parameters:**
+
 ```typescript
 {
   status?: 'pending' | 'approved' | 'rejected',
@@ -118,9 +131,11 @@ Get reviews for moderation (admin only).
 ```
 
 #### PUT /api/admin/reviews/:id
+
 Moderate a review (admin only).
 
 **Request Body:**
+
 ```typescript
 {
   status: 'approved' | 'rejected',
@@ -131,9 +146,11 @@ Moderate a review (admin only).
 ### Suggestions
 
 #### POST /api/suggestions
+
 Submit a new facility suggestion (public endpoint with reCAPTCHA protection).
 
 **Request Body:**
+
 ```typescript
 {
   facilityName: string,
@@ -150,12 +167,15 @@ Submit a new facility suggestion (public endpoint with reCAPTCHA protection).
 ```
 
 #### GET /api/admin/suggestions
+
 Get facility suggestions for review (admin only).
 
 #### PUT /api/admin/suggestions/:id
+
 Approve or reject a facility suggestion (admin only).
 
 **Request Body:**
+
 ```typescript
 {
   status: 'approved' | 'rejected',
@@ -167,20 +187,25 @@ Approve or reject a facility suggestion (admin only).
 ### Facility Management (Admin Only)
 
 #### POST /api/admin/locations
+
 Create a new facility.
 
 #### PUT /api/admin/locations/:id
+
 Update facility information.
 
 #### DELETE /api/admin/locations/:id
+
 Delete a facility (soft delete - marks as inactive).
 
 #### POST /api/admin/locations/bulk-upload
+
 Bulk upload facilities via CSV.
 
 **Request:** Multipart form data with CSV file
 
 **CSV Format:**
+
 ```csv
 name,address,city,state,zipCode,facilityType,contactPhone,contactEmail,wasteTypes
 "City Landfill","123 Main St","Springfield","IL","62701","landfill","555-0123","info@citylandfill.com","general,construction"
@@ -189,23 +214,29 @@ name,address,city,state,zipCode,facilityType,contactPhone,contactEmail,wasteType
 ### Blog Management (Admin Only)
 
 #### GET /api/blog/posts
+
 Get blog posts (public endpoint).
 
 #### POST /api/admin/blog/posts
+
 Create a new blog post.
 
 #### PUT /api/admin/blog/posts/:id
+
 Update a blog post.
 
 #### DELETE /api/admin/blog/posts/:id
+
 Delete a blog post.
 
 ### Authentication
 
 #### POST /api/auth/login
+
 Admin login with username and password.
 
 **Request Body:**
+
 ```typescript
 {
   username: string,
@@ -214,6 +245,7 @@ Admin login with username and password.
 ```
 
 **Response:**
+
 ```typescript
 {
   success: true,
@@ -229,25 +261,31 @@ Admin login with username and password.
 ```
 
 #### POST /api/auth/logout
+
 Logout and invalidate session.
 
 #### GET /api/auth/me
+
 Get current user information (if authenticated).
 
 ### System Administration (Admin Only)
 
 #### GET /api/admin/analytics
+
 Get system analytics and usage statistics.
 
 #### GET /api/admin/settings
+
 Get system configuration.
 
 #### PUT /api/admin/settings
+
 Update system configuration.
 
 ## Data Models
 
 ### Location
+
 ```typescript
 interface Location {
   id: string;
@@ -258,20 +296,21 @@ interface Location {
   zipCode: string;
   latitude: number;
   longitude: number;
-  facilityType: 'landfill' | 'transfer_station' | 'construction_landfill';
+  facilityType: "landfill" | "transfer_station" | "construction_landfill";
   acceptedWasteTypes: string[];
   restrictions: string[];
   operatingHours: OperatingHours[];
   contactInfo: ContactInfo;
   pricing: PricingInfo;
   isActive: boolean;
-  verificationStatus: 'verified' | 'pending' | 'unverified';
+  verificationStatus: "verified" | "pending" | "unverified";
   createdAt: string;
   updatedAt: string;
 }
 ```
 
 ### Review
+
 ```typescript
 interface Review {
   id: string;
@@ -290,6 +329,7 @@ interface Review {
 ```
 
 ### Suggestion
+
 ```typescript
 interface Suggestion {
   id: string;
@@ -302,7 +342,7 @@ interface Suggestion {
   additionalInfo?: string;
   submitterName?: string;
   submitterEmail: string;
-  status: 'pending' | 'approved' | 'rejected';
+  status: "pending" | "approved" | "rejected";
   rejectionReason?: string;
   createdAt: string;
   reviewedAt?: string;
@@ -311,6 +351,7 @@ interface Suggestion {
 ```
 
 ### Supporting Types
+
 ```typescript
 interface ContactInfo {
   phone?: string;
@@ -319,16 +360,23 @@ interface ContactInfo {
 }
 
 interface OperatingHours {
-  day: 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
+  day:
+    | "monday"
+    | "tuesday"
+    | "wednesday"
+    | "thursday"
+    | "friday"
+    | "saturday"
+    | "sunday";
   openTime: string; // "08:00"
   closeTime: string; // "17:00"
   isClosed: boolean;
 }
 
 interface PricingInfo {
-  priceType: 'per_ton' | 'per_load' | 'flat_rate' | 'variable';
+  priceType: "per_ton" | "per_load" | "flat_rate" | "variable";
   amount?: number;
-  currency: 'USD';
+  currency: "USD";
   notes?: string;
 }
 ```
@@ -336,6 +384,7 @@ interface PricingInfo {
 ## Error Handling
 
 ### Error Response Format
+
 ```typescript
 {
   success: false,
@@ -349,6 +398,7 @@ interface PricingInfo {
 ```
 
 ### Common Error Codes
+
 - `VALIDATION_ERROR`: Invalid input data
 - `NOT_FOUND`: Resource not found
 - `UNAUTHORIZED`: Authentication required
@@ -373,6 +423,7 @@ interface PricingInfo {
 ## Google API Integration
 
 ### Required API Keys
+
 ```env
 GOOGLE_MAPS_API_KEY=your_maps_api_key
 GOOGLE_PLACES_API_KEY=your_places_api_key
@@ -380,6 +431,7 @@ RECAPTCHA_SECRET_KEY=your_recaptcha_secret
 ```
 
 ### API Usage
+
 - Google Geocoding: ZIP code to coordinates conversion
 - Google Places: Address validation and autocomplete
 - reCAPTCHA: Spam protection for public forms
@@ -387,11 +439,13 @@ RECAPTCHA_SECRET_KEY=your_recaptcha_secret
 ## Performance & Monitoring
 
 ### Response Times
+
 - Location search: < 500ms (95th percentile)
 - Facility details: < 200ms (95th percentile)
 - Review/suggestion submission: < 1s (95th percentile)
 
 ### Monitoring Integration
+
 - Sentry: Error tracking and performance monitoring
 - Custom metrics: API response times, success rates
 - Database monitoring: Query performance and connection health

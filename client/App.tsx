@@ -12,7 +12,11 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { PageLoading } from "@/components/LoadingStates";
 import { initSentry } from "@/lib/monitoring";
 import { initSessionRecording } from "@/lib/sessionRecording";
-import { usePerformanceMonitoring, useBundlePerformance, useMemoryMonitoring } from "@/hooks/usePerformanceMonitoring";
+import {
+  usePerformanceMonitoring,
+  useBundlePerformance,
+  useMemoryMonitoring,
+} from "@/hooks/usePerformanceMonitoring";
 
 // Lazy load pages for code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -63,179 +67,188 @@ const App = () => (
       <AuthProvider>
         <MonitoringProvider>
           <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Suspense
-              fallback={<PageLoading message="Loading application..." />}
-            >
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/locations" element={<Locations />} />
-                <Route path="/all-locations" element={<AllLocations />} />
-                <Route path="/suggest-location" element={<SuggestLocation />} />
-                <Route path="/resources" element={<Resources />} />
-                <Route path="/location/:id" element={<LocationDetail />} />
-                <Route path="/blog" element={<Blog />} />
-                <Route path="/blog/:slug" element={<BlogPost />} />
-                <Route path="/search-test" element={<SearchTest />} />
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Suspense
+                fallback={<PageLoading message="Loading application..." />}
+              >
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/locations" element={<Locations />} />
+                  <Route path="/all-locations" element={<AllLocations />} />
+                  <Route
+                    path="/suggest-location"
+                    element={<SuggestLocation />}
+                  />
+                  <Route path="/resources" element={<Resources />} />
+                  <Route path="/location/:id" element={<LocationDetail />} />
+                  <Route path="/blog" element={<Blog />} />
+                  <Route path="/blog/:slug" element={<BlogPost />} />
+                  <Route path="/search-test" element={<SearchTest />} />
 
-                {/* Admin routes with separate loading */}
-                <Route
-                  path="/admin-login"
-                  element={
-                    <Suspense
-                      fallback={
-                        <PageLoading message="Loading admin login..." />
-                      }
-                    >
-                      <AdminLogin />
-                    </Suspense>
-                  }
-                />
+                  {/* Admin routes with separate loading */}
+                  <Route
+                    path="/admin-login"
+                    element={
+                      <Suspense
+                        fallback={
+                          <PageLoading message="Loading admin login..." />
+                        }
+                      >
+                        <AdminLogin />
+                      </Suspense>
+                    }
+                  />
 
-                <Route
-                  path="/admin"
-                  element={
-                    <Suspense
-                      fallback={
-                        <PageLoading message="Loading admin panel..." />
-                      }
-                    >
-                      <AdminRoute>
-                        <Admin />
-                      </AdminRoute>
-                    </Suspense>
-                  }
-                />
+                  <Route
+                    path="/admin"
+                    element={
+                      <Suspense
+                        fallback={
+                          <PageLoading message="Loading admin panel..." />
+                        }
+                      >
+                        <AdminRoute>
+                          <Admin />
+                        </AdminRoute>
+                      </Suspense>
+                    }
+                  />
 
-                <Route
-                  path="/admin/add-location"
-                  element={
-                    <Suspense
-                      fallback={<PageLoading message="Loading form..." />}
-                    >
-                      <AdminRoute>
-                        <AddLocation />
-                      </AdminRoute>
-                    </Suspense>
-                  }
-                />
+                  <Route
+                    path="/admin/add-location"
+                    element={
+                      <Suspense
+                        fallback={<PageLoading message="Loading form..." />}
+                      >
+                        <AdminRoute>
+                          <AddLocation />
+                        </AdminRoute>
+                      </Suspense>
+                    }
+                  />
 
-                <Route
-                  path="/admin/locations"
-                  element={
-                    <Suspense
-                      fallback={<PageLoading message="Loading locations..." />}
-                    >
-                      <AdminRoute>
-                        <LocationDataTable />
-                      </AdminRoute>
-                    </Suspense>
-                  }
-                />
+                  <Route
+                    path="/admin/locations"
+                    element={
+                      <Suspense
+                        fallback={
+                          <PageLoading message="Loading locations..." />
+                        }
+                      >
+                        <AdminRoute>
+                          <LocationDataTable />
+                        </AdminRoute>
+                      </Suspense>
+                    }
+                  />
 
-                <Route
-                  path="/admin/reviews"
-                  element={
-                    <Suspense
-                      fallback={<PageLoading message="Loading reviews..." />}
-                    >
-                      <AdminRoute>
-                        <ReviewsTable />
-                      </AdminRoute>
-                    </Suspense>
-                  }
-                />
+                  <Route
+                    path="/admin/reviews"
+                    element={
+                      <Suspense
+                        fallback={<PageLoading message="Loading reviews..." />}
+                      >
+                        <AdminRoute>
+                          <ReviewsTable />
+                        </AdminRoute>
+                      </Suspense>
+                    }
+                  />
 
-                <Route
-                  path="/admin/suggestions"
-                  element={
-                    <Suspense
-                      fallback={
-                        <PageLoading message="Loading suggestions..." />
-                      }
-                    >
-                      <AdminRoute>
-                        <SuggestionsTable />
-                      </AdminRoute>
-                    </Suspense>
-                  }
-                />
+                  <Route
+                    path="/admin/suggestions"
+                    element={
+                      <Suspense
+                        fallback={
+                          <PageLoading message="Loading suggestions..." />
+                        }
+                      >
+                        <AdminRoute>
+                          <SuggestionsTable />
+                        </AdminRoute>
+                      </Suspense>
+                    }
+                  />
 
-                <Route
-                  path="/admin/marketing"
-                  element={
-                    <Suspense
-                      fallback={<PageLoading message="Loading marketing..." />}
-                    >
-                      <AdminRoute>
-                        <Marketing />
-                      </AdminRoute>
-                    </Suspense>
-                  }
-                />
+                  <Route
+                    path="/admin/marketing"
+                    element={
+                      <Suspense
+                        fallback={
+                          <PageLoading message="Loading marketing..." />
+                        }
+                      >
+                        <AdminRoute>
+                          <Marketing />
+                        </AdminRoute>
+                      </Suspense>
+                    }
+                  />
 
-                <Route
-                  path="/admin/blog"
-                  element={
-                    <Suspense
-                      fallback={<PageLoading message="Loading blog admin..." />}
-                    >
-                      <AdminRoute>
-                        <BlogAdmin />
-                      </AdminRoute>
-                    </Suspense>
-                  }
-                />
+                  <Route
+                    path="/admin/blog"
+                    element={
+                      <Suspense
+                        fallback={
+                          <PageLoading message="Loading blog admin..." />
+                        }
+                      >
+                        <AdminRoute>
+                          <BlogAdmin />
+                        </AdminRoute>
+                      </Suspense>
+                    }
+                  />
 
-                <Route
-                  path="/admin/settings"
-                  element={
-                    <Suspense
-                      fallback={<PageLoading message="Loading settings..." />}
-                    >
-                      <AdminRoute>
-                        <AdminSettings />
-                      </AdminRoute>
-                    </Suspense>
-                  }
-                />
+                  <Route
+                    path="/admin/settings"
+                    element={
+                      <Suspense
+                        fallback={<PageLoading message="Loading settings..." />}
+                      >
+                        <AdminRoute>
+                          <AdminSettings />
+                        </AdminRoute>
+                      </Suspense>
+                    }
+                  />
 
-                <Route
-                  path="/admin/preview-location/:id"
-                  element={
-                    <Suspense
-                      fallback={<PageLoading message="Loading preview..." />}
-                    >
-                      <AdminRoute>
-                        <PreviewLocation />
-                      </AdminRoute>
-                    </Suspense>
-                  }
-                />
+                  <Route
+                    path="/admin/preview-location/:id"
+                    element={
+                      <Suspense
+                        fallback={<PageLoading message="Loading preview..." />}
+                      >
+                        <AdminRoute>
+                          <PreviewLocation />
+                        </AdminRoute>
+                      </Suspense>
+                    }
+                  />
 
-                <Route
-                  path="/admin/bulk-upload"
-                  element={
-                    <Suspense
-                      fallback={
-                        <PageLoading message="Loading bulk upload..." />
-                      }
-                    >
-                      <AdminRoute>
-                        <BulkUploadFacilities />
-                      </AdminRoute>
-                    </Suspense>
-                  }
-                />
+                  <Route
+                    path="/admin/bulk-upload"
+                    element={
+                      <Suspense
+                        fallback={
+                          <PageLoading message="Loading bulk upload..." />
+                        }
+                      >
+                        <AdminRoute>
+                          <BulkUploadFacilities />
+                        </AdminRoute>
+                      </Suspense>
+                    }
+                  />
 
-                {/* Catch-all route */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Suspense>
-          </BrowserRouter>
-        </TooltipProvider>
+                  {/* Catch-all route */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
+            </BrowserRouter>
+          </TooltipProvider>
         </MonitoringProvider>
       </AuthProvider>
     </QueryClientProvider>

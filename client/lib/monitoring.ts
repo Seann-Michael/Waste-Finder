@@ -6,10 +6,10 @@ import * as Sentry from "@sentry/react";
 export function initSentry() {
   // Only initialize in production or when SENTRY_DSN is provided
   const dsn = import.meta.env.VITE_SENTRY_DSN;
-  const environment = import.meta.env.VITE_ENVIRONMENT || 'development';
+  const environment = import.meta.env.VITE_ENVIRONMENT || "development";
 
-  if (!dsn && environment === 'production') {
-    console.warn('Sentry DSN not configured. Error tracking disabled.');
+  if (!dsn && environment === "production") {
+    console.warn("Sentry DSN not configured. Error tracking disabled.");
     return;
   }
 
@@ -24,10 +24,10 @@ export function initSentry() {
     ],
 
     // Performance monitoring
-    tracesSampleRate: environment === 'production' ? 0.1 : 1.0,
+    tracesSampleRate: environment === "production" ? 0.1 : 1.0,
 
     // Session replay
-    replaysSessionSampleRate: environment === 'production' ? 0.1 : 1.0,
+    replaysSessionSampleRate: environment === "production" ? 0.1 : 1.0,
     replaysOnErrorSampleRate: 1.0,
 
     // Error filtering
@@ -36,12 +36,12 @@ export function initSentry() {
       const error = hint.originalException;
 
       // Ignore React dev warnings
-      if (error && error.toString().includes('Warning:')) {
+      if (error && error.toString().includes("Warning:")) {
         return null;
       }
 
       // Ignore network errors from localhost
-      if (error && error.toString().includes('localhost')) {
+      if (error && error.toString().includes("localhost")) {
         return null;
       }
 
@@ -49,8 +49,8 @@ export function initSentry() {
     },
 
     // Additional configuration
-    debug: environment === 'development',
-    release: import.meta.env.VITE_APP_VERSION || '1.0.0',
+    debug: environment === "development",
+    release: import.meta.env.VITE_APP_VERSION || "1.0.0",
   });
 }
 
@@ -60,7 +60,7 @@ export function initSentry() {
 export function trackEvent(eventName: string, data?: Record<string, any>) {
   Sentry.addBreadcrumb({
     message: eventName,
-    level: 'info',
+    level: "info",
     data,
   });
 }
@@ -69,10 +69,10 @@ export function trackEvent(eventName: string, data?: Record<string, any>) {
  * Track user interactions
  */
 export function trackUserAction(action: string, details?: Record<string, any>) {
-  Sentry.setTag('user_action', action);
+  Sentry.setTag("user_action", action);
   Sentry.addBreadcrumb({
     message: `User action: ${action}`,
-    level: 'info',
+    level: "info",
     data: details,
   });
 }
@@ -80,10 +80,14 @@ export function trackUserAction(action: string, details?: Record<string, any>) {
 /**
  * Track API response times
  */
-export function trackAPICall(endpoint: string, duration: number, status: number) {
+export function trackAPICall(
+  endpoint: string,
+  duration: number,
+  status: number,
+) {
   Sentry.addBreadcrumb({
     message: `API call: ${endpoint}`,
-    level: status >= 400 ? 'error' : 'info',
+    level: status >= 400 ? "error" : "info",
     data: {
       endpoint,
       duration_ms: duration,
@@ -95,7 +99,11 @@ export function trackAPICall(endpoint: string, duration: number, status: number)
 /**
  * Set user context for error tracking
  */
-export function setUserContext(user: { id: string; email?: string; role?: string }) {
+export function setUserContext(user: {
+  id: string;
+  email?: string;
+  role?: string;
+}) {
   Sentry.setUser({
     id: user.id,
     email: user.email,

@@ -75,7 +75,10 @@ export default function Header() {
         {/* Admin Indicator */}
         {isAdmin && (
           <div className="bg-yellow-500 text-black py-2 px-4 text-xs font-medium text-center">
-            <Link to="/admin" className="flex items-center justify-center gap-2 hover:underline">
+            <Link
+              to="/admin"
+              className="flex items-center justify-center gap-2 hover:underline"
+            >
               <Shield className="w-3 h-3" />
               <span>ADMIN MODE - You are logged in as administrator</span>
             </Link>
@@ -124,23 +127,23 @@ export default function Header() {
 
               {/* Business Owner CTA - Fixed visibility */}
               <div className="hidden sm:flex items-center space-x-2 md:space-x-4">
-              <Button
-                variant="default"
-                size="sm"
-                asChild
-                className="text-xs sm:text-sm bg-green-600 text-white hover:bg-green-700 border-green-600 px-2"
-              >
-                <a
-                  href={contentSettings.marketingButtonUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Button
+                  variant="default"
+                  size="sm"
+                  asChild
+                  className="text-xs sm:text-sm bg-green-600 text-white hover:bg-green-700 border-green-600 px-2"
                 >
-                  <span className="hidden md:inline">
-                    Click: {contentSettings.marketingButtonText}
-                  </span>
-                  <span className="md:hidden">Get Marketing</span>
-                </a>
-              </Button>
+                  <a
+                    href={contentSettings.marketingButtonUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span className="hidden md:inline">
+                      Click: {contentSettings.marketingButtonText}
+                    </span>
+                    <span className="md:hidden">Get Marketing</span>
+                  </a>
+                </Button>
               </div>
 
               {/* Mobile menu button */}

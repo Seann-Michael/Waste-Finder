@@ -1,11 +1,11 @@
-import { useEffect, useCallback } from 'react';
-import { onCLS, onINP, onFCP, onLCP, onTTFB } from 'web-vitals';
-import { trackEvent } from '@/lib/monitoring';
+import { useEffect, useCallback } from "react";
+import { onCLS, onINP, onFCP, onLCP, onTTFB } from "web-vitals";
+import { trackEvent } from "@/lib/monitoring";
 
 interface PerformanceMetric {
   name: string;
   value: number;
-  rating: 'good' | 'needs-improvement' | 'poor';
+  rating: "good" | "needs-improvement" | "poor";
   delta: number;
   entries: PerformanceEntry[];
 }
@@ -17,11 +17,11 @@ export function usePerformanceMonitoring() {
   const reportMetric = useCallback((metric: PerformanceMetric) => {
     // Log to console in development
     if (import.meta.env.DEV) {
-      console.log('Performance metric:', metric);
+      console.log("Performance metric:", metric);
     }
 
     // Track in Sentry
-    trackEvent('performance_metric', {
+    trackEvent("performance_metric", {
       metric_name: metric.name,
       value: metric.value,
       rating: metric.rating,
@@ -29,8 +29,8 @@ export function usePerformanceMonitoring() {
     });
 
     // Send to analytics if needed
-    if (typeof gtag !== 'undefined') {
-      gtag('event', metric.name, {
+    if (typeof gtag !== "undefined") {
+      gtag("event", metric.name, {
         value: Math.round(metric.value),
         metric_rating: metric.rating,
       });
@@ -61,8 +61,9 @@ export function useRenderPerformance(componentName: string) {
     return () => {
       const renderTime = performance.now() - startTime;
 
-      if (renderTime > 100) { // Only track slow renders
-        trackEvent('slow_render', {
+      if (renderTime > 100) {
+        // Only track slow renders
+        trackEvent("slow_render", {
           component: componentName,
           render_time: renderTime,
         });
@@ -75,21 +76,24 @@ export function useRenderPerformance(componentName: string) {
  * Hook for monitoring API response times
  */
 export function useAPIPerformance() {
-  const trackAPICall = useCallback((url: string, startTime: number, response: Response) => {
-    const duration = performance.now() - startTime;
+  const trackAPICall = useCallback(
+    (url: string, startTime: number, response: Response) => {
+      const duration = performance.now() - startTime;
 
-    trackEvent('api_response_time', {
-      url,
-      duration,
-      status: response.status,
-      success: response.ok,
-    });
+      trackEvent("api_response_time", {
+        url,
+        duration,
+        status: response.status,
+        success: response.ok,
+      });
 
-    // Log slow API calls
-    if (duration > 2000) {
-      console.warn(`Slow API call: ${url} took ${duration}ms`);
-    }
-  }, []);
+      // Log slow API calls
+      if (duration > 2000) {
+        console.warn(`Slow API call: ${url} took ${duration}ms`);
+      }
+    },
+    [],
+  );
 
   return { trackAPICall };
 }
@@ -102,24 +106,26 @@ export function useBundlePerformance() {
     // Monitor resource loading
     const observer = new PerformanceObserver((list) => {
       list.getEntries().forEach((entry) => {
-        if (entry.entryType === 'navigation') {
+        if (entry.entryType === "navigation") {
           const navEntry = entry as PerformanceNavigationTiming;
 
-          trackEvent('page_load_timing', {
+          trackEvent("page_load_timing", {
             dns_lookup: navEntry.domainLookupEnd - navEntry.domainLookupStart,
             tcp_connect: navEntry.connectEnd - navEntry.connectStart,
             request_response: navEntry.responseEnd - navEntry.requestStart,
-            dom_processing: navEntry.domContentLoadedEventEnd - navEntry.responseEnd,
+            dom_processing:
+              navEntry.domContentLoadedEventEnd - navEntry.responseEnd,
             total_load_time: navEntry.loadEventEnd - navEntry.navigationStart,
           });
         }
 
-        if (entry.entryType === 'resource') {
+        if (entry.entryType === "resource") {
           const resourceEntry = entry as PerformanceResourceTiming;
 
           // Track large resources
-          if (resourceEntry.transferSize > 100000) { // > 100KB
-            trackEvent('large_resource', {
+          if (resourceEntry.transferSize > 100000) {
+            // > 100KB
+            trackEvent("large_resource", {
               name: resourceEntry.name,
               size: resourceEntry.transferSize,
               duration: resourceEntry.duration,
@@ -129,7 +135,7 @@ export function useBundlePerformance() {
       });
     });
 
-    observer.observe({ entryTypes: ['navigation', 'resource'] });
+    observer.observe({ entryTypes: ["navigation", "resource"] });
 
     return () => observer.disconnect();
   }, []);
@@ -141,14 +147,15 @@ export function useBundlePerformance() {
 export function useMemoryMonitoring() {
   useEffect(() => {
     const checkMemory = () => {
-      if ('memory' in performance) {
+      if ("memory" in performance) {
         const memory = (performance as any).memory;
 
-        trackEvent('memory_usage', {
+        trackEvent("memory_usage", {
           used: memory.usedJSHeapSize,
           total: memory.totalJSHeapSize,
           limit: memory.jsHeapSizeLimit,
-          usage_percentage: (memory.usedJSHeapSize / memory.jsHeapSizeLimit) * 100,
+          usage_percentage:
+            (memory.usedJSHeapSize / memory.jsHeapSizeLimit) * 100,
         });
       }
     };

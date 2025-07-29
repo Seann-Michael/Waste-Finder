@@ -1,6 +1,6 @@
 /**
  * Mobile Utility Components
- * 
+ *
  * Collection of utility components specifically designed for mobile responsiveness
  * and touch interactions in the WasteFinder application
  */
@@ -13,20 +13,22 @@ interface MobileContainerProps {
   padding?: "none" | "sm" | "md" | "lg";
 }
 
-export function MobileContainer({ 
-  children, 
-  className = "", 
-  padding = "md" 
+export function MobileContainer({
+  children,
+  className = "",
+  padding = "md",
 }: MobileContainerProps) {
   const paddingClasses = {
     none: "",
     sm: "px-4 sm:px-6",
     md: "px-4 sm:px-6 lg:px-8",
-    lg: "px-6 sm:px-8 lg:px-12"
+    lg: "px-6 sm:px-8 lg:px-12",
   };
 
   return (
-    <div className={`w-full max-w-7xl mx-auto ${paddingClasses[padding]} ${className}`}>
+    <div
+      className={`w-full max-w-7xl mx-auto ${paddingClasses[padding]} ${className}`}
+    >
       {children}
     </div>
   );
@@ -44,19 +46,19 @@ interface MobileGridProps {
   className?: string;
 }
 
-export function MobileGrid({ 
-  children, 
+export function MobileGrid({
+  children,
   columns = { mobile: 1, tablet: 2, desktop: 3 },
   gap = "md",
-  className = ""
+  className = "",
 }: MobileGridProps) {
   const gapClasses = {
     sm: "gap-3 sm:gap-4",
     md: "gap-4 sm:gap-6",
-    lg: "gap-6 sm:gap-8"
+    lg: "gap-6 sm:gap-8",
   };
 
-  const gridCols = `grid-cols-${columns.mobile} ${columns.tablet ? `sm:grid-cols-${columns.tablet}` : ''} ${columns.desktop ? `lg:grid-cols-${columns.desktop}` : ''}`;
+  const gridCols = `grid-cols-${columns.mobile} ${columns.tablet ? `sm:grid-cols-${columns.tablet}` : ""} ${columns.desktop ? `lg:grid-cols-${columns.desktop}` : ""}`;
 
   return (
     <div className={`grid ${gridCols} ${gapClasses[gap]} ${className}`}>
@@ -83,20 +85,22 @@ export function MobileButton({
   size = "md",
   fullWidth = false,
   disabled = false,
-  className = ""
+  className = "",
 }: MobileButtonProps) {
-  const baseClasses = "inline-flex items-center justify-center font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none";
-  
+  const baseClasses =
+    "inline-flex items-center justify-center font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none";
+
   const variantClasses = {
     primary: "bg-primary text-primary-foreground hover:bg-primary/90",
     secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-    outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground"
+    outline:
+      "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
   };
 
   const sizeClasses = {
     sm: "h-9 px-3 text-sm",
     md: "h-11 px-4 text-base", // Optimized for mobile touch
-    lg: "h-12 px-6 text-lg"
+    lg: "h-12 px-6 text-lg",
   };
 
   const widthClass = fullWidth ? "w-full" : "";
@@ -132,10 +136,11 @@ export function MobileInput({
   disabled = false,
   className = "",
   label,
-  error
+  error,
 }: MobileInputProps) {
-  const baseClasses = "flex h-11 w-full border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
-  
+  const baseClasses =
+    "flex h-11 w-full border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
+
   const errorClasses = error ? "border-destructive" : "";
 
   return (
@@ -153,9 +158,7 @@ export function MobileInput({
         disabled={disabled}
         className={`${baseClasses} ${errorClasses} ${className}`}
       />
-      {error && (
-        <p className="text-sm text-destructive">{error}</p>
-      )}
+      {error && <p className="text-sm text-destructive">{error}</p>}
     </div>
   );
 }
@@ -174,16 +177,19 @@ export function MobileCard({
   className = "",
   padding = "md",
   onClick,
-  hover = false
+  hover = false,
 }: MobileCardProps) {
-  const baseClasses = "rounded-lg border bg-card text-card-foreground shadow-sm";
+  const baseClasses =
+    "rounded-lg border bg-card text-card-foreground shadow-sm";
   const paddingClasses = {
     sm: "p-4",
     md: "p-4 sm:p-6",
-    lg: "p-6 sm:p-8"
+    lg: "p-6 sm:p-8",
   };
   const interactiveClasses = onClick ? "cursor-pointer" : "";
-  const hoverClasses = hover ? "hover:shadow-md transition-shadow duration-200" : "";
+  const hoverClasses = hover
+    ? "hover:shadow-md transition-shadow duration-200"
+    : "";
 
   return (
     <div
@@ -201,15 +207,20 @@ interface MobileSpinnerProps {
   className?: string;
 }
 
-export function MobileSpinner({ size = "md", className = "" }: MobileSpinnerProps) {
+export function MobileSpinner({
+  size = "md",
+  className = "",
+}: MobileSpinnerProps) {
   const sizeClasses = {
     sm: "w-4 h-4",
     md: "w-6 h-6",
-    lg: "w-8 h-8"
+    lg: "w-8 h-8",
   };
 
   return (
-    <div className={`animate-spin rounded-full border-2 border-gray-300 border-t-primary ${sizeClasses[size]} ${className}`} />
+    <div
+      className={`animate-spin rounded-full border-2 border-gray-300 border-t-primary ${sizeClasses[size]} ${className}`}
+    />
   );
 }
 
@@ -221,7 +232,12 @@ interface MobileTabsProps {
   className?: string;
 }
 
-export function MobileTabs({ tabs, activeTab, onTabChange, className = "" }: MobileTabsProps) {
+export function MobileTabs({
+  tabs,
+  activeTab,
+  onTabChange,
+  className = "",
+}: MobileTabsProps) {
   return (
     <div className={className}>
       {/* Tab buttons */}
@@ -240,10 +256,10 @@ export function MobileTabs({ tabs, activeTab, onTabChange, className = "" }: Mob
           </button>
         ))}
       </div>
-      
+
       {/* Tab content */}
       <div className="mt-4">
-        {tabs.find(tab => tab.id === activeTab)?.content}
+        {tabs.find((tab) => tab.id === activeTab)?.content}
       </div>
     </div>
   );
@@ -258,19 +274,27 @@ interface MobileModalProps {
   className?: string;
 }
 
-export function MobileModal({ isOpen, onClose, title, children, className = "" }: MobileModalProps) {
+export function MobileModal({
+  isOpen,
+  onClose,
+  title,
+  children,
+  className = "",
+}: MobileModalProps) {
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div 
+      <div
         className="absolute inset-0 bg-black bg-opacity-50"
         onClick={onClose}
       />
-      
+
       {/* Modal */}
-      <div className={`relative bg-white rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto ${className}`}>
+      <div
+        className={`relative bg-white rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto ${className}`}
+      >
         {title && (
           <div className="flex items-center justify-between p-4 border-b">
             <h2 className="text-lg font-semibold">{title}</h2>
@@ -282,10 +306,8 @@ export function MobileModal({ isOpen, onClose, title, children, className = "" }
             </button>
           </div>
         )}
-        
-        <div className="p-4">
-          {children}
-        </div>
+
+        <div className="p-4">{children}</div>
       </div>
     </div>
   );
@@ -299,18 +321,25 @@ interface MobileToastProps {
   onClose: () => void;
 }
 
-export function MobileToast({ message, type = "info", isVisible, onClose }: MobileToastProps) {
+export function MobileToast({
+  message,
+  type = "info",
+  isVisible,
+  onClose,
+}: MobileToastProps) {
   const typeClasses = {
     success: "bg-green-500 text-white",
     error: "bg-red-500 text-white",
     warning: "bg-yellow-500 text-black",
-    info: "bg-blue-500 text-white"
+    info: "bg-blue-500 text-white",
   };
 
   if (!isVisible) return null;
 
   return (
-    <div className={`fixed bottom-4 left-4 right-4 p-4 rounded-lg shadow-lg z-50 flex items-center justify-between ${typeClasses[type]}`}>
+    <div
+      className={`fixed bottom-4 left-4 right-4 p-4 rounded-lg shadow-lg z-50 flex items-center justify-between ${typeClasses[type]}`}
+    >
       <span>{message}</span>
       <button
         onClick={onClose}

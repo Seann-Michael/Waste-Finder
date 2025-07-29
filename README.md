@@ -7,6 +7,7 @@ WasteFinder is a comprehensive web application that serves as a searchable publi
 ## 🎯 Core Features
 
 ### For Public Users (No Login Required)
+
 - **🔍 Facility Search**: Find waste disposal facilities within 50 miles of any ZIP code
 - **🗺️ Interactive Maps**: Google Maps integration with facility locations and directions
 - **�� Reviews & Ratings**: Leave reviews and ratings for facilities
@@ -14,6 +15,7 @@ WasteFinder is a comprehensive web application that serves as a searchable publi
 - **📚 Educational Blog**: Read waste management tips and industry news
 
 ### For Administrators (Login Required)
+
 - **📋 Content Moderation**: Approve/reject user reviews and facility suggestions
 - **🏢 Facility Management**: Full CRUD operations on facility database
 - **📊 Bulk Operations**: CSV upload for multiple facility additions
@@ -34,6 +36,7 @@ WasteFinder is a comprehensive web application that serves as a searchable publi
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js 18+ and npm
 - Google Maps API key
 - Google Places API key
@@ -41,13 +44,16 @@ WasteFinder is a comprehensive web application that serves as a searchable publi
 - Sentry DSN (optional, for monitoring)
 
 ### Environment Setup
+
 1. Clone the repository
 2. Copy environment variables:
+
 ```bash
 cp .env.example .env
 ```
 
 3. Configure your `.env` file:
+
 ```env
 # Required - Google APIs
 VITE_GOOGLE_MAPS_API_KEY=your_maps_api_key_here
@@ -64,6 +70,7 @@ VITE_SESSION_RECORDING_SITE_ID=your_site_id_here
 ```
 
 ### Installation & Development
+
 ```bash
 # Install dependencies
 npm install
@@ -79,6 +86,7 @@ npm run preview
 ```
 
 ### Database Setup
+
 The application will need a backend database. See `API_DOCUMENTATION.md` for database schema and setup instructions.
 
 ## 📁 Project Structure
@@ -109,6 +117,7 @@ client/
 ## 🗺️ Google API Setup
 
 ### 1. Google Cloud Console Setup
+
 1. Create a new project in [Google Cloud Console](https://console.cloud.google.com/)
 2. Enable the following APIs:
    - Maps JavaScript API
@@ -116,11 +125,13 @@ client/
    - Geocoding API
 
 ### 2. API Key Configuration
+
 1. Create API keys with appropriate restrictions
 2. Add your domain to the API key restrictions
 3. Set up billing (required for Google Maps APIs)
 
 ### 3. reCAPTCHA Setup
+
 1. Visit [Google reCAPTCHA](https://www.google.com/recaptcha/)
 2. Register your site for reCAPTCHA v3
 3. Add your domain to the list of allowed domains
@@ -128,7 +139,9 @@ client/
 ## 🔧 Configuration
 
 ### Admin User Setup
+
 Admin users can:
+
 - Add, edit, delete facilities
 - Bulk upload facilities via CSV
 - Moderate user reviews and suggestions
@@ -137,11 +150,13 @@ Admin users can:
 - View analytics and reports
 
 ### AdSense Integration
+
 1. Apply for Google AdSense approval
 2. Configure ad placements in the admin panel
 3. Monitor revenue through the admin dashboard
 
 ### Performance Monitoring
+
 - Sentry integration for error tracking
 - Web Vitals monitoring for performance
 - Optional session recording with Hotjar/FullStory
@@ -149,6 +164,7 @@ Admin users can:
 ## 📋 Development Guidelines
 
 ### Code Standards
+
 - TypeScript strict mode enabled
 - ESLint + Prettier for code formatting
 - Comprehensive error boundaries
@@ -156,6 +172,7 @@ Admin users can:
 - Lazy loading for route-based code splitting
 
 ### Adding New Features
+
 1. **API First**: Define API contracts before UI implementation
 2. **Type Safety**: Create TypeScript interfaces for all data
 3. **Error Handling**: Implement proper error states and user feedback
@@ -163,6 +180,7 @@ Admin users can:
 5. **Monitoring**: Add tracking for new user interactions
 
 ### Testing
+
 ```bash
 # Run unit tests
 npm run test
@@ -186,17 +204,20 @@ npm run type-check
 ## 📊 Monitoring & Analytics
 
 ### Performance Monitoring
+
 - Core Web Vitals tracking (LCP, FID, CLS)
 - API response time monitoring
 - Component render performance
 - Bundle size optimization
 
 ### Error Tracking
+
 - Sentry integration for real-time error reporting
 - User context for admin user identification
 - Custom event tracking for business metrics
 
 ### Business Intelligence
+
 - Search query analytics
 - Facility usage statistics
 - Review and suggestion trends
@@ -205,11 +226,13 @@ npm run type-check
 ## 🚀 Deployment
 
 ### Production Build
+
 ```bash
 npm run build
 ```
 
 ### Environment Variables for Production
+
 ```env
 VITE_ENVIRONMENT=production
 VITE_API_URL=https://your-api-domain.com/api
@@ -218,6 +241,7 @@ VITE_SENTRY_DSN=production_sentry_dsn
 ```
 
 ### Hosting Recommendations
+
 - **Frontend**: Netlify, Vercel, or AWS CloudFront
 - **Backend**: Node.js on AWS EC2, Google Cloud Run, or similar
 - **Database**: PostgreSQL on AWS RDS or Google Cloud SQL
@@ -244,6 +268,7 @@ This project is proprietary software. See LICENSE file for details.
 ## 🆘 Support
 
 For technical support or questions:
+
 - Review the documentation files
 - Check the inline code comments
 - Contact the development team

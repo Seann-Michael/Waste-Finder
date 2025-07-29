@@ -110,32 +110,87 @@
 }
 
 /* Mobile typography scale */
-.mobile-text-xs { font-size: 12px; line-height: 16px; }
-.mobile-text-sm { font-size: 14px; line-height: 20px; }
-.mobile-text-base { font-size: 16px; line-height: 24px; }
-.mobile-text-lg { font-size: 18px; line-height: 28px; }
-.mobile-text-xl { font-size: 20px; line-height: 28px; }
-.mobile-text-2xl { font-size: 24px; line-height: 32px; }
-.mobile-text-3xl { font-size: 30px; line-height: 36px; }
+.mobile-text-xs {
+  font-size: 12px;
+  line-height: 16px;
+}
+.mobile-text-sm {
+  font-size: 14px;
+  line-height: 20px;
+}
+.mobile-text-base {
+  font-size: 16px;
+  line-height: 24px;
+}
+.mobile-text-lg {
+  font-size: 18px;
+  line-height: 28px;
+}
+.mobile-text-xl {
+  font-size: 20px;
+  line-height: 28px;
+}
+.mobile-text-2xl {
+  font-size: 24px;
+  line-height: 32px;
+}
+.mobile-text-3xl {
+  font-size: 30px;
+  line-height: 36px;
+}
 
 /* Mobile spacing utilities */
-.mobile-p-2 { padding: 8px; }
-.mobile-p-3 { padding: 12px; }
-.mobile-p-4 { padding: 16px; }
-.mobile-p-6 { padding: 24px; }
+.mobile-p-2 {
+  padding: 8px;
+}
+.mobile-p-3 {
+  padding: 12px;
+}
+.mobile-p-4 {
+  padding: 16px;
+}
+.mobile-p-6 {
+  padding: 24px;
+}
 
-.mobile-px-3 { padding-left: 12px; padding-right: 12px; }
-.mobile-px-4 { padding-left: 16px; padding-right: 16px; }
-.mobile-px-6 { padding-left: 24px; padding-right: 24px; }
+.mobile-px-3 {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+.mobile-px-4 {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+.mobile-px-6 {
+  padding-left: 24px;
+  padding-right: 24px;
+}
 
-.mobile-py-3 { padding-top: 12px; padding-bottom: 12px; }
-.mobile-py-4 { padding-top: 16px; padding-bottom: 16px; }
-.mobile-py-6 { padding-top: 24px; padding-bottom: 24px; }
+.mobile-py-3 {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.mobile-py-4 {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+.mobile-py-6 {
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
 
-.mobile-mb-2 { margin-bottom: 8px; }
-.mobile-mb-3 { margin-bottom: 12px; }
-.mobile-mb-4 { margin-bottom: 16px; }
-.mobile-mb-6 { margin-bottom: 24px; }
+.mobile-mb-2 {
+  margin-bottom: 8px;
+}
+.mobile-mb-3 {
+  margin-bottom: 12px;
+}
+.mobile-mb-4 {
+  margin-bottom: 16px;
+}
+.mobile-mb-6 {
+  margin-bottom: 24px;
+}
 
 /* Mobile-optimized tables */
 .mobile-table-container {
@@ -476,19 +531,19 @@
     border-color: #374151;
     color: #f9fafb;
   }
-  
+
   .mobile-card-footer,
   .mobile-location-footer,
   .mobile-modal-footer {
     background: #111827;
     border-color: #374151;
   }
-  
+
   .mobile-table th {
     background: #111827;
     color: #f9fafb;
   }
-  
+
   .mobile-form-input,
   .mobile-form-textarea,
   .mobile-search-input {

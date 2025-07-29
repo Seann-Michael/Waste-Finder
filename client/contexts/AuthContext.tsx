@@ -1,6 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useToastNotifications } from "@/hooks/use-toast-notifications";
-import { setUserContext, clearUserContext, trackUserAction } from "@/lib/monitoring";
+import {
+  setUserContext,
+  clearUserContext,
+  trackUserAction,
+} from "@/lib/monitoring";
 import { identifyUser } from "@/lib/sessionRecording";
 
 interface User {
@@ -163,9 +167,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       showSuccess(`Welcome back, ${data.user.username}!`);
 
       // Track user login for monitoring
-      setUserContext({ id: data.user.id, email: data.user.email, role: data.user.role });
-      identifyUser(data.user.id, { username: data.user.username, role: data.user.role });
-      trackUserAction('login', { role: data.user.role });
+      setUserContext({
+        id: data.user.id,
+        email: data.user.email,
+        role: data.user.role,
+      });
+      identifyUser(data.user.id, {
+        username: data.user.username,
+        role: data.user.role,
+      });
+      trackUserAction("login", { role: data.user.role });
 
       // Clear rate limiting on successful login
       sessionStorage.removeItem("rateLimit_login");
@@ -196,7 +207,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setUser(null);
       clearUserContext();
-      trackUserAction('logout');
+      trackUserAction("logout");
       showSuccess("You have been logged out successfully");
     }
   };
@@ -229,8 +240,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         // Track authenticated user for monitoring
         if (data.user) {
-          setUserContext({ id: data.user.id, email: data.user.email, role: data.user.role });
-          identifyUser(data.user.id, { username: data.user.username, role: data.user.role });
+          setUserContext({
+            id: data.user.id,
+            email: data.user.email,
+            role: data.user.role,
+          });
+          identifyUser(data.user.id, {
+            username: data.user.username,
+            role: data.user.role,
+          });
         }
       } catch (error) {
         // User not authenticated or session expired

@@ -141,14 +141,19 @@ export default function SearchForm({
           <MapPin className="w-6 h-6 text-primary" />
           Find Waste Disposal Facilities
         </CardTitle>
-        <p className="text-gray-600 text-sm mt-2">Enter your ZIP code to find nearby facilities</p>
+        <p className="text-gray-600 text-sm mt-2">
+          Enter your ZIP code to find nearby facilities
+        </p>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* ZIP Code Input - Centered */}
           <div className="flex flex-col items-center gap-4">
             <div className="space-y-2 text-center">
-              <label htmlFor="zipCode" className="text-sm font-medium text-gray-700 block">
+              <label
+                htmlFor="zipCode"
+                className="text-sm font-medium text-gray-700 block"
+              >
                 ZIP Code
               </label>
               <Input
@@ -287,8 +292,6 @@ export default function SearchForm({
               </div>
             </div>
           )}
-
-
         </form>
       </CardContent>
     </Card>
