@@ -231,6 +231,9 @@ export default function AllLocations() {
             className="mb-8"
           />
 
+          {/* Banner Ad under Google Maps */}
+          <AdSense placement="search-results-top" className="py-4 mb-8" />
+
           {/* Layout with Search/Filters on Left and Results on Right */}
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* Search and Filters - Left Sidebar */}
