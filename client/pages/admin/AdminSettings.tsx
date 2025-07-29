@@ -230,9 +230,9 @@ export default function AdminSettings() {
 
   const [seoSettings, setSeoSettings] = useState({
     // Homepage SEO
-    homeTitle: "WasteFinder - Find Waste Disposal Facilities Near You",
+    homeTitle: "WasteFinder - Find Waste Disposal Locations Near You",
     homeDescription:
-      "Search our comprehensive database of landfills, transfer stations, and construction facilities across the United States.",
+      "Search our comprehensive database of landfills, transfer stations, and construction locations across the United States.",
     homeKeywords:
       "waste disposal, landfill, transfer station, construction debris, recycling",
     homeOgImage: "",
