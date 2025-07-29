@@ -266,7 +266,7 @@ export default function PreviewLocation() {
           <User className="h-4 w-4" />
           <AlertDescription>
             <strong>Submitted by:</strong> {location.submitterName} ({location.submitterEmail})
-            {location.submitterPhone && ` • ${location.submitterPhone}`}
+            {location.submitterPhone && ` • ${formatPhoneNumber(location.submitterPhone)}`}
             <br />
             <strong>Submitted:</strong> {new Date(location.submittedAt).toLocaleDateString()} at {new Date(location.submittedAt).toLocaleTimeString()}
             {location.additionalNotes && (
@@ -394,7 +394,7 @@ export default function PreviewLocation() {
                       href={`tel:${location.phone}`}
                       className="text-primary hover:underline"
                     >
-                      {location.phone}
+                      {formatPhoneNumber(location.phone)}
                     </a>
                   </div>
                 )}
