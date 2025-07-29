@@ -24,6 +24,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Location } from "@shared/api";
 import { validatePhoneNumber, formatPhoneNumber, validateAndFormatUrl } from "@/lib/utils";
+import { sanitizeInput, validateEmail, validateUrl } from "@/lib/security";
 import {
   Edit,
   MapPin,
