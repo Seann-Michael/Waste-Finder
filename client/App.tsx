@@ -46,7 +46,7 @@ const BulkUploadFacilities = lazy(
   () => import("./pages/admin/BulkUploadFacilities"),
 );
 const RSSManager = lazy(() => import("./pages/admin/RSSManager"));
-const PricingCalculator = lazy(() => import("./pages/admin/PricingCalculator"));
+const PricingCalculator = lazy(() => import("./pages/PricingCalculator"));
 
 import AdminRoute from "./components/admin/AdminRoute";
 
@@ -74,6 +74,7 @@ const AppRoutes = () => (
     <Route path="/blog/:slug" element={<BlogPost />} />
     <Route path="/news" element={<News />} />
     <Route path="/news/article/:id" element={<NewsArticle />} />
+    <Route path="/pricing-calculator" element={<PricingCalculator />} />
 
     {/* Admin routes with separate loading */}
     <Route
@@ -201,17 +202,6 @@ const AppRoutes = () => (
         <Suspense fallback={<PageLoading message="Loading RSS manager..." />}>
           <AdminRoute>
             <RSSManager />
-          </AdminRoute>
-        </Suspense>
-      }
-    />
-
-    <Route
-      path="/admin/pricing-calculator"
-      element={
-        <Suspense fallback={<PageLoading message="Loading pricing calculator..." />}>
-          <AdminRoute>
-            <PricingCalculator />
           </AdminRoute>
         </Suspense>
       }

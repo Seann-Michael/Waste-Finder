@@ -32,11 +32,6 @@ const adminNavItems = [
     icon: Database,
   },
   {
-    title: "Pricing Calculator",
-    href: "/admin/pricing-calculator",
-    icon: Calculator,
-  },
-  {
     title: "Reviews",
     href: "/admin/reviews",
     icon: MessageSquare,
