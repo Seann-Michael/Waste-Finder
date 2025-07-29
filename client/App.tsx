@@ -87,6 +87,7 @@ const App = () => (
                   <Route path="/location/:id" element={<LocationDetail />} />
                   <Route path="/blog" element={<Blog />} />
                   <Route path="/blog/:slug" element={<BlogPost />} />
+                  <Route path="/news" element={<News />} />
                   <Route path="/search-test" element={<SearchTest />} />
 
                   {/* Admin routes with separate loading */}
