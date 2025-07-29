@@ -4,3 +4,65 @@ import { twMerge } from "tailwind-merge";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+/**
+ * Formats a phone number to (XXX) XXX-XXXX format
+ * Accepts various input formats: 4401231234, 440-123-1234, 14401231234, +14401231234, etc.
+ */
+export function formatPhoneNumber(phone: string): string {
+  if (!phone) return "";
+
+  // Remove all non-digit characters
+  const digits = phone.replace(/\D/g, "");
+
+  // Handle different input lengths
+  let cleanDigits = digits;
+
+  // If starts with 1 and has 11 digits, remove the 1 (US country code)
+  if (digits.length === 11 && digits.startsWith("1")) {
+    cleanDigits = digits.slice(1);
+  }
+
+  // Must have exactly 10 digits for US format
+  if (cleanDigits.length !== 10) {
+    return phone; // Return original if can't format
+  }
+
+  // Format as (XXX) XXX-XXXX
+  return `(${cleanDigits.slice(0, 3)}) ${cleanDigits.slice(3, 6)}-${cleanDigits.slice(6)}`;
+}
+
+/**
+ * Validates and normalizes phone numbers
+ * Returns true if phone number is valid (10-15 digits)
+ */
+export function validatePhoneNumber(phone: string): boolean {
+  if (!phone) return false;
+  const cleanPhone = phone.replace(/\D/g, "");
+  return cleanPhone.length >= 10 && cleanPhone.length <= 15;
+}
+
+/**
+ * Validates and normalizes URLs
+ * Accepts URLs with or without protocol, with or without www
+ */
+export function validateAndFormatUrl(url: string): { isValid: boolean; formattedUrl: string } {
+  if (!url) return { isValid: false, formattedUrl: "" };
+
+  let normalizedUrl = url.trim();
+
+  // Add protocol if missing
+  if (!normalizedUrl.match(/^https?:\/\//)) {
+    normalizedUrl = `https://${normalizedUrl}`;
+  }
+
+  try {
+    const urlObj = new URL(normalizedUrl);
+    return {
+      isValid: true,
+      formattedUrl: urlObj.toString()
+    };
+  } catch {
+    return { isValid: false, formattedUrl: url };
+  }
+}
