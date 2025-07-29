@@ -674,7 +674,7 @@ export default function LocationDataTable() {
                         )}
                         {visibleColumns.phone && (
                           <TableCell>
-                            <div className="text-sm">{location.phone}</div>
+                            <div className="text-sm">{formatPhoneNumber(location.phone)}</div>
                           </TableCell>
                         )}
                         {visibleColumns.lastUpdated && (
