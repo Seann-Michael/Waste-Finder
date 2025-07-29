@@ -118,7 +118,7 @@ export default function Index() {
       icon: <Users className="w-6 h-6" />,
       title: "Community Reviews",
       description:
-        "Read and leave reviews to help others find the best facilities",
+        "Read and leave reviews to help others find the best locations",
     },
   ];
 
