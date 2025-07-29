@@ -27,7 +27,7 @@ export default function GoogleMapsEmbed({
 }: GoogleMapsEmbedProps) {
   const [mapUrl, setMapUrl] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [apiKey, setApiKey] = useState("AIzaSyDdferzYu85fJL0DH_UbeVYGR9Xt9bX4x0");
+  const [apiKey, setApiKey] = useState("");
 
   useEffect(() => {
     // Load API key from localStorage
