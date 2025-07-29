@@ -134,13 +134,9 @@ export default function Header() {
                   href={contentSettings.marketingButtonUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex flex-col items-center"
                 >
-                  <span className="hidden md:inline text-center">
-                    {contentSettings.marketingButtonText}
-                  </span>
-                  <span className="hidden md:inline text-xs opacity-80">
-                    Click here
+                  <span className="hidden md:inline">
+                    Click: {contentSettings.marketingButtonText}
                   </span>
                   <span className="md:hidden">Get Marketing</span>
                 </a>
