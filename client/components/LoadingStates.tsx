@@ -1,7 +1,15 @@
 import React from 'react';
-import { Loader2, MapPin, Building2, Search } from 'lucide-react';
+import { Loader2, MapPin, Search } from 'lucide-react';
 import { Card, CardContent, CardHeader } from './ui/card';
-import { Skeleton } from './ui/skeleton';
+
+/**
+ * Simple skeleton component if it doesn't exist
+ */
+function Skeleton({ className = '' }: { className?: string }) {
+  return (
+    <div className={`animate-pulse bg-muted rounded ${className}`} />
+  );
+}
 
 /**
  * Generic loading spinner
@@ -117,12 +125,12 @@ export function BlogPostSkeleton() {
   return (
     <Card>
       <CardHeader className="space-y-3">
-        <Skeleton className="h-48 w-full" /> {/* Featured image */}
+        <Skeleton className="h-48 w-full" />
         <div className="space-y-2">
-          <Skeleton className="h-6 w-3/4" /> {/* Title */}
+          <Skeleton className="h-6 w-3/4" />
           <div className="flex gap-2">
-            <Skeleton className="h-4 w-16" /> {/* Category */}
-            <Skeleton className="h-4 w-20" /> {/* Date */}
+            <Skeleton className="h-4 w-16" />
+            <Skeleton className="h-4 w-20" />
           </div>
         </div>
       </CardHeader>
@@ -132,7 +140,7 @@ export function BlogPostSkeleton() {
           <Skeleton className="h-4 w-full" />
           <Skeleton className="h-4 w-2/3" />
         </div>
-        <Skeleton className="h-8 w-24" /> {/* Read more button */}
+        <Skeleton className="h-8 w-24" />
       </CardContent>
     </Card>
   );
@@ -150,14 +158,12 @@ export function DataTableSkeleton({
 }) {
   return (
     <div className="space-y-4">
-      {/* Table header */}
       <div className="flex gap-4 p-4 border-b">
         {Array.from({ length: columns }).map((_, i) => (
           <Skeleton key={i} className="h-4 flex-1" />
         ))}
       </div>
       
-      {/* Table rows */}
       {Array.from({ length: rows }).map((_, rowIndex) => (
         <div key={rowIndex} className="flex gap-4 p-4">
           {Array.from({ length: columns }).map((_, colIndex) => (
@@ -180,11 +186,11 @@ export function FormSkeleton({ fields = 6 }: { fields?: number }) {
     <div className="space-y-6">
       {Array.from({ length: fields }).map((_, i) => (
         <div key={i} className="space-y-2">
-          <Skeleton className="h-4 w-24" /> {/* Label */}
-          <Skeleton className="h-10 w-full" /> {/* Input */}
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-10 w-full" />
         </div>
       ))}
-      <Skeleton className="h-10 w-32" /> {/* Submit button */}
+      <Skeleton className="h-10 w-32" />
     </div>
   );
 }
@@ -195,19 +201,15 @@ export function FormSkeleton({ fields = 6 }: { fields?: number }) {
 export function SearchResultsSkeleton() {
   return (
     <div className="space-y-6">
-      {/* Search info */}
       <div className="flex items-center gap-2">
         <Search className="w-5 h-5 text-muted-foreground" />
         <Skeleton className="h-5 w-48" />
       </div>
       
-      {/* Results count */}
       <Skeleton className="h-4 w-32" />
       
-      {/* Results list */}
       <LocationListSkeleton count={4} />
       
-      {/* Pagination */}
       <div className="flex justify-center gap-2">
         {Array.from({ length: 5 }).map((_, i) => (
           <Skeleton key={i} className="h-8 w-8" />
@@ -230,7 +232,6 @@ export function MapSkeleton() {
         </div>
       </div>
       
-      {/* Animated overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse" />
     </div>
   );
@@ -242,13 +243,11 @@ export function MapSkeleton() {
 export function DashboardSkeleton() {
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="space-y-2">
         <Skeleton className="h-8 w-48" />
         <Skeleton className="h-4 w-64" />
       </div>
       
-      {/* Stats cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {Array.from({ length: 3 }).map((_, i) => (
           <Card key={i}>
@@ -264,7 +263,6 @@ export function DashboardSkeleton() {
         ))}
       </div>
       
-      {/* Chart */}
       <Card>
         <CardHeader>
           <Skeleton className="h-6 w-32" />
@@ -295,6 +293,41 @@ export function ContentSkeleton({
           className={`h-4 ${i === lines - 1 ? 'w-2/3' : 'w-full'}`} 
         />
       ))}
+    </div>
+  );
+}
+
+/**
+ * Inline loading indicator
+ */
+export function InlineLoading({ text = 'Loading...' }: { text?: string }) {
+  return (
+    <div className="flex items-center gap-2 text-muted-foreground">
+      <LoadingSpinner size="sm" />
+      <span className="text-sm">{text}</span>
+    </div>
+  );
+}
+
+/**
+ * Section loading placeholder
+ */
+export function SectionLoading({ 
+  title = 'Loading...', 
+  description,
+  className = '' 
+}: { 
+  title?: string;
+  description?: string;
+  className?: string;
+}) {
+  return (
+    <div className={`text-center py-12 ${className}`}>
+      <LoadingSpinner size="lg" className="text-primary mx-auto mb-4" />
+      <h3 className="text-lg font-medium mb-2">{title}</h3>
+      {description && (
+        <p className="text-muted-foreground">{description}</p>
+      )}
     </div>
   );
 }
