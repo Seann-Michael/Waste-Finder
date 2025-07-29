@@ -7,24 +7,24 @@ export class APIError extends Error {
   constructor(
     public status: number,
     public message: string,
-    public data?: any
+    public data?: any,
   ) {
     super(message);
-    this.name = 'APIError';
+    this.name = "APIError";
   }
 }
 
 export class NetworkError extends Error {
-  constructor(message: string = 'Network request failed') {
+  constructor(message: string = "Network request failed") {
     super(message);
-    this.name = 'NetworkError';
+    this.name = "NetworkError";
   }
 }
 
 export class TimeoutError extends Error {
-  constructor(message: string = 'Request timed out') {
+  constructor(message: string = "Request timed out") {
     super(message);
-    this.name = 'TimeoutError';
+    this.name = "TimeoutError";
   }
 }
 
@@ -48,8 +48,8 @@ const DEFAULT_RETRY_CONFIG: RetryConfig = {
 /**
  * Sleep utility for retry delays
  */
-const sleep = (ms: number): Promise<void> => 
-  new Promise(resolve => setTimeout(resolve, ms));
+const sleep = (ms: number): Promise<void> =>
+  new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
  * Calculate exponential backoff delay
@@ -80,7 +80,7 @@ export class APIClient {
   private defaultTimeout: number;
   private cache: Map<string, { data: any; timestamp: number; ttl: number }>;
 
-  constructor(baseURL = '/api', defaultTimeout = 10000) {
+  constructor(baseURL = "/api", defaultTimeout = 10000) {
     this.baseURL = baseURL;
     this.defaultTimeout = defaultTimeout;
     this.cache = new Map();
@@ -92,7 +92,7 @@ export class APIClient {
   private isCacheValid(cacheKey: string): boolean {
     const cached = this.cache.get(cacheKey);
     if (!cached) return false;
-    
+
     return Date.now() - cached.timestamp < cached.ttl;
   }
 
@@ -103,7 +103,7 @@ export class APIClient {
     if (this.isCacheValid(cacheKey)) {
       return this.cache.get(cacheKey)!.data;
     }
-    
+
     // Remove expired cache
     this.cache.delete(cacheKey);
     return null;
@@ -127,7 +127,7 @@ export class APIClient {
     endpoint: string,
     options: RequestInit = {},
     retryConfig: RetryConfig = DEFAULT_RETRY_CONFIG,
-    timeout: number = this.defaultTimeout
+    timeout: number = this.defaultTimeout,
   ): Promise<T> {
     const url = `${this.baseURL}${endpoint}`;
     let lastError: Error;
@@ -152,27 +152,33 @@ export class APIClient {
           const errorData = await response.json().catch(() => ({}));
           throw new APIError(
             response.status,
-            errorData.message || `HTTP ${response.status}: ${response.statusText}`,
-            errorData
+            errorData.message ||
+              `HTTP ${response.status}: ${response.statusText}`,
+            errorData,
           );
         }
 
         const data = await response.json();
         return data;
-
       } catch (error: any) {
         clearTimeout(timeoutId);
-        
-        if (error.name === 'AbortError') {
+
+        if (error.name === "AbortError") {
           lastError = new TimeoutError(`Request timed out after ${timeout}ms`);
-        } else if (error instanceof TypeError && error.message.includes('fetch')) {
-          lastError = new NetworkError('Network request failed');
+        } else if (
+          error instanceof TypeError &&
+          error.message.includes("fetch")
+        ) {
+          lastError = new NetworkError("Network request failed");
         } else {
           lastError = error;
         }
 
         // Don't retry on the last attempt or if error is not retryable
-        if (attempt === retryConfig.maxAttempts || !isRetryableError(lastError)) {
+        if (
+          attempt === retryConfig.maxAttempts ||
+          !isRetryableError(lastError)
+        ) {
           throw lastError;
         }
 
@@ -195,7 +201,7 @@ export class APIClient {
       cacheTTL?: number;
       timeout?: number;
       retryConfig?: Partial<RetryConfig>;
-    } = {}
+    } = {},
   ): Promise<T> {
     const {
       cache = true,
@@ -216,9 +222,9 @@ export class APIClient {
     const finalRetryConfig = { ...DEFAULT_RETRY_CONFIG, ...retryConfig };
     const data = await this.makeRequest<T>(
       endpoint,
-      { method: 'GET' },
+      { method: "GET" },
       finalRetryConfig,
-      timeout
+      timeout,
     );
 
     // Cache successful GET requests
@@ -239,23 +245,20 @@ export class APIClient {
     options: {
       timeout?: number;
       retryConfig?: Partial<RetryConfig>;
-    } = {}
+    } = {},
   ): Promise<T> {
-    const {
-      timeout = this.defaultTimeout,
-      retryConfig = {},
-    } = options;
+    const { timeout = this.defaultTimeout, retryConfig = {} } = options;
 
     const finalRetryConfig = { ...DEFAULT_RETRY_CONFIG, ...retryConfig };
-    
+
     return this.makeRequest<T>(
       endpoint,
       {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify(data),
       },
       finalRetryConfig,
-      timeout
+      timeout,
     );
   }
 
@@ -268,23 +271,20 @@ export class APIClient {
     options: {
       timeout?: number;
       retryConfig?: Partial<RetryConfig>;
-    } = {}
+    } = {},
   ): Promise<T> {
-    const {
-      timeout = this.defaultTimeout,
-      retryConfig = {},
-    } = options;
+    const { timeout = this.defaultTimeout, retryConfig = {} } = options;
 
     const finalRetryConfig = { ...DEFAULT_RETRY_CONFIG, ...retryConfig };
-    
+
     return this.makeRequest<T>(
       endpoint,
       {
-        method: 'PUT',
+        method: "PUT",
         body: JSON.stringify(data),
       },
       finalRetryConfig,
-      timeout
+      timeout,
     );
   }
 
@@ -296,20 +296,17 @@ export class APIClient {
     options: {
       timeout?: number;
       retryConfig?: Partial<RetryConfig>;
-    } = {}
+    } = {},
   ): Promise<T> {
-    const {
-      timeout = this.defaultTimeout,
-      retryConfig = {},
-    } = options;
+    const { timeout = this.defaultTimeout, retryConfig = {} } = options;
 
     const finalRetryConfig = { ...DEFAULT_RETRY_CONFIG, ...retryConfig };
-    
+
     return this.makeRequest<T>(
       endpoint,
-      { method: 'DELETE' },
+      { method: "DELETE" },
       finalRetryConfig,
-      timeout
+      timeout,
     );
   }
 
@@ -346,41 +343,47 @@ export const apiClient = new APIClient();
 export const api = {
   // Location endpoints
   locations: {
-    getAll: (params?: any) => apiClient.get('/locations/all', { 
-      cache: true, 
-      cacheTTL: 5 * 60 * 1000 // 5 minutes
-    }),
-    getById: (id: string) => apiClient.get(`/locations/${id}`, {
-      cache: true,
-      cacheTTL: 10 * 60 * 1000 // 10 minutes
-    }),
-    search: (params: any) => apiClient.get('/locations', {
-      cache: true,
-      cacheTTL: 2 * 60 * 1000 // 2 minutes for search results
-    }),
-    create: (data: any) => apiClient.post('/locations', data),
+    getAll: (params?: any) =>
+      apiClient.get("/locations/all", {
+        cache: true,
+        cacheTTL: 5 * 60 * 1000, // 5 minutes
+      }),
+    getById: (id: string) =>
+      apiClient.get(`/locations/${id}`, {
+        cache: true,
+        cacheTTL: 10 * 60 * 1000, // 10 minutes
+      }),
+    search: (params: any) =>
+      apiClient.get("/locations", {
+        cache: true,
+        cacheTTL: 2 * 60 * 1000, // 2 minutes for search results
+      }),
+    create: (data: any) => apiClient.post("/locations", data),
     update: (id: string, data: any) => apiClient.put(`/locations/${id}`, data),
     delete: (id: string) => apiClient.delete(`/locations/${id}`),
   },
 
   // Auth endpoints
   auth: {
-    login: (credentials: any) => apiClient.post('/auth/login', credentials, {
-      retryConfig: { maxAttempts: 1 } // Don't retry auth failures
-    }),
-    logout: () => apiClient.post('/auth/logout', {}),
-    me: () => apiClient.get('/auth/me', { cache: false }),
+    login: (credentials: any) =>
+      apiClient.post("/auth/login", credentials, {
+        retryConfig: { maxAttempts: 1 }, // Don't retry auth failures
+      }),
+    logout: () => apiClient.post("/auth/logout", {}),
+    me: () => apiClient.get("/auth/me", { cache: false }),
   },
 
   // Blog endpoints
   blog: {
-    getPosts: () => apiClient.get('/blog/posts', {
-      cache: true,
-      cacheTTL: 10 * 60 * 1000 // 10 minutes
-    }),
-    getPost: (slug: string) => apiClient.get(`/blog/posts/${slug}`, {
-      cache: true,
-      cacheTTL: 30 * 60 * 1000 // 30 minutes
-    }),
+    getPosts: () =>
+      apiClient.get("/blog/posts", {
+        cache: true,
+        cacheTTL: 10 * 60 * 1000, // 10 minutes
+      }),
+    getPost: (slug: string) =>
+      apiClient.get(`/blog/posts/${slug}`, {
+        cache: true,
+        cacheTTL: 30 * 60 * 1000, // 30 minutes
+      }),
   },
 };

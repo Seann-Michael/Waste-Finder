@@ -123,7 +123,10 @@ export default function AdminSettings() {
     const savedContentSettings = localStorage.getItem("contentSettings");
     if (savedContentSettings) {
       try {
-        setContentSettings(prev => ({ ...prev, ...JSON.parse(savedContentSettings) }));
+        setContentSettings((prev) => ({
+          ...prev,
+          ...JSON.parse(savedContentSettings),
+        }));
       } catch (error) {
         console.error("Error loading content settings:", error);
       }
@@ -141,7 +144,10 @@ export default function AdminSettings() {
     const savedSeoSettings = localStorage.getItem("seoSettings");
     if (savedSeoSettings) {
       try {
-        setSeoSettings(prev => ({ ...prev, ...JSON.parse(savedSeoSettings) }));
+        setSeoSettings((prev) => ({
+          ...prev,
+          ...JSON.parse(savedSeoSettings),
+        }));
       } catch (error) {
         console.error("Error loading SEO settings:", error);
       }
@@ -225,26 +231,35 @@ export default function AdminSettings() {
   const [seoSettings, setSeoSettings] = useState({
     // Homepage SEO
     homeTitle: "WasteFinder - Find Waste Disposal Facilities Near You",
-    homeDescription: "Search our comprehensive database of landfills, transfer stations, and construction facilities across the United States.",
-    homeKeywords: "waste disposal, landfill, transfer station, construction debris, recycling",
+    homeDescription:
+      "Search our comprehensive database of landfills, transfer stations, and construction facilities across the United States.",
+    homeKeywords:
+      "waste disposal, landfill, transfer station, construction debris, recycling",
     homeOgImage: "",
 
     // All Locations Page SEO
     allLocationsTitle: "All Waste Disposal Facilities | WasteFinder Directory",
-    allLocationsDescription: "Browse our complete directory of waste disposal facilities including landfills, transfer stations, and construction debris sites.",
-    allLocationsKeywords: "waste disposal directory, landfill locations, transfer stations, construction landfills",
+    allLocationsDescription:
+      "Browse our complete directory of waste disposal facilities including landfills, transfer stations, and construction debris sites.",
+    allLocationsKeywords:
+      "waste disposal directory, landfill locations, transfer stations, construction landfills",
     allLocationsOgImage: "",
 
     // Location Detail Page SEO Templates
     locationTitleTemplate: "{location_name} - Waste Disposal | {city}, {state}",
-    locationDescriptionTemplate: "Find details for {location_name} in {city}, {state}. Get hours, pricing, contact info and accepted waste types.",
-    locationKeywordsTemplate: "{location_type}, waste disposal {city}, landfill {state}, debris disposal {zipcode}",
+    locationDescriptionTemplate:
+      "Find details for {location_name} in {city}, {state}. Get hours, pricing, contact info and accepted waste types.",
+    locationKeywordsTemplate:
+      "{location_type}, waste disposal {city}, landfill {state}, debris disposal {zipcode}",
     locationOgImageTemplate: "",
 
     // Search Results SEO Templates
-    searchTitleTemplate: "Waste Disposal Facilities near {search_term} | WasteFinder",
-    searchDescriptionTemplate: "Find waste disposal facilities near {search_term}. Compare prices, hours, and services for landfills and transfer stations.",
-    searchKeywordsTemplate: "waste disposal {search_term}, landfill near {search_term}, transfer station {search_term}",
+    searchTitleTemplate:
+      "Waste Disposal Facilities near {search_term} | WasteFinder",
+    searchDescriptionTemplate:
+      "Find waste disposal facilities near {search_term}. Compare prices, hours, and services for landfills and transfer stations.",
+    searchKeywordsTemplate:
+      "waste disposal {search_term}, landfill near {search_term}, transfer station {search_term}",
 
     // Blog SEO Templates
     blogTitleTemplate: "{post_title} | WasteFinder Blog",
@@ -274,18 +289,23 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
   const [blogSettings, setBlogSettings] = useState({
     // Blog SEO Templates
     blogIndexTitle: "Learn - Expert Insights on Waste Management | WasteFinder",
-    blogIndexDescription: "Discover expert insights, tips, and guides for waste management and environmental sustainability from industry professionals.",
-    blogIndexKeywords: "waste management blog, environmental insights, sustainability tips, disposal guides",
+    blogIndexDescription:
+      "Discover expert insights, tips, and guides for waste management and environmental sustainability from industry professionals.",
+    blogIndexKeywords:
+      "waste management blog, environmental insights, sustainability tips, disposal guides",
 
     // Individual Blog Post SEO Templates
     blogPostTitleTemplate: "{post_title} | WasteFinder Learn",
     blogPostDescriptionTemplate: "{post_excerpt}",
-    blogPostKeywordsTemplate: "waste management, {post_tags}, environmental blog",
+    blogPostKeywordsTemplate:
+      "waste management, {post_tags}, environmental blog",
 
     // Blog Category SEO Templates
     blogCategoryTitleTemplate: "{category_name} Articles | WasteFinder Learn",
-    blogCategoryDescriptionTemplate: "Read the latest articles about {category_name} on WasteFinder Learn. Expert insights and practical tips.",
-    blogCategoryKeywordsTemplate: "{category_name}, waste management, environmental articles",
+    blogCategoryDescriptionTemplate:
+      "Read the latest articles about {category_name} on WasteFinder Learn. Expert insights and practical tips.",
+    blogCategoryKeywordsTemplate:
+      "{category_name}, waste management, environmental articles",
 
     // Blog Settings
     postsPerPage: 10,
@@ -302,7 +322,8 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
     // RSS Feed
     enableRssFeed: true,
     rssTitle: "WasteFinder Learn - Latest Articles",
-    rssDescription: "Stay updated with the latest waste management insights and environmental tips.",
+    rssDescription:
+      "Stay updated with the latest waste management insights and environmental tips.",
   });
 
   const [newUser, setNewUser] = useState({
@@ -344,7 +365,10 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
   };
 
   const handleSaveMarketingSettings = () => {
-    localStorage.setItem("marketingSettings", JSON.stringify(marketingSettings));
+    localStorage.setItem(
+      "marketingSettings",
+      JSON.stringify(marketingSettings),
+    );
     console.log("Saving marketing settings:", marketingSettings);
     alert("Marketing settings updated successfully!");
   };
@@ -430,14 +454,10 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
     }
   };
 
-
-
   const handleSaveWebsiteSettings = () => {
     console.log("Saving website settings:", websiteSettings);
     alert("Website settings updated successfully!");
   };
-
-
 
   const getRoleBadge = (role: AdminUser["role"]) => {
     switch (role) {
@@ -496,7 +516,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                 >
                   <Icon className="w-4 h-4" />
                   <span className="hidden sm:inline">{tab.label}</span>
-                  <span className="sm:hidden text-xs">{tab.label.split(' ')[0]}</span>
+                  <span className="sm:hidden text-xs">
+                    {tab.label.split(" ")[0]}
+                  </span>
                 </button>
               );
             })}
@@ -519,7 +541,10 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                       id="firstName"
                       value={profileData.firstName}
                       onChange={(e) =>
-                        setProfileData({ ...profileData, firstName: e.target.value })
+                        setProfileData({
+                          ...profileData,
+                          firstName: e.target.value,
+                        })
                       }
                     />
                   </div>
@@ -529,7 +554,10 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                       id="lastName"
                       value={profileData.lastName}
                       onChange={(e) =>
-                        setProfileData({ ...profileData, lastName: e.target.value })
+                        setProfileData({
+                          ...profileData,
+                          lastName: e.target.value,
+                        })
                       }
                     />
                   </div>
@@ -540,7 +568,10 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                       type="email"
                       value={profileData.email}
                       onChange={(e) =>
-                        setProfileData({ ...profileData, email: e.target.value })
+                        setProfileData({
+                          ...profileData,
+                          email: e.target.value,
+                        })
                       }
                     />
                   </div>
@@ -672,7 +703,10 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                             type="password"
                             value={newUser.password}
                             onChange={(e) =>
-                              setNewUser({ ...newUser, password: e.target.value })
+                              setNewUser({
+                                ...newUser,
+                                password: e.target.value,
+                              })
                             }
                           />
                         </div>
@@ -796,7 +830,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                           />
                           <Button
                             variant="outline"
-                            onClick={() => document.getElementById('siteLogo')?.click()}
+                            onClick={() =>
+                              document.getElementById("siteLogo")?.click()
+                            }
                             className="w-full"
                           >
                             <Upload className="w-4 h-4 mr-2" />
@@ -836,7 +872,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                           />
                           <Button
                             variant="outline"
-                            onClick={() => document.getElementById('favicon')?.click()}
+                            onClick={() =>
+                              document.getElementById("favicon")?.click()
+                            }
                             className="w-full"
                           >
                             <Upload className="w-4 h-4 mr-2" />
@@ -861,10 +899,7 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                   </div>
                 </div>
 
-                <Button
-                  onClick={handleSaveWebsiteSettings}
-                  className="w-full"
-                >
+                <Button onClick={handleSaveWebsiteSettings} className="w-full">
                   <Save className="w-4 h-4 mr-2" />
                   Save Website Settings
                 </Button>
@@ -884,7 +919,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
               <CardContent className="space-y-8">
                 {/* Homepage SEO */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-medium border-b pb-2">Homepage SEO</h3>
+                  <h3 className="text-lg font-medium border-b pb-2">
+                    Homepage SEO
+                  </h3>
                   <div className="grid grid-cols-1 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="homeTitle">Homepage Title</Label>
@@ -901,7 +938,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="homeDescription">Homepage Meta Description</Label>
+                      <Label htmlFor="homeDescription">
+                        Homepage Meta Description
+                      </Label>
                       <Textarea
                         id="homeDescription"
                         value={seoSettings.homeDescription}
@@ -934,15 +973,20 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
 
                 {/* Location Pages SEO Templates */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-medium border-b pb-2">Location Detail Pages</h3>
+                  <h3 className="text-lg font-medium border-b pb-2">
+                    Location Detail Pages
+                  </h3>
                   <div className="bg-blue-50 p-4 rounded-lg">
                     <p className="text-sm text-blue-800 mb-2">
-                      Use template variables: {"{location_name}"}, {"{city}"}, {"{state}"}, {"{location_type}"}, {"{zipcode}"}
+                      Use template variables: {"{location_name}"}, {"{city}"},{" "}
+                      {"{state}"}, {"{location_type}"}, {"{zipcode}"}
                     </p>
                   </div>
                   <div className="grid grid-cols-1 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="locationTitleTemplate">Title Template</Label>
+                      <Label htmlFor="locationTitleTemplate">
+                        Title Template
+                      </Label>
                       <Input
                         id="locationTitleTemplate"
                         value={seoSettings.locationTitleTemplate}
@@ -956,7 +1000,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="locationDescriptionTemplate">Description Template</Label>
+                      <Label htmlFor="locationDescriptionTemplate">
+                        Description Template
+                      </Label>
                       <Textarea
                         id="locationDescriptionTemplate"
                         value={seoSettings.locationDescriptionTemplate}
@@ -975,7 +1021,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
 
                 {/* Search Results SEO Templates */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-medium border-b pb-2">Search Results Pages</h3>
+                  <h3 className="text-lg font-medium border-b pb-2">
+                    Search Results Pages
+                  </h3>
                   <div className="bg-green-50 p-4 rounded-lg">
                     <p className="text-sm text-green-800 mb-2">
                       Use template variable: {"{search_term}"}
@@ -983,7 +1031,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                   </div>
                   <div className="grid grid-cols-1 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="searchTitleTemplate">Search Title Template</Label>
+                      <Label htmlFor="searchTitleTemplate">
+                        Search Title Template
+                      </Label>
                       <Input
                         id="searchTitleTemplate"
                         value={seoSettings.searchTitleTemplate}
@@ -997,7 +1047,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="searchDescriptionTemplate">Search Description Template</Label>
+                      <Label htmlFor="searchDescriptionTemplate">
+                        Search Description Template
+                      </Label>
                       <Textarea
                         id="searchDescriptionTemplate"
                         value={seoSettings.searchDescriptionTemplate}
@@ -1016,7 +1068,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
 
                 {/* Technical SEO Features */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-medium border-b pb-2">Technical Features</h3>
+                  <h3 className="text-lg font-medium border-b pb-2">
+                    Technical Features
+                  </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-4">
                       <div className="flex items-center space-x-2">
@@ -1030,7 +1084,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                             })
                           }
                         />
-                        <Label htmlFor="enableSchemaMarkup">Enable Schema Markup</Label>
+                        <Label htmlFor="enableSchemaMarkup">
+                          Enable Schema Markup
+                        </Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <Checkbox
@@ -1043,7 +1099,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                             })
                           }
                         />
-                        <Label htmlFor="enableSitemap">Generate XML Sitemap</Label>
+                        <Label htmlFor="enableSitemap">
+                          Generate XML Sitemap
+                        </Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <Checkbox
@@ -1056,7 +1114,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                             })
                           }
                         />
-                        <Label htmlFor="canonicalUrlsEnabled">Canonical URLs</Label>
+                        <Label htmlFor="canonicalUrlsEnabled">
+                          Canonical URLs
+                        </Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <Checkbox
@@ -1069,12 +1129,16 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                             })
                           }
                         />
-                        <Label htmlFor="enableBreadcrumbs">Enable Breadcrumbs</Label>
+                        <Label htmlFor="enableBreadcrumbs">
+                          Enable Breadcrumbs
+                        </Label>
                       </div>
                     </div>
                     <div className="space-y-4">
                       <div className="space-y-2">
-                        <Label htmlFor="sitemapUpdateFrequency">Sitemap Update Frequency</Label>
+                        <Label htmlFor="sitemapUpdateFrequency">
+                          Sitemap Update Frequency
+                        </Label>
                         <Select
                           value={seoSettings.sitemapUpdateFrequency}
                           onValueChange={(value) =>
@@ -1100,7 +1164,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
 
                 {/* Robots.txt */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-medium border-b pb-2">Robots.txt</h3>
+                  <h3 className="text-lg font-medium border-b pb-2">
+                    Robots.txt
+                  </h3>
                   <div className="space-y-2">
                     <Label htmlFor="robotsTxt">Robots.txt Content</Label>
                     <Textarea
@@ -1118,10 +1184,7 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                   </div>
                 </div>
 
-                <Button
-                  onClick={handleSaveSeoSettings}
-                  className="w-full"
-                >
+                <Button onClick={handleSaveSeoSettings} className="w-full">
                   <Save className="w-4 h-4 mr-2" />
                   Save SEO Settings
                 </Button>
@@ -1141,7 +1204,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
               <CardContent className="space-y-8">
                 {/* Blog Index SEO */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-medium border-b pb-2">Blog Index Page SEO</h3>
+                  <h3 className="text-lg font-medium border-b pb-2">
+                    Blog Index Page SEO
+                  </h3>
                   <div className="grid grid-cols-1 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="blogIndexTitle">Blog Index Title</Label>
@@ -1158,7 +1223,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="blogIndexDescription">Blog Index Meta Description</Label>
+                      <Label htmlFor="blogIndexDescription">
+                        Blog Index Meta Description
+                      </Label>
                       <Textarea
                         id="blogIndexDescription"
                         value={blogSettings.blogIndexDescription}
@@ -1173,7 +1240,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="blogIndexKeywords">Blog Index Keywords</Label>
+                      <Label htmlFor="blogIndexKeywords">
+                        Blog Index Keywords
+                      </Label>
                       <Input
                         id="blogIndexKeywords"
                         value={blogSettings.blogIndexKeywords}
@@ -1191,15 +1260,20 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
 
                 {/* Blog Post SEO Templates */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-medium border-b pb-2">Individual Blog Post SEO Templates</h3>
+                  <h3 className="text-lg font-medium border-b pb-2">
+                    Individual Blog Post SEO Templates
+                  </h3>
                   <div className="bg-blue-50 p-4 rounded-lg">
                     <p className="text-sm text-blue-800 mb-2">
-                      Use template variables: {"{post_title}"}, {"{post_excerpt}"}, {"{post_tags}"}, {"{author_name}"}
+                      Use template variables: {"{post_title}"},{" "}
+                      {"{post_excerpt}"}, {"{post_tags}"}, {"{author_name}"}
                     </p>
                   </div>
                   <div className="grid grid-cols-1 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="blogPostTitleTemplate">Post Title Template</Label>
+                      <Label htmlFor="blogPostTitleTemplate">
+                        Post Title Template
+                      </Label>
                       <Input
                         id="blogPostTitleTemplate"
                         value={blogSettings.blogPostTitleTemplate}
@@ -1213,7 +1287,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="blogPostDescriptionTemplate">Post Description Template</Label>
+                      <Label htmlFor="blogPostDescriptionTemplate">
+                        Post Description Template
+                      </Label>
                       <Textarea
                         id="blogPostDescriptionTemplate"
                         value={blogSettings.blogPostDescriptionTemplate}
@@ -1228,7 +1304,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="blogPostKeywordsTemplate">Post Keywords Template</Label>
+                      <Label htmlFor="blogPostKeywordsTemplate">
+                        Post Keywords Template
+                      </Label>
                       <Input
                         id="blogPostKeywordsTemplate"
                         value={blogSettings.blogPostKeywordsTemplate}
@@ -1246,7 +1324,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
 
                 {/* Blog Category SEO Templates */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-medium border-b pb-2">Blog Category SEO Templates</h3>
+                  <h3 className="text-lg font-medium border-b pb-2">
+                    Blog Category SEO Templates
+                  </h3>
                   <div className="bg-green-50 p-4 rounded-lg">
                     <p className="text-sm text-green-800 mb-2">
                       Use template variable: {"{category_name}"}
@@ -1254,7 +1334,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                   </div>
                   <div className="grid grid-cols-1 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="blogCategoryTitleTemplate">Category Title Template</Label>
+                      <Label htmlFor="blogCategoryTitleTemplate">
+                        Category Title Template
+                      </Label>
                       <Input
                         id="blogCategoryTitleTemplate"
                         value={blogSettings.blogCategoryTitleTemplate}
@@ -1268,7 +1350,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="blogCategoryDescriptionTemplate">Category Description Template</Label>
+                      <Label htmlFor="blogCategoryDescriptionTemplate">
+                        Category Description Template
+                      </Label>
                       <Textarea
                         id="blogCategoryDescriptionTemplate"
                         value={blogSettings.blogCategoryDescriptionTemplate}
@@ -1287,7 +1371,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
 
                 {/* Blog Features */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-medium border-b pb-2">Blog Features</h3>
+                  <h3 className="text-lg font-medium border-b pb-2">
+                    Blog Features
+                  </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-4">
                       <div className="space-y-2">
@@ -1307,7 +1393,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="wordsPerMinute">Reading Speed (words per minute)</Label>
+                        <Label htmlFor="wordsPerMinute">
+                          Reading Speed (words per minute)
+                        </Label>
                         <Input
                           id="wordsPerMinute"
                           type="number"
@@ -1348,7 +1436,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                             })
                           }
                         />
-                        <Label htmlFor="showRelatedPosts">Show Related Posts</Label>
+                        <Label htmlFor="showRelatedPosts">
+                          Show Related Posts
+                        </Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <Checkbox
@@ -1361,7 +1451,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                             })
                           }
                         />
-                        <Label htmlFor="enableReadingTime">Show Reading Time</Label>
+                        <Label htmlFor="enableReadingTime">
+                          Show Reading Time
+                        </Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <Checkbox
@@ -1374,7 +1466,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                             })
                           }
                         />
-                        <Label htmlFor="enableSocialSharing">Enable Social Sharing</Label>
+                        <Label htmlFor="enableSocialSharing">
+                          Enable Social Sharing
+                        </Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <Checkbox
@@ -1387,7 +1481,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                             })
                           }
                         />
-                        <Label htmlFor="enableNewsletterSignup">Enable Newsletter Signup</Label>
+                        <Label htmlFor="enableNewsletterSignup">
+                          Enable Newsletter Signup
+                        </Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <Checkbox
@@ -1406,10 +1502,7 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                   </div>
                 </div>
 
-                <Button
-                  onClick={handleSaveBlogSettings}
-                  className="w-full"
-                >
+                <Button onClick={handleSaveBlogSettings} className="w-full">
                   <Save className="w-4 h-4 mr-2" />
                   Save Blog Settings
                 </Button>
@@ -1456,7 +1549,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="marketingButtonText">Header Marketing Button Text</Label>
+                    <Label htmlFor="marketingButtonText">
+                      Header Marketing Button Text
+                    </Label>
                     <Input
                       id="marketingButtonText"
                       value={contentSettings.marketingButtonText}
@@ -1471,7 +1566,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="marketingButtonUrl">Header Marketing Button URL</Label>
+                    <Label htmlFor="marketingButtonUrl">
+                      Header Marketing Button URL
+                    </Label>
                     <Input
                       id="marketingButtonUrl"
                       value={contentSettings.marketingButtonUrl}
@@ -1486,7 +1583,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="homeMarketingButtonText">Homepage Marketing Button Text</Label>
+                    <Label htmlFor="homeMarketingButtonText">
+                      Homepage Marketing Button Text
+                    </Label>
                     <Input
                       id="homeMarketingButtonText"
                       value={contentSettings.homeMarketingButtonText}
@@ -1501,7 +1600,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="homeMarketingButtonUrl">Homepage Marketing Button URL</Label>
+                    <Label htmlFor="homeMarketingButtonUrl">
+                      Homepage Marketing Button URL
+                    </Label>
                     <Input
                       id="homeMarketingButtonUrl"
                       value={contentSettings.homeMarketingButtonUrl}
@@ -1627,7 +1728,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="facebookCtaText">Facebook CTA Description</Label>
+                    <Label htmlFor="facebookCtaText">
+                      Facebook CTA Description
+                    </Label>
                     <Textarea
                       id="facebookCtaText"
                       value={marketingSettings.facebookCtaText}
@@ -1643,7 +1746,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="facebookButtonText">Facebook Button Text</Label>
+                    <Label htmlFor="facebookButtonText">
+                      Facebook Button Text
+                    </Label>
                     <Input
                       id="facebookButtonText"
                       value={marketingSettings.facebookButtonText}
@@ -1788,8 +1893,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
               <CardContent className="space-y-6">
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                   <p className="text-sm text-yellow-800">
-                    <strong>Important:</strong> Custom code changes will be applied system-wide.
-                    Make sure to test thoroughly and only include trusted code to maintain security.
+                    <strong>Important:</strong> Custom code changes will be
+                    applied system-wide. Make sure to test thoroughly and only
+                    include trusted code to maintain security.
                   </p>
                 </div>
 
@@ -1810,8 +1916,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                       className="font-mono text-sm"
                     />
                     <p className="text-sm text-muted-foreground">
-                      This code will be inserted in the HTML head section of all pages.
-                      Use for analytics, meta tags, or external resources.
+                      This code will be inserted in the HTML head section of all
+                      pages. Use for analytics, meta tags, or external
+                      resources.
                     </p>
                   </div>
 
@@ -1831,8 +1938,8 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                       className="font-mono text-sm"
                     />
                     <p className="text-sm text-muted-foreground">
-                      This code will be inserted before the closing body tag on all pages.
-                      Use for tracking scripts or chat widgets.
+                      This code will be inserted before the closing body tag on
+                      all pages. Use for tracking scripts or chat widgets.
                     </p>
                   </div>
 
@@ -1856,8 +1963,8 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                       className="font-mono text-sm"
                     />
                     <p className="text-sm text-muted-foreground">
-                      Add custom CSS styles to override default styling.
-                      These styles will be applied site-wide.
+                      Add custom CSS styles to override default styling. These
+                      styles will be applied site-wide.
                     </p>
                   </div>
 
@@ -1882,8 +1989,8 @@ document.addEventListener('DOMContentLoaded', function() {
                       className="font-mono text-sm"
                     />
                     <p className="text-sm text-muted-foreground">
-                      Add custom JavaScript functionality. Code will be executed on all pages.
-                      Ensure proper error handling and testing.
+                      Add custom JavaScript functionality. Code will be executed
+                      on all pages. Ensure proper error handling and testing.
                     </p>
                   </div>
                 </div>

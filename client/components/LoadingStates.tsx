@@ -1,43 +1,39 @@
-import React from 'react';
-import { Loader2, MapPin, Search } from 'lucide-react';
-import { Card, CardContent, CardHeader } from './ui/card';
+import React from "react";
+import { Loader2, MapPin, Search } from "lucide-react";
+import { Card, CardContent, CardHeader } from "./ui/card";
 
 /**
  * Simple skeleton component if it doesn't exist
  */
-function Skeleton({ className = '' }: { className?: string }) {
-  return (
-    <div className={`animate-pulse bg-muted rounded ${className}`} />
-  );
+function Skeleton({ className = "" }: { className?: string }) {
+  return <div className={`animate-pulse bg-muted rounded ${className}`} />;
 }
 
 /**
  * Generic loading spinner
  */
-export function LoadingSpinner({ 
-  size = 'default',
-  className = '',
-}: { 
-  size?: 'sm' | 'default' | 'lg';
+export function LoadingSpinner({
+  size = "default",
+  className = "",
+}: {
+  size?: "sm" | "default" | "lg";
   className?: string;
 }) {
   const sizeClasses = {
-    sm: 'w-4 h-4',
-    default: 'w-6 h-6',
-    lg: 'w-8 h-8',
+    sm: "w-4 h-4",
+    default: "w-6 h-6",
+    lg: "w-8 h-8",
   };
 
   return (
-    <Loader2 
-      className={`animate-spin ${sizeClasses[size]} ${className}`} 
-    />
+    <Loader2 className={`animate-spin ${sizeClasses[size]} ${className}`} />
   );
 }
 
 /**
  * Full page loading
  */
-export function PageLoading({ message = 'Loading...' }: { message?: string }) {
+export function PageLoading({ message = "Loading..." }: { message?: string }) {
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center">
       <LoadingSpinner size="lg" className="text-primary mb-4" />
@@ -49,11 +45,11 @@ export function PageLoading({ message = 'Loading...' }: { message?: string }) {
 /**
  * Button loading state
  */
-export function ButtonLoading({ 
-  children, 
+export function ButtonLoading({
+  children,
   isLoading = false,
-  loadingText = 'Loading...',
-  ...props 
+  loadingText = "Loading...",
+  ...props
 }: {
   children: React.ReactNode;
   isLoading?: boolean;
@@ -149,12 +145,12 @@ export function BlogPostSkeleton() {
 /**
  * Data table skeleton
  */
-export function DataTableSkeleton({ 
-  rows = 5, 
-  columns = 4 
-}: { 
-  rows?: number; 
-  columns?: number; 
+export function DataTableSkeleton({
+  rows = 5,
+  columns = 4,
+}: {
+  rows?: number;
+  columns?: number;
 }) {
   return (
     <div className="space-y-4">
@@ -163,13 +159,13 @@ export function DataTableSkeleton({
           <Skeleton key={i} className="h-4 flex-1" />
         ))}
       </div>
-      
+
       {Array.from({ length: rows }).map((_, rowIndex) => (
         <div key={rowIndex} className="flex gap-4 p-4">
           {Array.from({ length: columns }).map((_, colIndex) => (
-            <Skeleton 
-              key={colIndex} 
-              className={`h-4 flex-1 ${colIndex === 0 ? 'w-2/5' : ''}`} 
+            <Skeleton
+              key={colIndex}
+              className={`h-4 flex-1 ${colIndex === 0 ? "w-2/5" : ""}`}
             />
           ))}
         </div>
@@ -205,11 +201,11 @@ export function SearchResultsSkeleton() {
         <Search className="w-5 h-5 text-muted-foreground" />
         <Skeleton className="h-5 w-48" />
       </div>
-      
+
       <Skeleton className="h-4 w-32" />
-      
+
       <LocationListSkeleton count={4} />
-      
+
       <div className="flex justify-center gap-2">
         {Array.from({ length: 5 }).map((_, i) => (
           <Skeleton key={i} className="h-8 w-8" />
@@ -231,7 +227,7 @@ export function MapSkeleton() {
           <p className="text-sm text-muted-foreground">Loading map...</p>
         </div>
       </div>
-      
+
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse" />
     </div>
   );
@@ -247,7 +243,7 @@ export function DashboardSkeleton() {
         <Skeleton className="h-8 w-48" />
         <Skeleton className="h-4 w-64" />
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {Array.from({ length: 3 }).map((_, i) => (
           <Card key={i}>
@@ -262,7 +258,7 @@ export function DashboardSkeleton() {
           </Card>
         ))}
       </div>
-      
+
       <Card>
         <CardHeader>
           <Skeleton className="h-6 w-32" />
@@ -278,19 +274,19 @@ export function DashboardSkeleton() {
 /**
  * Generic content skeleton
  */
-export function ContentSkeleton({ 
+export function ContentSkeleton({
   lines = 3,
-  className = '' 
-}: { 
+  className = "",
+}: {
   lines?: number;
   className?: string;
 }) {
   return (
     <div className={`space-y-2 ${className}`}>
       {Array.from({ length: lines }).map((_, i) => (
-        <Skeleton 
-          key={i} 
-          className={`h-4 ${i === lines - 1 ? 'w-2/3' : 'w-full'}`} 
+        <Skeleton
+          key={i}
+          className={`h-4 ${i === lines - 1 ? "w-2/3" : "w-full"}`}
         />
       ))}
     </div>
@@ -300,7 +296,7 @@ export function ContentSkeleton({
 /**
  * Inline loading indicator
  */
-export function InlineLoading({ text = 'Loading...' }: { text?: string }) {
+export function InlineLoading({ text = "Loading..." }: { text?: string }) {
   return (
     <div className="flex items-center gap-2 text-muted-foreground">
       <LoadingSpinner size="sm" />
@@ -312,11 +308,11 @@ export function InlineLoading({ text = 'Loading...' }: { text?: string }) {
 /**
  * Section loading placeholder
  */
-export function SectionLoading({ 
-  title = 'Loading...', 
+export function SectionLoading({
+  title = "Loading...",
   description,
-  className = '' 
-}: { 
+  className = "",
+}: {
   title?: string;
   description?: string;
   className?: string;
@@ -325,9 +321,7 @@ export function SectionLoading({
     <div className={`text-center py-12 ${className}`}>
       <LoadingSpinner size="lg" className="text-primary mx-auto mb-4" />
       <h3 className="text-lg font-medium mb-2">{title}</h3>
-      {description && (
-        <p className="text-muted-foreground">{description}</p>
-      )}
+      {description && <p className="text-muted-foreground">{description}</p>}
     </div>
   );
 }

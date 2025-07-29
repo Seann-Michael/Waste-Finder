@@ -7,15 +7,15 @@
  * Removes potentially dangerous characters and limits length
  */
 export function sanitizeInput(input: string, maxLength: number = 500): string {
-  if (typeof input !== 'string') {
-    return '';
+  if (typeof input !== "string") {
+    return "";
   }
 
   return input
     .trim()
-    .replace(/[<>]/g, '') // Remove HTML tags
-    .replace(/javascript:/gi, '') // Remove javascript: protocols
-    .replace(/on\w+=/gi, '') // Remove event handlers
+    .replace(/[<>]/g, "") // Remove HTML tags
+    .replace(/javascript:/gi, "") // Remove javascript: protocols
+    .replace(/on\w+=/gi, "") // Remove event handlers
     .substring(0, maxLength);
 }
 
@@ -24,23 +24,29 @@ export function sanitizeInput(input: string, maxLength: number = 500): string {
  * Use for rich text inputs
  */
 export function sanitizeHtml(html: string): string {
-  if (typeof html !== 'string') {
-    return '';
+  if (typeof html !== "string") {
+    return "";
   }
 
   // List of allowed tags (very restrictive)
-  const allowedTags = ['p', 'br', 'strong', 'em', 'u', 'ul', 'ol', 'li'];
-  
+  const allowedTags = ["p", "br", "strong", "em", "u", "ul", "ol", "li"];
+
   // Remove script tags and their content
-  let sanitized = html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-  
+  let sanitized = html.replace(
+    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+    "",
+  );
+
   // Remove all tags except allowed ones
-  sanitized = sanitized.replace(/<(?!\/?(?:p|br|strong|em|u|ul|ol|li)\b)[^>]+>/gi, '');
-  
+  sanitized = sanitized.replace(
+    /<(?!\/?(?:p|br|strong|em|u|ul|ol|li)\b)[^>]+>/gi,
+    "",
+  );
+
   // Remove event handlers and javascript protocols
-  sanitized = sanitized.replace(/on\w+="[^"]*"/gi, '');
-  sanitized = sanitized.replace(/javascript:/gi, '');
-  
+  sanitized = sanitized.replace(/on\w+="[^"]*"/gi, "");
+  sanitized = sanitized.replace(/javascript:/gi, "");
+
   return sanitized.trim();
 }
 
@@ -58,7 +64,7 @@ export function validateEmail(email: string): boolean {
 export function validateUrl(url: string): boolean {
   try {
     const urlObj = new URL(url);
-    const allowedProtocols = ['http:', 'https:'];
+    const allowedProtocols = ["http:", "https:"];
     return allowedProtocols.includes(urlObj.protocol);
   } catch {
     return false;
@@ -70,7 +76,7 @@ export function validateUrl(url: string): boolean {
  */
 export function sanitizePhoneNumber(phone: string): string {
   // Remove all non-digit characters
-  return phone.replace(/\D/g, '');
+  return phone.replace(/\D/g, "");
 }
 
 /**
@@ -83,28 +89,28 @@ export function validatePassword(password: string): {
   const errors: string[] = [];
 
   if (password.length < 8) {
-    errors.push('Password must be at least 8 characters long');
+    errors.push("Password must be at least 8 characters long");
   }
 
   if (!/[A-Z]/.test(password)) {
-    errors.push('Password must contain at least one uppercase letter');
+    errors.push("Password must contain at least one uppercase letter");
   }
 
   if (!/[a-z]/.test(password)) {
-    errors.push('Password must contain at least one lowercase letter');
+    errors.push("Password must contain at least one lowercase letter");
   }
 
   if (!/\d/.test(password)) {
-    errors.push('Password must contain at least one number');
+    errors.push("Password must contain at least one number");
   }
 
   if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-    errors.push('Password must contain at least one special character');
+    errors.push("Password must contain at least one special character");
   }
 
   return {
     isValid: errors.length === 0,
-    errors
+    errors,
   };
 }
 
@@ -120,21 +126,27 @@ export class RateLimiter {
    * @param maxAttempts - Maximum number of attempts allowed
    * @param windowMs - Time window in milliseconds
    */
-  isRateLimited(key: string, maxAttempts: number = 5, windowMs: number = 60000): boolean {
+  isRateLimited(
+    key: string,
+    maxAttempts: number = 5,
+    windowMs: number = 60000,
+  ): boolean {
     const now = Date.now();
     const attempts = this.attempts.get(key) || [];
-    
+
     // Remove attempts outside the time window
-    const recentAttempts = attempts.filter(timestamp => now - timestamp < windowMs);
-    
+    const recentAttempts = attempts.filter(
+      (timestamp) => now - timestamp < windowMs,
+    );
+
     if (recentAttempts.length >= maxAttempts) {
       return true; // Rate limited
     }
-    
+
     // Add current attempt
     recentAttempts.push(now);
     this.attempts.set(key, recentAttempts);
-    
+
     return false;
   }
 
@@ -152,25 +164,31 @@ export class RateLimiter {
 export function generateCSRFToken(): string {
   const array = new Uint32Array(4);
   crypto.getRandomValues(array);
-  return Array.from(array, byte => byte.toString(16).padStart(8, '0')).join('');
+  return Array.from(array, (byte) => byte.toString(16).padStart(8, "0")).join(
+    "",
+  );
 }
 
 /**
  * Get CSRF token from meta tag or generate new one
  */
 export function getCSRFToken(): string {
-  const metaTag = document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement;
+  const metaTag = document.querySelector(
+    'meta[name="csrf-token"]',
+  ) as HTMLMetaElement;
   return metaTag?.content || generateCSRFToken();
 }
 
 /**
  * Secure headers for API requests
  */
-export function getSecureHeaders(additionalHeaders: Record<string, string> = {}): Record<string, string> {
+export function getSecureHeaders(
+  additionalHeaders: Record<string, string> = {},
+): Record<string, string> {
   return {
-    'Content-Type': 'application/json',
-    'X-CSRF-Token': getCSRFToken(),
-    'X-Requested-With': 'XMLHttpRequest',
+    "Content-Type": "application/json",
+    "X-CSRF-Token": getCSRFToken(),
+    "X-Requested-With": "XMLHttpRequest",
     ...additionalHeaders,
   };
 }

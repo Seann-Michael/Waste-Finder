@@ -18,12 +18,12 @@ import {
   handleLocationById,
   handleAllLocations,
 } from "./routes/locations";
+import { handleLogin, handleLogout, handleAuthMe } from "./routes/auth";
 import {
-  handleLogin,
-  handleLogout,
-  handleAuthMe,
-} from "./routes/auth";
-import { authRateLimit, apiRateLimit, publicRateLimit } from "./middleware/rateLimiter";
+  authRateLimit,
+  apiRateLimit,
+  publicRateLimit,
+} from "./middleware/rateLimiter";
 
 export function createServer() {
   const app = express();
@@ -71,17 +71,24 @@ export function createServer() {
   });
 
   // Global error handler
-  app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-    console.error("Server error:", err);
+  app.use(
+    (
+      err: any,
+      _req: express.Request,
+      res: express.Response,
+      _next: express.NextFunction,
+    ) => {
+      console.error("Server error:", err);
 
-    const isDevelopment = process.env.NODE_ENV === "development";
+      const isDevelopment = process.env.NODE_ENV === "development";
 
-    res.status(err.status || 500).json({
-      success: false,
-      error: isDevelopment ? err.message : "Internal server error",
-      ...(isDevelopment && { stack: err.stack }),
-    });
-  });
+      res.status(err.status || 500).json({
+        success: false,
+        error: isDevelopment ? err.message : "Internal server error",
+        ...(isDevelopment && { stack: err.stack }),
+      });
+    },
+  );
 
   return app;
 }

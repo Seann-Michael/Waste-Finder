@@ -1,7 +1,7 @@
-import React, { Component, ReactNode } from 'react';
-import { Button } from './ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { AlertCircle, RefreshCw, Home } from 'lucide-react';
+import React, { Component, ReactNode } from "react";
+import { Button } from "./ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { AlertCircle, RefreshCw, Home } from "lucide-react";
 
 interface Props {
   children: ReactNode;
@@ -26,8 +26,8 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('Error caught by boundary:', error, errorInfo);
-    
+    console.error("Error caught by boundary:", error, errorInfo);
+
     this.setState({
       error,
       errorInfo,
@@ -37,7 +37,7 @@ export class ErrorBoundary extends Component<Props, State> {
     this.props.onError?.(error, errorInfo);
 
     // Log to error reporting service in production
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === "production") {
       // Example: Sentry.captureException(error, { extra: errorInfo });
     }
   }
@@ -47,7 +47,7 @@ export class ErrorBoundary extends Component<Props, State> {
   };
 
   handleGoHome = () => {
-    window.location.href = '/';
+    window.location.href = "/";
   };
 
   render() {
@@ -69,21 +69,22 @@ export class ErrorBoundary extends Component<Props, State> {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-sm text-muted-foreground text-center">
-                We're sorry, but something unexpected happened. Please try refreshing the page.
+                We're sorry, but something unexpected happened. Please try
+                refreshing the page.
               </p>
 
-              {process.env.NODE_ENV === 'development' && this.state.error && (
+              {process.env.NODE_ENV === "development" && this.state.error && (
                 <details className="text-xs bg-muted p-3 rounded border">
                   <summary className="cursor-pointer font-medium mb-2">
                     Error Details (Development)
                   </summary>
                   <pre className="whitespace-pre-wrap overflow-auto">
                     {this.state.error.message}
-                    {'\n\n'}
+                    {"\n\n"}
                     {this.state.error.stack}
                     {this.state.errorInfo?.componentStack && (
                       <>
-                        {'\n\nComponent Stack:'}
+                        {"\n\nComponent Stack:"}
                         {this.state.errorInfo.componentStack}
                       </>
                     )}
@@ -100,10 +101,7 @@ export class ErrorBoundary extends Component<Props, State> {
                   <RefreshCw className="w-4 h-4 mr-2" />
                   Try Again
                 </Button>
-                <Button
-                  onClick={this.handleGoHome}
-                  className="flex-1"
-                >
+                <Button onClick={this.handleGoHome} className="flex-1">
                   <Home className="w-4 h-4 mr-2" />
                   Go Home
                 </Button>
@@ -142,7 +140,7 @@ export function useErrorHandler() {
 export function withErrorBoundary<P extends object>(
   Component: React.ComponentType<P>,
   fallback?: ReactNode,
-  onError?: (error: Error, errorInfo: React.ErrorInfo) => void
+  onError?: (error: Error, errorInfo: React.ErrorInfo) => void,
 ) {
   const WrappedComponent = (props: P) => (
     <ErrorBoundary fallback={fallback} onError={onError}>
@@ -151,6 +149,6 @@ export function withErrorBoundary<P extends object>(
   );
 
   WrappedComponent.displayName = `withErrorBoundary(${Component.displayName || Component.name})`;
-  
+
   return WrappedComponent;
 }

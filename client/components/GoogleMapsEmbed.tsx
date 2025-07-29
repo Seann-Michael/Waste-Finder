@@ -23,7 +23,7 @@ interface GoogleMapsEmbedProps {
 export default function GoogleMapsEmbed({
   locations,
   searchQuery = "",
-  className = ""
+  className = "",
 }: GoogleMapsEmbedProps) {
   const [mapUrl, setMapUrl] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -58,11 +58,17 @@ export default function GoogleMapsEmbed({
 
     if (locations.length > 0) {
       // Calculate center point from all locations
-      const validLocations = locations.filter(loc => loc.latitude && loc.longitude);
+      const validLocations = locations.filter(
+        (loc) => loc.latitude && loc.longitude,
+      );
 
       if (validLocations.length > 0) {
-        const avgLat = validLocations.reduce((sum, loc) => sum + (loc.latitude || 0), 0) / validLocations.length;
-        const avgLng = validLocations.reduce((sum, loc) => sum + (loc.longitude || 0), 0) / validLocations.length;
+        const avgLat =
+          validLocations.reduce((sum, loc) => sum + (loc.latitude || 0), 0) /
+          validLocations.length;
+        const avgLng =
+          validLocations.reduce((sum, loc) => sum + (loc.longitude || 0), 0) /
+          validLocations.length;
         centerLat = avgLat;
         centerLng = avgLng;
         zoom = validLocations.length === 1 ? 12 : 8;
@@ -77,7 +83,7 @@ export default function GoogleMapsEmbed({
       key: apiKey,
       center: `${centerLat},${centerLng}`,
       zoom: zoom.toString(),
-      maptype: "roadmap"
+      maptype: "roadmap",
     });
 
     // Alternative: Use search mode if we have a search query
@@ -86,7 +92,7 @@ export default function GoogleMapsEmbed({
       const searchParams = new URLSearchParams({
         key: apiKey,
         q: `waste disposal facilities near ${searchQuery}`,
-        zoom: "10"
+        zoom: "10",
       });
       setMapUrl(`${searchUrl}?${searchParams.toString()}`);
     } else {

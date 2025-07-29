@@ -13,7 +13,12 @@ const mockUsers = [
     email: "admin@wastefinder.com",
     password: "wastefinderadmin2024", // In production, this would be hashed
     role: "admin" as const,
-    permissions: ["locations.read", "locations.write", "suggestions.read", "suggestions.write"],
+    permissions: [
+      "locations.read",
+      "locations.write",
+      "suggestions.read",
+      "suggestions.write",
+    ],
   },
   {
     id: "super-admin-1",
@@ -29,7 +34,7 @@ const mockUsers = [
  * Validate CSRF token
  */
 function validateCSRFToken(req: Request): boolean {
-  const token = req.headers['x-csrf-token'] as string;
+  const token = req.headers["x-csrf-token"] as string;
   const expectedToken = "demo-csrf-token-12345"; // In production, this would be dynamic and secure
 
   return token === expectedToken;
@@ -62,12 +67,14 @@ export async function handleLogin(req: Request, res: Response) {
 
     // Find user
     const user = mockUsers.find(
-      u => u.username.toLowerCase() === username.toLowerCase() && u.password === password
+      (u) =>
+        u.username.toLowerCase() === username.toLowerCase() &&
+        u.password === password,
     );
 
     if (!user) {
       // Simulate a delay to prevent timing attacks
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       return res.status(401).json({
         success: false,
@@ -91,7 +98,6 @@ export async function handleLogin(req: Request, res: Response) {
       user: userResponse,
       message: "Login successful",
     });
-
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({

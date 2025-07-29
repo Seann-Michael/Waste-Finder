@@ -80,8 +80,12 @@ export default function PreviewLocation() {
     setIsLoading(true);
     try {
       // Load from localStorage (in production, this would be from API)
-      const pendingSuggestions = JSON.parse(localStorage.getItem("pendingSuggestions") || "[]");
-      const foundLocation = pendingSuggestions.find((loc: PendingLocation) => loc.id === id);
+      const pendingSuggestions = JSON.parse(
+        localStorage.getItem("pendingSuggestions") || "[]",
+      );
+      const foundLocation = pendingSuggestions.find(
+        (loc: PendingLocation) => loc.id === id,
+      );
 
       if (foundLocation) {
         setLocation(foundLocation);
@@ -97,7 +101,9 @@ export default function PreviewLocation() {
     if (!location) return;
 
     // Move to approved locations (in real app, this would be an API call)
-    const existingLocations = JSON.parse(localStorage.getItem("locations") || "[]");
+    const existingLocations = JSON.parse(
+      localStorage.getItem("locations") || "[]",
+    );
     const newLocation = {
       ...location,
       id: `location-${Date.now()}`,
@@ -108,11 +114,18 @@ export default function PreviewLocation() {
       updatedAt: new Date().toISOString(),
     };
 
-    localStorage.setItem("locations", JSON.stringify([...existingLocations, newLocation]));
+    localStorage.setItem(
+      "locations",
+      JSON.stringify([...existingLocations, newLocation]),
+    );
 
     // Remove from pending suggestions
-    const pendingSuggestions = JSON.parse(localStorage.getItem("pendingSuggestions") || "[]");
-    const updated = pendingSuggestions.filter((loc: PendingLocation) => loc.id !== id);
+    const pendingSuggestions = JSON.parse(
+      localStorage.getItem("pendingSuggestions") || "[]",
+    );
+    const updated = pendingSuggestions.filter(
+      (loc: PendingLocation) => loc.id !== id,
+    );
     localStorage.setItem("pendingSuggestions", JSON.stringify(updated));
 
     alert("Location approved and added to active listings!");
@@ -124,8 +137,12 @@ export default function PreviewLocation() {
 
     if (confirm("Are you sure you want to reject this location suggestion?")) {
       // Remove from pending suggestions
-      const pendingSuggestions = JSON.parse(localStorage.getItem("pendingSuggestions") || "[]");
-      const updated = pendingSuggestions.filter((loc: PendingLocation) => loc.id !== id);
+      const pendingSuggestions = JSON.parse(
+        localStorage.getItem("pendingSuggestions") || "[]",
+      );
+      const updated = pendingSuggestions.filter(
+        (loc: PendingLocation) => loc.id !== id,
+      );
       localStorage.setItem("pendingSuggestions", JSON.stringify(updated));
 
       alert("Location suggestion rejected.");
@@ -160,14 +177,23 @@ export default function PreviewLocation() {
   };
 
   const getDayName = (dayOfWeek: number) => {
-    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const days = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
     return days[dayOfWeek];
   };
 
   const formatTime = (time: string) => {
     if (time === "00:00") return "";
     const [hours, minutes] = time.split(":");
-    const hour12 = parseInt(hours) > 12 ? parseInt(hours) - 12 : parseInt(hours);
+    const hour12 =
+      parseInt(hours) > 12 ? parseInt(hours) - 12 : parseInt(hours);
     const ampm = parseInt(hours) >= 12 ? "PM" : "AM";
     return `${hour12 === 0 ? 12 : hour12}:${minutes} ${ampm}`;
   };
@@ -177,7 +203,9 @@ export default function PreviewLocation() {
       <Star
         key={i}
         className={`${size} ${
-          i < Math.floor(rating) ? "text-yellow-400 fill-current" : "text-gray-300"
+          i < Math.floor(rating)
+            ? "text-yellow-400 fill-current"
+            : "text-gray-300"
         }`}
       />
     ));
@@ -186,7 +214,7 @@ export default function PreviewLocation() {
   const getDirectionsUrl = () => {
     if (!location) return "#";
     return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
-      `${location.address}, ${location.city}, ${location.state} ${location.zipCode}`
+      `${location.address}, ${location.city}, ${location.state} ${location.zipCode}`,
     )}`;
   };
 
@@ -220,7 +248,8 @@ export default function PreviewLocation() {
             <AlertCircle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
             <h1 className="text-2xl font-bold mb-2">Location Not Found</h1>
             <p className="text-muted-foreground mb-4">
-              The suggested location you're looking for doesn't exist or has been removed.
+              The suggested location you're looking for doesn't exist or has
+              been removed.
             </p>
             <Button asChild>
               <a href="/admin/suggestions">Back to Suggestions</a>
@@ -265,10 +294,14 @@ export default function PreviewLocation() {
         <Alert>
           <User className="h-4 w-4" />
           <AlertDescription>
-            <strong>Submitted by:</strong> {location.submitterName} ({location.submitterEmail})
-            {location.submitterPhone && ` • ${formatPhoneNumber(location.submitterPhone)}`}
+            <strong>Submitted by:</strong> {location.submitterName} (
+            {location.submitterEmail})
+            {location.submitterPhone &&
+              ` • ${formatPhoneNumber(location.submitterPhone)}`}
             <br />
-            <strong>Submitted:</strong> {new Date(location.submittedAt).toLocaleDateString()} at {new Date(location.submittedAt).toLocaleTimeString()}
+            <strong>Submitted:</strong>{" "}
+            {new Date(location.submittedAt).toLocaleDateString()} at{" "}
+            {new Date(location.submittedAt).toLocaleTimeString()}
             {location.additionalNotes && (
               <>
                 <br />
@@ -287,7 +320,10 @@ export default function PreviewLocation() {
               <CardContent className="pt-6">
                 <div className="flex items-center gap-2 mb-4">
                   {getLocationIcon(location.locationType)}
-                  <Badge variant="secondary" className="flex items-center gap-1">
+                  <Badge
+                    variant="secondary"
+                    className="flex items-center gap-1"
+                  >
                     {getLocationLabel(location.locationType)}
                   </Badge>
                 </div>
@@ -295,7 +331,8 @@ export default function PreviewLocation() {
                 <h1 className="text-3xl font-bold mb-4">{location.name}</h1>
 
                 <div className="flex items-center gap-2 mb-4">
-                  {renderStars(0, "w-5 h-5")} {/* No rating for pending locations */}
+                  {renderStars(0, "w-5 h-5")}{" "}
+                  {/* No rating for pending locations */}
                   <span className="text-lg font-medium">New Location</span>
                   <span className="text-muted-foreground">(0 reviews)</span>
                 </div>
@@ -320,7 +357,10 @@ export default function PreviewLocation() {
               <CardContent>
                 <div className="grid gap-4">
                   {location.debrisTypes.map((debris, index) => (
-                    <div key={index} className="flex justify-between items-center p-3 border rounded-lg">
+                    <div
+                      key={index}
+                      className="flex justify-between items-center p-3 border rounded-lg"
+                    >
                       <div>
                         <span className="font-medium">{debris.name}</span>
                       </div>
@@ -337,7 +377,9 @@ export default function PreviewLocation() {
                             )}
                           </div>
                         ) : (
-                          <span className="text-muted-foreground">Call for pricing</span>
+                          <span className="text-muted-foreground">
+                            Call for pricing
+                          </span>
                         )}
                       </div>
                     </div>
@@ -383,7 +425,9 @@ export default function PreviewLocation() {
                     className="text-primary hover:underline"
                   >
                     <div>{location.address}</div>
-                    <div>{location.city}, {location.state} {location.zipCode}</div>
+                    <div>
+                      {location.city}, {location.state} {location.zipCode}
+                    </div>
                   </a>
                 </div>
 
@@ -428,7 +472,9 @@ export default function PreviewLocation() {
                 {location.googleBusinessUrl && (
                   <div className="mt-4">
                     <Button
-                      onClick={() => window.open(location.googleBusinessUrl, "_blank")}
+                      onClick={() =>
+                        window.open(location.googleBusinessUrl, "_blank")
+                      }
                       className="w-full"
                       variant="outline"
                     >
@@ -458,7 +504,11 @@ export default function PreviewLocation() {
                       <span className="font-medium">
                         {getDayName(hours.dayOfWeek)}
                       </span>
-                      <span className={hours.isClosed ? "text-muted-foreground" : ""}>
+                      <span
+                        className={
+                          hours.isClosed ? "text-muted-foreground" : ""
+                        }
+                      >
                         {hours.isClosed
                           ? "Closed"
                           : `${formatTime(hours.openTime)} - ${formatTime(hours.closeTime)}`}
@@ -485,7 +535,9 @@ export default function PreviewLocation() {
                     <span>{location.debrisTypes.length}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Payment Methods:</span>
+                    <span className="text-muted-foreground">
+                      Payment Methods:
+                    </span>
                     <span>{location.paymentTypes.length}</span>
                   </div>
                   <div className="flex justify-between">

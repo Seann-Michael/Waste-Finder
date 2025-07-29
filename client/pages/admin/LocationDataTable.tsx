@@ -72,7 +72,11 @@ const fetchLocations = async (): Promise<Location[]> => {
       const savedLocations = localStorage.getItem("locations");
       if (savedLocations) {
         const locations = JSON.parse(savedLocations);
-        console.log("Loaded locations from localStorage:", locations.length, "locations");
+        console.log(
+          "Loaded locations from localStorage:",
+          locations.length,
+          "locations",
+        );
         return Array.isArray(locations) ? locations : [];
       }
     } catch (localStorageError) {
@@ -121,7 +125,11 @@ export default function LocationDataTable() {
       setIsLoading(true);
       try {
         const data = await fetchLocations();
-        console.log("LocationDataTable: Loaded locations:", data.length, "locations");
+        console.log(
+          "LocationDataTable: Loaded locations:",
+          data.length,
+          "locations",
+        );
         console.log("LocationDataTable: First location:", data[0]);
         setLocations(data);
         setFilteredLocations(data);
@@ -191,7 +199,11 @@ export default function LocationDataTable() {
     setIsLoading(true);
     try {
       const data = await fetchLocations();
-      console.log("Manual refresh: Loaded locations:", data.length, "locations");
+      console.log(
+        "Manual refresh: Loaded locations:",
+        data.length,
+        "locations",
+      );
       setLocations(data);
       setFilteredLocations(data);
     } catch (error) {
@@ -236,7 +248,9 @@ export default function LocationDataTable() {
 
     // Type filter
     if (typeFilter !== "all") {
-      filtered = filtered.filter((location) => location.locationType === typeFilter);
+      filtered = filtered.filter(
+        (location) => location.locationType === typeFilter,
+      );
     }
 
     // Status filter
@@ -367,7 +381,7 @@ export default function LocationDataTable() {
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedLocations(currentItems.map(location => location.id));
+      setSelectedLocations(currentItems.map((location) => location.id));
     } else {
       setSelectedLocations([]);
     }
@@ -375,14 +389,16 @@ export default function LocationDataTable() {
 
   const handleSelectLocation = (locationId: string, checked: boolean) => {
     if (checked) {
-      setSelectedLocations(prev => [...prev, locationId]);
+      setSelectedLocations((prev) => [...prev, locationId]);
     } else {
-      setSelectedLocations(prev => prev.filter(id => id !== locationId));
+      setSelectedLocations((prev) => prev.filter((id) => id !== locationId));
     }
   };
 
   const handleBulkDelete = () => {
-    const updatedLocations = locations.filter(location => !selectedLocations.includes(location.id));
+    const updatedLocations = locations.filter(
+      (location) => !selectedLocations.includes(location.id),
+    );
     setLocations(updatedLocations);
     setSelectedLocations([]);
     // In a real app, you'd make an API call here
@@ -436,10 +452,14 @@ export default function LocationDataTable() {
                         key={key}
                         checked={value}
                         onCheckedChange={(checked) =>
-                          setVisibleColumns(prev => ({ ...prev, [key]: checked }))
+                          setVisibleColumns((prev) => ({
+                            ...prev,
+                            [key]: checked,
+                          }))
                         }
                       >
-                        {key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}
+                        {key.charAt(0).toUpperCase() +
+                          key.slice(1).replace(/([A-Z])/g, " $1")}
                       </DropdownMenuCheckboxItem>
                     ))}
                   </DropdownMenuContent>
@@ -458,10 +478,11 @@ export default function LocationDataTable() {
                   onClick={refreshLocations}
                   disabled={isLoading}
                 >
-                  <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+                  <RefreshCw
+                    className={`w-4 h-4 mr-2 ${isLoading ? "animate-spin" : ""}`}
+                  />
                   Refresh
                 </Button>
-
               </div>
             </div>
           </CardHeader>
@@ -549,7 +570,10 @@ export default function LocationDataTable() {
                   <TableRow>
                     <TableHead className="w-12">
                       <Checkbox
-                        checked={selectedLocations.length === currentItems.length && currentItems.length > 0}
+                        checked={
+                          selectedLocations.length === currentItems.length &&
+                          currentItems.length > 0
+                        }
                         onCheckedChange={handleSelectAll}
                       />
                     </TableHead>
@@ -634,14 +658,16 @@ export default function LocationDataTable() {
                     </TableRow>
                   ) : (
                     currentItems.map((location) => (
-                      <TableRow
-                        key={location.id}
-                        className="hover:bg-muted/50"
-                      >
+                      <TableRow key={location.id} className="hover:bg-muted/50">
                         <TableCell>
                           <Checkbox
                             checked={selectedLocations.includes(location.id)}
-                            onCheckedChange={(checked) => handleSelectLocation(location.id, checked as boolean)}
+                            onCheckedChange={(checked) =>
+                              handleSelectLocation(
+                                location.id,
+                                checked as boolean,
+                              )
+                            }
                           />
                         </TableCell>
                         {visibleColumns.name && (
@@ -662,19 +688,26 @@ export default function LocationDataTable() {
                             <div className="text-sm">
                               {location.address}
                               <br />
-                              {location.city}, {location.state} {location.zipCode}
+                              {location.city}, {location.state}{" "}
+                              {location.zipCode}
                             </div>
                           </TableCell>
                         )}
                         {visibleColumns.type && (
-                          <TableCell>{getTypeBadge(location.locationType)}</TableCell>
+                          <TableCell>
+                            {getTypeBadge(location.locationType)}
+                          </TableCell>
                         )}
                         {visibleColumns.status && (
-                          <TableCell>{getStatusBadge(location.isActive)}</TableCell>
+                          <TableCell>
+                            {getStatusBadge(location.isActive)}
+                          </TableCell>
                         )}
                         {visibleColumns.phone && (
                           <TableCell>
-                            <div className="text-sm">{formatPhoneNumber(location.phone)}</div>
+                            <div className="text-sm">
+                              {formatPhoneNumber(location.phone)}
+                            </div>
                           </TableCell>
                         )}
                         {visibleColumns.lastUpdated && (

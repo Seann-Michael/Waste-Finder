@@ -82,7 +82,10 @@ export default function LocationDetail() {
     paymentTypes: [] as string[],
     additionalPaymentDetails: "",
     debrisTypes: [] as string[],
-    debrisPricing: {} as Record<string, { price?: number; priceDetails?: string }>,
+    debrisPricing: {} as Record<
+      string,
+      { price?: number; priceDetails?: string }
+    >,
     notes: "",
     operatingHours: [] as any[],
   });
@@ -99,7 +102,7 @@ export default function LocationDetail() {
     "Concrete",
     "Asphalt",
     "Metal",
-    "Hazardous Waste"
+    "Hazardous Waste",
   ];
 
   // Review form state
@@ -119,7 +122,7 @@ export default function LocationDetail() {
     if (!id) return;
 
     const viewKey = `pageviews_${id}`;
-    const currentViews = parseInt(localStorage.getItem(viewKey) || '0');
+    const currentViews = parseInt(localStorage.getItem(viewKey) || "0");
     const newViews = currentViews + 1;
     localStorage.setItem(viewKey, newViews.toString());
     setPageViews(newViews);
@@ -289,7 +292,10 @@ export default function LocationDetail() {
     if (!location) return;
 
     // Create debris pricing map from location data
-    const debrisPricingMap: Record<string, { price?: number; priceDetails?: string }> = {};
+    const debrisPricingMap: Record<
+      string,
+      { price?: number; priceDetails?: string }
+    > = {};
     location.debrisTypes?.forEach((debris) => {
       debrisPricingMap[debris.name] = {
         price: debris.price,
@@ -308,9 +314,9 @@ export default function LocationDetail() {
       website: location.website || "",
       googleBusinessUrl: location.googleBusinessUrl || "",
       facilityType: location.locationType || "",
-      paymentTypes: location.paymentTypes?.map(p => p.name) || [],
+      paymentTypes: location.paymentTypes?.map((p) => p.name) || [],
       additionalPaymentDetails: location.additionalPaymentDetails || "",
-      debrisTypes: location.debrisTypes?.map(d => d.name) || [],
+      debrisTypes: location.debrisTypes?.map((d) => d.name) || [],
       debrisPricing: debrisPricingMap,
       notes: location.notes || "",
       operatingHours: location.operatingHours || [],
@@ -387,35 +393,39 @@ export default function LocationDetail() {
   };
 
   const handleFormChange = (field: string, value: any) => {
-    setEditFormData(prev => ({
+    setEditFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
   };
 
-  const handleOperatingHourChange = (index: number, field: string, value: string | boolean) => {
-    setEditFormData(prev => ({
+  const handleOperatingHourChange = (
+    index: number,
+    field: string,
+    value: string | boolean,
+  ) => {
+    setEditFormData((prev) => ({
       ...prev,
       operatingHours: prev.operatingHours.map((hour, i) =>
-        i === index ? { ...hour, [field]: value } : hour
+        i === index ? { ...hour, [field]: value } : hour,
       ),
     }));
   };
 
   const handlePaymentTypeChange = (type: string, checked: boolean) => {
-    setEditFormData(prev => ({
+    setEditFormData((prev) => ({
       ...prev,
       paymentTypes: checked
         ? [...prev.paymentTypes, type]
-        : prev.paymentTypes.filter(t => t !== type),
+        : prev.paymentTypes.filter((t) => t !== type),
     }));
   };
 
   const handleDebrisTypeChange = (type: string, checked: boolean) => {
-    setEditFormData(prev => {
+    setEditFormData((prev) => {
       const newDebrisTypes = checked
         ? [...prev.debrisTypes, type]
-        : prev.debrisTypes.filter(t => t !== type);
+        : prev.debrisTypes.filter((t) => t !== type);
 
       // Initialize pricing for new debris type or remove it
       const newDebrisPricing = { ...prev.debrisPricing };
@@ -433,14 +443,23 @@ export default function LocationDetail() {
     });
   };
 
-  const handleDebrisPricingChange = (debrisType: string, field: "price" | "priceDetails", value: string | number) => {
-    setEditFormData(prev => ({
+  const handleDebrisPricingChange = (
+    debrisType: string,
+    field: "price" | "priceDetails",
+    value: string | number,
+  ) => {
+    setEditFormData((prev) => ({
       ...prev,
       debrisPricing: {
         ...prev.debrisPricing,
         [debrisType]: {
           ...prev.debrisPricing[debrisType],
-          [field]: field === "price" ? (value === "" ? undefined : Number(value)) : value,
+          [field]:
+            field === "price"
+              ? value === ""
+                ? undefined
+                : Number(value)
+              : value,
         },
       },
     }));
@@ -577,7 +596,9 @@ export default function LocationDetail() {
 
                 {isEditMode ? (
                   <div className="mb-4">
-                    <Label htmlFor="edit-name" className="text-sm font-medium">Facility Name</Label>
+                    <Label htmlFor="edit-name" className="text-sm font-medium">
+                      Facility Name
+                    </Label>
                     <Input
                       id="edit-name"
                       value={editFormData.name}
@@ -591,9 +612,24 @@ export default function LocationDetail() {
                 )}
 
                 <div className="flex items-center gap-2 mb-4">
-                  {renderStars(reviews.length > 0 ? reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length : 0, "w-5 h-5")}
+                  {renderStars(
+                    reviews.length > 0
+                      ? reviews.reduce(
+                          (acc, review) => acc + review.rating,
+                          0,
+                        ) / reviews.length
+                      : 0,
+                    "w-5 h-5",
+                  )}
                   <span className="text-lg font-medium">
-                    {reviews.length > 0 ? (reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length).toFixed(1) : "0"}
+                    {reviews.length > 0
+                      ? (
+                          reviews.reduce(
+                            (acc, review) => acc + review.rating,
+                            0,
+                          ) / reviews.length
+                        ).toFixed(1)
+                      : "0"}
                   </span>
                   <span className="text-muted-foreground">
                     ({reviews.length} reviews)
@@ -635,7 +671,9 @@ export default function LocationDetail() {
                           <Input
                             id="edit-address"
                             value={editFormData.address}
-                            onChange={(e) => handleFormChange("address", e.target.value)}
+                            onChange={(e) =>
+                              handleFormChange("address", e.target.value)
+                            }
                             placeholder="1234 Main St"
                           />
                         </div>
@@ -645,7 +683,9 @@ export default function LocationDetail() {
                             <Input
                               id="edit-city"
                               value={editFormData.city}
-                              onChange={(e) => handleFormChange("city", e.target.value)}
+                              onChange={(e) =>
+                                handleFormChange("city", e.target.value)
+                              }
                               placeholder="City"
                             />
                           </div>
@@ -654,7 +694,9 @@ export default function LocationDetail() {
                             <Input
                               id="edit-state"
                               value={editFormData.state}
-                              onChange={(e) => handleFormChange("state", e.target.value)}
+                              onChange={(e) =>
+                                handleFormChange("state", e.target.value)
+                              }
                               placeholder="IL"
                               maxLength={2}
                             />
@@ -664,7 +706,9 @@ export default function LocationDetail() {
                             <Input
                               id="edit-zipCode"
                               value={editFormData.zipCode}
-                              onChange={(e) => handleFormChange("zipCode", e.target.value)}
+                              onChange={(e) =>
+                                handleFormChange("zipCode", e.target.value)
+                              }
                               placeholder="62701"
                             />
                           </div>
@@ -674,7 +718,9 @@ export default function LocationDetail() {
                           <Input
                             id="edit-phone"
                             value={editFormData.phone}
-                            onChange={(e) => handleFormChange("phone", e.target.value)}
+                            onChange={(e) =>
+                              handleFormChange("phone", e.target.value)
+                            }
                             placeholder="(555) 123-4567"
                           />
                         </div>
@@ -684,7 +730,9 @@ export default function LocationDetail() {
                             id="edit-email"
                             type="email"
                             value={editFormData.email}
-                            onChange={(e) => handleFormChange("email", e.target.value)}
+                            onChange={(e) =>
+                              handleFormChange("email", e.target.value)
+                            }
                             placeholder="info@facility.com"
                           />
                         </div>
@@ -693,16 +741,25 @@ export default function LocationDetail() {
                           <Input
                             id="edit-website"
                             value={editFormData.website}
-                            onChange={(e) => handleFormChange("website", e.target.value)}
+                            onChange={(e) =>
+                              handleFormChange("website", e.target.value)
+                            }
                             placeholder="https://example.com"
                           />
                         </div>
                         <div>
-                          <Label htmlFor="edit-googleBusinessUrl">Google Business Profile</Label>
+                          <Label htmlFor="edit-googleBusinessUrl">
+                            Google Business Profile
+                          </Label>
                           <Input
                             id="edit-googleBusinessUrl"
                             value={editFormData.googleBusinessUrl}
-                            onChange={(e) => handleFormChange("googleBusinessUrl", e.target.value)}
+                            onChange={(e) =>
+                              handleFormChange(
+                                "googleBusinessUrl",
+                                e.target.value,
+                              )
+                            }
                             placeholder="https://maps.google.com/..."
                           />
                         </div>
@@ -794,7 +851,10 @@ export default function LocationDetail() {
                   {isEditMode ? (
                     <div className="space-y-4">
                       {editFormData.operatingHours.map((hours, index) => (
-                        <div key={hours.dayOfWeek} className="flex items-center gap-4">
+                        <div
+                          key={hours.dayOfWeek}
+                          className="flex items-center gap-4"
+                        >
                           <div className="w-20 text-sm font-medium">
                             {getDayName(hours.dayOfWeek)}
                           </div>
@@ -802,7 +862,11 @@ export default function LocationDetail() {
                             <Checkbox
                               checked={!hours.isClosed}
                               onCheckedChange={(checked) =>
-                                handleOperatingHourChange(index, "isClosed", !checked)
+                                handleOperatingHourChange(
+                                  index,
+                                  "isClosed",
+                                  !checked,
+                                )
                               }
                             />
                             <span className="text-sm">Open</span>
@@ -813,23 +877,35 @@ export default function LocationDetail() {
                                 type="time"
                                 value={hours.openTime}
                                 onChange={(e) =>
-                                  handleOperatingHourChange(index, "openTime", e.target.value)
+                                  handleOperatingHourChange(
+                                    index,
+                                    "openTime",
+                                    e.target.value,
+                                  )
                                 }
                                 className="w-32"
                               />
-                              <span className="text-sm text-muted-foreground">to</span>
+                              <span className="text-sm text-muted-foreground">
+                                to
+                              </span>
                               <Input
                                 type="time"
                                 value={hours.closeTime}
                                 onChange={(e) =>
-                                  handleOperatingHourChange(index, "closeTime", e.target.value)
+                                  handleOperatingHourChange(
+                                    index,
+                                    "closeTime",
+                                    e.target.value,
+                                  )
                                 }
                                 className="w-32"
                               />
                             </>
                           )}
                           {hours.isClosed && (
-                            <span className="text-sm text-muted-foreground">Closed</span>
+                            <span className="text-sm text-muted-foreground">
+                              Closed
+                            </span>
                           )}
                         </div>
                       ))}
@@ -860,8 +936,8 @@ export default function LocationDetail() {
                       <div className="mt-4 p-3 bg-muted/50 rounded-lg">
                         <p className="text-xs text-muted-foreground">
                           * Please call to verify hours and check for holiday
-                          schedules. Hours may vary during peak seasons or special
-                          circumstances.
+                          schedules. Hours may vary during peak seasons or
+                          special circumstances.
                         </p>
                       </div>
                     </>
@@ -882,14 +958,24 @@ export default function LocationDetail() {
                     <div className="space-y-6">
                       {/* Debris Type Selection */}
                       <div>
-                        <Label className="text-base font-medium mb-3 block">Select Accepted Debris Types</Label>
+                        <Label className="text-base font-medium mb-3 block">
+                          Select Accepted Debris Types
+                        </Label>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                           {debrisOptions.map((option) => (
-                            <div key={option} className="flex items-center space-x-2">
+                            <div
+                              key={option}
+                              className="flex items-center space-x-2"
+                            >
                               <Checkbox
-                                checked={editFormData.debrisTypes.includes(option)}
+                                checked={editFormData.debrisTypes.includes(
+                                  option,
+                                )}
                                 onCheckedChange={(checked) =>
-                                  handleDebrisTypeChange(option, checked as boolean)
+                                  handleDebrisTypeChange(
+                                    option,
+                                    checked as boolean,
+                                  )
                                 }
                               />
                               <Label className="text-sm">{option}</Label>
@@ -901,17 +987,27 @@ export default function LocationDetail() {
                       {/* Pricing for Selected Debris Types */}
                       {editFormData.debrisTypes.length > 0 && (
                         <div>
-                          <Label className="text-base font-medium mb-3 block">Pricing Information</Label>
+                          <Label className="text-base font-medium mb-3 block">
+                            Pricing Information
+                          </Label>
                           <div className="space-y-4">
                             {editFormData.debrisTypes.map((debrisType) => (
-                              <div key={debrisType} className="border rounded-lg p-4">
+                              <div
+                                key={debrisType}
+                                className="border rounded-lg p-4"
+                              >
                                 <div className="flex items-center gap-2 mb-3">
                                   <div className="w-2 h-2 bg-success rounded-full"></div>
-                                  <span className="font-medium">{debrisType}</span>
+                                  <span className="font-medium">
+                                    {debrisType}
+                                  </span>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                   <div>
-                                    <Label htmlFor={`price-${debrisType}`} className="text-sm">
+                                    <Label
+                                      htmlFor={`price-${debrisType}`}
+                                      className="text-sm"
+                                    >
                                       Price per ton ($)
                                     </Label>
                                     <Input
@@ -919,22 +1015,39 @@ export default function LocationDetail() {
                                       type="number"
                                       step="0.01"
                                       min="0"
-                                      value={editFormData.debrisPricing[debrisType]?.price ?? ""}
+                                      value={
+                                        editFormData.debrisPricing[debrisType]
+                                          ?.price ?? ""
+                                      }
                                       onChange={(e) =>
-                                        handleDebrisPricingChange(debrisType, "price", e.target.value)
+                                        handleDebrisPricingChange(
+                                          debrisType,
+                                          "price",
+                                          e.target.value,
+                                        )
                                       }
                                       placeholder="0.00"
                                     />
                                   </div>
                                   <div>
-                                    <Label htmlFor={`priceDetails-${debrisType}`} className="text-sm">
+                                    <Label
+                                      htmlFor={`priceDetails-${debrisType}`}
+                                      className="text-sm"
+                                    >
                                       Price Details
                                     </Label>
                                     <Input
                                       id={`priceDetails-${debrisType}`}
-                                      value={editFormData.debrisPricing[debrisType]?.priceDetails ?? ""}
+                                      value={
+                                        editFormData.debrisPricing[debrisType]
+                                          ?.priceDetails ?? ""
+                                      }
                                       onChange={(e) =>
-                                        handleDebrisPricingChange(debrisType, "priceDetails", e.target.value)
+                                        handleDebrisPricingChange(
+                                          debrisType,
+                                          "priceDetails",
+                                          e.target.value,
+                                        )
                                       }
                                       placeholder="per ton, minimum, etc."
                                     />
@@ -971,8 +1084,8 @@ export default function LocationDetail() {
                       <div className="mt-4 p-3 bg-muted/50 rounded-lg">
                         <p className="text-sm text-muted-foreground mb-2">
                           * Prices may vary based on quantity and material
-                          condition. Contact facility for current rates and minimum
-                          requirements.
+                          condition. Contact facility for current rates and
+                          minimum requirements.
                         </p>
                         <p className="text-xs text-muted-foreground">
                           Price table last updated:{" "}
@@ -997,11 +1110,19 @@ export default function LocationDetail() {
                     <>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {paymentOptions.map((option) => (
-                          <div key={option} className="flex items-center space-x-2">
+                          <div
+                            key={option}
+                            className="flex items-center space-x-2"
+                          >
                             <Checkbox
-                              checked={editFormData.paymentTypes.includes(option)}
+                              checked={editFormData.paymentTypes.includes(
+                                option,
+                              )}
                               onCheckedChange={(checked) =>
-                                handlePaymentTypeChange(option, checked as boolean)
+                                handlePaymentTypeChange(
+                                  option,
+                                  checked as boolean,
+                                )
                               }
                             />
                             <Label className="text-sm">{option}</Label>
@@ -1009,11 +1130,18 @@ export default function LocationDetail() {
                         ))}
                       </div>
                       <div>
-                        <Label htmlFor="edit-additionalPaymentDetails">Additional Payment Details</Label>
+                        <Label htmlFor="edit-additionalPaymentDetails">
+                          Additional Payment Details
+                        </Label>
                         <Textarea
                           id="edit-additionalPaymentDetails"
                           value={editFormData.additionalPaymentDetails}
-                          onChange={(e) => handleFormChange("additionalPaymentDetails", e.target.value)}
+                          onChange={(e) =>
+                            handleFormChange(
+                              "additionalPaymentDetails",
+                              e.target.value,
+                            )
+                          }
                           placeholder="Any additional payment information..."
                           rows={3}
                         />
@@ -1030,7 +1158,8 @@ export default function LocationDetail() {
                       </div>
                       {location.additionalPaymentDetails && (
                         <div className="text-sm text-muted-foreground border-t pt-3">
-                          <strong>Additional Payment Details:</strong> {location.additionalPaymentDetails}
+                          <strong>Additional Payment Details:</strong>{" "}
+                          {location.additionalPaymentDetails}
                         </div>
                       )}
                     </>
@@ -1047,11 +1176,15 @@ export default function LocationDetail() {
                   <CardContent>
                     {isEditMode ? (
                       <div>
-                        <Label htmlFor="edit-notes">Additional Information</Label>
+                        <Label htmlFor="edit-notes">
+                          Additional Information
+                        </Label>
                         <Textarea
                           id="edit-notes"
                           value={editFormData.notes}
-                          onChange={(e) => handleFormChange("notes", e.target.value)}
+                          onChange={(e) =>
+                            handleFormChange("notes", e.target.value)
+                          }
                           placeholder="Any additional information about the facility, directions, restrictions, etc."
                           rows={4}
                         />
@@ -1131,7 +1264,12 @@ export default function LocationDetail() {
                         Connect with waste management professionals.
                       </p>
                       <Button
-                        onClick={() => window.open("https://facebook.com/groups/wastefindergroup", "_blank")}
+                        onClick={() =>
+                          window.open(
+                            "https://facebook.com/groups/wastefindergroup",
+                            "_blank",
+                          )
+                        }
                         className="bg-blue-600 hover:bg-blue-700 text-white"
                         size="sm"
                       >
@@ -1192,7 +1330,9 @@ export default function LocationDetail() {
                 <CardContent className="space-y-4">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Location ID:</span>
-                    <span className="font-mono text-sm">{getLocationIdNumber(location.id)}</span>
+                    <span className="font-mono text-sm">
+                      {getLocationIdNumber(location.id)}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Type:</span>
@@ -1242,7 +1382,9 @@ export default function LocationDetail() {
                   size="lg"
                 />
                 <span className="text-sm text-muted-foreground">
-                  {reviewRating > 0 ? `${reviewRating} star${reviewRating > 1 ? 's' : ''}` : 'Click to rate'}
+                  {reviewRating > 0
+                    ? `${reviewRating} star${reviewRating > 1 ? "s" : ""}`
+                    : "Click to rate"}
                 </span>
               </div>
             </div>

@@ -66,15 +66,20 @@ const fetchLocations = async (query?: string): Promise<Location[]> => {
         // Filter by search query if provided
         if (query && Array.isArray(locations)) {
           const searchTerm = query.toLowerCase();
-          locations = locations.filter((location: Location) =>
-            location.name.toLowerCase().includes(searchTerm) ||
-            location.address.toLowerCase().includes(searchTerm) ||
-            location.city.toLowerCase().includes(searchTerm) ||
-            location.zipCode.includes(searchTerm)
+          locations = locations.filter(
+            (location: Location) =>
+              location.name.toLowerCase().includes(searchTerm) ||
+              location.address.toLowerCase().includes(searchTerm) ||
+              location.city.toLowerCase().includes(searchTerm) ||
+              location.zipCode.includes(searchTerm),
           );
         }
 
-        console.log("Loaded locations from localStorage:", locations.length, "locations");
+        console.log(
+          "Loaded locations from localStorage:",
+          locations.length,
+          "locations",
+        );
         return Array.isArray(locations) ? locations : [];
       }
     } catch (localStorageError) {
@@ -205,8 +210,6 @@ export default function AllLocations() {
       <Header />
 
       <div className="flex-1">
-
-
         <div className="max-w-7xl mx-auto px-4 py-8">
           {/* Header */}
           <div className="mb-8">
@@ -217,7 +220,8 @@ export default function AllLocations() {
               <div className="flex items-center gap-2 text-muted-foreground mb-2">
                 <MapPin className="w-4 h-4" />
                 <span>
-                  Within {searchLocation.radius} miles of {searchLocation.zipCode}
+                  Within {searchLocation.radius} miles of{" "}
+                  {searchLocation.zipCode}
                 </span>
               </div>
             )}
@@ -251,7 +255,9 @@ export default function AllLocations() {
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
                           className="pl-10"
-                          onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+                          onKeyPress={(e) =>
+                            e.key === "Enter" && handleSearch()
+                          }
                         />
                       </div>
                       <Button
@@ -267,7 +273,9 @@ export default function AllLocations() {
                     <div>
                       <div className="flex items-center gap-2 mb-2">
                         <Filter className="w-4 h-4 text-muted-foreground" />
-                        <span className="text-sm font-medium">Filter by Type</span>
+                        <span className="text-sm font-medium">
+                          Filter by Type
+                        </span>
                       </div>
                       <Select value={filterBy} onValueChange={setFilterBy}>
                         <SelectTrigger>
@@ -309,7 +317,6 @@ export default function AllLocations() {
 
             {/* Results - Right Side */}
             <div className="lg:col-span-3">
-
               {/* Error State */}
               {error.hasError && (
                 <Card className="mb-8 border-destructive">

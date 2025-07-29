@@ -1,13 +1,25 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Textarea } from "../components/ui/textarea";
 import { Checkbox } from "../components/ui/checkbox";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../components/ui/select";
 import { Alert, AlertDescription } from "../components/ui/alert";
 import { Badge } from "../components/ui/badge";
 import {
@@ -22,12 +34,16 @@ import {
   Plus,
   Info,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
 } from "lucide-react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useToastNotifications } from "../hooks/use-toast-notifications";
-import { validatePhoneNumber, formatPhoneNumber, validateAndFormatUrl } from "../lib/utils";
+import {
+  validatePhoneNumber,
+  formatPhoneNumber,
+  validateAndFormatUrl,
+} from "../lib/utils";
 import { sanitizeInput, validateEmail, validateUrl } from "../lib/security";
 
 // Form data interface matching AddLocation
@@ -47,7 +63,7 @@ interface SuggestLocationFormData {
   paymentTypes: string[];
   additionalPaymentDetails?: string;
   debrisTypes: string[];
-  debrisPricing: Record<string, { price?: number; priceDetails?: string; }>;
+  debrisPricing: Record<string, { price?: number; priceDetails?: string }>;
   debrisAdditionalDetails?: string;
   additionalDebrisPricingDetails?: string;
   operatingHours: OperatingHour[];
@@ -130,17 +146,27 @@ const DEBRIS_TYPES = [
   "Asphalt",
   "Metal",
   "Hazardous Materials",
-  "Fluorescent Bulbs"
+  "Fluorescent Bulbs",
 ];
 
 const LOCATION_TYPES = [
   { value: "landfill", label: "Landfill", icon: Trash2 },
   { value: "transfer_station", label: "Transfer Station", icon: Building2 },
-  { value: "construction_landfill", label: "Construction Landfill", icon: HardHat },
+  {
+    value: "construction_landfill",
+    label: "Construction Landfill",
+    icon: HardHat,
+  },
 ];
 
 const DAYS_OF_WEEK = [
-  "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
 ];
 
 export default function SuggestLocation() {
@@ -190,8 +216,6 @@ export default function SuggestLocation() {
 
   const watchedValues = watch();
 
-
-
   const onSubmit = async (data: SuggestLocationFormData) => {
     // Sanitize all inputs
     const sanitizedData = {
@@ -204,11 +228,17 @@ export default function SuggestLocation() {
       phone: sanitizeInput(data.phone, 20),
       email: data.email ? sanitizeInput(data.email, 254) : "",
       website: data.website ? sanitizeInput(data.website, 500) : "",
-      googleBusinessUrl: data.googleBusinessUrl ? sanitizeInput(data.googleBusinessUrl, 500) : "",
-      additionalLocationDetails: data.additionalLocationDetails ? sanitizeInput(data.additionalLocationDetails, 1000) : "",
+      googleBusinessUrl: data.googleBusinessUrl
+        ? sanitizeInput(data.googleBusinessUrl, 500)
+        : "",
+      additionalLocationDetails: data.additionalLocationDetails
+        ? sanitizeInput(data.additionalLocationDetails, 1000)
+        : "",
       submitterName: sanitizeInput(data.submitterName, 100),
       submitterEmail: sanitizeInput(data.submitterEmail, 254),
-      submitterPhone: data.submitterPhone ? sanitizeInput(data.submitterPhone, 20) : "",
+      submitterPhone: data.submitterPhone
+        ? sanitizeInput(data.submitterPhone, 20)
+        : "",
     };
 
     // Validate email formats
@@ -238,10 +268,12 @@ export default function SuggestLocation() {
 
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
       // Save to localStorage for admin review
-      const existingSuggestions = JSON.parse(localStorage.getItem("pendingSuggestions") || "[]");
+      const existingSuggestions = JSON.parse(
+        localStorage.getItem("pendingSuggestions") || "[]",
+      );
       const newSuggestion = {
         id: Date.now().toString(),
         ...sanitizedData,
@@ -249,16 +281,20 @@ export default function SuggestLocation() {
         submittedAt: new Date().toISOString(),
       };
 
-      localStorage.setItem("pendingSuggestions", JSON.stringify([...existingSuggestions, newSuggestion]));
+      localStorage.setItem(
+        "pendingSuggestions",
+        JSON.stringify([...existingSuggestions, newSuggestion]),
+      );
 
       setShowSuccessAlert(true);
-      showSuccess("Location suggestion submitted successfully! We'll review it and add it to our database.");
+      showSuccess(
+        "Location suggestion submitted successfully! We'll review it and add it to our database.",
+      );
 
       // Reset form or redirect after success
       setTimeout(() => {
         navigate("/all-locations");
       }, 2000);
-
     } catch (error) {
       showError("Failed to submit suggestion. Please try again.");
     } finally {
@@ -269,13 +305,16 @@ export default function SuggestLocation() {
   const handleArrayFieldChange = (
     fieldName: "paymentTypes" | "debrisTypes",
     value: string,
-    checked: boolean
+    checked: boolean,
   ) => {
     const currentValues = watchedValues[fieldName] || [];
     if (checked) {
       setValue(fieldName, [...currentValues, value]);
     } else {
-      setValue(fieldName, currentValues.filter((item) => item !== value));
+      setValue(
+        fieldName,
+        currentValues.filter((item) => item !== value),
+      );
 
       // Clear pricing data if debris type is unchecked
       if (fieldName === "debrisTypes") {
@@ -292,7 +331,11 @@ export default function SuggestLocation() {
     }
   };
 
-  const updateDebrisPricing = (debrisType: string, field: "price" | "priceDetails", value: string | number) => {
+  const updateDebrisPricing = (
+    debrisType: string,
+    field: "price" | "priceDetails",
+    value: string | number,
+  ) => {
     const currentPricing = watchedValues.debrisPricing || {};
     const currentDebrisData = currentPricing[debrisType] || {};
 
@@ -300,12 +343,21 @@ export default function SuggestLocation() {
       ...currentPricing,
       [debrisType]: {
         ...currentDebrisData,
-        [field]: field === "price" ? (value === "" ? undefined : Number(value)) : value,
+        [field]:
+          field === "price"
+            ? value === ""
+              ? undefined
+              : Number(value)
+            : value,
       },
     });
   };
 
-  const updateOperatingHours = (dayIndex: number, field: "openTime" | "closeTime" | "isClosed", value: string | boolean) => {
+  const updateOperatingHours = (
+    dayIndex: number,
+    field: "openTime" | "closeTime" | "isClosed",
+    value: string | boolean,
+  ) => {
     const currentHours = [...watchedValues.operatingHours];
     currentHours[dayIndex] = {
       ...currentHours[dayIndex],
@@ -325,7 +377,8 @@ export default function SuggestLocation() {
             <div>
               <h1 className="text-3xl font-bold">Suggest a Location</h1>
               <p className="text-muted-foreground mt-2">
-                Help us expand our database by suggesting a waste disposal location
+                Help us expand our database by suggesting a waste disposal
+                location
               </p>
             </div>
           </div>
@@ -334,7 +387,8 @@ export default function SuggestLocation() {
             <Alert className="mb-6 border-green-200 bg-green-50">
               <CheckCircle className="h-4 w-4 text-green-600" />
               <AlertDescription className="text-green-800">
-                Thank you for your suggestion! We'll review it and add it to our database if approved.
+                Thank you for your suggestion! We'll review it and add it to our
+                database if approved.
               </AlertDescription>
             </Alert>
           )}
@@ -474,7 +528,9 @@ export default function SuggestLocation() {
                     <Label htmlFor="locationType">Facility Type *</Label>
                     <Select
                       value={watchedValues.locationType}
-                      onValueChange={(value) => setValue("locationType", value as any)}
+                      onValueChange={(value) =>
+                        setValue("locationType", value as any)
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -531,7 +587,9 @@ export default function SuggestLocation() {
                   </div>
 
                   <div className="md:col-span-2">
-                    <Label htmlFor="googleBusinessUrl">Google Business Profile URL</Label>
+                    <Label htmlFor="googleBusinessUrl">
+                      Google Business Profile URL
+                    </Label>
                     <Input
                       id="googleBusinessUrl"
                       {...register("googleBusinessUrl")}
@@ -566,7 +624,7 @@ export default function SuggestLocation() {
                           handleArrayFieldChange(
                             "paymentTypes",
                             payment,
-                            checked as boolean
+                            checked as boolean,
                           )
                         }
                       />
@@ -577,17 +635,20 @@ export default function SuggestLocation() {
                   ))}
                 </div>
 
-                {watchedValues.paymentTypes && watchedValues.paymentTypes.length > 0 && (
-                  <div>
-                    <Label htmlFor="additionalPaymentDetails">Additional Payment Details</Label>
-                    <Textarea
-                      id="additionalPaymentDetails"
-                      placeholder="Special payment requirements, credit terms, deposits..."
-                      rows={2}
-                      {...register("additionalPaymentDetails")}
-                    />
-                  </div>
-                )}
+                {watchedValues.paymentTypes &&
+                  watchedValues.paymentTypes.length > 0 && (
+                    <div>
+                      <Label htmlFor="additionalPaymentDetails">
+                        Additional Payment Details
+                      </Label>
+                      <Textarea
+                        id="additionalPaymentDetails"
+                        placeholder="Special payment requirements, credit terms, deposits..."
+                        rows={2}
+                        {...register("additionalPaymentDetails")}
+                      />
+                    </div>
+                  )}
               </CardContent>
             </Card>
 
@@ -599,7 +660,8 @@ export default function SuggestLocation() {
                   Accepted Debris Types & Pricing
                 </CardTitle>
                 <CardDescription>
-                  Select the types of waste this location accepts (pricing optional)
+                  Select the types of waste this location accepts (pricing
+                  optional)
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -619,7 +681,7 @@ export default function SuggestLocation() {
                             handleArrayFieldChange(
                               "debrisTypes",
                               debris,
-                              checked as boolean
+                              checked as boolean,
                             );
                           }}
                         />
@@ -643,10 +705,15 @@ export default function SuggestLocation() {
                                 placeholder="0.00"
                                 className="pl-7"
                                 value={
-                                  watchedValues.debrisPricing?.[debris]?.price || ""
+                                  watchedValues.debrisPricing?.[debris]
+                                    ?.price || ""
                                 }
                                 onChange={(e) =>
-                                  updateDebrisPricing(debris, "price", e.target.value)
+                                  updateDebrisPricing(
+                                    debris,
+                                    "price",
+                                    e.target.value,
+                                  )
                                 }
                               />
                             </div>
@@ -656,10 +723,15 @@ export default function SuggestLocation() {
                             <Input
                               placeholder="per ton, per load, etc."
                               value={
-                                watchedValues.debrisPricing?.[debris]?.priceDetails || ""
+                                watchedValues.debrisPricing?.[debris]
+                                  ?.priceDetails || ""
                               }
                               onChange={(e) =>
-                                updateDebrisPricing(debris, "priceDetails", e.target.value)
+                                updateDebrisPricing(
+                                  debris,
+                                  "priceDetails",
+                                  e.target.value,
+                                )
                               }
                             />
                           </div>
@@ -669,31 +741,38 @@ export default function SuggestLocation() {
                   ))}
                 </div>
 
-                {watchedValues.debrisTypes && watchedValues.debrisTypes.length > 0 && (
-                  <div className="mt-6 space-y-4">
-                    <div>
-                      <Label htmlFor="debrisAdditionalDetails">General Requirements & Restrictions</Label>
-                      <Textarea
-                        placeholder="General requirements, restrictions, preparation instructions for debris types..."
-                        rows={3}
-                        {...register("debrisAdditionalDetails")}
-                      />
-                    </div>
+                {watchedValues.debrisTypes &&
+                  watchedValues.debrisTypes.length > 0 && (
+                    <div className="mt-6 space-y-4">
+                      <div>
+                        <Label htmlFor="debrisAdditionalDetails">
+                          General Requirements & Restrictions
+                        </Label>
+                        <Textarea
+                          placeholder="General requirements, restrictions, preparation instructions for debris types..."
+                          rows={3}
+                          {...register("debrisAdditionalDetails")}
+                        />
+                      </div>
 
-                    <div>
-                      <Label htmlFor="additionalDebrisPricingDetails">Additional Debris Type Pricing Details</Label>
-                      <Textarea
-                        id="additionalDebrisPricingDetails"
-                        placeholder="Special pricing information, volume discounts, seasonal rates, or other pricing details that apply to debris disposal..."
-                        rows={3}
-                        {...register("additionalDebrisPricingDetails")}
-                      />
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Include any special pricing arrangements, bulk discounts, seasonal variations, or additional fees that customers should know about.
-                      </p>
+                      <div>
+                        <Label htmlFor="additionalDebrisPricingDetails">
+                          Additional Debris Type Pricing Details
+                        </Label>
+                        <Textarea
+                          id="additionalDebrisPricingDetails"
+                          placeholder="Special pricing information, volume discounts, seasonal rates, or other pricing details that apply to debris disposal..."
+                          rows={3}
+                          {...register("additionalDebrisPricingDetails")}
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Include any special pricing arrangements, bulk
+                          discounts, seasonal variations, or additional fees
+                          that customers should know about.
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
               </CardContent>
             </Card>
 
@@ -717,7 +796,9 @@ export default function SuggestLocation() {
                       </div>
                       <div className="flex items-center space-x-2">
                         <Checkbox
-                          checked={!watchedValues.operatingHours[index]?.isClosed}
+                          checked={
+                            !watchedValues.operatingHours[index]?.isClosed
+                          }
                           onCheckedChange={(checked) =>
                             updateOperatingHours(index, "isClosed", !checked)
                           }
@@ -728,25 +809,41 @@ export default function SuggestLocation() {
                         <>
                           <Input
                             type="time"
-                            value={watchedValues.operatingHours[index]?.openTime || "08:00"}
+                            value={
+                              watchedValues.operatingHours[index]?.openTime ||
+                              "08:00"
+                            }
                             onChange={(e) =>
-                              updateOperatingHours(index, "openTime", e.target.value)
+                              updateOperatingHours(
+                                index,
+                                "openTime",
+                                e.target.value,
+                              )
                             }
                             className="w-32"
                           />
                           <span className="text-muted-foreground">to</span>
                           <Input
                             type="time"
-                            value={watchedValues.operatingHours[index]?.closeTime || "17:00"}
+                            value={
+                              watchedValues.operatingHours[index]?.closeTime ||
+                              "17:00"
+                            }
                             onChange={(e) =>
-                              updateOperatingHours(index, "closeTime", e.target.value)
+                              updateOperatingHours(
+                                index,
+                                "closeTime",
+                                e.target.value,
+                              )
                             }
                             className="w-32"
                           />
                         </>
                       )}
                       {watchedValues.operatingHours[index]?.isClosed && (
-                        <span className="text-muted-foreground text-sm">Closed</span>
+                        <span className="text-muted-foreground text-sm">
+                          Closed
+                        </span>
                       )}
                     </div>
                   ))}
@@ -762,7 +859,8 @@ export default function SuggestLocation() {
                   Your Information
                 </CardTitle>
                 <CardDescription>
-                  We need your contact information in case we have questions about this suggestion
+                  We need your contact information in case we have questions
+                  about this suggestion
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -807,7 +905,9 @@ export default function SuggestLocation() {
                   </div>
 
                   <div>
-                    <Label htmlFor="submitterPhone">Your Phone (Optional)</Label>
+                    <Label htmlFor="submitterPhone">
+                      Your Phone (Optional)
+                    </Label>
                     <Input
                       id="submitterPhone"
                       {...register("submitterPhone")}
@@ -838,11 +938,7 @@ export default function SuggestLocation() {
               >
                 Cancel
               </Button>
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className="flex-1"
-              >
+              <Button type="submit" disabled={isSubmitting} className="flex-1">
                 {isSubmitting ? "Submitting..." : "Submit Suggestion"}
               </Button>
             </div>

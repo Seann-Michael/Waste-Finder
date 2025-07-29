@@ -132,8 +132,12 @@ export default function Marketing() {
     }
   };
 
-  const updateAdConfig = (placement: string, field: keyof AdConfig, value: any) => {
-    setAdConfigs(prev => ({
+  const updateAdConfig = (
+    placement: string,
+    field: keyof AdConfig,
+    value: any,
+  ) => {
+    setAdConfigs((prev) => ({
       ...prev,
       [placement]: {
         ...prev[placement],
@@ -169,7 +173,9 @@ export default function Marketing() {
 
     switch (adType) {
       case "adsense":
-        return code.includes("data-ad-client") || code.includes("google_ad_client");
+        return (
+          code.includes("data-ad-client") || code.includes("google_ad_client")
+        );
       case "html":
         return true; // Allow any HTML
       default:
@@ -226,7 +232,11 @@ export default function Marketing() {
                 <div>
                   <p className="text-sm text-muted-foreground">Active Ads</p>
                   <p className="text-2xl font-bold">
-                    {Object.values(adConfigs).filter(config => config.enabled && isAdConfigValid(config)).length}
+                    {
+                      Object.values(adConfigs).filter(
+                        (config) => config.enabled && isAdConfigValid(config),
+                      ).length
+                    }
                   </p>
                 </div>
               </div>
@@ -241,7 +251,9 @@ export default function Marketing() {
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Placements</p>
-                  <p className="text-2xl font-bold">{Object.keys(adConfigs).length}</p>
+                  <p className="text-2xl font-bold">
+                    {Object.keys(adConfigs).length}
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -256,7 +268,11 @@ export default function Marketing() {
                 <div>
                   <p className="text-sm text-muted-foreground">Total Codes</p>
                   <p className="text-2xl font-bold">
-                    {Object.values(adConfigs).filter(config => isAdConfigValid(config)).length}
+                    {
+                      Object.values(adConfigs).filter((config) =>
+                        isAdConfigValid(config),
+                      ).length
+                    }
                   </p>
                 </div>
               </div>
@@ -287,7 +303,9 @@ export default function Marketing() {
                     </Badge>
                     <Switch
                       checked={config.enabled}
-                      onCheckedChange={(checked) => updateAdConfig(placement, "enabled", checked)}
+                      onCheckedChange={(checked) =>
+                        updateAdConfig(placement, "enabled", checked)
+                      }
                     />
                   </div>
                 </CardTitle>
@@ -297,7 +315,13 @@ export default function Marketing() {
                   <Label htmlFor={`${placement}-adtype`}>Ad Type</Label>
                   <Select
                     value={config.adType}
-                    onValueChange={(value) => updateAdConfig(placement, "adType", value as "adsense" | "image" | "html")}
+                    onValueChange={(value) =>
+                      updateAdConfig(
+                        placement,
+                        "adType",
+                        value as "adsense" | "image" | "html",
+                      )
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select ad type" />
@@ -318,10 +342,15 @@ export default function Marketing() {
                         id={`${placement}-code`}
                         placeholder="Paste your Google AdSense code here..."
                         value={config.code}
-                        onChange={(e) => updateAdConfig(placement, "code", e.target.value)}
+                        onChange={(e) =>
+                          updateAdConfig(placement, "code", e.target.value)
+                        }
                         rows={6}
                         className={`font-mono text-sm ${
-                          config.code && !validateAdCode(config.code, config.adType) ? "border-red-500" : ""
+                          config.code &&
+                          !validateAdCode(config.code, config.adType)
+                            ? "border-red-500"
+                            : ""
                         }`}
                       />
                       {config.code && (
@@ -335,35 +364,45 @@ export default function Marketing() {
                         </Button>
                       )}
                     </div>
-                    {config.code && !validateAdCode(config.code, config.adType) && (
-                      <Alert className="mt-2">
-                        <AlertCircle className="h-4 w-4" />
-                        <AlertDescription>
-                          This doesn't appear to be a valid AdSense code. Please check the format.
-                        </AlertDescription>
-                      </Alert>
-                    )}
+                    {config.code &&
+                      !validateAdCode(config.code, config.adType) && (
+                        <Alert className="mt-2">
+                          <AlertCircle className="h-4 w-4" />
+                          <AlertDescription>
+                            This doesn't appear to be a valid AdSense code.
+                            Please check the format.
+                          </AlertDescription>
+                        </Alert>
+                      )}
                   </div>
                 )}
 
                 {config.adType === "image" && (
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor={`${placement}-image-url`}>Image URL</Label>
+                      <Label htmlFor={`${placement}-image-url`}>
+                        Image URL
+                      </Label>
                       <Input
                         id={`${placement}-image-url`}
                         placeholder="https://example.com/banner.jpg"
                         value={config.imageUrl || ""}
-                        onChange={(e) => updateAdConfig(placement, "imageUrl", e.target.value)}
+                        onChange={(e) =>
+                          updateAdConfig(placement, "imageUrl", e.target.value)
+                        }
                       />
                     </div>
                     <div>
-                      <Label htmlFor={`${placement}-link-url`}>Link URL (Optional)</Label>
+                      <Label htmlFor={`${placement}-link-url`}>
+                        Link URL (Optional)
+                      </Label>
                       <Input
                         id={`${placement}-link-url`}
                         placeholder="https://example.com/landing-page"
                         value={config.linkUrl || ""}
-                        onChange={(e) => updateAdConfig(placement, "linkUrl", e.target.value)}
+                        onChange={(e) =>
+                          updateAdConfig(placement, "linkUrl", e.target.value)
+                        }
                       />
                     </div>
                     <div>
@@ -372,7 +411,9 @@ export default function Marketing() {
                         id={`${placement}-alt-text`}
                         placeholder="Advertisement description"
                         value={config.altText || ""}
-                        onChange={(e) => updateAdConfig(placement, "altText", e.target.value)}
+                        onChange={(e) =>
+                          updateAdConfig(placement, "altText", e.target.value)
+                        }
                       />
                     </div>
                   </div>
@@ -380,13 +421,17 @@ export default function Marketing() {
 
                 {config.adType === "html" && (
                   <div>
-                    <Label htmlFor={`${placement}-html-code`}>Custom HTML Code</Label>
+                    <Label htmlFor={`${placement}-html-code`}>
+                      Custom HTML Code
+                    </Label>
                     <div className="relative mt-1">
                       <Textarea
                         id={`${placement}-html-code`}
                         placeholder="Paste your custom HTML/JS code here..."
                         value={config.code}
-                        onChange={(e) => updateAdConfig(placement, "code", e.target.value)}
+                        onChange={(e) =>
+                          updateAdConfig(placement, "code", e.target.value)
+                        }
                         rows={6}
                         className="font-mono text-sm"
                       />
@@ -406,7 +451,9 @@ export default function Marketing() {
 
                 {/* Desktop/Mobile Specific Settings */}
                 <div className="space-y-4 pt-4 border-t">
-                  <h4 className="font-medium text-sm">Device-Specific Settings</h4>
+                  <h4 className="font-medium text-sm">
+                    Device-Specific Settings
+                  </h4>
 
                   {/* Desktop Settings */}
                   <div className="space-y-3">
@@ -418,7 +465,10 @@ export default function Marketing() {
                       <Switch
                         checked={config.desktop.enabled}
                         onCheckedChange={(checked) =>
-                          updateAdConfig(placement, "desktop", { ...config.desktop, enabled: checked })
+                          updateAdConfig(placement, "desktop", {
+                            ...config.desktop,
+                            enabled: checked,
+                          })
                         }
                       />
                     </div>
@@ -427,12 +477,18 @@ export default function Marketing() {
                       <div className="ml-6 space-y-2">
                         {config.adType === "adsense" && (
                           <div>
-                            <Label className="text-xs">Desktop AdSense Code (Optional - uses main if empty)</Label>
+                            <Label className="text-xs">
+                              Desktop AdSense Code (Optional - uses main if
+                              empty)
+                            </Label>
                             <Textarea
                               placeholder="Desktop-specific AdSense code..."
                               value={config.desktop.code || ""}
                               onChange={(e) =>
-                                updateAdConfig(placement, "desktop", { ...config.desktop, code: e.target.value })
+                                updateAdConfig(placement, "desktop", {
+                                  ...config.desktop,
+                                  code: e.target.value,
+                                })
                               }
                               rows={3}
                               className="font-mono text-sm"
@@ -442,12 +498,17 @@ export default function Marketing() {
                         {config.adType === "image" && (
                           <div className="space-y-2">
                             <div>
-                              <Label className="text-xs">Desktop Image URL</Label>
+                              <Label className="text-xs">
+                                Desktop Image URL
+                              </Label>
                               <Input
                                 placeholder="Desktop banner image URL..."
                                 value={config.desktop.imageUrl || ""}
                                 onChange={(e) =>
-                                  updateAdConfig(placement, "desktop", { ...config.desktop, imageUrl: e.target.value })
+                                  updateAdConfig(placement, "desktop", {
+                                    ...config.desktop,
+                                    imageUrl: e.target.value,
+                                  })
                                 }
                               />
                             </div>
@@ -467,7 +528,10 @@ export default function Marketing() {
                       <Switch
                         checked={config.mobile.enabled}
                         onCheckedChange={(checked) =>
-                          updateAdConfig(placement, "mobile", { ...config.mobile, enabled: checked })
+                          updateAdConfig(placement, "mobile", {
+                            ...config.mobile,
+                            enabled: checked,
+                          })
                         }
                       />
                     </div>
@@ -476,12 +540,18 @@ export default function Marketing() {
                       <div className="ml-6 space-y-2">
                         {config.adType === "adsense" && (
                           <div>
-                            <Label className="text-xs">Mobile AdSense Code (Optional - uses main if empty)</Label>
+                            <Label className="text-xs">
+                              Mobile AdSense Code (Optional - uses main if
+                              empty)
+                            </Label>
                             <Textarea
                               placeholder="Mobile-specific AdSense code..."
                               value={config.mobile.code || ""}
                               onChange={(e) =>
-                                updateAdConfig(placement, "mobile", { ...config.mobile, code: e.target.value })
+                                updateAdConfig(placement, "mobile", {
+                                  ...config.mobile,
+                                  code: e.target.value,
+                                })
                               }
                               rows={3}
                               className="font-mono text-sm"
@@ -491,12 +561,17 @@ export default function Marketing() {
                         {config.adType === "image" && (
                           <div className="space-y-2">
                             <div>
-                              <Label className="text-xs">Mobile Image URL</Label>
+                              <Label className="text-xs">
+                                Mobile Image URL
+                              </Label>
                               <Input
                                 placeholder="Mobile banner image URL..."
                                 value={config.mobile.imageUrl || ""}
                                 onChange={(e) =>
-                                  updateAdConfig(placement, "mobile", { ...config.mobile, imageUrl: e.target.value })
+                                  updateAdConfig(placement, "mobile", {
+                                    ...config.mobile,
+                                    imageUrl: e.target.value,
+                                  })
                                 }
                               />
                             </div>
@@ -507,14 +582,16 @@ export default function Marketing() {
                   </div>
 
                   {/* Show placeholder info */}
-                  {(config.desktop.enabled || config.mobile.enabled) && !config.code && (
-                    <Alert>
-                      <AlertCircle className="h-4 w-4" />
-                      <AlertDescription className="text-xs">
-                        When enabled without code, ad placeholders will be shown on the site.
-                      </AlertDescription>
-                    </Alert>
-                  )}
+                  {(config.desktop.enabled || config.mobile.enabled) &&
+                    !config.code && (
+                      <Alert>
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertDescription className="text-xs">
+                          When enabled without code, ad placeholders will be
+                          shown on the site.
+                        </AlertDescription>
+                      </Alert>
+                    )}
                 </div>
               </CardContent>
             </Card>
@@ -542,7 +619,9 @@ export default function Marketing() {
                 <h4 className="font-medium">Image Ads:</h4>
                 <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground ml-4">
                   <li>Upload your banner image to a hosting service</li>
-                  <li>Enter the direct image URL (must be publicly accessible)</li>
+                  <li>
+                    Enter the direct image URL (must be publicly accessible)
+                  </li>
                   <li>Add a destination URL where clicks should go</li>
                   <li>Provide descriptive alt text for accessibility</li>
                 </ul>
@@ -551,8 +630,12 @@ export default function Marketing() {
               <div>
                 <h4 className="font-medium">Custom HTML:</h4>
                 <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground ml-4">
-                  <li>Use for other ad networks (Media.net, PropellerAds, etc.)</li>
-                  <li>Paste the HTML/JavaScript code provided by your ad network</li>
+                  <li>
+                    Use for other ad networks (Media.net, PropellerAds, etc.)
+                  </li>
+                  <li>
+                    Paste the HTML/JavaScript code provided by your ad network
+                  </li>
                   <li>Ensure code is from trusted sources only</li>
                 </ul>
               </div>
@@ -561,11 +644,26 @@ export default function Marketing() {
             <div className="space-y-2">
               <h4 className="font-medium">Placement Descriptions:</h4>
               <ul className="space-y-1 text-sm text-muted-foreground ml-4">
-                <li><strong>Homepage Banner:</strong> Displays at the top of the homepage</li>
-                <li><strong>Search Results Content:</strong> Shows in the main content area on search/browse pages</li>
-                <li><strong>Search Results Top Banner:</strong> Horizontal banner at the top of search results page</li>
-                <li><strong>Location Detail Content:</strong> Appears in the main content on individual location pages</li>
-                <li><strong>Location Detail Top Banner:</strong> Horizontal banner at the top of location detail page</li>
+                <li>
+                  <strong>Homepage Banner:</strong> Displays at the top of the
+                  homepage
+                </li>
+                <li>
+                  <strong>Search Results Content:</strong> Shows in the main
+                  content area on search/browse pages
+                </li>
+                <li>
+                  <strong>Search Results Top Banner:</strong> Horizontal banner
+                  at the top of search results page
+                </li>
+                <li>
+                  <strong>Location Detail Content:</strong> Appears in the main
+                  content on individual location pages
+                </li>
+                <li>
+                  <strong>Location Detail Top Banner:</strong> Horizontal banner
+                  at the top of location detail page
+                </li>
               </ul>
             </div>
           </CardContent>

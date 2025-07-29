@@ -1,5 +1,5 @@
-import { queryKeys } from '@/hooks/useApi';
-import { Location } from '@shared/api';
+import { queryKeys } from "@/hooks/useApi";
+import { Location } from "@shared/api";
 
 /**
  * Centralized data store that abstracts localStorage and provides a consistent API
@@ -23,13 +23,17 @@ export interface StoredData {
 }
 
 class DataStore {
-  private cache: Map<string, { data: any; timestamp: number; ttl: number }> = new Map();
+  private cache: Map<string, { data: any; timestamp: number; ttl: number }> =
+    new Map();
   private subscribers: Map<string, Set<(data: any) => void>> = new Map();
 
   /**
    * Get data with caching and change notifications
    */
-  async get<T>(key: keyof StoredData, ttl: number = 5 * 60 * 1000): Promise<T[]> {
+  async get<T>(
+    key: keyof StoredData,
+    ttl: number = 5 * 60 * 1000,
+  ): Promise<T[]> {
     // Check cache first
     const cached = this.cache.get(key);
     if (cached && Date.now() - cached.timestamp < cached.ttl) {
@@ -40,7 +44,7 @@ class DataStore {
     try {
       const stored = localStorage.getItem(key);
       const data = stored ? JSON.parse(stored) : [];
-      
+
       // Update cache
       this.cache.set(key, {
         data,
@@ -62,7 +66,7 @@ class DataStore {
     try {
       // Update localStorage
       localStorage.setItem(key, JSON.stringify(data));
-      
+
       // Update cache
       this.cache.set(key, {
         data,
@@ -90,10 +94,14 @@ class DataStore {
   /**
    * Update item in array by ID
    */
-  async update<T extends { id: string }>(key: keyof StoredData, id: string, updates: Partial<T>): Promise<void> {
+  async update<T extends { id: string }>(
+    key: keyof StoredData,
+    id: string,
+    updates: Partial<T>,
+  ): Promise<void> {
     const data = await this.get<T>(key);
-    const index = data.findIndex(item => item.id === id);
-    
+    const index = data.findIndex((item) => item.id === id);
+
     if (index !== -1) {
       data[index] = { ...data[index], ...updates };
       await this.set(key, data);
@@ -114,9 +122,12 @@ class DataStore {
   /**
    * Find item by ID
    */
-  async findById<T extends { id: string }>(key: keyof StoredData, id: string): Promise<T | null> {
+  async findById<T extends { id: string }>(
+    key: keyof StoredData,
+    id: string,
+  ): Promise<T | null> {
     const data = await this.get<T>(key);
-    return data.find(item => item.id === id) || null;
+    return data.find((item) => item.id === id) || null;
   }
 
   /**
@@ -126,9 +137,9 @@ class DataStore {
     if (!this.subscribers.has(key)) {
       this.subscribers.set(key, new Set());
     }
-    
+
     this.subscribers.get(key)!.add(callback);
-    
+
     // Return unsubscribe function
     return () => {
       this.subscribers.get(key)?.delete(callback);
@@ -203,7 +214,7 @@ class DataStore {
   private notifySubscribers(key: keyof StoredData, data: any): void {
     const callbacks = this.subscribers.get(key);
     if (callbacks) {
-      callbacks.forEach(callback => {
+      callbacks.forEach((callback) => {
         try {
           callback(data);
         } catch (error) {
@@ -222,7 +233,8 @@ class DataStore {
         id: "1",
         title: "Best Practices for Waste Management in 2024",
         slug: "best-practices-waste-management-2024",
-        excerpt: "Learn about the latest trends and best practices in waste management for the new year.",
+        excerpt:
+          "Learn about the latest trends and best practices in waste management for the new year.",
         content: "Content here...",
         author: "Environmental Expert",
         status: "published",
@@ -237,7 +249,8 @@ class DataStore {
         id: "2",
         title: "How to Choose the Right Disposal Facility",
         slug: "choose-right-disposal-facility",
-        excerpt: "A comprehensive guide to selecting the best waste disposal facility for your needs.",
+        excerpt:
+          "A comprehensive guide to selecting the best waste disposal facility for your needs.",
         content: "Content here...",
         author: "Waste Management Pro",
         status: "published",
@@ -301,29 +314,35 @@ dataStore.initializeDefaults();
 
 // Convenience methods for common operations
 export const locations = {
-  getAll: () => dataStore.get<Location>('locations'),
-  getById: (id: string) => dataStore.findById<Location>('locations', id),
-  create: (location: Location) => dataStore.add('locations', location),
-  update: (id: string, updates: Partial<Location>) => dataStore.update('locations', id, updates),
-  delete: (id: string) => dataStore.remove('locations', id),
-  subscribe: (callback: (locations: Location[]) => void) => dataStore.subscribe('locations', callback),
+  getAll: () => dataStore.get<Location>("locations"),
+  getById: (id: string) => dataStore.findById<Location>("locations", id),
+  create: (location: Location) => dataStore.add("locations", location),
+  update: (id: string, updates: Partial<Location>) =>
+    dataStore.update("locations", id, updates),
+  delete: (id: string) => dataStore.remove("locations", id),
+  subscribe: (callback: (locations: Location[]) => void) =>
+    dataStore.subscribe("locations", callback),
 };
 
 export const suggestions = {
-  getAll: () => dataStore.get('pendingSuggestions'),
-  create: (suggestion: any) => dataStore.add('pendingSuggestions', suggestion),
-  update: (id: string, updates: any) => dataStore.update('pendingSuggestions', id, updates),
-  delete: (id: string) => dataStore.remove('pendingSuggestions', id),
-  subscribe: (callback: (suggestions: any[]) => void) => dataStore.subscribe('pendingSuggestions', callback),
+  getAll: () => dataStore.get("pendingSuggestions"),
+  create: (suggestion: any) => dataStore.add("pendingSuggestions", suggestion),
+  update: (id: string, updates: any) =>
+    dataStore.update("pendingSuggestions", id, updates),
+  delete: (id: string) => dataStore.remove("pendingSuggestions", id),
+  subscribe: (callback: (suggestions: any[]) => void) =>
+    dataStore.subscribe("pendingSuggestions", callback),
 };
 
 export const blog = {
-  getPosts: () => dataStore.get('blogPosts'),
-  getCategories: () => dataStore.get('blogCategories'),
-  createPost: (post: any) => dataStore.add('blogPosts', post),
-  updatePost: (id: string, updates: any) => dataStore.update('blogPosts', id, updates),
-  deletePost: (id: string) => dataStore.remove('blogPosts', id),
-  subscribeToPosts: (callback: (posts: any[]) => void) => dataStore.subscribe('blogPosts', callback),
+  getPosts: () => dataStore.get("blogPosts"),
+  getCategories: () => dataStore.get("blogCategories"),
+  createPost: (post: any) => dataStore.add("blogPosts", post),
+  updatePost: (id: string, updates: any) =>
+    dataStore.update("blogPosts", id, updates),
+  deletePost: (id: string) => dataStore.remove("blogPosts", id),
+  subscribeToPosts: (callback: (posts: any[]) => void) =>
+    dataStore.subscribe("blogPosts", callback),
 };
 
 export default dataStore;

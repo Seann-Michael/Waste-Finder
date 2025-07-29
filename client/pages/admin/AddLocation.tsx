@@ -25,8 +25,17 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import AdminLayout from "@/components/admin/AdminLayout";
-import { validatePhoneNumber, formatPhoneNumber, validateAndFormatUrl } from "@/lib/utils";
-import { sanitizeInput, sanitizeHtml, validateEmail, validateUrl } from "@/lib/security";
+import {
+  validatePhoneNumber,
+  formatPhoneNumber,
+  validateAndFormatUrl,
+} from "@/lib/utils";
+import {
+  sanitizeInput,
+  sanitizeHtml,
+  validateEmail,
+  validateUrl,
+} from "@/lib/security";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -78,7 +87,7 @@ interface LocationFormData {
   paymentTypes: string[];
   additionalPaymentDetails?: string;
   debrisTypes: string[];
-  debrisPricing: Record<string, { price?: number; priceDetails?: string; }>;
+  debrisPricing: Record<string, { price?: number; priceDetails?: string }>;
   debrisAdditionalDetails?: string;
   additionalDebrisPricingDetails?: string;
   additionalLocationDetails?: string;
@@ -95,12 +104,7 @@ const LOCATION_TYPES = [
   { value: "construction_landfill", label: "Construction Landfill" },
 ] as const;
 
-const PAYMENT_TYPES = [
-  "Cash",
-  "Check",
-  "Credit/Debit",
-  "Net Terms",
-] as const;
+const PAYMENT_TYPES = ["Cash", "Check", "Credit/Debit", "Net Terms"] as const;
 
 const DEBRIS_TYPES = [
   "Municipal Waste",
@@ -223,7 +227,9 @@ export default function AddLocation() {
 
     // If only one is provided, both must be provided
     if ((lat && !lng) || (!lat && lng)) {
-      showError("Both latitude and longitude must be provided if either is entered");
+      showError(
+        "Both latitude and longitude must be provided if either is entered",
+      );
       return false;
     }
 
@@ -266,11 +272,21 @@ export default function AddLocation() {
         phone: sanitizeInput(data.phone, 20),
         email: data.email ? sanitizeInput(data.email, 254) : "",
         website: data.website ? sanitizeInput(data.website, 500) : "",
-        googleBusinessUrl: data.googleBusinessUrl ? sanitizeInput(data.googleBusinessUrl, 500) : "",
-        additionalPaymentDetails: data.additionalPaymentDetails ? sanitizeInput(data.additionalPaymentDetails, 500) : "",
-        debrisAdditionalDetails: data.debrisAdditionalDetails ? sanitizeInput(data.debrisAdditionalDetails, 1000) : "",
-        additionalDebrisPricingDetails: data.additionalDebrisPricingDetails ? sanitizeInput(data.additionalDebrisPricingDetails, 1000) : "",
-        additionalLocationDetails: data.additionalLocationDetails ? sanitizeInput(data.additionalLocationDetails, 1000) : "",
+        googleBusinessUrl: data.googleBusinessUrl
+          ? sanitizeInput(data.googleBusinessUrl, 500)
+          : "",
+        additionalPaymentDetails: data.additionalPaymentDetails
+          ? sanitizeInput(data.additionalPaymentDetails, 500)
+          : "",
+        debrisAdditionalDetails: data.debrisAdditionalDetails
+          ? sanitizeInput(data.debrisAdditionalDetails, 1000)
+          : "",
+        additionalDebrisPricingDetails: data.additionalDebrisPricingDetails
+          ? sanitizeInput(data.additionalDebrisPricingDetails, 1000)
+          : "",
+        additionalLocationDetails: data.additionalLocationDetails
+          ? sanitizeInput(data.additionalLocationDetails, 1000)
+          : "",
       };
 
       // Validate email if provided
@@ -292,7 +308,10 @@ export default function AddLocation() {
       }
 
       // Validate coordinates if provided
-      if ((sanitizedData.latitude || sanitizedData.longitude) && !validateCoordinates(sanitizedData.latitude, sanitizedData.longitude)) {
+      if (
+        (sanitizedData.latitude || sanitizedData.longitude) &&
+        !validateCoordinates(sanitizedData.latitude, sanitizedData.longitude)
+      ) {
         return;
       }
 
@@ -302,14 +321,16 @@ export default function AddLocation() {
         return;
       }
 
-
-
       // Prepare API payload with sanitized data
       const payload = {
         ...sanitizedData,
         facilityType: sanitizedData.locationType, // Map locationType to facilityType for consistency
-        latitude: sanitizedData.latitude ? parseFloat(sanitizedData.latitude) : undefined,
-        longitude: sanitizedData.longitude ? parseFloat(sanitizedData.longitude) : undefined,
+        latitude: sanitizedData.latitude
+          ? parseFloat(sanitizedData.latitude)
+          : undefined,
+        longitude: sanitizedData.longitude
+          ? parseFloat(sanitizedData.longitude)
+          : undefined,
         paymentTypes: sanitizedData.paymentTypes.map((type, index) => ({
           id: (index + 1).toString(),
           name: type,
@@ -321,7 +342,9 @@ export default function AddLocation() {
             id: (index + 1).toString(),
             name: type,
             category: "general", // Default category, could be made configurable
-            price: pricing.pricePerTon ? parseFloat(pricing.pricePerTon.toString()) : undefined,
+            price: pricing.pricePerTon
+              ? parseFloat(pricing.pricePerTon.toString())
+              : undefined,
             priceDetails: pricing.priceNote || "",
           };
         }),
@@ -410,12 +433,17 @@ export default function AddLocation() {
           result = await response.json();
         } catch (jsonError) {
           // If response is not JSON, continue anyway - the location might have been created
-          console.warn("Response was not JSON, but request might have succeeded");
+          console.warn(
+            "Response was not JSON, but request might have succeeded",
+          );
           result = { success: true };
         }
       } catch (error) {
         // If API is not available (404 or network error), save to localStorage
-        if (error instanceof Error && (error.message === "API_NOT_FOUND" || error.name === "TypeError")) {
+        if (
+          error instanceof Error &&
+          (error.message === "API_NOT_FOUND" || error.name === "TypeError")
+        ) {
           console.log("API not available, saving to localStorage...");
 
           // Generate a unique ID for the location
@@ -423,7 +451,9 @@ export default function AddLocation() {
           const locationWithId = { ...payload, id: locationId };
 
           // Get existing locations from localStorage
-          const existingLocations = JSON.parse(localStorage.getItem("locations") || "[]");
+          const existingLocations = JSON.parse(
+            localStorage.getItem("locations") || "[]",
+          );
 
           // Add new location
           existingLocations.push(locationWithId);
@@ -527,7 +557,8 @@ export default function AddLocation() {
                       autoComplete="off"
                     />
                     <div className="text-xs text-muted-foreground mt-1">
-                      Start typing to search Google Places or enter name manually
+                      Start typing to search Google Places or enter name
+                      manually
                     </div>
                   </div>
                   {errors.name && (
@@ -623,7 +654,9 @@ export default function AddLocation() {
                     id="phone"
                     {...register("phone", {
                       required: "Phone number is required",
-                      validate: (value) => validatePhoneNumber(value) || "Please enter a valid phone number (10-15 digits)",
+                      validate: (value) =>
+                        validatePhoneNumber(value) ||
+                        "Please enter a valid phone number (10-15 digits)",
                     })}
                     placeholder="(555) 123-4567 or 5551234567"
                     className={errors.phone ? "border-red-500" : ""}
@@ -666,7 +699,10 @@ export default function AddLocation() {
                       validate: (value) => {
                         if (!value) return true; // Optional field
                         const { isValid } = validateAndFormatUrl(value);
-                        return isValid || "Please enter a valid website URL (with or without http/https)";
+                        return (
+                          isValid ||
+                          "Please enter a valid website URL (with or without http/https)"
+                        );
                       },
                     })}
                     placeholder="https://location.com or location.com"
@@ -798,7 +834,9 @@ export default function AddLocation() {
               </div>
 
               <div>
-                <Label htmlFor="additionalPaymentDetails">Additional Payment Details</Label>
+                <Label htmlFor="additionalPaymentDetails">
+                  Additional Payment Details
+                </Label>
                 <Textarea
                   id="additionalPaymentDetails"
                   {...register("additionalPaymentDetails")}
@@ -828,7 +866,8 @@ export default function AddLocation() {
                             );
                             if (!checked) {
                               // Clear pricing data when unchecked
-                              const currentPricing = watchedValues.debrisPricing || {};
+                              const currentPricing =
+                                watchedValues.debrisPricing || {};
                               delete currentPricing[debris];
                               setValue("debrisPricing", currentPricing);
 
@@ -852,16 +891,24 @@ export default function AddLocation() {
                           <div>
                             <Label className="text-xs">Price (USD)</Label>
                             <div className="relative">
-                              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">$</span>
+                              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
+                                $
+                              </span>
                               <Input
                                 type="number"
                                 step="0.01"
                                 placeholder="34.00"
                                 className="pl-7"
-                                value={watchedValues.debrisPricing?.[debris]?.price || ""}
+                                value={
+                                  watchedValues.debrisPricing?.[debris]
+                                    ?.price || ""
+                                }
                                 onChange={(e) => {
-                                  const currentPricing = watchedValues.debrisPricing || {};
-                                  const value = e.target.value ? parseFloat(e.target.value) : undefined;
+                                  const currentPricing =
+                                    watchedValues.debrisPricing || {};
+                                  const value = e.target.value
+                                    ? parseFloat(e.target.value)
+                                    : undefined;
                                   setValue("debrisPricing", {
                                     ...currentPricing,
                                     [debris]: {
@@ -875,7 +922,8 @@ export default function AddLocation() {
                                   if (e.target.value) {
                                     const value = parseFloat(e.target.value);
                                     if (!isNaN(value)) {
-                                      const currentPricing = watchedValues.debrisPricing || {};
+                                      const currentPricing =
+                                        watchedValues.debrisPricing || {};
                                       setValue("debrisPricing", {
                                         ...currentPricing,
                                         [debris]: {
@@ -891,12 +939,18 @@ export default function AddLocation() {
                           </div>
 
                           <div>
-                            <Label className="text-xs">Price Unit Details</Label>
+                            <Label className="text-xs">
+                              Price Unit Details
+                            </Label>
                             <Input
                               placeholder="per ton, per load, per cubic yard, etc."
-                              value={watchedValues.debrisPricing?.[debris]?.priceDetails || ""}
+                              value={
+                                watchedValues.debrisPricing?.[debris]
+                                  ?.priceDetails || ""
+                              }
                               onChange={(e) => {
-                                const currentPricing = watchedValues.debrisPricing || {};
+                                const currentPricing =
+                                  watchedValues.debrisPricing || {};
                                 setValue("debrisPricing", {
                                   ...currentPricing,
                                   [debris]: {
@@ -913,38 +967,50 @@ export default function AddLocation() {
                   ))}
                 </div>
 
-                {watchedValues.debrisTypes && watchedValues.debrisTypes.length > 0 && (
-                  <div className="mt-6 space-y-4">
-                    <div>
-                      <Label className="text-base font-medium">Additional Debris Information</Label>
-                      <Textarea
-                        placeholder="General requirements, restrictions, preparation instructions for debris types..."
-                        rows={3}
-                        value={watchedValues.debrisAdditionalDetails || ""}
-                        onChange={(e) => {
-                          setValue("debrisAdditionalDetails", e.target.value);
-                        }}
-                        className="mt-2"
-                      />
-                    </div>
+                {watchedValues.debrisTypes &&
+                  watchedValues.debrisTypes.length > 0 && (
+                    <div className="mt-6 space-y-4">
+                      <div>
+                        <Label className="text-base font-medium">
+                          Additional Debris Information
+                        </Label>
+                        <Textarea
+                          placeholder="General requirements, restrictions, preparation instructions for debris types..."
+                          rows={3}
+                          value={watchedValues.debrisAdditionalDetails || ""}
+                          onChange={(e) => {
+                            setValue("debrisAdditionalDetails", e.target.value);
+                          }}
+                          className="mt-2"
+                        />
+                      </div>
 
-                    <div>
-                      <Label className="text-base font-medium">Additional Debris Type Pricing Details</Label>
-                      <Textarea
-                        placeholder="Special pricing information, volume discounts, seasonal rates, or other pricing details that apply to debris disposal..."
-                        rows={3}
-                        value={watchedValues.additionalDebrisPricingDetails || ""}
-                        onChange={(e) => {
-                          setValue("additionalDebrisPricingDetails", e.target.value);
-                        }}
-                        className="mt-2"
-                      />
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Include any special pricing arrangements, bulk discounts, seasonal variations, or additional fees that customers should know about.
-                      </p>
+                      <div>
+                        <Label className="text-base font-medium">
+                          Additional Debris Type Pricing Details
+                        </Label>
+                        <Textarea
+                          placeholder="Special pricing information, volume discounts, seasonal rates, or other pricing details that apply to debris disposal..."
+                          rows={3}
+                          value={
+                            watchedValues.additionalDebrisPricingDetails || ""
+                          }
+                          onChange={(e) => {
+                            setValue(
+                              "additionalDebrisPricingDetails",
+                              e.target.value,
+                            );
+                          }}
+                          className="mt-2"
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Include any special pricing arrangements, bulk
+                          discounts, seasonal variations, or additional fees
+                          that customers should know about.
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
               </div>
             </CardContent>
           </Card>
@@ -959,7 +1025,9 @@ export default function AddLocation() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <Label htmlFor="additionalLocationDetails">Additional Location Details</Label>
+                <Label htmlFor="additionalLocationDetails">
+                  Additional Location Details
+                </Label>
                 <Textarea
                   id="additionalLocationDetails"
                   {...register("additionalLocationDetails")}

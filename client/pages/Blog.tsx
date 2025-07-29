@@ -2,7 +2,12 @@ import React, { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
@@ -13,7 +18,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../components/ui/select";
-import { Search, Calendar, User, Tag, ChevronRight, BookOpen, AlertCircle } from "lucide-react";
+import {
+  Search,
+  Calendar,
+  User,
+  Tag,
+  ChevronRight,
+  BookOpen,
+  AlertCircle,
+} from "lucide-react";
 import { BlogPostSkeleton, ContentSkeleton } from "../components/LoadingStates";
 import { ErrorBoundary } from "../components/ErrorBoundary";
 
@@ -59,15 +72,13 @@ export default function Blog() {
         (post) =>
           post.title.toLowerCase().includes(query) ||
           post.excerpt.toLowerCase().includes(query) ||
-          post.tags.some((tag) =>
-            tag.toLowerCase().includes(query)
-          )
+          post.tags.some((tag) => tag.toLowerCase().includes(query)),
       );
     }
 
     if (selectedCategory !== "all") {
       filtered = filtered.filter((post) =>
-        post.categories.includes(selectedCategory)
+        post.categories.includes(selectedCategory),
       );
     }
 
@@ -110,9 +121,12 @@ export default function Blog() {
           <div className="max-w-7xl mx-auto px-4 py-8">
             <div className="text-center py-16">
               <AlertCircle className="w-12 h-12 text-destructive mx-auto mb-4" />
-              <h2 className="text-2xl font-bold mb-2">Failed to Load Blog Posts</h2>
+              <h2 className="text-2xl font-bold mb-2">
+                Failed to Load Blog Posts
+              </h2>
               <p className="text-muted-foreground mb-4">
-                We're having trouble loading the blog posts. Please try again later.
+                We're having trouble loading the blog posts. Please try again
+                later.
               </p>
               <Button onClick={() => window.location.reload()}>
                 Try Again
@@ -158,7 +172,10 @@ export default function Blog() {
                       className="pl-10"
                     />
                   </div>
-                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <Select
+                    value={selectedCategory}
+                    onValueChange={setSelectedCategory}
+                  >
                     <SelectTrigger className="md:w-48">
                       <SelectValue placeholder="All Categories" />
                     </SelectTrigger>
@@ -177,7 +194,9 @@ export default function Blog() {
                 {filteredPosts.length === 0 ? (
                   <div className="text-center py-16">
                     <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="text-xl font-semibold mb-2">No posts found</h3>
+                    <h3 className="text-xl font-semibold mb-2">
+                      No posts found
+                    </h3>
                     <p className="text-muted-foreground">
                       {searchQuery || selectedCategory !== "all"
                         ? "Try adjusting your search criteria."
@@ -193,17 +212,25 @@ export default function Blog() {
                     </div>
 
                     {/* Featured Post */}
-                    {filteredPosts.some(post => post.featured) && (
+                    {filteredPosts.some((post) => post.featured) && (
                       <div className="mb-12">
-                        <h2 className="text-2xl font-bold mb-6">Featured Article</h2>
-                        <FeaturedBlogCard post={filteredPosts.find(post => post.featured)!} />
+                        <h2 className="text-2xl font-bold mb-6">
+                          Featured Article
+                        </h2>
+                        <FeaturedBlogCard
+                          post={filteredPosts.find((post) => post.featured)!}
+                        />
                       </div>
                     )}
 
                     {/* Blog Posts Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
                       {filteredPosts
-                        .filter(post => !post.featured || filteredPosts.filter(p => p.featured).length > 1)
+                        .filter(
+                          (post) =>
+                            !post.featured ||
+                            filteredPosts.filter((p) => p.featured).length > 1,
+                        )
                         .map((post) => (
                           <BlogPostCard key={post.id} post={post} />
                         ))}
@@ -261,11 +288,12 @@ const BlogPostCard = React.memo<{ post: BlogPost }>(({ post }) => {
       )}
       <CardHeader className="flex-grow">
         <div className="flex items-center gap-2 mb-2">
-          {post.categories && post.categories.map((category) => (
-            <Badge key={category} variant="secondary" className="text-xs">
-              {category}
-            </Badge>
-          ))}
+          {post.categories &&
+            post.categories.map((category) => (
+              <Badge key={category} variant="secondary" className="text-xs">
+                {category}
+              </Badge>
+            ))}
           {post.featured && (
             <Badge variant="default" className="text-xs">
               Featured
@@ -277,10 +305,10 @@ const BlogPostCard = React.memo<{ post: BlogPost }>(({ post }) => {
             to={`/blog/${post.slug}`}
             className="hover:text-primary transition-colors block"
             style={{
-              display: '-webkit-box',
+              display: "-webkit-box",
               WebkitLineClamp: 2,
-              WebkitBoxOrient: 'vertical',
-              overflow: 'hidden',
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
             }}
           >
             {post.title || "Untitled"}
@@ -289,10 +317,10 @@ const BlogPostCard = React.memo<{ post: BlogPost }>(({ post }) => {
         <p
           className="text-muted-foreground text-sm overflow-hidden"
           style={{
-            display: '-webkit-box',
+            display: "-webkit-box",
             WebkitLineClamp: 3,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
           }}
         >
           {post.excerpt || "No excerpt available"}
@@ -321,7 +349,7 @@ const BlogPostCard = React.memo<{ post: BlogPost }>(({ post }) => {
   );
 });
 
-BlogPostCard.displayName = 'BlogPostCard';
+BlogPostCard.displayName = "BlogPostCard";
 
 /**
  * Featured blog post card (larger format)
@@ -353,17 +381,20 @@ const FeaturedBlogCard = React.memo<{ post: BlogPost }>(({ post }) => {
             />
           </div>
         )}
-        <div className={`${post.featuredImage ? 'md:w-1/2' : 'w-full'} p-6 flex flex-col justify-between`}>
+        <div
+          className={`${post.featuredImage ? "md:w-1/2" : "w-full"} p-6 flex flex-col justify-between`}
+        >
           <div>
             <div className="flex items-center gap-2 mb-4">
               <Badge variant="default" className="text-xs">
                 Featured
               </Badge>
-              {post.categories && post.categories.map((category) => (
-                <Badge key={category} variant="secondary" className="text-xs">
-                  {category}
-                </Badge>
-              ))}
+              {post.categories &&
+                post.categories.map((category) => (
+                  <Badge key={category} variant="secondary" className="text-xs">
+                    {category}
+                  </Badge>
+                ))}
             </div>
 
             <h2 className="text-2xl font-bold mb-3 leading-tight">
@@ -406,7 +437,7 @@ const FeaturedBlogCard = React.memo<{ post: BlogPost }>(({ post }) => {
   );
 });
 
-FeaturedBlogCard.displayName = 'FeaturedBlogCard';
+FeaturedBlogCard.displayName = "FeaturedBlogCard";
 
 /**
  * Blog sidebar with categories, recent posts, and tags
@@ -418,7 +449,7 @@ const BlogSidebar = React.memo<{
   onCategoryChange: (category: string) => void;
 }>(({ categories = [], posts = [], selectedCategory, onCategoryChange }) => {
   const recentPosts = posts
-    .filter(post => post && post.status === "published")
+    .filter((post) => post && post.status === "published")
     .sort((a, b) => {
       const dateA = new Date(b.createdAt || 0).getTime();
       const dateB = new Date(a.createdAt || 0).getTime();
@@ -426,7 +457,9 @@ const BlogSidebar = React.memo<{
     })
     .slice(0, 5);
 
-  const allTags = [...new Set(posts.flatMap(post => (post && post.tags) ? post.tags : []))].slice(0, 15);
+  const allTags = [
+    ...new Set(posts.flatMap((post) => (post && post.tags ? post.tags : []))),
+  ].slice(0, 15);
 
   return (
     <div className="space-y-8">
@@ -447,29 +480,38 @@ const BlogSidebar = React.memo<{
           >
             All Posts
           </Button>
-          {categories && categories.length > 0 ? categories.map((category) => {
-            if (!category || !category.id) return null;
+          {categories && categories.length > 0 ? (
+            categories.map((category) => {
+              if (!category || !category.id) return null;
 
-            const postCount = posts.filter(post =>
-              post && post.categories?.includes(category.slug) && post.status === "published"
-            ).length;
+              const postCount = posts.filter(
+                (post) =>
+                  post &&
+                  post.categories?.includes(category.slug) &&
+                  post.status === "published",
+              ).length;
 
-            return (
-              <Button
-                key={category.id}
-                variant={selectedCategory === category.slug ? "default" : "ghost"}
-                size="sm"
-                className="w-full justify-between"
-                onClick={() => onCategoryChange(category.slug)}
-              >
-                <span>{category.name || "Unnamed Category"}</span>
-                <Badge variant="secondary" className="text-xs">
-                  {postCount}
-                </Badge>
-              </Button>
-            );
-          }) : (
-            <p className="text-sm text-muted-foreground">No categories available</p>
+              return (
+                <Button
+                  key={category.id}
+                  variant={
+                    selectedCategory === category.slug ? "default" : "ghost"
+                  }
+                  size="sm"
+                  className="w-full justify-between"
+                  onClick={() => onCategoryChange(category.slug)}
+                >
+                  <span>{category.name || "Unnamed Category"}</span>
+                  <Badge variant="secondary" className="text-xs">
+                    {postCount}
+                  </Badge>
+                </Button>
+              );
+            })
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              No categories available
+            </p>
           )}
         </CardContent>
       </Card>
@@ -483,26 +525,35 @@ const BlogSidebar = React.memo<{
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {recentPosts && recentPosts.length > 0 ? recentPosts.map((post) => {
-            if (!post || !post.id) return null;
+          {recentPosts && recentPosts.length > 0 ? (
+            recentPosts.map((post) => {
+              if (!post || !post.id) return null;
 
-            return (
-              <div key={post.id} className="border-b border-border pb-3 last:border-b-0 last:pb-0">
-                <Link
-                  to={`/blog/${post.slug || '#'}`}
-                  className="block hover:text-primary transition-colors"
+              return (
+                <div
+                  key={post.id}
+                  className="border-b border-border pb-3 last:border-b-0 last:pb-0"
                 >
-                  <h4 className="font-medium text-sm mb-1 leading-tight">
-                    {post.title || "Untitled Post"}
-                  </h4>
-                  <p className="text-xs text-muted-foreground">
-                    {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : "No date"}
-                  </p>
-                </Link>
-              </div>
-            );
-          }) : (
-            <p className="text-sm text-muted-foreground">No recent posts available</p>
+                  <Link
+                    to={`/blog/${post.slug || "#"}`}
+                    className="block hover:text-primary transition-colors"
+                  >
+                    <h4 className="font-medium text-sm mb-1 leading-tight">
+                      {post.title || "Untitled Post"}
+                    </h4>
+                    <p className="text-xs text-muted-foreground">
+                      {post.createdAt
+                        ? new Date(post.createdAt).toLocaleDateString()
+                        : "No date"}
+                    </p>
+                  </Link>
+                </div>
+              );
+            })
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              No recent posts available
+            </p>
           )}
         </CardContent>
       </Card>
@@ -517,19 +568,21 @@ const BlogSidebar = React.memo<{
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
-            {allTags && allTags.length > 0 ? allTags.map((tag) => {
-              if (!tag) return null;
+            {allTags && allTags.length > 0 ? (
+              allTags.map((tag) => {
+                if (!tag) return null;
 
-              return (
-                <Badge
-                  key={tag}
-                  variant="outline"
-                  className="text-xs cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
-                >
-                  {tag}
-                </Badge>
-              );
-            }) : (
+                return (
+                  <Badge
+                    key={tag}
+                    variant="outline"
+                    className="text-xs cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
+                  >
+                    {tag}
+                  </Badge>
+                );
+              })
+            ) : (
               <p className="text-sm text-muted-foreground">No tags available</p>
             )}
           </div>
@@ -543,7 +596,8 @@ const BlogSidebar = React.memo<{
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-sm text-muted-foreground">
-            Get the latest waste management tips and industry news delivered to your inbox.
+            Get the latest waste management tips and industry news delivered to
+            your inbox.
           </p>
           <div className="space-y-2">
             <Input
@@ -564,7 +618,7 @@ const BlogSidebar = React.memo<{
   );
 });
 
-BlogSidebar.displayName = 'BlogSidebar';
+BlogSidebar.displayName = "BlogSidebar";
 
 /**
  * Simple sidebar component (safe version)
@@ -591,17 +645,20 @@ const SimpleSidebar = React.memo<{
           >
             All Posts
           </Button>
-          {Array.isArray(categories) && categories.map((category) => (
-            <Button
-              key={category?.id || Math.random()}
-              variant={selectedCategory === category?.slug ? "default" : "ghost"}
-              size="sm"
-              className="w-full justify-start"
-              onClick={() => onCategoryChange(category?.slug || "all")}
-            >
-              {category?.name || "Unknown"}
-            </Button>
-          ))}
+          {Array.isArray(categories) &&
+            categories.map((category) => (
+              <Button
+                key={category?.id || Math.random()}
+                variant={
+                  selectedCategory === category?.slug ? "default" : "ghost"
+                }
+                size="sm"
+                className="w-full justify-start"
+                onClick={() => onCategoryChange(category?.slug || "all")}
+              >
+                {category?.name || "Unknown"}
+              </Button>
+            ))}
         </CardContent>
       </Card>
 
@@ -611,23 +668,24 @@ const SimpleSidebar = React.memo<{
           <CardTitle>Recent Posts</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          {Array.isArray(posts) && posts.slice(0, 5).map((post) => (
-            <div key={post?.id || Math.random()} className="text-sm">
-              <Link
-                to={`/blog/${post?.slug || '#'}`}
-                className="hover:text-primary transition-colors"
-              >
-                {post?.title || "Untitled"}
-              </Link>
-            </div>
-          ))}
+          {Array.isArray(posts) &&
+            posts.slice(0, 5).map((post) => (
+              <div key={post?.id || Math.random()} className="text-sm">
+                <Link
+                  to={`/blog/${post?.slug || "#"}`}
+                  className="hover:text-primary transition-colors"
+                >
+                  {post?.title || "Untitled"}
+                </Link>
+              </div>
+            ))}
         </CardContent>
       </Card>
     </div>
   );
 });
 
-SimpleSidebar.displayName = 'SimpleSidebar';
+SimpleSidebar.displayName = "SimpleSidebar";
 
 /**
  * Custom hook for blog data (temporary localStorage implementation)
@@ -648,7 +706,9 @@ function useBlogData() {
 
         if (savedPosts) {
           const parsedPosts = JSON.parse(savedPosts);
-          setPosts(parsedPosts.filter((post: BlogPost) => post.status === "published"));
+          setPosts(
+            parsedPosts.filter((post: BlogPost) => post.status === "published"),
+          );
         }
 
         if (savedCategories) {

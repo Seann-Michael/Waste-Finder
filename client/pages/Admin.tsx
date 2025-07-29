@@ -217,13 +217,19 @@ export default function Admin() {
               <Shield className="w-6 h-6 text-primary-foreground" />
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold">Admin Dashboard</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold">
+                Admin Dashboard
+              </h1>
               <p className="text-muted-foreground">
                 Manage locations, reviews, and suggestions
               </p>
             </div>
           </div>
-          <Button variant="outline" onClick={handleLogout} className="w-full sm:w-auto">
+          <Button
+            variant="outline"
+            onClick={handleLogout}
+            className="w-full sm:w-auto"
+          >
             <LogOut className="w-4 h-4 mr-2" />
             Logout
           </Button>
@@ -316,7 +322,9 @@ export default function Admin() {
                   </p>
                 </div>
                 <Button variant="outline" className="w-full" size="sm" asChild>
-                  <Link to="/admin/suggestions?tab=locations">View All Pending</Link>
+                  <Link to="/admin/suggestions?tab=locations">
+                    View All Pending
+                  </Link>
                 </Button>
               </CardContent>
             </Card>
@@ -586,7 +594,8 @@ export default function Admin() {
                     <div>
                       <h4 className="font-medium">Contact</h4>
                       <p className="text-sm text-muted-foreground">
-                        Phone: {formatPhoneNumber(selectedSuggestion.details.phone)}
+                        Phone:{" "}
+                        {formatPhoneNumber(selectedSuggestion.details.phone)}
                       </p>
                       <p className="text-sm text-muted-foreground">
                         Email: {selectedSuggestion.details.submitterEmail}

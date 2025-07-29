@@ -46,7 +46,10 @@ export function validatePhoneNumber(phone: string): boolean {
  * Validates and normalizes URLs
  * Accepts URLs with or without protocol, with or without www
  */
-export function validateAndFormatUrl(url: string): { isValid: boolean; formattedUrl: string } {
+export function validateAndFormatUrl(url: string): {
+  isValid: boolean;
+  formattedUrl: string;
+} {
   if (!url) return { isValid: false, formattedUrl: "" };
 
   let normalizedUrl = url.trim();
@@ -60,7 +63,7 @@ export function validateAndFormatUrl(url: string): { isValid: boolean; formatted
     const urlObj = new URL(normalizedUrl);
     return {
       isValid: true,
-      formattedUrl: urlObj.toString()
+      formattedUrl: urlObj.toString(),
     };
   } catch {
     return { isValid: false, formattedUrl: url };

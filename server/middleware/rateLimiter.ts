@@ -16,9 +16,12 @@ class RateLimiter {
 
   constructor() {
     // Clean up old entries every 10 minutes
-    this.cleanupInterval = setInterval(() => {
-      this.cleanup();
-    }, 10 * 60 * 1000);
+    this.cleanupInterval = setInterval(
+      () => {
+        this.cleanup();
+      },
+      10 * 60 * 1000,
+    );
   }
 
   /**
@@ -30,8 +33,10 @@ class RateLimiter {
 
     for (const [key, data] of this.clients.entries()) {
       // Remove old requests
-      data.requests = data.requests.filter(timestamp => timestamp > fiveMinutesAgo);
-      
+      data.requests = data.requests.filter(
+        (timestamp) => timestamp > fiveMinutesAgo,
+      );
+
       // Remove blocked clients whose block has expired
       if (data.blocked && data.blockUntil && now > data.blockUntil) {
         data.blocked = false;
@@ -52,7 +57,7 @@ class RateLimiter {
     clientId: string,
     maxRequests: number = 100,
     windowMs: number = 60 * 1000, // 1 minute
-    blockDurationMs: number = 5 * 60 * 1000 // 5 minutes
+    blockDurationMs: number = 5 * 60 * 1000, // 5 minutes
   ): boolean {
     const now = Date.now();
     const windowStart = now - windowMs;
@@ -64,12 +69,18 @@ class RateLimiter {
     }
 
     // Check if client is currently blocked
-    if (clientData.blocked && clientData.blockUntil && now < clientData.blockUntil) {
+    if (
+      clientData.blocked &&
+      clientData.blockUntil &&
+      now < clientData.blockUntil
+    ) {
       return true;
     }
 
     // Remove requests outside the time window
-    clientData.requests = clientData.requests.filter(timestamp => timestamp > windowStart);
+    clientData.requests = clientData.requests.filter(
+      (timestamp) => timestamp > windowStart,
+    );
 
     // Check if rate limit is exceeded
     if (clientData.requests.length >= maxRequests) {
@@ -90,7 +101,7 @@ class RateLimiter {
   getRemainingRequests(
     clientId: string,
     maxRequests: number = 100,
-    windowMs: number = 60 * 1000
+    windowMs: number = 60 * 1000,
   ): number {
     const now = Date.now();
     const windowStart = now - windowMs;
@@ -100,7 +111,9 @@ class RateLimiter {
       return maxRequests;
     }
 
-    const recentRequests = clientData.requests.filter(timestamp => timestamp > windowStart);
+    const recentRequests = clientData.requests.filter(
+      (timestamp) => timestamp > windowStart,
+    );
     return Math.max(0, maxRequests - recentRequests.length);
   }
 
@@ -126,27 +139,36 @@ const rateLimiter = new RateLimiter();
 /**
  * Express middleware for rate limiting
  */
-export function createRateLimitMiddleware(options: {
-  maxRequests?: number;
-  windowMs?: number;
-  blockDurationMs?: number;
-  keyGenerator?: (req: Request) => string;
-  message?: string;
-  statusCode?: number;
-} = {}) {
+export function createRateLimitMiddleware(
+  options: {
+    maxRequests?: number;
+    windowMs?: number;
+    blockDurationMs?: number;
+    keyGenerator?: (req: Request) => string;
+    message?: string;
+    statusCode?: number;
+  } = {},
+) {
   const {
     maxRequests = 100,
     windowMs = 60 * 1000, // 1 minute
     blockDurationMs = 5 * 60 * 1000, // 5 minutes
-    keyGenerator = (req) => req.ip || 'unknown',
-    message = 'Too many requests. Please try again later.',
-    statusCode = 429
+    keyGenerator = (req) => req.ip || "unknown",
+    message = "Too many requests. Please try again later.",
+    statusCode = 429,
   } = options;
 
   return (req: Request, res: Response, next: NextFunction) => {
     const clientId = keyGenerator(req);
-    
-    if (rateLimiter.isRateLimited(clientId, maxRequests, windowMs, blockDurationMs)) {
+
+    if (
+      rateLimiter.isRateLimited(
+        clientId,
+        maxRequests,
+        windowMs,
+        blockDurationMs,
+      )
+    ) {
       res.status(statusCode).json({
         success: false,
         error: message,
@@ -156,11 +178,15 @@ export function createRateLimitMiddleware(options: {
     }
 
     // Add rate limit headers
-    const remaining = rateLimiter.getRemainingRequests(clientId, maxRequests, windowMs);
+    const remaining = rateLimiter.getRemainingRequests(
+      clientId,
+      maxRequests,
+      windowMs,
+    );
     res.set({
-      'X-RateLimit-Limit': maxRequests.toString(),
-      'X-RateLimit-Remaining': remaining.toString(),
-      'X-RateLimit-Reset': new Date(Date.now() + windowMs).toISOString(),
+      "X-RateLimit-Limit": maxRequests.toString(),
+      "X-RateLimit-Remaining": remaining.toString(),
+      "X-RateLimit-Reset": new Date(Date.now() + windowMs).toISOString(),
     });
 
     next();
@@ -174,7 +200,7 @@ export const authRateLimit = createRateLimitMiddleware({
   maxRequests: 5,
   windowMs: 15 * 60 * 1000, // 15 minutes
   blockDurationMs: 30 * 60 * 1000, // 30 minutes
-  message: 'Too many authentication attempts. Please try again in 30 minutes.',
+  message: "Too many authentication attempts. Please try again in 30 minutes.",
 });
 
 /**

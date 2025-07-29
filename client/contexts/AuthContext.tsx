@@ -36,14 +36,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const generateCSRFToken = (): string => {
     const array = new Uint32Array(4);
     crypto.getRandomValues(array);
-    return Array.from(array, byte => byte.toString(16).padStart(8, '0')).join('');
+    return Array.from(array, (byte) => byte.toString(16).padStart(8, "0")).join(
+      "",
+    );
   };
 
   /**
    * Get CSRF token from meta tag (should be set by server)
    */
   const getCSRFToken = (): string => {
-    const metaTag = document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement;
+    const metaTag = document.querySelector(
+      'meta[name="csrf-token"]',
+    ) as HTMLMetaElement;
     return metaTag?.content || generateCSRFToken();
   };
 
@@ -52,20 +56,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    */
   const secureRequest = async (url: string, options: RequestInit = {}) => {
     const csrfToken = getCSRFToken();
-    
+
     const response = await fetch(url, {
       ...options,
       headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': csrfToken,
-        'X-Requested-With': 'XMLHttpRequest',
+        "Content-Type": "application/json",
+        "X-CSRF-Token": csrfToken,
+        "X-Requested-With": "XMLHttpRequest",
         ...options.headers,
       },
-      credentials: 'same-origin', // Include cookies for session management
+      credentials: "same-origin", // Include cookies for session management
     });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+      const errorData = await response
+        .json()
+        .catch(() => ({ message: "Unknown error" }));
       throw new Error(errorData.message || `HTTP ${response.status}`);
     }
 
@@ -75,35 +81,48 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   /**
    * Simple rate limiting check (client-side basic protection)
    */
-  const checkRateLimit = (action: string, maxAttempts: number = 5, windowMs: number = 60000): boolean => {
+  const checkRateLimit = (
+    action: string,
+    maxAttempts: number = 5,
+    windowMs: number = 60000,
+  ): boolean => {
     const key = `rateLimit_${action}`;
     const now = Date.now();
-    const attempts = JSON.parse(sessionStorage.getItem(key) || '[]') as number[];
-    
+    const attempts = JSON.parse(
+      sessionStorage.getItem(key) || "[]",
+    ) as number[];
+
     // Remove attempts outside the time window
-    const recentAttempts = attempts.filter(timestamp => now - timestamp < windowMs);
-    
+    const recentAttempts = attempts.filter(
+      (timestamp) => now - timestamp < windowMs,
+    );
+
     if (recentAttempts.length >= maxAttempts) {
       return false; // Rate limit exceeded
     }
-    
+
     // Add current attempt
     recentAttempts.push(now);
     sessionStorage.setItem(key, JSON.stringify(recentAttempts));
-    
+
     return true;
   };
 
   /**
    * Secure login with rate limiting and proper error handling
    */
-  const login = async (username: string, password: string): Promise<boolean> => {
+  const login = async (
+    username: string,
+    password: string,
+  ): Promise<boolean> => {
     try {
       setIsLoading(true);
 
       // Check rate limiting
-      if (!checkRateLimit('login')) {
-        showError("Too many login attempts. Please wait 1 minute before trying again.");
+      if (!checkRateLimit("login")) {
+        showError(
+          "Too many login attempts. Please wait 1 minute before trying again.",
+        );
         return false;
       }
 
@@ -128,14 +147,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Set user state (server manages session via HTTP-only cookies)
       setUser(data.user);
       showSuccess(`Welcome back, ${data.user.username}!`);
-      
+
       // Clear rate limiting on successful login
-      sessionStorage.removeItem('rateLimit_login');
-      
+      sessionStorage.removeItem("rateLimit_login");
+
       return true;
     } catch (error) {
       console.error("Login error:", error);
-      showError(error instanceof Error ? error.message : "Login failed. Please try again.");
+      showError(
+        error instanceof Error
+          ? error.message
+          : "Login failed. Please try again.",
+      );
       return false;
     } finally {
       setIsLoading(false);

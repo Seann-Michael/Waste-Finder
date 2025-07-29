@@ -23,7 +23,11 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Location } from "@shared/api";
-import { validatePhoneNumber, formatPhoneNumber, validateAndFormatUrl } from "@/lib/utils";
+import {
+  validatePhoneNumber,
+  formatPhoneNumber,
+  validateAndFormatUrl,
+} from "@/lib/utils";
 import { sanitizeInput, validateEmail, validateUrl } from "@/lib/security";
 import {
   Edit,
@@ -188,15 +192,30 @@ export default function SuggestEdit({
           setValue("googleBusinessUrl", location.googleBusinessUrl || "");
           break;
         case "operating_hours":
-          setValue("operatingHours", location.operatingHours || getDefaultOperatingHours());
+          setValue(
+            "operatingHours",
+            location.operatingHours || getDefaultOperatingHours(),
+          );
           break;
         case "payment_methods":
-          setValue("paymentTypes", location.paymentTypes?.map(p => p.name) || []);
-          setValue("additionalPaymentDetails", location.additionalPaymentDetails || "");
+          setValue(
+            "paymentTypes",
+            location.paymentTypes?.map((p) => p.name) || [],
+          );
+          setValue(
+            "additionalPaymentDetails",
+            location.additionalPaymentDetails || "",
+          );
           break;
         case "pricing_info":
-          setValue("debrisTypes", location.debrisTypes?.map(d => d.name) || []);
-          const pricingMap: Record<string, { price?: number; priceDetails?: string }> = {};
+          setValue(
+            "debrisTypes",
+            location.debrisTypes?.map((d) => d.name) || [],
+          );
+          const pricingMap: Record<
+            string,
+            { price?: number; priceDetails?: string }
+          > = {};
           location.debrisTypes?.forEach((debris) => {
             pricingMap[debris.name] = {
               price: debris.price,
@@ -213,23 +232,66 @@ export default function SuggestEdit({
   }, [watchedValues.editType, location, setValue]);
 
   const getDefaultOperatingHours = () => [
-    { dayOfWeek: 0, dayName: "Sunday", openTime: "", closeTime: "", isClosed: true },
-    { dayOfWeek: 1, dayName: "Monday", openTime: "07:00", closeTime: "17:00", isClosed: false },
-    { dayOfWeek: 2, dayName: "Tuesday", openTime: "07:00", closeTime: "17:00", isClosed: false },
-    { dayOfWeek: 3, dayName: "Wednesday", openTime: "07:00", closeTime: "17:00", isClosed: false },
-    { dayOfWeek: 4, dayName: "Thursday", openTime: "07:00", closeTime: "17:00", isClosed: false },
-    { dayOfWeek: 5, dayName: "Friday", openTime: "07:00", closeTime: "17:00", isClosed: false },
-    { dayOfWeek: 6, dayName: "Saturday", openTime: "08:00", closeTime: "15:00", isClosed: false },
+    {
+      dayOfWeek: 0,
+      dayName: "Sunday",
+      openTime: "",
+      closeTime: "",
+      isClosed: true,
+    },
+    {
+      dayOfWeek: 1,
+      dayName: "Monday",
+      openTime: "07:00",
+      closeTime: "17:00",
+      isClosed: false,
+    },
+    {
+      dayOfWeek: 2,
+      dayName: "Tuesday",
+      openTime: "07:00",
+      closeTime: "17:00",
+      isClosed: false,
+    },
+    {
+      dayOfWeek: 3,
+      dayName: "Wednesday",
+      openTime: "07:00",
+      closeTime: "17:00",
+      isClosed: false,
+    },
+    {
+      dayOfWeek: 4,
+      dayName: "Thursday",
+      openTime: "07:00",
+      closeTime: "17:00",
+      isClosed: false,
+    },
+    {
+      dayOfWeek: 5,
+      dayName: "Friday",
+      openTime: "07:00",
+      closeTime: "17:00",
+      isClosed: false,
+    },
+    {
+      dayOfWeek: 6,
+      dayName: "Saturday",
+      openTime: "08:00",
+      closeTime: "15:00",
+      isClosed: false,
+    },
   ];
-
-
 
   const handlePaymentTypeChange = (type: string, checked: boolean) => {
     const currentTypes = watchedValues.paymentTypes || [];
     if (checked) {
       setValue("paymentTypes", [...currentTypes, type]);
     } else {
-      setValue("paymentTypes", currentTypes.filter(t => t !== type));
+      setValue(
+        "paymentTypes",
+        currentTypes.filter((t) => t !== type),
+      );
     }
   };
 
@@ -242,32 +304,49 @@ export default function SuggestEdit({
       if (!currentPricing[type]) {
         setValue("debrisPricing", {
           ...currentPricing,
-          [type]: { price: undefined, priceDetails: "" }
+          [type]: { price: undefined, priceDetails: "" },
         });
       }
     } else {
-      setValue("debrisTypes", currentTypes.filter(t => t !== type));
+      setValue(
+        "debrisTypes",
+        currentTypes.filter((t) => t !== type),
+      );
       const newPricing = { ...currentPricing };
       delete newPricing[type];
       setValue("debrisPricing", newPricing);
     }
   };
 
-  const handleDebrisPricingChange = (debrisType: string, field: "price" | "priceDetails", value: string | number) => {
+  const handleDebrisPricingChange = (
+    debrisType: string,
+    field: "price" | "priceDetails",
+    value: string | number,
+  ) => {
     const currentPricing = watchedValues.debrisPricing || {};
     setValue("debrisPricing", {
       ...currentPricing,
       [debrisType]: {
         ...currentPricing[debrisType],
-        [field]: field === "price" ? (value === "" ? undefined : Number(value)) : value,
+        [field]:
+          field === "price"
+            ? value === ""
+              ? undefined
+              : Number(value)
+            : value,
       },
     });
   };
 
-  const handleOperatingHourChange = (index: number, field: string, value: string | boolean) => {
-    const currentHours = watchedValues.operatingHours || getDefaultOperatingHours();
+  const handleOperatingHourChange = (
+    index: number,
+    field: string,
+    value: string | boolean,
+  ) => {
+    const currentHours =
+      watchedValues.operatingHours || getDefaultOperatingHours();
     const newHours = currentHours.map((hour, i) =>
-      i === index ? { ...hour, [field]: value } : hour
+      i === index ? { ...hour, [field]: value } : hour,
     );
     setValue("operatingHours", newHours);
   };
@@ -279,7 +358,9 @@ export default function SuggestEdit({
       name: data.name ? sanitizeInput(data.name, 100) : undefined,
       address: data.address ? sanitizeInput(data.address, 200) : undefined,
       city: data.city ? sanitizeInput(data.city, 100) : undefined,
-      state: data.state ? sanitizeInput(data.state.toUpperCase(), 2) : undefined,
+      state: data.state
+        ? sanitizeInput(data.state.toUpperCase(), 2)
+        : undefined,
       zipCode: data.zipCode ? sanitizeInput(data.zipCode, 10) : undefined,
       phone: data.phone ? sanitizeInput(data.phone, 20) : undefined,
       email: data.email ? sanitizeInput(data.email, 254) : undefined,
@@ -319,9 +400,14 @@ export default function SuggestEdit({
       };
 
       // Save to localStorage for demo
-      const savedSuggestions = JSON.parse(localStorage.getItem("pendingSuggestions") || "[]");
+      const savedSuggestions = JSON.parse(
+        localStorage.getItem("pendingSuggestions") || "[]",
+      );
       savedSuggestions.push(suggestion);
-      localStorage.setItem("pendingSuggestions", JSON.stringify(savedSuggestions));
+      localStorage.setItem(
+        "pendingSuggestions",
+        JSON.stringify(savedSuggestions),
+      );
 
       onSubmit(suggestion);
       setSubmitSuccess(true);
@@ -331,7 +417,6 @@ export default function SuggestEdit({
         reset();
         setSubmitSuccess(false);
       }, 2000);
-
     } catch (error) {
       console.error("Error submitting suggestion:", error);
       alert("Failed to submit suggestion. Please try again.");
@@ -365,7 +450,8 @@ export default function SuggestEdit({
           <Alert>
             <CheckCircle className="h-4 w-4" />
             <AlertDescription>
-              Thank you! Your suggestion has been submitted and will be reviewed by our team.
+              Thank you! Your suggestion has been submitted and will be reviewed
+              by our team.
             </AlertDescription>
           </Alert>
         )}
@@ -438,11 +524,7 @@ export default function SuggestEdit({
                   </div>
                   <div>
                     <Label htmlFor="city">City</Label>
-                    <Input
-                      id="city"
-                      {...register("city")}
-                      placeholder="City"
-                    />
+                    <Input id="city" {...register("city")} placeholder="City" />
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div>
@@ -508,8 +590,13 @@ export default function SuggestEdit({
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {(watchedValues.operatingHours || getDefaultOperatingHours()).map((hour, index) => (
-                    <div key={hour.dayOfWeek} className="flex items-center gap-4">
+                  {(
+                    watchedValues.operatingHours || getDefaultOperatingHours()
+                  ).map((hour, index) => (
+                    <div
+                      key={hour.dayOfWeek}
+                      className="flex items-center gap-4"
+                    >
                       <div className="w-20 text-sm font-medium">
                         {hour.dayName}
                       </div>
@@ -517,7 +604,11 @@ export default function SuggestEdit({
                         <Checkbox
                           checked={!hour.isClosed}
                           onCheckedChange={(checked) =>
-                            handleOperatingHourChange(index, "isClosed", !checked)
+                            handleOperatingHourChange(
+                              index,
+                              "isClosed",
+                              !checked,
+                            )
                           }
                         />
                         <span className="text-sm">Open</span>
@@ -528,23 +619,35 @@ export default function SuggestEdit({
                             type="time"
                             value={hour.openTime}
                             onChange={(e) =>
-                              handleOperatingHourChange(index, "openTime", e.target.value)
+                              handleOperatingHourChange(
+                                index,
+                                "openTime",
+                                e.target.value,
+                              )
                             }
                             className="w-32"
                           />
-                          <span className="text-sm text-muted-foreground">to</span>
+                          <span className="text-sm text-muted-foreground">
+                            to
+                          </span>
                           <Input
                             type="time"
                             value={hour.closeTime}
                             onChange={(e) =>
-                              handleOperatingHourChange(index, "closeTime", e.target.value)
+                              handleOperatingHourChange(
+                                index,
+                                "closeTime",
+                                e.target.value,
+                              )
                             }
                             className="w-32"
                           />
                         </>
                       )}
                       {hour.isClosed && (
-                        <span className="text-sm text-muted-foreground">Closed</span>
+                        <span className="text-sm text-muted-foreground">
+                          Closed
+                        </span>
                       )}
                     </div>
                   ))}
@@ -567,7 +670,9 @@ export default function SuggestEdit({
                   {PAYMENT_OPTIONS.map((option) => (
                     <div key={option} className="flex items-center space-x-2">
                       <Checkbox
-                        checked={watchedValues.paymentTypes?.includes(option) || false}
+                        checked={
+                          watchedValues.paymentTypes?.includes(option) || false
+                        }
                         onCheckedChange={(checked) =>
                           handlePaymentTypeChange(option, checked as boolean)
                         }
@@ -578,7 +683,9 @@ export default function SuggestEdit({
                 </div>
 
                 <div>
-                  <Label htmlFor="additionalPaymentDetails">Additional Payment Details</Label>
+                  <Label htmlFor="additionalPaymentDetails">
+                    Additional Payment Details
+                  </Label>
                   <Textarea
                     id="additionalPaymentDetails"
                     {...register("additionalPaymentDetails")}
@@ -601,12 +708,16 @@ export default function SuggestEdit({
               </CardHeader>
               <CardContent className="space-y-6">
                 <div>
-                  <Label className="text-base font-medium mb-3 block">Accepted Debris Types</Label>
+                  <Label className="text-base font-medium mb-3 block">
+                    Accepted Debris Types
+                  </Label>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {DEBRIS_TYPES.map((option) => (
                       <div key={option} className="flex items-center space-x-2">
                         <Checkbox
-                          checked={watchedValues.debrisTypes?.includes(option) || false}
+                          checked={
+                            watchedValues.debrisTypes?.includes(option) || false
+                          }
                           onCheckedChange={(checked) =>
                             handleDebrisTypeChange(option, checked as boolean)
                           }
@@ -618,46 +729,68 @@ export default function SuggestEdit({
                 </div>
 
                 {/* Pricing for Selected Debris Types */}
-                {watchedValues.debrisTypes && watchedValues.debrisTypes.length > 0 && (
-                  <div>
-                    <Label className="text-base font-medium mb-3 block">Pricing Information</Label>
-                    <div className="space-y-4">
-                      {watchedValues.debrisTypes.map((debrisType) => (
-                        <div key={debrisType} className="border rounded-lg p-4">
-                          <div className="flex items-center gap-2 mb-3">
-                            <div className="w-2 h-2 bg-primary rounded-full"></div>
-                            <span className="font-medium">{debrisType}</span>
-                          </div>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            <div>
-                              <Label className="text-sm">Price per ton ($)</Label>
-                              <Input
-                                type="number"
-                                step="0.01"
-                                min="0"
-                                value={watchedValues.debrisPricing?.[debrisType]?.price ?? ""}
-                                onChange={(e) =>
-                                  handleDebrisPricingChange(debrisType, "price", e.target.value)
-                                }
-                                placeholder="0.00"
-                              />
+                {watchedValues.debrisTypes &&
+                  watchedValues.debrisTypes.length > 0 && (
+                    <div>
+                      <Label className="text-base font-medium mb-3 block">
+                        Pricing Information
+                      </Label>
+                      <div className="space-y-4">
+                        {watchedValues.debrisTypes.map((debrisType) => (
+                          <div
+                            key={debrisType}
+                            className="border rounded-lg p-4"
+                          >
+                            <div className="flex items-center gap-2 mb-3">
+                              <div className="w-2 h-2 bg-primary rounded-full"></div>
+                              <span className="font-medium">{debrisType}</span>
                             </div>
-                            <div>
-                              <Label className="text-sm">Price Details</Label>
-                              <Input
-                                value={watchedValues.debrisPricing?.[debrisType]?.priceDetails ?? ""}
-                                onChange={(e) =>
-                                  handleDebrisPricingChange(debrisType, "priceDetails", e.target.value)
-                                }
-                                placeholder="per ton, minimum, etc."
-                              />
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                              <div>
+                                <Label className="text-sm">
+                                  Price per ton ($)
+                                </Label>
+                                <Input
+                                  type="number"
+                                  step="0.01"
+                                  min="0"
+                                  value={
+                                    watchedValues.debrisPricing?.[debrisType]
+                                      ?.price ?? ""
+                                  }
+                                  onChange={(e) =>
+                                    handleDebrisPricingChange(
+                                      debrisType,
+                                      "price",
+                                      e.target.value,
+                                    )
+                                  }
+                                  placeholder="0.00"
+                                />
+                              </div>
+                              <div>
+                                <Label className="text-sm">Price Details</Label>
+                                <Input
+                                  value={
+                                    watchedValues.debrisPricing?.[debrisType]
+                                      ?.priceDetails ?? ""
+                                  }
+                                  onChange={(e) =>
+                                    handleDebrisPricingChange(
+                                      debrisType,
+                                      "priceDetails",
+                                      e.target.value,
+                                    )
+                                  }
+                                  placeholder="per ton, minimum, etc."
+                                />
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
               </CardContent>
             </Card>
           )}
@@ -673,7 +806,9 @@ export default function SuggestEdit({
               </CardHeader>
               <CardContent>
                 <div>
-                  <Label htmlFor="additionalLocationDetails">Additional Information</Label>
+                  <Label htmlFor="additionalLocationDetails">
+                    Additional Information
+                  </Label>
                   <Textarea
                     id="additionalLocationDetails"
                     {...register("additionalLocationDetails")}
@@ -697,11 +832,15 @@ export default function SuggestEdit({
                     <Label htmlFor="submitterName">Your Name *</Label>
                     <Input
                       id="submitterName"
-                      {...register("submitterName", { required: "Name is required" })}
+                      {...register("submitterName", {
+                        required: "Name is required",
+                      })}
                       placeholder="Your full name"
                     />
                     {errors.submitterName && (
-                      <p className="text-sm text-red-600 mt-1">{errors.submitterName.message}</p>
+                      <p className="text-sm text-red-600 mt-1">
+                        {errors.submitterName.message}
+                      </p>
                     )}
                   </div>
                   <div>
@@ -713,13 +852,15 @@ export default function SuggestEdit({
                         required: "Email is required",
                         pattern: {
                           value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                          message: "Invalid email address"
-                        }
+                          message: "Invalid email address",
+                        },
                       })}
                       placeholder="your.email@example.com"
                     />
                     {errors.submitterEmail && (
-                      <p className="text-sm text-red-600 mt-1">{errors.submitterEmail.message}</p>
+                      <p className="text-sm text-red-600 mt-1">
+                        {errors.submitterEmail.message}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -753,7 +894,12 @@ export default function SuggestEdit({
           </Button>
           <Button
             onClick={handleSubmit(onSubmitForm)}
-            disabled={!watchedValues.editType || !watchedValues.submitterName || !watchedValues.submitterEmail || isSubmitting}
+            disabled={
+              !watchedValues.editType ||
+              !watchedValues.submitterName ||
+              !watchedValues.submitterEmail ||
+              isSubmitting
+            }
           >
             {isSubmitting ? "Submitting..." : "Submit Suggestion"}
           </Button>

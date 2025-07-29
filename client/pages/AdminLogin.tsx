@@ -21,7 +21,7 @@ import { Shield, AlertCircle, Eye, EyeOff } from "lucide-react";
 const sanitizeInput = (input: string): string => {
   return input
     .trim()
-    .replace(/[<>]/g, '') // Remove potential HTML tags
+    .replace(/[<>]/g, "") // Remove potential HTML tags
     .substring(0, 100); // Limit length
 };
 
@@ -31,7 +31,7 @@ export default function AdminLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  
+
   const { login, isAuthenticated, isLoading } = useAuth();
 
   // Redirect if already authenticated
@@ -66,7 +66,7 @@ export default function AdminLogin() {
 
     // Attempt login
     const success = await login(sanitizedUsername, sanitizedPassword);
-    
+
     if (success) {
       navigate("/admin");
     } else {
@@ -155,9 +155,9 @@ export default function AdminLogin() {
                 </div>
               </div>
 
-              <Button 
-                type="submit" 
-                className="w-full" 
+              <Button
+                type="submit"
+                className="w-full"
                 disabled={isLoading || !username || !password}
               >
                 {isLoading ? (

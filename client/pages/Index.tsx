@@ -42,9 +42,15 @@ export default function Index() {
       try {
         const locations = JSON.parse(savedLocations);
         const total = locations.length;
-        const landfills = locations.filter((loc: any) => loc.facilityType === "landfill").length;
-        const transferStations = locations.filter((loc: any) => loc.facilityType === "transfer_station").length;
-        const constructionLandfills = locations.filter((loc: any) => loc.facilityType === "construction_landfill").length;
+        const landfills = locations.filter(
+          (loc: any) => loc.facilityType === "landfill",
+        ).length;
+        const transferStations = locations.filter(
+          (loc: any) => loc.facilityType === "transfer_station",
+        ).length;
+        const constructionLandfills = locations.filter(
+          (loc: any) => loc.facilityType === "construction_landfill",
+        ).length;
 
         setLocationCounts({
           total,
@@ -62,7 +68,7 @@ export default function Index() {
     if (savedContentSettings) {
       try {
         const parsed = JSON.parse(savedContentSettings);
-        setContentSettings(prev => ({ ...prev, ...parsed }));
+        setContentSettings((prev) => ({ ...prev, ...parsed }));
       } catch (error) {
         console.error("Error loading content settings:", error);
       }
@@ -208,7 +214,9 @@ export default function Index() {
           {/* Stats */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
             <div className="text-center">
-              <div className="text-3xl font-bold text-primary">{locationCounts.total.toLocaleString()}</div>
+              <div className="text-3xl font-bold text-primary">
+                {locationCounts.total.toLocaleString()}
+              </div>
               <div className="text-muted-foreground">Verified Locations</div>
             </div>
             <div className="text-center">
