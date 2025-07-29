@@ -142,7 +142,7 @@ export default function SearchForm({
           Find Waste Disposal Locations
         </CardTitle>
         <p className="text-gray-600 text-sm mt-2">
-          Enter your ZIP code to find nearby facilities
+          Enter your ZIP code to find nearby locations
         </p>
       </CardHeader>
       <CardContent>
