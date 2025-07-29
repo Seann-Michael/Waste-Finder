@@ -42,7 +42,7 @@ X-CSRF-Token: <csrf_token>
 
 #### GET /api/locations/search
 
-Search for waste disposal facilities by location and filters.
+Search for waste disposal locations by location and filters.
 
 **Parameters:**
 
