@@ -1,23 +1,3 @@
-/**
- * Authentication Context
- *
- * Purpose: Provides secure authentication state management across the application
- * with JWT token support, role-based access control, and session persistence
- *
- * Security Features:
- * - JWT token management with automatic refresh
- * - Role-based access control (admin, super_admin)
- * - Secure session storage with encryption
- * - Automatic logout on token expiration
- * - CSRF protection
- * - Brute force protection
- *
- * Dependencies:
- * - Local storage for session persistence
- * - Fetch API for authentication requests
- * - Toast notifications for user feedback
- */
-
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useToastNotifications } from "@/hooks/use-toast-notifications";
 
@@ -27,8 +7,6 @@ interface User {
   email: string;
   role: "admin" | "super_admin";
   permissions: string[];
-  lastLogin: string;
-  sessionId: string;
 }
 
 interface AuthContextType {
@@ -36,8 +14,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (username: string, password: string) => Promise<boolean>;
-  logout: () => Promise<void>;
-  refreshToken: () => Promise<boolean>;
+  logout: () => void;
   hasPermission: (permission: string) => boolean;
   hasRole: (role: "admin" | "super_admin") => boolean;
 }
@@ -45,162 +22,120 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 /**
- * Authentication Provider Component
- * Manages authentication state and provides secure session handling
+ * Simplified Authentication Provider
+ * Uses secure, industry-standard practices
  */
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { showSuccess, showError, showWarning } = useToastNotifications();
+  const { showSuccess, showError } = useToastNotifications();
 
   /**
-   * Encrypts sensitive data before storing in localStorage
-   * Basic encryption for demo - in production, use proper encryption
+   * Generate CSRF token for secure form submissions
    */
-  const encryptData = (data: string): string => {
-    // Simple base64 encoding for demo - use proper encryption in production
-    return btoa(data);
+  const generateCSRFToken = (): string => {
+    const array = new Uint32Array(4);
+    crypto.getRandomValues(array);
+    return Array.from(array, byte => byte.toString(16).padStart(8, '0')).join('');
   };
 
   /**
-   * Decrypts data from localStorage
+   * Get CSRF token from meta tag (should be set by server)
    */
-  const decryptData = (encryptedData: string): string => {
-    try {
-      return atob(encryptedData);
-    } catch {
-      return "";
-    }
+  const getCSRFToken = (): string => {
+    const metaTag = document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement;
+    return metaTag?.content || generateCSRFToken();
   };
 
   /**
-   * Securely stores authentication token
+   * Secure API request with CSRF protection and rate limiting
    */
-  const storeToken = (token: string, refreshToken: string) => {
-    localStorage.setItem("auth_token", encryptData(token));
-    localStorage.setItem("refresh_token", encryptData(refreshToken));
-    localStorage.setItem("token_timestamp", Date.now().toString());
-  };
+  const secureRequest = async (url: string, options: RequestInit = {}) => {
+    const csrfToken = getCSRFToken();
+    
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken,
+        'X-Requested-With': 'XMLHttpRequest',
+        ...options.headers,
+      },
+      credentials: 'same-origin', // Include cookies for session management
+    });
 
-  /**
-   * Retrieves stored authentication token
-   */
-  const getStoredToken = (): string | null => {
-    const encryptedToken = localStorage.getItem("auth_token");
-    if (!encryptedToken) return null;
-
-    const timestamp = localStorage.getItem("token_timestamp");
-    const tokenAge = Date.now() - (timestamp ? parseInt(timestamp) : 0);
-
-    // Token expires after 24 hours
-    if (tokenAge > 24 * 60 * 60 * 1000) {
-      clearStoredAuth();
-      return null;
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+      throw new Error(errorData.message || `HTTP ${response.status}`);
     }
 
-    return decryptData(encryptedToken);
+    return response.json();
   };
 
   /**
-   * Clears all stored authentication data
+   * Simple rate limiting check (client-side basic protection)
    */
-  const clearStoredAuth = () => {
-    localStorage.removeItem("auth_token");
-    localStorage.removeItem("refresh_token");
-    localStorage.removeItem("token_timestamp");
-    localStorage.removeItem("user_data");
-  };
-
-  /**
-   * Validates JWT token format and expiration
-   */
-  const validateToken = (token: string): boolean => {
-    try {
-      const parts = token.split(".");
-      if (parts.length !== 3) return false;
-
-      const payload = JSON.parse(atob(parts[1]));
-      const currentTime = Math.floor(Date.now() / 1000);
-
-      return payload.exp > currentTime;
-    } catch {
-      return false;
+  const checkRateLimit = (action: string, maxAttempts: number = 5, windowMs: number = 60000): boolean => {
+    const key = `rateLimit_${action}`;
+    const now = Date.now();
+    const attempts = JSON.parse(sessionStorage.getItem(key) || '[]') as number[];
+    
+    // Remove attempts outside the time window
+    const recentAttempts = attempts.filter(timestamp => now - timestamp < windowMs);
+    
+    if (recentAttempts.length >= maxAttempts) {
+      return false; // Rate limit exceeded
     }
+    
+    // Add current attempt
+    recentAttempts.push(now);
+    sessionStorage.setItem(key, JSON.stringify(recentAttempts));
+    
+    return true;
   };
 
   /**
-   * Authenticates user with username and password
+   * Secure login with rate limiting and proper error handling
    */
-  const login = async (
-    username: string,
-    password: string,
-  ): Promise<boolean> => {
+  const login = async (username: string, password: string): Promise<boolean> => {
     try {
       setIsLoading(true);
 
-      // Add rate limiting check
-      const lastAttempt = localStorage.getItem("last_login_attempt");
-      const attemptCount = parseInt(
-        localStorage.getItem("login_attempts") || "0",
-      );
-
-      if (
-        lastAttempt &&
-        Date.now() - parseInt(lastAttempt) < 60000 &&
-        attemptCount >= 5
-      ) {
-        showError(
-          "Too many login attempts. Please wait 1 minute before trying again.",
-        );
+      // Check rate limiting
+      if (!checkRateLimit('login')) {
+        showError("Too many login attempts. Please wait 1 minute before trying again.");
         return false;
       }
 
-      const response = await fetch("/api/auth/login", {
+      // Sanitize inputs
+      const sanitizedUsername = username.trim().toLowerCase();
+      const sanitizedPassword = password; // Don't trim password
+
+      if (!sanitizedUsername || !sanitizedPassword) {
+        showError("Username and password are required");
+        return false;
+      }
+
+      // Make secure API request
+      const data = await secureRequest("/api/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Requested-With": "XMLHttpRequest", // CSRF protection
-        },
         body: JSON.stringify({
-          username: username.trim().toLowerCase(),
-          password,
-          timestamp: Date.now(), // Prevent replay attacks
+          username: sanitizedUsername,
+          password: sanitizedPassword,
         }),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        // Track failed attempts
-        localStorage.setItem("last_login_attempt", Date.now().toString());
-        localStorage.setItem("login_attempts", (attemptCount + 1).toString());
-
-        showError(data.message || "Login failed");
-        return false;
-      }
-
-      // Validate received JWT token
-      if (!validateToken(data.token)) {
-        showError("Invalid authentication token received");
-        return false;
-      }
-
-      // Clear failed attempts on successful login
-      localStorage.removeItem("last_login_attempt");
-      localStorage.removeItem("login_attempts");
-
-      // Store authentication data securely
-      storeToken(data.token, data.refreshToken);
+      // Set user state (server manages session via HTTP-only cookies)
       setUser(data.user);
-
-      // Store encrypted user data
-      localStorage.setItem("user_data", encryptData(JSON.stringify(data.user)));
-
       showSuccess(`Welcome back, ${data.user.username}!`);
+      
+      // Clear rate limiting on successful login
+      sessionStorage.removeItem('rateLimit_login');
+      
       return true;
     } catch (error) {
       console.error("Login error:", error);
-      showError("Login failed. Please check your connection and try again.");
+      showError(error instanceof Error ? error.message : "Login failed. Please try again.");
       return false;
     } finally {
       setIsLoading(false);
@@ -208,62 +143,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   /**
-   * Refreshes authentication token
-   */
-  const refreshToken = async (): Promise<boolean> => {
-    try {
-      const refreshToken = localStorage.getItem("refresh_token");
-      if (!refreshToken) return false;
-
-      const response = await fetch("/api/auth/refresh", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${decryptData(refreshToken)}`,
-        },
-      });
-
-      if (!response.ok) return false;
-
-      const data = await response.json();
-
-      if (!validateToken(data.token)) return false;
-
-      storeToken(data.token, data.refreshToken);
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
-  /**
-   * Logs out user and clears all authentication data
+   * Simple logout that clears client state
+   * Server invalidates session via HTTP-only cookie
    */
   const logout = async (): Promise<void> => {
     try {
-      const token = getStoredToken();
-
-      if (token) {
-        // Notify server of logout for session invalidation
-        await fetch("/api/auth/logout", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-      }
+      await secureRequest("/api/auth/logout", { method: "POST" });
     } catch (error) {
       console.error("Logout error:", error);
     } finally {
       setUser(null);
-      clearStoredAuth();
       showSuccess("You have been logged out successfully");
     }
   };
 
   /**
-   * Checks if user has specific permission
+   * Check if user has specific permission
    */
   const hasPermission = (permission: string): boolean => {
     if (!user) return false;
@@ -271,7 +166,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   /**
-   * Checks if user has specific role
+   * Check if user has specific role
    */
   const hasRole = (role: "admin" | "super_admin"): boolean => {
     if (!user) return false;
@@ -279,63 +174,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   /**
-   * Initialize authentication state on mount
+   * Check authentication status on mount
    */
   useEffect(() => {
-    const initializeAuth = async () => {
+    const checkAuth = async () => {
       try {
-        const token = getStoredToken();
-        const userData = localStorage.getItem("user_data");
-
-        if (token && userData && validateToken(token)) {
-          const user = JSON.parse(decryptData(userData));
-          setUser(user);
-        } else if (token) {
-          // Try to refresh token
-          const refreshed = await refreshToken();
-          if (!refreshed) {
-            clearStoredAuth();
-          }
-        }
+        // Check if user is authenticated via HTTP-only cookie
+        const data = await secureRequest("/api/auth/me");
+        setUser(data.user);
       } catch (error) {
-        console.error("Auth initialization error:", error);
-        clearStoredAuth();
+        // User not authenticated or session expired
+        setUser(null);
       } finally {
         setIsLoading(false);
       }
     };
 
-    initializeAuth();
+    checkAuth();
   }, []);
-
-  /**
-   * Set up automatic token refresh
-   */
-  useEffect(() => {
-    if (!user) return;
-
-    const interval = setInterval(
-      async () => {
-        const token = getStoredToken();
-        if (token && validateToken(token)) {
-          // Refresh token when it's close to expiring (15 minutes before)
-          const payload = JSON.parse(atob(token.split(".")[1]));
-          const timeUntilExpiry = payload.exp * 1000 - Date.now();
-
-          if (timeUntilExpiry < 15 * 60 * 1000) {
-            const refreshed = await refreshToken();
-            if (!refreshed) {
-              await logout();
-              showWarning("Your session has expired. Please log in again.");
-            }
-          }
-        }
-      },
-      5 * 60 * 1000,
-    ); // Check every 5 minutes
-
-    return () => clearInterval(interval);
-  }, [user]);
 
   const value: AuthContextType = {
     user,
@@ -343,7 +199,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isLoading,
     login,
     logout,
-    refreshToken,
     hasPermission,
     hasRole,
   };
@@ -352,7 +207,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 }
 
 /**
- * Custom hook to use authentication context
+ * Hook to use authentication context
  */
 export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
