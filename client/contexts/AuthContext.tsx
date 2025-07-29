@@ -99,13 +99,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
 
       if (!response.ok) {
-        const errorData = await response
-          .json()
-          .catch(() => ({ message: "Unknown error" }));
-        throw new Error(errorData.message || `HTTP ${response.status}`);
+        let errorData;
+        try {
+          errorData = await response.json();
+        } catch (parseError) {
+          errorData = {
+            message: `HTTP ${response.status}: ${response.statusText}`,
+            status: response.status
+          };
+        }
+        throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
       }
 
-      return response.json();
+      try {
+        return await response.json();
+      } catch (parseError) {
+        console.warn('Response parsing failed:', parseError);
+        throw new Error('Invalid response format from server');
+      }
     } catch (error) {
       // Safe error logging to prevent console issues
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
