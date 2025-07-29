@@ -1,7 +1,7 @@
 /**
  * SuggestLocation Page Component
  *
- * PURPOSE: Public interface for suggesting new waste disposal facilities
+ * PURPOSE: Public interface for suggesting new waste disposal locations
  *
  * USER WORKFLOW:
  * 1. Public user discovers missing facility in their area
