@@ -60,7 +60,7 @@ export default function MapPlaceholder({
               View location details with interactive Google Maps integration
             </p>
             <div className="mt-4 text-xs text-muted-foreground">
-              {locations.length} facilities will be shown on the map
+              {locations.length} locations will be shown on the map
             </div>
           </div>
         </div>
