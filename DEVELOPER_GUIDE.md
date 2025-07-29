@@ -4,7 +4,7 @@
 
 ### Understanding the System
 
-WasteFinder is a **public waste facility database** with **admin-only authentication**. Public users search for facilities without logging in, while admins manage content through a secure admin panel.
+WasteFinder is a **public waste location database** with **admin-only authentication**. Public users search for locations without logging in, while admins manage content through a secure admin panel.
 
 ### Key Concepts to Understand
 
