@@ -27,6 +27,7 @@ import {
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useToastNotifications } from "../hooks/use-toast-notifications";
+import { validatePhoneNumber, formatPhoneNumber } from "../lib/utils";
 
 // Form data interface matching AddLocation
 interface SuggestLocationFormData {
@@ -189,10 +190,7 @@ export default function SuggestLocation() {
 
   const watchedValues = watch();
 
-  const validatePhoneNumber = (phone: string): boolean => {
-    const cleanPhone = phone.replace(/\D/g, "");
-    return cleanPhone.length >= 10 && cleanPhone.length <= 15;
-  };
+
 
   const onSubmit = async (data: SuggestLocationFormData) => {
     // Validate phone number if provided
