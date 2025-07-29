@@ -102,7 +102,7 @@ export default function LocationDetail() {
   ];
 
   // Review form state
-  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewRating, setReviewRating] = useState(0);
   const [reviewTitle, setReviewTitle] = useState("");
   const [reviewContent, setReviewContent] = useState("");
   const [reviewAuthor, setReviewAuthor] = useState("");
