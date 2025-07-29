@@ -37,14 +37,19 @@ export default function AdminLogin() {
   // Redirect if already authenticated (prevent infinite loops)
   useEffect(() => {
     if (isAuthenticated && !isLoading) {
-      // Add small delay to prevent rapid redirects
-      const redirectTimer = setTimeout(() => {
-        navigate("/admin", { replace: true });
-      }, 100);
-
-      return () => clearTimeout(redirectTimer);
+      // Immediate redirect without delay
+      navigate("/admin", { replace: true });
     }
   }, [isAuthenticated, isLoading, navigate]);
+
+  // Early return if authenticated to prevent rendering login form
+  if (isAuthenticated && !isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
