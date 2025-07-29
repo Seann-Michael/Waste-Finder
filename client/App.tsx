@@ -25,7 +25,6 @@ const AllLocations = lazy(() => import("./pages/AllLocations"));
 const LocationDetail = lazy(() => import("./pages/LocationDetail"));
 const SuggestLocation = lazy(() => import("./pages/SuggestLocation"));
 const Resources = lazy(() => import("./pages/Resources"));
-const SearchTest = lazy(() => import("./pages/SearchTest"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
