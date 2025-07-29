@@ -51,6 +51,11 @@ export default function Header() {
       active: location.pathname.startsWith("/blog"),
     },
     {
+      name: "News",
+      href: "/news",
+      active: location.pathname === "/news",
+    },
+    {
       name: "Suggest Location",
       href: "/suggest-location",
       active: location.pathname === "/suggest-location",
