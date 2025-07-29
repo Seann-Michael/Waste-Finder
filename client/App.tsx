@@ -13,7 +13,6 @@ import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
 import BulkUploadFacilities from "./pages/admin/BulkUploadFacilities";
 import AddLocation from "./pages/admin/AddLocation";
-import EditLocation from "./pages/admin/EditLocation";
 import LocationDataTable from "./pages/admin/LocationDataTable";
 import AdminSettings from "./pages/admin/AdminSettings";
 import ReviewsTable from "./pages/admin/ReviewsTable";
@@ -23,7 +22,6 @@ import Marketing from "./pages/admin/Marketing";
 import BlogAdmin from "./pages/admin/BlogAdmin";
 
 import AdminRoute from "./components/admin/AdminRoute";
-import About from "./pages/About";
 import LocationDetail from "./pages/LocationDetail";
 import SuggestLocation from "./pages/SuggestLocation";
 import Resources from "./pages/Resources";
@@ -132,7 +130,6 @@ const App = () => (
           <Route path="/location/:id" element={<LocationDetail />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
-          <Route path="/about" element={<About />} />
           <Route path="/search-test" element={<SearchTest />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
