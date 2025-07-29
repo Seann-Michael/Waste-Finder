@@ -109,8 +109,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           };
         }
 
-        // Don't log 401 errors for auth checks as they're expected when not logged in
-        if (response.status === 401 && skipAuthErrorLogging) {
+        // Don't log expected errors (401 for auth checks, 429 for rate limiting)
+        if (skipExpectedErrorLogging && (response.status === 401 || response.status === 429)) {
           const error = new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
           (error as any).status = response.status;
           throw error;
