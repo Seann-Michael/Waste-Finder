@@ -74,14 +74,11 @@ export default function Header() {
 
         {/* Admin Indicator */}
         {isAdmin && (
-          <div className="bg-yellow-500 text-black py-2 px-4 text-xs font-medium">
-            <div className="flex items-center justify-center gap-2 whitespace-nowrap">
+          <div className="bg-yellow-500 text-black py-2 px-4 text-xs font-medium text-center">
+            <Link to="/admin" className="flex items-center justify-center gap-2 hover:underline">
               <Shield className="w-3 h-3" />
               <span>ADMIN MODE - You are logged in as administrator</span>
-              <Link to="/admin" className="underline hover:no-underline font-semibold">
-                Go to Admin Dashboard
-              </Link>
-            </div>
+            </Link>
           </div>
         )}
 
