@@ -70,6 +70,15 @@ export function createServer() {
   app.get("/api/locations", publicRateLimit, handleLocationsSearch);
   app.get("/api/locations/:id", publicRateLimit, handleLocationById);
 
+  // RSS feed routes
+  app.get("/api/rss/parse", apiRateLimit, parseRSSFeed);
+  app.get("/api/rss/test", apiRateLimit, testRSSFeed);
+  app.get("/api/rss/feeds", apiRateLimit, getRSSFeeds);
+  app.post("/api/rss/feeds", apiRateLimit, createRSSFeed);
+  app.put("/api/rss/feeds/:id", apiRateLimit, updateRSSFeed);
+  app.delete("/api/rss/feeds/:id", apiRateLimit, deleteRSSFeed);
+  app.get("/api/news", publicRateLimit, getAggregatedNews);
+
   // 404 handler for API routes
   app.use("/api/*", (_req, res) => {
     res.status(404).json({
