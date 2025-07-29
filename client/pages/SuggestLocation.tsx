@@ -10,7 +10,7 @@
  * 4. Data stored with "pending" status for admin review
  * 5. Admin notification sent for approval queue
  * 6. Admin approves/rejects through admin panel
- * 7. Approved facilities automatically added to searchable database
+ * 7. Approved locations automatically added to searchable database
  *
  * FORM FEATURES:
  * - Address validation with Google Places API
