@@ -13,11 +13,18 @@
     -webkit-text-size-adjust: 100%;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Fix for iOS Safari viewport issues */
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
   }
 
   body {
     min-height: 100vh;
+    min-height: -webkit-fill-available;
     line-height: 1.5;
+    /* Prevent iOS Safari from shifting content */
+    position: relative;
+    overflow-x: hidden;
   }
 
   /* Ensure touch targets are at least 44px */
