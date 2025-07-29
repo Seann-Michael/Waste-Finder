@@ -52,6 +52,10 @@ interface DebrisItem {
 interface JobItem {
   debrisItem: DebrisItem;
   quantity: number;
+  // Custom values (if null, use default from debrisItem)
+  customWeight?: number;
+  customVolume?: number;
+  customLoadingTime?: number;
 }
 
 interface JobEstimate {
@@ -228,18 +232,29 @@ export default function PricingCalculator() {
     }
   };
 
+  const updateJobItemProperty = (itemId: string, property: 'customWeight' | 'customVolume' | 'customLoadingTime', value: number) => {
+    setJobItems(jobItems.map(item =>
+      item.debrisItem.id === itemId
+        ? { ...item, [property]: value }
+        : item
+    ));
+  };
+
   const calculateJobTotals = () => {
-    const totalWeight = jobItems.reduce((sum, item) =>
-      sum + (item.debrisItem.weightPerItem * item.quantity), 0
-    );
+    const totalWeight = jobItems.reduce((sum, item) => {
+      const weight = item.customWeight ?? item.debrisItem.weightPerItem;
+      return sum + (weight * item.quantity);
+    }, 0);
 
-    const totalVolume = jobItems.reduce((sum, item) =>
-      sum + (item.debrisItem.volumePerItem * item.quantity), 0
-    );
+    const totalVolume = jobItems.reduce((sum, item) => {
+      const volume = item.customVolume ?? item.debrisItem.volumePerItem;
+      return sum + (volume * item.quantity);
+    }, 0);
 
-    let baseLoadingTime = jobItems.reduce((sum, item) =>
-      sum + (item.debrisItem.loadingTimePerItem * item.quantity), 0
-    );
+    let baseLoadingTime = jobItems.reduce((sum, item) => {
+      const loadingTime = item.customLoadingTime ?? item.debrisItem.loadingTimePerItem;
+      return sum + (loadingTime * item.quantity);
+    }, 0);
 
     // Calculate walking time: 2 mph average walking speed
     // Each item needs to be carried from pickup location to truck
@@ -610,59 +625,154 @@ export default function PricingCalculator() {
                           </div>
 
                           {/* Items List */}
-                          <div className="space-y-2 max-h-80 overflow-y-auto">
-                            {jobItems.map((jobItem) => (
-                              <div key={jobItem.debrisItem.id} className="flex items-center justify-between p-3 border rounded-lg bg-muted/20">
-                                <div className="flex-1">
-                                  <div className="font-medium">{jobItem.debrisItem.name}</div>
-                                  <div className="text-sm text-muted-foreground">
-                                    <Badge variant="outline" className="mr-1 text-xs">
-                                      {jobItem.debrisItem.category}
-                                    </Badge>
-                                    {(jobItem.debrisItem.weightPerItem * jobItem.quantity).toFixed(2)} tons • {(jobItem.debrisItem.volumePerItem * jobItem.quantity).toFixed(1)} yd³ • {(jobItem.debrisItem.loadingTimePerItem * jobItem.quantity)}min
+                          <div className="space-y-3 max-h-80 overflow-y-auto">
+                            {jobItems.map((jobItem) => {
+                              const currentWeight = jobItem.customWeight ?? jobItem.debrisItem.weightPerItem;
+                              const currentVolume = jobItem.customVolume ?? jobItem.debrisItem.volumePerItem;
+                              const currentLoadingTime = jobItem.customLoadingTime ?? jobItem.debrisItem.loadingTimePerItem;
+
+                              return (
+                                <div key={jobItem.debrisItem.id} className="border rounded-lg bg-muted/20 p-4">
+                                  {/* Item Header */}
+                                  <div className="flex items-center justify-between mb-3">
+                                    <div className="flex-1">
+                                      <div className="font-medium">{jobItem.debrisItem.name}</div>
+                                      <Badge variant="outline" className="text-xs">
+                                        {jobItem.debrisItem.category}
+                                      </Badge>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      <Button
+                                        size="sm"
+                                        variant="outline"
+                                        onClick={() => updateJobItemQuantity(
+                                          jobItem.debrisItem.id,
+                                          jobItem.quantity - 1
+                                        )}
+                                      >
+                                        <Minus className="w-3 h-3" />
+                                      </Button>
+                                      <Input
+                                        type="number"
+                                        min="1"
+                                        value={jobItem.quantity}
+                                        onChange={(e) => updateJobItemQuantity(
+                                          jobItem.debrisItem.id,
+                                          Math.max(1, Number(e.target.value))
+                                        )}
+                                        className="w-16 text-center"
+                                      />
+                                      <Button
+                                        size="sm"
+                                        variant="outline"
+                                        onClick={() => updateJobItemQuantity(
+                                          jobItem.debrisItem.id,
+                                          jobItem.quantity + 1
+                                        )}
+                                      >
+                                        <Plus className="w-3 h-3" />
+                                      </Button>
+                                      <Button
+                                        size="sm"
+                                        variant="destructive"
+                                        onClick={() => updateJobItemQuantity(jobItem.debrisItem.id, 0)}
+                                      >
+                                        <Trash2 className="w-3 h-3" />
+                                      </Button>
+                                    </div>
                                   </div>
+
+                                  {/* Editable Properties */}
+                                  <div className="grid grid-cols-3 gap-3">
+                                    <div>
+                                      <Label htmlFor={`weight-${jobItem.debrisItem.id}`} className="text-xs">
+                                        Weight (tons)
+                                      </Label>
+                                      <Input
+                                        id={`weight-${jobItem.debrisItem.id}`}
+                                        type="number"
+                                        step="0.001"
+                                        value={currentWeight}
+                                        onChange={(e) => updateJobItemProperty(
+                                          jobItem.debrisItem.id,
+                                          'customWeight',
+                                          Number(e.target.value)
+                                        )}
+                                        className="h-8 text-xs"
+                                        placeholder={jobItem.debrisItem.weightPerItem.toString()}
+                                      />
+                                    </div>
+                                    <div>
+                                      <Label htmlFor={`volume-${jobItem.debrisItem.id}`} className="text-xs">
+                                        Volume (yd³)
+                                      </Label>
+                                      <Input
+                                        id={`volume-${jobItem.debrisItem.id}`}
+                                        type="number"
+                                        step="0.1"
+                                        value={currentVolume}
+                                        onChange={(e) => updateJobItemProperty(
+                                          jobItem.debrisItem.id,
+                                          'customVolume',
+                                          Number(e.target.value)
+                                        )}
+                                        className="h-8 text-xs"
+                                        placeholder={jobItem.debrisItem.volumePerItem.toString()}
+                                      />
+                                    </div>
+                                    <div>
+                                      <Label htmlFor={`time-${jobItem.debrisItem.id}`} className="text-xs">
+                                        Load Time (min)
+                                      </Label>
+                                      <Input
+                                        id={`time-${jobItem.debrisItem.id}`}
+                                        type="number"
+                                        step="0.5"
+                                        value={currentLoadingTime}
+                                        onChange={(e) => updateJobItemProperty(
+                                          jobItem.debrisItem.id,
+                                          'customLoadingTime',
+                                          Number(e.target.value)
+                                        )}
+                                        className="h-8 text-xs"
+                                        placeholder={jobItem.debrisItem.loadingTimePerItem.toString()}
+                                      />
+                                    </div>
+                                  </div>
+
+                                  {/* Totals */}
+                                  <div className="mt-2 text-xs text-muted-foreground">
+                                    Total: {(currentWeight * jobItem.quantity).toFixed(2)} tons • {(currentVolume * jobItem.quantity).toFixed(1)} yd³ • {(currentLoadingTime * jobItem.quantity)} min
+                                    {(jobItem.customWeight || jobItem.customVolume || jobItem.customLoadingTime) && (
+                                      <span className="ml-2 text-orange-600">(Custom values)</span>
+                                    )}
+                                  </div>
+
+                                  {/* Reset to Defaults */}
+                                  {(jobItem.customWeight || jobItem.customVolume || jobItem.customLoadingTime) && (
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      onClick={() => {
+                                        setJobItems(jobItems.map(item =>
+                                          item.debrisItem.id === jobItem.debrisItem.id
+                                            ? {
+                                                ...item,
+                                                customWeight: undefined,
+                                                customVolume: undefined,
+                                                customLoadingTime: undefined
+                                              }
+                                            : item
+                                        ));
+                                      }}
+                                      className="mt-2 h-6 text-xs"
+                                    >
+                                      Reset to Defaults
+                                    </Button>
+                                  )}
                                 </div>
-                                <div className="flex items-center gap-2">
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    onClick={() => updateJobItemQuantity(
-                                      jobItem.debrisItem.id,
-                                      jobItem.quantity - 1
-                                    )}
-                                  >
-                                    <Minus className="w-3 h-3" />
-                                  </Button>
-                                  <Input
-                                    type="number"
-                                    min="1"
-                                    value={jobItem.quantity}
-                                    onChange={(e) => updateJobItemQuantity(
-                                      jobItem.debrisItem.id,
-                                      Math.max(1, Number(e.target.value))
-                                    )}
-                                    className="w-16 text-center"
-                                  />
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    onClick={() => updateJobItemQuantity(
-                                      jobItem.debrisItem.id,
-                                      jobItem.quantity + 1
-                                    )}
-                                  >
-                                    <Plus className="w-3 h-3" />
-                                  </Button>
-                                  <Button
-                                    size="sm"
-                                    variant="destructive"
-                                    onClick={() => updateJobItemQuantity(jobItem.debrisItem.id, 0)}
-                                  >
-                                    <Trash2 className="w-3 h-3" />
-                                  </Button>
-                                </div>
-                              </div>
-                            ))}
+                              );
+                            })}
                           </div>
                         </>
                       )}
