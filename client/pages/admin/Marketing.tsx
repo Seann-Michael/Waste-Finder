@@ -404,15 +404,117 @@ export default function Marketing() {
                   </div>
                 )}
 
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-1">
-                    <Monitor className="w-4 h-4" />
-                    Desktop
+                {/* Desktop/Mobile Specific Settings */}
+                <div className="space-y-4 pt-4 border-t">
+                  <h4 className="font-medium text-sm">Device-Specific Settings</h4>
+
+                  {/* Desktop Settings */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Monitor className="w-4 h-4" />
+                        <Label>Desktop</Label>
+                      </div>
+                      <Switch
+                        checked={config.desktop.enabled}
+                        onCheckedChange={(checked) =>
+                          updateAdConfig(placement, "desktop", { ...config.desktop, enabled: checked })
+                        }
+                      />
+                    </div>
+
+                    {config.desktop.enabled && (
+                      <div className="ml-6 space-y-2">
+                        {config.adType === "adsense" && (
+                          <div>
+                            <Label className="text-xs">Desktop AdSense Code (Optional - uses main if empty)</Label>
+                            <Textarea
+                              placeholder="Desktop-specific AdSense code..."
+                              value={config.desktop.code || ""}
+                              onChange={(e) =>
+                                updateAdConfig(placement, "desktop", { ...config.desktop, code: e.target.value })
+                              }
+                              rows={3}
+                              className="font-mono text-sm"
+                            />
+                          </div>
+                        )}
+                        {config.adType === "image" && (
+                          <div className="space-y-2">
+                            <div>
+                              <Label className="text-xs">Desktop Image URL</Label>
+                              <Input
+                                placeholder="Desktop banner image URL..."
+                                value={config.desktop.imageUrl || ""}
+                                onChange={(e) =>
+                                  updateAdConfig(placement, "desktop", { ...config.desktop, imageUrl: e.target.value })
+                                }
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
-                  <div className="flex items-center gap-1">
-                    <Smartphone className="w-4 h-4" />
-                    Mobile
+
+                  {/* Mobile Settings */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Smartphone className="w-4 h-4" />
+                        <Label>Mobile</Label>
+                      </div>
+                      <Switch
+                        checked={config.mobile.enabled}
+                        onCheckedChange={(checked) =>
+                          updateAdConfig(placement, "mobile", { ...config.mobile, enabled: checked })
+                        }
+                      />
+                    </div>
+
+                    {config.mobile.enabled && (
+                      <div className="ml-6 space-y-2">
+                        {config.adType === "adsense" && (
+                          <div>
+                            <Label className="text-xs">Mobile AdSense Code (Optional - uses main if empty)</Label>
+                            <Textarea
+                              placeholder="Mobile-specific AdSense code..."
+                              value={config.mobile.code || ""}
+                              onChange={(e) =>
+                                updateAdConfig(placement, "mobile", { ...config.mobile, code: e.target.value })
+                              }
+                              rows={3}
+                              className="font-mono text-sm"
+                            />
+                          </div>
+                        )}
+                        {config.adType === "image" && (
+                          <div className="space-y-2">
+                            <div>
+                              <Label className="text-xs">Mobile Image URL</Label>
+                              <Input
+                                placeholder="Mobile banner image URL..."
+                                value={config.mobile.imageUrl || ""}
+                                onChange={(e) =>
+                                  updateAdConfig(placement, "mobile", { ...config.mobile, imageUrl: e.target.value })
+                                }
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
+
+                  {/* Show placeholder info */}
+                  {(config.desktop.enabled || config.mobile.enabled) && !config.code && (
+                    <Alert>
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription className="text-xs">
+                        When enabled without code, ad placeholders will be shown on the site.
+                      </AlertDescription>
+                    </Alert>
+                  )}
                 </div>
               </CardContent>
             </Card>
