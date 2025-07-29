@@ -310,7 +310,7 @@ export default function Index() {
       <section className="py-16 px-4 bg-primary text-primary-foreground">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-8">
-            Ready to Find Your Nearest Facility?
+            Ready to Find Your Nearest Location?
           </h2>
           <div className="flex justify-center">
             <Button size="lg" variant="secondary" className="text-lg px-8">
