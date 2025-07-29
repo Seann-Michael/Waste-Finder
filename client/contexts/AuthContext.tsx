@@ -185,17 +185,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(data.user);
       showSuccess(`Welcome back, ${data.user.username}!`);
 
-      // Track user login for monitoring
-      setUserContext({
-        id: data.user.id,
-        email: data.user.email,
-        role: data.user.role,
-      });
-      identifyUser(data.user.id, {
-        username: data.user.username,
-        role: data.user.role,
-      });
-      trackUserAction("login", { role: data.user.role });
+      // Track user login for monitoring (with error handling)
+      try {
+        setUserContext({
+          id: data.user.id,
+          email: data.user.email,
+          role: data.user.role,
+        });
+        identifyUser(data.user.id, {
+          username: data.user.username,
+          role: data.user.role,
+        });
+        trackUserAction("login", { role: data.user.role });
+      } catch (monitoringError) {
+        console.warn('Monitoring tracking failed:', monitoringError);
+        // Don't fail login if monitoring fails
+      }
 
       // Clear rate limiting on successful login
       sessionStorage.removeItem("rateLimit_login");
