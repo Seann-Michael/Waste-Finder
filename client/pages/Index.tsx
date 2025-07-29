@@ -156,7 +156,7 @@ export default function Index() {
       location: "Metro Transfer Station",
       rating: 4,
       author: "Sarah L.",
-      comment: "Clean facility with good hours. Easy to find and navigate.",
+      comment: "Clean location with good hours. Easy to find and navigate.",
     },
     {
       location: "Capitol Construction Landfill",
