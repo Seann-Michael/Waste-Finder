@@ -26,8 +26,8 @@ export default function Locations() {
   // Parse search params
   const zipCode = searchParams.get("zipCode") || "";
   const radius = parseInt(searchParams.get("radius") || "25");
-  const facilityTypes =
-    searchParams.get("facilityTypes")?.split(",").filter(Boolean) || [];
+  const locationTypes =
+    searchParams.get("locationTypes")?.split(",").filter(Boolean) || [];
   const debrisTypes =
     searchParams.get("debrisTypes")?.split(",").filter(Boolean) || [];
 
