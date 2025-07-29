@@ -197,13 +197,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       // Make secure API request
-      const data = await secureRequest("/api/auth/login", {
-        method: "POST",
-        body: JSON.stringify({
-          username: sanitizedUsername,
-          password: sanitizedPassword,
-        }),
-      });
+      let data;
+      try {
+        data = await secureRequest("/api/auth/login", {
+          method: "POST",
+          body: JSON.stringify({
+            username: sanitizedUsername,
+            password: sanitizedPassword,
+          }),
+        });
+      } catch (requestError) {
+        console.error('Login API request failed:', requestError);
+
+        // Handle specific error types
+        if (requestError instanceof Error) {
+          if (requestError.message.includes('Network error')) {
+            throw new Error('Unable to connect to login server. Please check your connection.');
+          }
+          if (requestError.message.includes('401') || requestError.message.includes('Unauthorized')) {
+            throw new Error('Invalid username or password.');
+          }
+          if (requestError.message.includes('429') || requestError.message.includes('Too Many')) {
+            throw new Error('Too many login attempts. Please wait before trying again.');
+          }
+          if (requestError.message.includes('500')) {
+            throw new Error('Server error. Please try again later.');
+          }
+        }
+
+        throw requestError;
+      }
+
+      // Validate response data
+      if (!data || !data.user) {
+        throw new Error('Invalid response from login server');
+      }
 
       // Set user state (server manages session via HTTP-only cookies)
       setUser(data.user);
