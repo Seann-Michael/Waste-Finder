@@ -78,8 +78,8 @@ export default function AdminLogin() {
     const success = await login(sanitizedUsername, sanitizedPassword);
 
     if (success) {
-      // Don't navigate here - let the useEffect handle it to prevent race conditions
-      // navigate("/admin");
+      // Force immediate navigation after successful login
+      navigate("/admin", { replace: true });
     } else {
       // Error is handled by AuthContext and shown via toast
       setPassword(""); // Clear password on failed attempt
