@@ -18,6 +18,16 @@
   body {
     min-height: 100vh;
     line-height: 1.5;
+    /* Add top padding to account for fixed header */
+    padding-top: 120px; /* Approximate height of banner + admin banner + header */
+  }
+
+  /* Mobile Safari specific fixes for fixed header */
+  @supports (-webkit-touch-callout: none) {
+    body {
+      /* iOS Safari - account for dynamic viewport */
+      padding-top: max(120px, env(safe-area-inset-top) + 120px);
+    }
   }
 
   /* Ensure touch targets are at least 44px */
