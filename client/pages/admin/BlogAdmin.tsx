@@ -130,7 +130,8 @@ export default function BlogAdmin() {
           id: "2",
           name: "Environmental Impact",
           slug: "environmental-impact",
-          description: "Articles about environmental effects and sustainability",
+          description:
+            "Articles about environmental effects and sustainability",
           createdAt: "2024-01-01T00:00:00Z",
         },
         {
@@ -165,14 +166,17 @@ export default function BlogAdmin() {
           id: "1",
           title: "Understanding Landfill Costs: A Complete Guide",
           slug: "understanding-landfill-costs-complete-guide",
-          excerpt: "A comprehensive breakdown of landfill pricing, factors that affect costs, and tips for budget planning.",
-          content: "# Understanding Landfill Costs: A Complete Guide\n\nWhen it comes to waste disposal, understanding the costs involved is crucial for both businesses and individuals...",
+          excerpt:
+            "A comprehensive breakdown of landfill pricing, factors that affect costs, and tips for budget planning.",
+          content:
+            "# Understanding Landfill Costs: A Complete Guide\n\nWhen it comes to waste disposal, understanding the costs involved is crucial for both businesses and individuals...",
           author: "Sean Webb",
           status: "published",
           featured: true,
           tags: ["landfill", "costs", "pricing", "guide"],
           categories: ["1", "4"], // Waste Management and How-to Guides
-          featuredImage: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800",
+          featuredImage:
+            "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800",
           publishedAt: "2024-01-15T10:00:00Z",
           createdAt: "2024-01-15T08:00:00Z",
           updatedAt: "2024-01-15T10:00:00Z",
@@ -181,8 +185,10 @@ export default function BlogAdmin() {
           id: "2",
           title: "Environmental Benefits of Proper Waste Sorting",
           slug: "environmental-benefits-proper-waste-sorting",
-          excerpt: "Learn how proper waste sorting at disposal locations contributes to environmental protection and sustainability.",
-          content: "# Environmental Benefits of Proper Waste Sorting\n\nProper waste sorting is one of the most effective ways to reduce environmental impact...",
+          excerpt:
+            "Learn how proper waste sorting at disposal locations contributes to environmental protection and sustainability.",
+          content:
+            "# Environmental Benefits of Proper Waste Sorting\n\nProper waste sorting is one of the most effective ways to reduce environmental impact...",
           author: "Sean Webb",
           status: "draft",
           featured: false,
@@ -207,7 +213,8 @@ export default function BlogAdmin() {
   };
 
   const extractYouTubeVideoId = (url: string): string | null => {
-    const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+    const regex =
+      /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
     const match = url.match(regex);
     return match ? match[1] : null;
   };
@@ -230,7 +237,9 @@ export default function BlogAdmin() {
         showError("Schedule date and time are required for scheduled posts");
         return false;
       }
-      const scheduledDate = new Date(`${formData.publishDate}T${formData.publishTime}`);
+      const scheduledDate = new Date(
+        `${formData.publishDate}T${formData.publishTime}`,
+      );
       if (scheduledDate <= new Date()) {
         showError("Scheduled date must be in the future");
         return false;
@@ -253,12 +262,20 @@ export default function BlogAdmin() {
       let publishedAt: string | undefined;
       if (formData.status === "published") {
         if (formData.publishDate && formData.publishTime) {
-          publishedAt = new Date(`${formData.publishDate}T${formData.publishTime}`).toISOString();
+          publishedAt = new Date(
+            `${formData.publishDate}T${formData.publishTime}`,
+          ).toISOString();
         } else {
           publishedAt = now;
         }
-      } else if (formData.status === "scheduled" && formData.publishDate && formData.publishTime) {
-        publishedAt = new Date(`${formData.publishDate}T${formData.publishTime}`).toISOString();
+      } else if (
+        formData.status === "scheduled" &&
+        formData.publishDate &&
+        formData.publishTime
+      ) {
+        publishedAt = new Date(
+          `${formData.publishDate}T${formData.publishTime}`,
+        ).toISOString();
       }
 
       const postData: BlogPost = {
@@ -270,7 +287,10 @@ export default function BlogAdmin() {
         author: formData.author,
         status: formData.status,
         featured: formData.featured,
-        tags: formData.tags.split(",").map(tag => tag.trim()).filter(Boolean),
+        tags: formData.tags
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter(Boolean),
         categories: formData.categories,
         featuredImage: formData.featuredImage || undefined,
         publishedAt,
@@ -279,13 +299,17 @@ export default function BlogAdmin() {
       };
 
       const updatedPosts = editingPost
-        ? posts.map(post => post.id === editingPost.id ? postData : post)
+        ? posts.map((post) => (post.id === editingPost.id ? postData : post))
         : [...posts, postData];
 
       setPosts(updatedPosts);
       localStorage.setItem("blogPosts", JSON.stringify(updatedPosts));
 
-      showSuccess(editingPost ? "Post updated successfully!" : "Post created successfully!");
+      showSuccess(
+        editingPost
+          ? "Post updated successfully!"
+          : "Post created successfully!",
+      );
       setShowEditor(false);
       resetForm();
     } catch (error) {
@@ -305,7 +329,7 @@ export default function BlogAdmin() {
     let publishTime = "";
     if (post.publishedAt) {
       const date = new Date(post.publishedAt);
-      publishDate = date.toISOString().split('T')[0];
+      publishDate = date.toISOString().split("T")[0];
       publishTime = date.toTimeString().slice(0, 5);
     }
 
@@ -328,7 +352,7 @@ export default function BlogAdmin() {
   const handleDeletePost = async () => {
     if (!postToDelete) return;
 
-    const updatedPosts = posts.filter(post => post.id !== postToDelete.id);
+    const updatedPosts = posts.filter((post) => post.id !== postToDelete.id);
     setPosts(updatedPosts);
     localStorage.setItem("blogPosts", JSON.stringify(updatedPosts));
 
@@ -417,7 +441,11 @@ export default function BlogAdmin() {
                 <div>
                   <p className="text-sm text-muted-foreground">Published</p>
                   <p className="text-2xl font-bold">
-                    {(posts || []).filter(post => post && post.status === "published").length}
+                    {
+                      (posts || []).filter(
+                        (post) => post && post.status === "published",
+                      ).length
+                    }
                   </p>
                 </div>
               </div>
@@ -433,7 +461,11 @@ export default function BlogAdmin() {
                 <div>
                   <p className="text-sm text-muted-foreground">Drafts</p>
                   <p className="text-2xl font-bold">
-                    {(posts || []).filter(post => post && post.status === "draft").length}
+                    {
+                      (posts || []).filter(
+                        (post) => post && post.status === "draft",
+                      ).length
+                    }
                   </p>
                 </div>
               </div>
@@ -449,7 +481,10 @@ export default function BlogAdmin() {
                 <div>
                   <p className="text-sm text-muted-foreground">Featured</p>
                   <p className="text-2xl font-bold">
-                    {(posts || []).filter(post => post && post.featured).length}
+                    {
+                      (posts || []).filter((post) => post && post.featured)
+                        .length
+                    }
                   </p>
                 </div>
               </div>
@@ -477,49 +512,55 @@ export default function BlogAdmin() {
                 {(posts || []).map((post) => {
                   if (!post || !post.id) return null;
                   return (
-                  <TableRow key={post.id}>
-                    <TableCell>
-                      <div>
-                        <div className="font-medium">{post.title || "Untitled"}</div>
-                        <div className="text-sm text-muted-foreground">
-                          {post.excerpt ? post.excerpt.substring(0, 60) + "..." : "No excerpt available"}
+                    <TableRow key={post.id}>
+                      <TableCell>
+                        <div>
+                          <div className="font-medium">
+                            {post.title || "Untitled"}
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            {post.excerpt
+                              ? post.excerpt.substring(0, 60) + "..."
+                              : "No excerpt available"}
+                          </div>
+                          {post.featured && (
+                            <Badge variant="outline" className="mt-1 text-xs">
+                              Featured
+                            </Badge>
+                          )}
                         </div>
-                        {post.featured && (
-                          <Badge variant="outline" className="mt-1 text-xs">
-                            Featured
-                          </Badge>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell>{getStatusBadge(post.status || "draft")}</TableCell>
-                    <TableCell>{post.author || "Unknown"}</TableCell>
-                    <TableCell>
-                      {post.publishedAt
-                        ? new Date(post.publishedAt).toLocaleDateString()
-                        : "-"}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleEditPost(post)}
-                        >
-                          <Edit className="w-3 h-3" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            setPostToDelete(post);
-                            setDeleteDialogOpen(true);
-                          }}
-                        >
-                          <Trash2 className="w-3 h-3" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
+                      </TableCell>
+                      <TableCell>
+                        {getStatusBadge(post.status || "draft")}
+                      </TableCell>
+                      <TableCell>{post.author || "Unknown"}</TableCell>
+                      <TableCell>
+                        {post.publishedAt
+                          ? new Date(post.publishedAt).toLocaleDateString()
+                          : "-"}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleEditPost(post)}
+                          >
+                            <Edit className="w-3 h-3" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setPostToDelete(post);
+                              setDeleteDialogOpen(true);
+                            }}
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
                   );
                 })}
               </TableBody>
@@ -545,7 +586,9 @@ export default function BlogAdmin() {
             <div>
               <ImageUpload
                 value={formData.featuredImage}
-                onChange={(url) => setFormData(prev => ({ ...prev, featuredImage: url }))}
+                onChange={(url) =>
+                  setFormData((prev) => ({ ...prev, featuredImage: url }))
+                }
                 className="mb-6"
               />
             </div>
@@ -556,7 +599,9 @@ export default function BlogAdmin() {
                 <Input
                   id="title"
                   value={formData.title}
-                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, title: e.target.value }))
+                  }
                   placeholder="Enter post title"
                 />
               </div>
@@ -565,7 +610,9 @@ export default function BlogAdmin() {
                 <Input
                   id="author"
                   value={formData.author}
-                  onChange={(e) => setFormData(prev => ({ ...prev, author: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, author: e.target.value }))
+                  }
                   placeholder="Author name"
                 />
               </div>
@@ -576,7 +623,9 @@ export default function BlogAdmin() {
               <Textarea
                 id="excerpt"
                 value={formData.excerpt}
-                onChange={(e) => setFormData(prev => ({ ...prev, excerpt: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, excerpt: e.target.value }))
+                }
                 placeholder="Brief description of the post"
                 rows={2}
               />
@@ -596,12 +645,14 @@ export default function BlogAdmin() {
                         const videoId = extractYouTubeVideoId(youtubeUrl);
                         if (videoId) {
                           const embedCode = `<div class="video-embed my-4"><iframe width="100%" height="315" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe></div>`;
-                          setFormData(prev => ({
+                          setFormData((prev) => ({
                             ...prev,
-                            content: prev.content + '\n\n' + embedCode
+                            content: prev.content + "\n\n" + embedCode,
                           }));
                         } else {
-                          showError("Invalid YouTube URL. Please use a valid YouTube video URL.");
+                          showError(
+                            "Invalid YouTube URL. Please use a valid YouTube video URL.",
+                          );
                         }
                       }
                     }}
@@ -611,7 +662,9 @@ export default function BlogAdmin() {
                 </div>
                 <RichTextEditor
                   value={formData.content}
-                  onChange={(content) => setFormData(prev => ({ ...prev, content }))}
+                  onChange={(content) =>
+                    setFormData((prev) => ({ ...prev, content }))
+                  }
                   placeholder="Write your blog post content here. Use the toolbar for formatting options or switch to HTML mode for advanced editing."
                   className="mt-2"
                 />
@@ -624,7 +677,9 @@ export default function BlogAdmin() {
                 <Input
                   id="tags"
                   value={formData.tags}
-                  onChange={(e) => setFormData(prev => ({ ...prev, tags: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, tags: e.target.value }))
+                  }
                   placeholder="tag1, tag2, tag3"
                 />
               </div>
@@ -633,9 +688,9 @@ export default function BlogAdmin() {
                 <Select
                   value={formData.categories[0] || ""}
                   onValueChange={(value) =>
-                    setFormData(prev => ({
+                    setFormData((prev) => ({
                       ...prev,
-                      categories: value ? [value] : []
+                      categories: value ? [value] : [],
                     }))
                   }
                 >
@@ -665,11 +720,19 @@ export default function BlogAdmin() {
                   <Input
                     id="seoTitle"
                     value={formData.customSeoTitle || ""}
-                    onChange={(e) => setFormData(prev => ({ ...prev, customSeoTitle: e.target.value }))}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        customSeoTitle: e.target.value,
+                      }))
+                    }
                     placeholder="Leave empty to use default template"
                   />
                   <p className="text-xs text-muted-foreground">
-                    Default: {formData.title ? `${formData.title} | WasteFinder Learn` : "Uses blog title template"}
+                    Default:{" "}
+                    {formData.title
+                      ? `${formData.title} | WasteFinder Learn`
+                      : "Uses blog title template"}
                   </p>
                 </div>
                 <div className="space-y-2">
@@ -677,7 +740,12 @@ export default function BlogAdmin() {
                   <Textarea
                     id="seoDescription"
                     value={formData.customSeoDescription || ""}
-                    onChange={(e) => setFormData(prev => ({ ...prev, customSeoDescription: e.target.value }))}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        customSeoDescription: e.target.value,
+                      }))
+                    }
                     placeholder="Leave empty to use post excerpt"
                     rows={2}
                   />
@@ -690,11 +758,17 @@ export default function BlogAdmin() {
                   <Input
                     id="seoKeywords"
                     value={formData.customSeoKeywords || ""}
-                    onChange={(e) => setFormData(prev => ({ ...prev, customSeoKeywords: e.target.value }))}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        customSeoKeywords: e.target.value,
+                      }))
+                    }
                     placeholder="Leave empty to use default template"
                   />
                   <p className="text-xs text-muted-foreground">
-                    Default: waste management, {formData.tags || "post tags"}, environmental blog
+                    Default: waste management, {formData.tags || "post tags"},
+                    environmental blog
                   </p>
                 </div>
               </div>
@@ -705,7 +779,9 @@ export default function BlogAdmin() {
                 <Label htmlFor="status">Status *</Label>
                 <Select
                   value={formData.status}
-                  onValueChange={(value) => setFormData(prev => ({ ...prev, status: value as any }))}
+                  onValueChange={(value) =>
+                    setFormData((prev) => ({ ...prev, status: value as any }))
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -718,29 +794,44 @@ export default function BlogAdmin() {
                 </Select>
               </div>
 
-              {(formData.status === "published" || formData.status === "scheduled") && (
+              {(formData.status === "published" ||
+                formData.status === "scheduled") && (
                 <>
                   <div>
                     <Label htmlFor="publish-date">
-                      {formData.status === "scheduled" ? "Schedule Date *" : "Publish Date"}
+                      {formData.status === "scheduled"
+                        ? "Schedule Date *"
+                        : "Publish Date"}
                     </Label>
                     <Input
                       id="publish-date"
                       type="date"
                       value={formData.publishDate}
-                      onChange={(e) => setFormData(prev => ({ ...prev, publishDate: e.target.value }))}
-                      min={new Date().toISOString().split('T')[0]}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          publishDate: e.target.value,
+                        }))
+                      }
+                      min={new Date().toISOString().split("T")[0]}
                     />
                   </div>
                   <div>
                     <Label htmlFor="publish-time">
-                      {formData.status === "scheduled" ? "Schedule Time *" : "Publish Time"}
+                      {formData.status === "scheduled"
+                        ? "Schedule Time *"
+                        : "Publish Time"}
                     </Label>
                     <Input
                       id="publish-time"
                       type="time"
                       value={formData.publishTime}
-                      onChange={(e) => setFormData(prev => ({ ...prev, publishTime: e.target.value }))}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          publishTime: e.target.value,
+                        }))
+                      }
                     />
                   </div>
                 </>
@@ -750,7 +841,9 @@ export default function BlogAdmin() {
                 <Switch
                   id="featured"
                   checked={formData.featured}
-                  onCheckedChange={(checked) => setFormData(prev => ({ ...prev, featured: checked }))}
+                  onCheckedChange={(checked) =>
+                    setFormData((prev) => ({ ...prev, featured: checked }))
+                  }
                 />
                 <Label htmlFor="featured">Featured Post</Label>
               </div>
@@ -766,7 +859,9 @@ export default function BlogAdmin() {
                   This post will be automatically published on{" "}
                   {formData.publishDate && formData.publishTime ? (
                     <span className="font-medium">
-                      {new Date(`${formData.publishDate}T${formData.publishTime}`).toLocaleString()}
+                      {new Date(
+                        `${formData.publishDate}T${formData.publishTime}`,
+                      ).toLocaleString()}
                     </span>
                   ) : (
                     "the selected date and time"
@@ -790,10 +885,19 @@ export default function BlogAdmin() {
             </Button>
             <Button
               onClick={handleSavePost}
-              disabled={isLoading || !formData.title.trim() || !formData.excerpt.trim() || !formData.content.trim()}
+              disabled={
+                isLoading ||
+                !formData.title.trim() ||
+                !formData.excerpt.trim() ||
+                !formData.content.trim()
+              }
             >
               <Save className="w-4 h-4 mr-2" />
-              {isLoading ? "Saving..." : editingPost ? "Update Post" : "Create Post"}
+              {isLoading
+                ? "Saving..."
+                : editingPost
+                  ? "Update Post"
+                  : "Create Post"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -813,11 +917,15 @@ export default function BlogAdmin() {
           <DialogHeader>
             <DialogTitle>Delete Blog Post</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete "{postToDelete?.title}"? This action cannot be undone.
+              Are you sure you want to delete "{postToDelete?.title}"? This
+              action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setDeleteDialogOpen(false)}
+            >
               Cancel
             </Button>
             <Button variant="destructive" onClick={handleDeletePost}>
