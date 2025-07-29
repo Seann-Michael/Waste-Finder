@@ -415,15 +415,12 @@ export default function News() {
                         </div>
 
                         <Button asChild variant="ghost" size="sm">
-                          <a
-                            href={article.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                          <Link
+                            to={`/news/article/${article.id}`}
                             className="flex items-center gap-1"
                           >
                             Read More
-                            <ExternalLink className="w-3 h-3" />
-                          </a>
+                          </Link>
                         </Button>
                       </div>
 
