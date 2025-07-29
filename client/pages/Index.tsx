@@ -99,9 +99,9 @@ export default function Index() {
   const features = [
     {
       icon: <MapPin className="w-6 h-6" />,
-      title: "Find Nearby Facilities",
+      title: "Find Nearby Locations",
       description:
-        "Locate landfills, transfer stations, and construction facilities near you",
+        "Locate landfills, transfer stations, and construction locations near you",
     },
     {
       icon: <Clock className="w-6 h-6" />,
