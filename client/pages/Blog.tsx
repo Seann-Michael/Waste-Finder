@@ -143,59 +143,85 @@ export default function Blog() {
               </p>
             </div>
 
-            {/* Search and Filter */}
-            <div className="flex flex-col md:flex-row gap-4 mb-8">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                <Input
-                  placeholder="Search blog posts..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
+            {/* Main Content Layout with Sidebar */}
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+              {/* Main Content */}
+              <div className="lg:col-span-3">
+                {/* Search and Filter */}
+                <div className="flex flex-col md:flex-row gap-4 mb-8">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                    <Input
+                      placeholder="Search blog posts..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                    <SelectTrigger className="md:w-48">
+                      <SelectValue placeholder="All Categories" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Categories</SelectItem>
+                      {categories.map((category) => (
+                        <SelectItem key={category.id} value={category.slug}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Results */}
+                {filteredPosts.length === 0 ? (
+                  <div className="text-center py-16">
+                    <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-xl font-semibold mb-2">No posts found</h3>
+                    <p className="text-muted-foreground">
+                      {searchQuery || selectedCategory !== "all"
+                        ? "Try adjusting your search criteria."
+                        : "Check back later for new content."}
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <div className="mb-6">
+                      <p className="text-muted-foreground">
+                        Showing {filteredPosts.length} of {posts.length} posts
+                      </p>
+                    </div>
+
+                    {/* Featured Post */}
+                    {filteredPosts.some(post => post.featured) && (
+                      <div className="mb-12">
+                        <h2 className="text-2xl font-bold mb-6">Featured Article</h2>
+                        <FeaturedBlogCard post={filteredPosts.find(post => post.featured)!} />
+                      </div>
+                    )}
+
+                    {/* Blog Posts Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                      {filteredPosts
+                        .filter(post => !post.featured || filteredPosts.filter(p => p.featured).length > 1)
+                        .map((post) => (
+                          <BlogPostCard key={post.id} post={post} />
+                        ))}
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* Sidebar */}
+              <div className="lg:col-span-1">
+                <BlogSidebar
+                  categories={categories}
+                  posts={posts}
+                  selectedCategory={selectedCategory}
+                  onCategoryChange={setSelectedCategory}
                 />
               </div>
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="md:w-48">
-                  <SelectValue placeholder="All Categories" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  {categories.map((category) => (
-                    <SelectItem key={category.id} value={category.slug}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
             </div>
-
-            {/* Results */}
-            {filteredPosts.length === 0 ? (
-              <div className="text-center py-16">
-                <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-xl font-semibold mb-2">No posts found</h3>
-                <p className="text-muted-foreground">
-                  {searchQuery || selectedCategory !== "all"
-                    ? "Try adjusting your search criteria."
-                    : "Check back later for new content."}
-                </p>
-              </div>
-            ) : (
-              <>
-                <div className="mb-6">
-                  <p className="text-muted-foreground">
-                    Showing {filteredPosts.length} of {posts.length} posts
-                  </p>
-                </div>
-
-                {/* Blog Posts Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                  {filteredPosts.map((post) => (
-                    <BlogPostCard key={post.id} post={post} />
-                  ))}
-                </div>
-              </>
-            )}
           </div>
         </main>
         <Footer />
@@ -296,6 +322,229 @@ const BlogPostCard = React.memo<{ post: BlogPost }>(({ post }) => {
 });
 
 BlogPostCard.displayName = 'BlogPostCard';
+
+/**
+ * Featured blog post card (larger format)
+ */
+const FeaturedBlogCard = React.memo<{ post: BlogPost }>(({ post }) => {
+  const formatDate = (dateString: string) => {
+    if (!dateString) return "Unknown date";
+    try {
+      return new Date(dateString).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    } catch (error) {
+      return "Invalid date";
+    }
+  };
+
+  return (
+    <Card className="overflow-hidden hover:shadow-xl transition-shadow duration-300">
+      <div className="md:flex">
+        {post.featuredImage && (
+          <div className="md:w-1/2">
+            <img
+              src={post.featuredImage}
+              alt={post.title || "Featured blog post"}
+              className="w-full h-64 md:h-full object-cover"
+              loading="eager"
+            />
+          </div>
+        )}
+        <div className={`${post.featuredImage ? 'md:w-1/2' : 'w-full'} p-6 flex flex-col justify-between`}>
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <Badge variant="default" className="text-xs">
+                Featured
+              </Badge>
+              {post.categories && post.categories.map((category) => (
+                <Badge key={category} variant="secondary" className="text-xs">
+                  {category}
+                </Badge>
+              ))}
+            </div>
+
+            <h2 className="text-2xl font-bold mb-3 leading-tight">
+              <Link
+                to={`/blog/${post.slug}`}
+                className="hover:text-primary transition-colors"
+              >
+                {post.title || "Untitled"}
+              </Link>
+            </h2>
+
+            <p className="text-muted-foreground mb-4">
+              {post.excerpt || "No excerpt available"}
+            </p>
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
+              <div className="flex items-center gap-1">
+                <User className="w-4 h-4" />
+                <span>{post.author || "Unknown author"}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Calendar className="w-4 h-4" />
+                <span>{formatDate(post.publishedAt || post.createdAt)}</span>
+              </div>
+            </div>
+
+            <Link
+              to={`/blog/${post.slug}`}
+              className="inline-flex items-center text-primary hover:underline font-medium"
+            >
+              Read full article
+              <ChevronRight className="w-4 h-4 ml-1" />
+            </Link>
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
+});
+
+FeaturedBlogCard.displayName = 'FeaturedBlogCard';
+
+/**
+ * Blog sidebar with categories, recent posts, and tags
+ */
+const BlogSidebar = React.memo<{
+  categories: BlogCategory[];
+  posts: BlogPost[];
+  selectedCategory: string;
+  onCategoryChange: (category: string) => void;
+}>(({ categories, posts, selectedCategory, onCategoryChange }) => {
+  const recentPosts = posts
+    .filter(post => post.status === "published")
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 5);
+
+  const allTags = [...new Set(posts.flatMap(post => post.tags || []))].slice(0, 15);
+
+  return (
+    <div className="space-y-8">
+      {/* Categories */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Tag className="w-5 h-5" />
+            Categories
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <Button
+            variant={selectedCategory === "all" ? "default" : "ghost"}
+            size="sm"
+            className="w-full justify-start"
+            onClick={() => onCategoryChange("all")}
+          >
+            All Posts
+          </Button>
+          {categories.map((category) => {
+            const postCount = posts.filter(post =>
+              post.categories?.includes(category.slug) && post.status === "published"
+            ).length;
+
+            return (
+              <Button
+                key={category.id}
+                variant={selectedCategory === category.slug ? "default" : "ghost"}
+                size="sm"
+                className="w-full justify-between"
+                onClick={() => onCategoryChange(category.slug)}
+              >
+                <span>{category.name}</span>
+                <Badge variant="secondary" className="text-xs">
+                  {postCount}
+                </Badge>
+              </Button>
+            );
+          })}
+        </CardContent>
+      </Card>
+
+      {/* Recent Posts */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Clock className="w-5 h-5" />
+            Recent Posts
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {recentPosts.map((post) => (
+            <div key={post.id} className="border-b border-border pb-3 last:border-b-0 last:pb-0">
+              <Link
+                to={`/blog/${post.slug}`}
+                className="block hover:text-primary transition-colors"
+              >
+                <h4 className="font-medium text-sm mb-1 leading-tight">
+                  {post.title}
+                </h4>
+                <p className="text-xs text-muted-foreground">
+                  {new Date(post.createdAt).toLocaleDateString()}
+                </p>
+              </Link>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+
+      {/* Popular Tags */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <BookOpen className="w-5 h-5" />
+            Popular Tags
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap gap-2">
+            {allTags.map((tag) => (
+              <Badge
+                key={tag}
+                variant="outline"
+                className="text-xs cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
+              >
+                {tag}
+              </Badge>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Newsletter Signup */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Stay Updated</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-sm text-muted-foreground">
+            Get the latest waste management tips and industry news delivered to your inbox.
+          </p>
+          <div className="space-y-2">
+            <Input
+              placeholder="Your email address"
+              type="email"
+              className="text-sm"
+            />
+            <Button size="sm" className="w-full">
+              Subscribe
+            </Button>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            No spam, unsubscribe anytime.
+          </p>
+        </CardContent>
+      </Card>
+    </div>
+  );
+});
+
+BlogSidebar.displayName = 'BlogSidebar';
 
 /**
  * Custom hook for blog data (temporary localStorage implementation)
