@@ -597,7 +597,7 @@ export default function LocationDetail() {
                 {isEditMode ? (
                   <div className="mb-4">
                     <Label htmlFor="edit-name" className="text-sm font-medium">
-                      Facility Name
+                      Location Name
                     </Label>
                     <Input
                       id="edit-name"
