@@ -12,14 +12,14 @@ WasteFinder is a **public waste location database** with **admin-only authentica
 
 ```typescript
 // PUBLIC USERS (No Authentication)
-// - Search facilities by ZIP code
-// - View facility details and maps
+// - Search locations by ZIP code
+// - View location details and maps
 // - Leave reviews (with reCAPTCHA protection)
-// - Suggest new facilities or corrections
+// - Suggest new locations or corrections
 
 // ADMIN USERS (Authentication Required)
-// - Full CRUD operations on facilities
-// - Bulk upload facilities via CSV
+// - Full CRUD operations on locations
+// - Bulk upload locations via CSV
 // - Moderate user reviews and suggestions
 // - Blog content management
 // - System configuration and settings
