@@ -172,7 +172,7 @@ export default function Index() {
       <Header />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary/10 via-background to-accent/5 py-16 px-4">
+      <section className="bg-gradient-to-br from-primary/10 via-background to-accent/5 py-16 px-4 fixed-header-spacing">
         <div className="max-w-7xl mx-auto text-center">
           <div className="max-w-3xl mx-auto">
             <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
