@@ -214,7 +214,7 @@ export default function Blog() {
 
               {/* Sidebar */}
               <div className="lg:col-span-1">
-                <BlogSidebar
+                <SimpleSidebar
                   categories={categories}
                   posts={posts}
                   selectedCategory={selectedCategory}
@@ -565,6 +565,69 @@ const BlogSidebar = React.memo<{
 });
 
 BlogSidebar.displayName = 'BlogSidebar';
+
+/**
+ * Simple sidebar component (safe version)
+ */
+const SimpleSidebar = React.memo<{
+  categories: BlogCategory[];
+  posts: BlogPost[];
+  selectedCategory: string;
+  onCategoryChange: (category: string) => void;
+}>(({ categories = [], posts = [], selectedCategory, onCategoryChange }) => {
+  return (
+    <div className="space-y-6">
+      {/* Categories */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Categories</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <Button
+            variant={selectedCategory === "all" ? "default" : "ghost"}
+            size="sm"
+            className="w-full justify-start"
+            onClick={() => onCategoryChange("all")}
+          >
+            All Posts
+          </Button>
+          {Array.isArray(categories) && categories.map((category) => (
+            <Button
+              key={category?.id || Math.random()}
+              variant={selectedCategory === category?.slug ? "default" : "ghost"}
+              size="sm"
+              className="w-full justify-start"
+              onClick={() => onCategoryChange(category?.slug || "all")}
+            >
+              {category?.name || "Unknown"}
+            </Button>
+          ))}
+        </CardContent>
+      </Card>
+
+      {/* Recent Posts */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Recent Posts</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {Array.isArray(posts) && posts.slice(0, 5).map((post) => (
+            <div key={post?.id || Math.random()} className="text-sm">
+              <Link
+                to={`/blog/${post?.slug || '#'}`}
+                className="hover:text-primary transition-colors"
+              >
+                {post?.title || "Untitled"}
+              </Link>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+    </div>
+  );
+});
+
+SimpleSidebar.displayName = 'SimpleSidebar';
 
 /**
  * Custom hook for blog data (temporary localStorage implementation)
