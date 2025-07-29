@@ -1610,6 +1610,52 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                       placeholder="https://facebook.com/groups/your-group"
                     />
                   </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="facebookCtaTitle">Facebook CTA Title</Label>
+                    <Input
+                      id="facebookCtaTitle"
+                      value={marketingSettings.facebookCtaTitle}
+                      onChange={(e) =>
+                        setMarketingSettings({
+                          ...marketingSettings,
+                          facebookCtaTitle: e.target.value,
+                        })
+                      }
+                      placeholder="Join Our Community!"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="facebookCtaText">Facebook CTA Description</Label>
+                    <Textarea
+                      id="facebookCtaText"
+                      value={marketingSettings.facebookCtaText}
+                      onChange={(e) =>
+                        setMarketingSettings({
+                          ...marketingSettings,
+                          facebookCtaText: e.target.value,
+                        })
+                      }
+                      placeholder="Connect with waste management professionals."
+                      rows={2}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="facebookButtonText">Facebook Button Text</Label>
+                    <Input
+                      id="facebookButtonText"
+                      value={marketingSettings.facebookButtonText}
+                      onChange={(e) =>
+                        setMarketingSettings({
+                          ...marketingSettings,
+                          facebookButtonText: e.target.value,
+                        })
+                      }
+                      placeholder="Join Group"
+                    />
+                  </div>
                 </div>
 
                 <Button onClick={handleSaveMarketingSettings}>
