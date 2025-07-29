@@ -1,5 +1,4 @@
 import * as Sentry from "@sentry/react";
-import { BrowserTracing } from "@sentry/tracing";
 
 /**
  * Initialize Sentry for error tracking and performance monitoring
@@ -8,7 +7,7 @@ export function initSentry() {
   // Only initialize in production or when SENTRY_DSN is provided
   const dsn = import.meta.env.VITE_SENTRY_DSN;
   const environment = import.meta.env.VITE_ENVIRONMENT || 'development';
-  
+
   if (!dsn && environment === 'production') {
     console.warn('Sentry DSN not configured. Error tracking disabled.');
     return;
@@ -18,37 +17,37 @@ export function initSentry() {
     dsn,
     environment,
     integrations: [
-      new BrowserTracing({
+      Sentry.browserTracingIntegration({
         // Set sampling rates
         tracePropagationTargets: ["localhost", /^\//],
       }),
     ],
-    
+
     // Performance monitoring
     tracesSampleRate: environment === 'production' ? 0.1 : 1.0,
-    
+
     // Session replay
     replaysSessionSampleRate: environment === 'production' ? 0.1 : 1.0,
     replaysOnErrorSampleRate: 1.0,
-    
+
     // Error filtering
     beforeSend(event, hint) {
       // Filter out known development errors
       const error = hint.originalException;
-      
+
       // Ignore React dev warnings
       if (error && error.toString().includes('Warning:')) {
         return null;
       }
-      
+
       // Ignore network errors from localhost
       if (error && error.toString().includes('localhost')) {
         return null;
       }
-      
+
       return event;
     },
-    
+
     // Additional configuration
     debug: environment === 'development',
     release: import.meta.env.VITE_APP_VERSION || '1.0.0',
