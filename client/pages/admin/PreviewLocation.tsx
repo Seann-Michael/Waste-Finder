@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import AdminLayout from "@/components/admin/AdminLayout";
+import { formatPhoneNumber } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -81,7 +82,7 @@ export default function PreviewLocation() {
       // Load from localStorage (in production, this would be from API)
       const pendingSuggestions = JSON.parse(localStorage.getItem("pendingSuggestions") || "[]");
       const foundLocation = pendingSuggestions.find((loc: PendingLocation) => loc.id === id);
-      
+
       if (foundLocation) {
         setLocation(foundLocation);
       }
@@ -94,7 +95,7 @@ export default function PreviewLocation() {
 
   const handleApprove = () => {
     if (!location) return;
-    
+
     // Move to approved locations (in real app, this would be an API call)
     const existingLocations = JSON.parse(localStorage.getItem("locations") || "[]");
     const newLocation = {
@@ -106,27 +107,27 @@ export default function PreviewLocation() {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
-    
+
     localStorage.setItem("locations", JSON.stringify([...existingLocations, newLocation]));
-    
+
     // Remove from pending suggestions
     const pendingSuggestions = JSON.parse(localStorage.getItem("pendingSuggestions") || "[]");
     const updated = pendingSuggestions.filter((loc: PendingLocation) => loc.id !== id);
     localStorage.setItem("pendingSuggestions", JSON.stringify(updated));
-    
+
     alert("Location approved and added to active listings!");
     navigate("/admin/suggestions");
   };
 
   const handleReject = () => {
     if (!location) return;
-    
+
     if (confirm("Are you sure you want to reject this location suggestion?")) {
       // Remove from pending suggestions
       const pendingSuggestions = JSON.parse(localStorage.getItem("pendingSuggestions") || "[]");
       const updated = pendingSuggestions.filter((loc: PendingLocation) => loc.id !== id);
       localStorage.setItem("pendingSuggestions", JSON.stringify(updated));
-      
+
       alert("Location suggestion rejected.");
       navigate("/admin/suggestions");
     }
@@ -243,7 +244,7 @@ export default function PreviewLocation() {
             <ArrowLeft className="w-4 h-4" />
             Back to Suggestions
           </Button>
-          
+
           <div className="flex items-center gap-2">
             <Button
               variant="outline"
