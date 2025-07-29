@@ -273,7 +273,32 @@ export default function SuggestEdit({
   };
 
   const onSubmitForm = async (data: SuggestEditFormData) => {
-    if (data.phone && !validatePhoneNumber(data.phone)) {
+    // Sanitize all inputs
+    const sanitizedData = {
+      ...data,
+      name: data.name ? sanitizeInput(data.name, 100) : undefined,
+      address: data.address ? sanitizeInput(data.address, 200) : undefined,
+      city: data.city ? sanitizeInput(data.city, 100) : undefined,
+      state: data.state ? sanitizeInput(data.state.toUpperCase(), 2) : undefined,
+      zipCode: data.zipCode ? sanitizeInput(data.zipCode, 10) : undefined,
+      phone: data.phone ? sanitizeInput(data.phone, 20) : undefined,
+      email: data.email ? sanitizeInput(data.email, 254) : undefined,
+      website: data.website ? sanitizeInput(data.website, 500) : undefined,
+      notes: data.notes ? sanitizeInput(data.notes, 1000) : undefined,
+    };
+
+    // Validate inputs
+    if (sanitizedData.email && !validateEmail(sanitizedData.email)) {
+      alert("Please enter a valid email address");
+      return;
+    }
+
+    if (sanitizedData.website && !validateUrl(sanitizedData.website)) {
+      alert("Please enter a valid website URL");
+      return;
+    }
+
+    if (sanitizedData.phone && !validatePhoneNumber(sanitizedData.phone)) {
       alert("Please enter a valid phone number (10-15 digits)");
       return;
     }
@@ -284,9 +309,9 @@ export default function SuggestEdit({
         id: Date.now().toString(),
         locationId: location.id,
         type: "edit_location",
-        editType: data.editType,
+        editType: sanitizedData.editType,
         data: {
-          ...data,
+          ...sanitizedData,
           originalLocationName: location.name,
         },
         status: "pending",
