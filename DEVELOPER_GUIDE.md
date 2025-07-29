@@ -90,7 +90,7 @@ admin / LocationDataTable.tsx; // Facility management
 admin / ReviewsTable.tsx; // Review moderation
 admin / SuggestionsTable.tsx; // Suggestion approval
 admin / BlogAdmin.tsx; // Blog post management
-admin / BulkUploadFacilities.tsx; // CSV facility import
+admin / BulkUploadFacilities.tsx; // CSV location import
 ```
 
 #### `/client/hooks/` - Custom React Hooks
