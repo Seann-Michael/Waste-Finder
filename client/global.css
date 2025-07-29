@@ -45,18 +45,6 @@
 }
 
 @layer components {
-  /* Fixed header spacing utility */
-  .fixed-header-spacing {
-    padding-top: 110px; /* Banner (42px) + Admin banner (34px if present) + Header (64px) */
-  }
-
-  /* Mobile Safari specific adjustments */
-  @supports (-webkit-touch-callout: none) {
-    .fixed-header-spacing {
-      padding-top: max(110px, env(safe-area-inset-top) + 110px);
-    }
-  }
-
   /* Mobile-optimized container */
   .container-mobile {
     width: 100%;
