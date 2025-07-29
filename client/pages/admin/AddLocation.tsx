@@ -25,7 +25,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import AdminLayout from "@/components/admin/AdminLayout";
-import { validatePhoneNumber, formatPhoneNumber } from "@/lib/utils";
+import { validatePhoneNumber, formatPhoneNumber, validateAndFormatUrl } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -626,12 +626,13 @@ export default function AddLocation() {
                   <Input
                     id="website"
                     {...register("website", {
-                      pattern: {
-                        value: /^https?:\/\/.+/,
-                        message: "Website must start with http:// or https://",
+                      validate: (value) => {
+                        if (!value) return true; // Optional field
+                        const { isValid } = validateAndFormatUrl(value);
+                        return isValid || "Please enter a valid website URL (with or without http/https)";
                       },
                     })}
-                    placeholder="https://location.com"
+                    placeholder="https://location.com or location.com"
                     className={errors.website ? "border-red-500" : ""}
                   />
                   {errors.website && (
