@@ -2,9 +2,72 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Mobile-optimized viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
     <meta name="csrf-token" content="demo-csrf-token-12345" />
-    <title>Waste Finder - Find Disposal Facilities Near You</title>
+
+    <!-- Mobile browser optimizations -->
+    <meta name="theme-color" content="#3b82f6" />
+    <meta name="msapplication-navbutton-color" content="#3b82f6" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="WasteFinder" />
+
+    <!-- SEO and social meta tags -->
+    <meta name="description" content="Find waste disposal facilities, landfills, and recycling centers near you. Comprehensive database of waste management locations across the United States." />
+    <meta name="keywords" content="waste disposal, landfill, recycling center, transfer station, waste management, garbage disposal" />
+
+    <!-- Performance optimizations -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://maps.googleapis.com" />
+    <link rel="dns-prefetch" href="https://www.google.com" />
+
+    <title>WasteFinder - Find Waste Disposal Facilities Near You</title>
+
+    <!-- Mobile optimizations -->
+    <style>
+      html {
+        -webkit-text-size-adjust: 100%;
+        -moz-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+      }
+
+      /* Improve tap highlighting */
+      * {
+        -webkit-tap-highlight-color: rgba(59, 130, 246, 0.1);
+      }
+
+      /* Better scrolling on iOS */
+      body {
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-y: contain;
+      }
+
+      /* Loading state */
+      #root {
+        min-height: 100vh;
+      }
+
+      /* Fix for iOS Safari bottom bar */
+      .min-h-screen {
+        min-height: 100vh;
+        min-height: -webkit-fill-available;
+      }
+
+      /* Touch-friendly minimum sizes */
+      button, input[type="button"], input[type="submit"], a {
+        min-height: 44px;
+        min-width: 44px;
+      }
+
+      /* Prevent zoom on form inputs (iOS) */
+      input, textarea, select {
+        font-size: 16px;
+      }
+    </style>
   </head>
 
   <body>
