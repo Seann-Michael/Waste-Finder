@@ -162,7 +162,12 @@ const TRUCK_CONFIGURATIONS: TruckConfig[] = [
 ];
 
 export default function PricingCalculator() {
-  const [truckConfig, setTruckConfig] = useState<TruckConfig>(TRUCK_CONFIGURATIONS[2]);
+  const [truckConfig, setTruckConfig] = useState<TruckConfig>({
+    ...TRUCK_CONFIGURATIONS[2],
+    length: 0,
+    width: 0,
+    height: 0
+  });
   const [config, setConfig] = useState<PricingConfig>({
     dumpRatePerTon: 85,
     dumpRatePerCubicYard: 45,
