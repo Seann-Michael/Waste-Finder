@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import FacebookCTA from "@/components/FacebookCTA";
 import AdSense from "@/components/AdSense";
 import SuggestEdit from "@/components/SuggestEdit";
-import { formatPhoneNumber } from "@/lib/utils";
+import { formatPhoneNumber, parseLocationFromUrl } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
