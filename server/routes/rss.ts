@@ -286,29 +286,40 @@ export const createRSSFeed = async (req: Request, res: Response) => {
       });
     }
 
+    // Sanitize URL
+    const sanitizedUrl = sanitizeRSSUrl(url);
+
     // Validate URL format
     try {
-      new URL(url);
+      new URL(sanitizedUrl);
     } catch {
       return res.status(400).json({
         error: 'Invalid URL format'
       });
     }
 
-    // In production, this would save to database
     const newFeed = {
       id: Date.now().toString(),
       name,
-      url,
+      url: sanitizedUrl,
       category,
       description: description || "",
       isActive: isActive !== false,
       updateFrequency: updateFrequency || 6,
-      status: "pending",
+      status: "active",
       articleCount: 0,
       createdAt: new Date().toISOString()
     };
 
+    // Store in memory (in production, save to database)
+    rssFeeds.push(newFeed);
+
+    // Trigger aggregation if this is an active feed
+    if (newFeed.isActive) {
+      setTimeout(() => aggregateAllFeeds(), 1000);
+    }
+
+    console.log(`Added RSS feed: ${name} - ${sanitizedUrl}`);
     res.status(201).json(newFeed);
 
   } catch (error) {
