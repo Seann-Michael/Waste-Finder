@@ -66,6 +66,8 @@ interface JobEstimate {
   hasSteps: boolean;
   numberOfSteps: number;
   percentageRequiringSteps: number; // percentage of debris that needs to go up/down steps
+  averageMpg: number; // vehicle fuel efficiency
+  fuelPricePerGallon: number; // current fuel price
 }
 
 const DEBRIS_ITEMS: DebrisItem[] = [
@@ -177,6 +179,8 @@ export default function PricingCalculator() {
     hasSteps: false,
     numberOfSteps: 0,
     percentageRequiringSteps: 0,
+    averageMpg: 12, // typical truck MPG
+    fuelPricePerGallon: 3.50, // default fuel price
   });
 
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
@@ -281,7 +285,12 @@ export default function PricingCalculator() {
       : totalVolume * config.dumpRatePerCubicYard;
 
     const laborCost = (totalLoadingTime / 60) * config.laborRatePerHour; // Convert minutes to hours
-    const fuelCost = estimate.distance * 2 * config.fuelCostPerMile * tripsNeeded; // Round trip * trips
+
+    // Calculate fuel cost: (distance * 2 for round trip * trips) / MPG * price per gallon
+    const totalMiles = estimate.distance * 2 * tripsNeeded; // Round trip * number of trips
+    const gallonsUsed = totalMiles / estimate.averageMpg;
+    const fuelCost = gallonsUsed * estimate.fuelPricePerGallon;
+
     const tripSurcharge = tripsNeeded > 1 ? (tripsNeeded - 1) * 50 : 0; // $50 per additional trip
 
     const subtotal = config.baseServiceFee + dumpFee + laborCost + fuelCost + tripSurcharge + estimate.additionalFees;
@@ -321,21 +330,44 @@ export default function PricingCalculator() {
   });
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 flex flex-col">
       <Header />
       <main className="flex-1 container mx-auto px-4 py-8">
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold">Debris Removal Calculator</h1>
-              <p className="text-muted-foreground">
-                Advanced tool for calculating junk removal jobs with item-by-item estimates
-              </p>
+        <div className="space-y-8">
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 via-purple-600 to-green-600 p-8 text-white shadow-2xl">
+            <div className="absolute inset-0 bg-black/20"></div>
+            <div className="relative z-10 flex items-center justify-between">
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 bg-white/20 rounded-full backdrop-blur-sm">
+                    <Calculator className="w-8 h-8" />
+                  </div>
+                  <div>
+                    <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+                      Debris Removal Calculator
+                    </h1>
+                    <p className="text-blue-100 text-lg">
+                      Professional tool for accurate junk removal estimates 💪
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <Button
+                onClick={saveConfig}
+                className="bg-white/20 hover:bg-white/30 border-white/30 backdrop-blur-sm text-white shadow-lg transition-all duration-200"
+                size="lg"
+              >
+                <Save className="w-5 h-5 mr-2" />
+                Save Configuration
+              </Button>
             </div>
-            <Button onClick={saveConfig}>
-              <Save className="w-4 h-4 mr-2" />
-              Save Configuration
-            </Button>
+
+            {/* Animated background elements */}
+            <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
+              <div className="absolute -top-4 -right-4 w-24 h-24 bg-white/10 rounded-full animate-pulse"></div>
+              <div className="absolute top-1/2 -left-8 w-32 h-32 bg-white/5 rounded-full animate-bounce"></div>
+              <div className="absolute bottom-0 right-1/4 w-16 h-16 bg-white/10 rounded-full animate-pulse delay-1000"></div>
+            </div>
           </div>
 
           <Tabs defaultValue="configure" className="w-full">
@@ -785,40 +817,94 @@ export default function PricingCalculator() {
             <TabsContent value="estimate" className="space-y-6">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Job Details */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Job Details</CardTitle>
+                <Card className="shadow-lg border-0 bg-gradient-to-br from-white to-blue-50">
+                  <CardHeader className="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-t-lg">
+                    <CardTitle className="flex items-center gap-2">
+                      <div className="p-2 bg-white/20 rounded-lg">
+                        <Calculator className="w-5 h-5" />
+                      </div>
+                      Job Details & Site Conditions
+                    </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="distance">Distance to Dump (miles)</Label>
-                        <Input
-                          id="distance"
-                          type="number"
-                          value={estimate.distance}
-                          onChange={(e) => setEstimate({
-                            ...estimate,
-                            distance: Number(e.target.value)
-                          })}
-                        />
+                  <CardContent className="space-y-6 p-6">
+                    {/* Distance & Vehicle Info */}
+                    <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                      <h4 className="font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                        <Truck className="w-4 h-4" />
+                        Travel & Fuel Information
+                      </h4>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="distance" className="text-blue-700">Distance to Dump (miles)</Label>
+                          <Input
+                            id="distance"
+                            type="number"
+                            value={estimate.distance}
+                            onChange={(e) => setEstimate({
+                              ...estimate,
+                              distance: Number(e.target.value)
+                            })}
+                            className="border-blue-300 focus:border-blue-500"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="averageMpg" className="text-blue-700">Vehicle MPG</Label>
+                          <Input
+                            id="averageMpg"
+                            type="number"
+                            step="0.1"
+                            value={estimate.averageMpg}
+                            onChange={(e) => setEstimate({
+                              ...estimate,
+                              averageMpg: Number(e.target.value)
+                            })}
+                            className="border-blue-300 focus:border-blue-500"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="fuelPrice" className="text-blue-700">Fuel Price ($/gallon)</Label>
+                          <Input
+                            id="fuelPrice"
+                            type="number"
+                            step="0.01"
+                            value={estimate.fuelPricePerGallon}
+                            onChange={(e) => setEstimate({
+                              ...estimate,
+                              fuelPricePerGallon: Number(e.target.value)
+                            })}
+                            className="border-blue-300 focus:border-blue-500"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="walkingDistance" className="text-blue-700">Walking Distance (feet)</Label>
+                          <Input
+                            id="walkingDistance"
+                            type="number"
+                            value={estimate.walkingDistance}
+                            onChange={(e) => setEstimate({
+                              ...estimate,
+                              walkingDistance: Number(e.target.value)
+                            })}
+                            className="border-blue-300 focus:border-blue-500"
+                          />
+                        </div>
                       </div>
-                      <div>
-                        <Label htmlFor="walkingDistance">Walking Distance (feet)</Label>
-                        <Input
-                          id="walkingDistance"
-                          type="number"
-                          value={estimate.walkingDistance}
-                          onChange={(e) => setEstimate({
-                            ...estimate,
-                            walkingDistance: Number(e.target.value)
-                          })}
-                        />
-                      </div>
+
+                      {/* Fuel calculation preview */}
+                      {estimate.distance > 0 && totals.tripsNeeded > 0 && (
+                        <div className="mt-3 p-3 bg-blue-100 rounded border border-blue-300">
+                          <div className="text-sm text-blue-800">
+                            <div>Total Miles: {estimate.distance} × 2 (round trip) × {totals.tripsNeeded} trips = {estimate.distance * 2 * totals.tripsNeeded} miles</div>
+                            <div>Fuel Needed: {(estimate.distance * 2 * totals.tripsNeeded / estimate.averageMpg).toFixed(1)} gallons</div>
+                            <div>Fuel Cost: {(estimate.distance * 2 * totals.tripsNeeded / estimate.averageMpg * estimate.fuelPricePerGallon).toFixed(2)} @ ${estimate.fuelPricePerGallon}/gal</div>
+                          </div>
+                        </div>
+                      )}
                     </div>
 
+                    {/* Additional Fees */}
                     <div>
-                      <Label htmlFor="additionalFees">Additional Fees ($)</Label>
+                      <Label htmlFor="additionalFees" className="text-gray-700 font-medium">Additional Fees ($)</Label>
                       <Input
                         id="additionalFees"
                         type="number"
@@ -827,6 +913,7 @@ export default function PricingCalculator() {
                           ...estimate,
                           additionalFees: Number(e.target.value)
                         })}
+                        className="mt-1"
                       />
                     </div>
 
@@ -926,12 +1013,74 @@ export default function PricingCalculator() {
                 </Card>
               </div>
 
+              {/* Selected Items Summary */}
+              {jobItems.length > 0 && (
+                <Card className="shadow-lg border-0 bg-gradient-to-br from-white to-green-50">
+                  <CardHeader className="bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-t-lg">
+                    <CardTitle className="flex items-center gap-2">
+                      <div className="p-2 bg-white/20 rounded-lg">
+                        <Package className="w-5 h-5" />
+                      </div>
+                      Selected Items ({jobItems.length} types, {jobItems.reduce((sum, item) => sum + item.quantity, 0)} total items)
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {jobItems.map((jobItem) => {
+                        const currentWeight = jobItem.customWeight ?? jobItem.debrisItem.weightPerItem;
+                        const currentVolume = jobItem.customVolume ?? jobItem.debrisItem.volumePerItem;
+                        const currentLoadingTime = jobItem.customLoadingTime ?? jobItem.debrisItem.loadingTimePerItem;
+
+                        return (
+                          <div key={jobItem.debrisItem.id} className="bg-white border border-green-200 rounded-lg p-4 shadow-sm">
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="font-medium text-gray-800">{jobItem.debrisItem.name}</div>
+                              <Badge variant="secondary" className="text-lg font-bold">
+                                {jobItem.quantity}×
+                              </Badge>
+                            </div>
+                            <div className="text-sm text-gray-600 mb-2">
+                              <Badge variant="outline" className="text-xs mb-1">
+                                {jobItem.debrisItem.category}
+                              </Badge>
+                            </div>
+                            <div className="space-y-1 text-xs text-gray-600">
+                              <div className="flex justify-between">
+                                <span>Weight:</span>
+                                <span className="font-medium">{(currentWeight * jobItem.quantity).toFixed(2)} tons</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>Volume:</span>
+                                <span className="font-medium">{(currentVolume * jobItem.quantity).toFixed(1)} yd³</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>Load Time:</span>
+                                <span className="font-medium">{currentLoadingTime * jobItem.quantity} min</span>
+                              </div>
+                            </div>
+                            {(jobItem.customWeight || jobItem.customVolume || jobItem.customLoadingTime) && (
+                              <div className="mt-2">
+                                <Badge variant="outline" className="text-xs text-orange-600 border-orange-300">
+                                  Custom Values
+                                </Badge>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
               {/* Cost Breakdown */}
-              <Card>
-                <CardHeader>
+              <Card className="shadow-xl border-0 bg-gradient-to-br from-white to-yellow-50">
+                <CardHeader className="bg-gradient-to-r from-yellow-500 to-orange-600 text-white rounded-t-lg">
                   <CardTitle className="flex items-center gap-2">
-                    <DollarSign className="w-5 h-5" />
-                    Cost Breakdown
+                    <div className="p-2 bg-white/20 rounded-lg">
+                      <DollarSign className="w-5 h-5" />
+                    </div>
+                    Professional Cost Breakdown
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -955,7 +1104,7 @@ export default function PricingCalculator() {
                         {totals.stepsTime > 0 && <div>• Steps: {Math.ceil(totals.stepsTime)}min</div>}
                       </div>
                       <div className="flex justify-between">
-                        <span>Fuel ({estimate.distance} mi × {totals.tripsNeeded} trips):</span>
+                        <span>Fuel ({estimate.distance * 2 * totals.tripsNeeded} mi, {(estimate.distance * 2 * totals.tripsNeeded / estimate.averageMpg).toFixed(1)} gal):</span>
                         <span className="font-medium">${totals.fuelCost.toFixed(2)}</span>
                       </div>
                       {totals.tripSurcharge > 0 && (
@@ -979,40 +1128,66 @@ export default function PricingCalculator() {
                       </div>
                     </div>
 
-                    <div className="flex flex-col justify-center items-center bg-primary/5 rounded-lg p-6">
-                      <div className="text-center">
-                        <div className="text-4xl font-bold text-primary mb-2">
-                          ${totals.total.toFixed(2)}
+                    <div className="relative overflow-hidden bg-gradient-to-br from-green-400 via-blue-500 to-purple-600 rounded-xl p-8 text-white shadow-2xl">
+                      <div className="absolute inset-0 bg-black/10"></div>
+                      <div className="relative z-10 text-center">
+                        <div className="mb-4">
+                          <div className="text-sm text-green-100 mb-2">💰 Total Job Price</div>
+                          <div className="text-6xl font-black mb-2 bg-gradient-to-r from-white to-yellow-200 bg-clip-text text-transparent animate-pulse">
+                            ${totals.total.toFixed(2)}
+                          </div>
+                          <div className="text-green-100 text-lg">
+                            Professional Quote Ready! 🎯
+                          </div>
                         </div>
-                        <div className="text-lg text-muted-foreground mb-4">Total Job Price</div>
 
-                        <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div className="grid grid-cols-2 gap-4 bg-white/10 rounded-lg p-4 backdrop-blur-sm">
                           <div className="text-center">
-                            <div className="flex items-center justify-center gap-1 mb-1">
-                              <Weight className="w-3 h-3" />
-                              <span className="font-medium">{totals.totalWeight.toFixed(2)} tons</span>
+                            <div className="flex items-center justify-center gap-2 mb-1">
+                              <Weight className="w-4 h-4 text-yellow-300" />
+                              <span className="font-bold text-lg">{totals.totalWeight.toFixed(2)} tons</span>
                             </div>
+                            <div className="text-xs text-blue-100">Total Weight</div>
                           </div>
                           <div className="text-center">
-                            <div className="flex items-center justify-center gap-1 mb-1">
-                              <Package className="w-3 h-3" />
-                              <span className="font-medium">{totals.totalVolume.toFixed(1)} yd³</span>
+                            <div className="flex items-center justify-center gap-2 mb-1">
+                              <Package className="w-4 h-4 text-yellow-300" />
+                              <span className="font-bold text-lg">{totals.totalVolume.toFixed(1)} yd³</span>
                             </div>
+                            <div className="text-xs text-blue-100">Total Volume</div>
                           </div>
                           <div className="text-center">
-                            <div className="flex items-center justify-center gap-1 mb-1">
-                              <Clock className="w-3 h-3" />
-                              <span className="font-medium">{Math.ceil(totals.totalLoadingTime)}min</span>
+                            <div className="flex items-center justify-center gap-2 mb-1">
+                              <Clock className="w-4 h-4 text-yellow-300" />
+                              <span className="font-bold text-lg">{Math.ceil(totals.totalLoadingTime)}min</span>
                             </div>
+                            <div className="text-xs text-blue-100">Labor Time</div>
                           </div>
                           <div className="text-center">
-                            <div className="flex items-center justify-center gap-1 mb-1">
-                              <Truck className="w-3 h-3" />
-                              <span className="font-medium">{totals.tripsNeeded} trip{totals.tripsNeeded > 1 ? 's' : ''}</span>
+                            <div className="flex items-center justify-center gap-2 mb-1">
+                              <Truck className="w-4 h-4 text-yellow-300" />
+                              <span className="font-bold text-lg">{totals.tripsNeeded} trip{totals.tripsNeeded > 1 ? 's' : ''}</span>
                             </div>
+                            <div className="text-xs text-blue-100">Trips Needed</div>
                           </div>
                         </div>
+
+                        <Button
+                          className="mt-4 bg-white text-purple-600 hover:bg-gray-100 font-bold text-lg px-8 py-3 shadow-lg"
+                          onClick={() => {
+                            const quote = `DEBRIS REMOVAL ESTIMATE\n\nTotal Price: $${totals.total.toFixed(2)}\n\nItems: ${jobItems.length} types, ${jobItems.reduce((sum, item) => sum + item.quantity, 0)} total\nWeight: ${totals.totalWeight.toFixed(2)} tons\nVolume: ${totals.totalVolume.toFixed(1)} cubic yards\nTrips: ${totals.tripsNeeded}\n\nGenerated by WasteFinder Calculator`;
+                            navigator.clipboard.writeText(quote);
+                            alert('Quote copied to clipboard!');
+                          }}
+                        >
+                          📋 Copy Quote
+                        </Button>
                       </div>
+
+                      {/* Animated background elements */}
+                      <div className="absolute top-2 right-2 w-8 h-8 bg-white/20 rounded-full animate-bounce"></div>
+                      <div className="absolute bottom-4 left-4 w-6 h-6 bg-yellow-300/30 rounded-full animate-pulse"></div>
+                      <div className="absolute top-1/2 left-2 w-4 h-4 bg-white/20 rounded-full animate-ping"></div>
                     </div>
                   </div>
                 </CardContent>
