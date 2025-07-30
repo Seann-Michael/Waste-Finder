@@ -208,7 +208,7 @@ export default function PricingCalculator() {
   const getCookie = (name: string): string | null => {
     const nameEQ = name + "=";
     const ca = document.cookie.split(';');
-    for(let i = 0; i < ca.length; i++) {
+    for (let i = 0; i < ca.length; i++) {
       let c = ca[i];
       while (c.charAt(0) === ' ') c = c.substring(1, c.length);
       if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
@@ -338,7 +338,7 @@ export default function PricingCalculator() {
     const fuelCost = gallonsUsed * estimate.fuelPricePerGallon;
 
     const tripSurcharge = tripsNeeded > 1 ? (tripsNeeded - 1) * 50 : 0; // $50 per additional trip
-
+    
     const removalFee = totalVolume * config.removalRatePerCubicYard; // New removal rate charge
 
     const subtotal = dumpFee + laborCost + fuelCost + tripSurcharge + removalFee + estimate.additionalFees;
@@ -378,70 +378,67 @@ export default function PricingCalculator() {
     return matchesCategory && matchesSearch;
   });
 
-  // PDF Generation Function
   const generatePDF = () => {
     const currentDate = new Date().toLocaleDateString();
     const totalItems = jobItems.reduce((sum, item) => sum + item.quantity, 0);
 
-    // Create detailed items list
     const itemsList = jobItems.map(item => {
-      const weight = item.customWeight ?? item.debrisItem.weightPerItem;
-      const volume = item.customVolume ?? item.debrisItem.volumePerItem;
-      const loadTime = item.customLoadingTime ?? item.debrisItem.loadingTimePerItem;
+      const weight = item.customWeight ?? item.debrisItem?.weightPerItem ?? 0;
+      const volume = item.customVolume ?? item.debrisItem?.volumePerItem ?? 0;
+      const loadTime = item.customLoadingTime ?? item.debrisItem?.loadingTimePerItem ?? 0;
       const customNote = (item.customWeight || item.customVolume || item.customLoadingTime) ? ' (Custom)' : '';
 
       return `${item.quantity}× ${item.debrisItem.name}${customNote}
         Category: ${item.debrisItem.category}
-        Weight: ${(weight * item.quantity).toFixed(2)} tons | Volume: ${(volume * item.quantity).toFixed(1)} yd³ | Load Time: ${loadTime * item.quantity} min`;
+        Weight: ${weight} tons each (Total: ${(weight * item.quantity).toFixed(2)} tons)
+        Volume: ${volume} yd³ each (Total: ${(volume * item.quantity).toFixed(1)} yd³)
+        Load Time: ${loadTime} min each (Total: ${loadTime * item.quantity} min)`;
     }).join('\n\n');
 
     // Calculate fuel details
     const totalMiles = estimate.distance * 2 * totals.tripsNeeded;
     const gallonsUsed = totalMiles / estimate.averageMpg;
 
-    const pdfContent = `
-═══���══════════════════════���══════════════════════════���═════════
-                    DEBRIS REMOVAL ESTIMATE
-══════════���════════════════��═══════════════════════════════════
+    const pdfContent = `DEBRIS REMOVAL ESTIMATE
+Generated on: ${currentDate}
 
-Generated: ${currentDate}
+COMPANY INFORMATION
+─────────────────────────────────────────────────────────────
 Company: ________________________________
 Customer: _______________________________
 Job Address: ____________________________
+Phone: __________________________________
+Email: __________________________________
 
-VEHICLE CONFIGURATION
-────────────────────────���────────────────────────────────────
+VEHICLE & SITE CONFIGURATION
+─────────────────────────────────────────────────────────────
 Vehicle: ${truckConfig.name}
 Capacity: ${truckConfig.capacity} cubic yards
 Payload: ${truckConfig.payload} tons
+Distance to Dump: ${estimate.distance} miles
+Walking Distance: ${estimate.walkingDistance} feet
+${estimate.hasSteps ? `Steps: ${estimate.numberOfSteps} steps (${estimate.percentageRequiringSteps}% of items)` : 'No steps involved'}
 
-JOB SUMMARY
-───────────────────────────────────────────────────────────��─
+DEBRIS ITEMS
+─────────────────────────────────────────────────────────────
 Total Items: ${jobItems.length} types, ${totalItems} pieces
 Total Weight: ${totals.totalWeight.toFixed(2)} tons
 Total Volume: ${totals.totalVolume.toFixed(1)} cubic yards
 Trips Required: ${totals.tripsNeeded}
 Total Labor Time: ${Math.ceil(totals.totalLoadingTime)} minutes
 
-DETAILED ITEMS LIST
-─────────���─────────────��──────────���────────────────────────���─
+ITEMIZED LIST:
 ${itemsList}
 
-JOB SITE CONDITIONS
-───��─────────────────────────────────────���───────────────────
-Distance to Dump: ${estimate.distance} miles
-Walking Distance: ${estimate.walkingDistance} feet
-${estimate.hasSteps ? `Steps Required: ${estimate.numberOfSteps} steps (${estimate.percentageRequiringSteps}% of items)` : 'No Steps Required'}
-
-FUEL & TRAVEL CALCULATION
-──────────────���────────────────────────────���─────────────────
+FUEL & TRAVEL DETAILS
+─────────────────────────────────────────────────────────────
 Vehicle MPG: ${estimate.averageMpg}
 Fuel Price: $${estimate.fuelPricePerGallon}/gallon
 Total Miles: ${estimate.distance} × 2 (round trip) × ${totals.tripsNeeded} trips = ${totalMiles} miles
 Fuel Needed: ${gallonsUsed.toFixed(1)} gallons
 Fuel Cost: $${totals.fuelCost.toFixed(2)}
 
-LABOR TIME BREAKDOWN
+LABOR BREAKDOWN
 ─────────────────────────────────────────────────────────────
 Base Loading Time: ${Math.ceil(totals.baseLoadingTime)} minutes
 Walking Time: ${Math.ceil(totals.walkingTime)} minutes
@@ -449,7 +446,7 @@ ${totals.stepsTime > 0 ? `Steps Time: ${Math.ceil(totals.stepsTime)} minutes` : 
 Total Labor Time: ${Math.ceil(totals.totalLoadingTime)} minutes
 
 COST BREAKDOWN
-───────────��─────────������──────────────────────────────────────
+────────────────────────────────────────────────────────��────
 Removal Fee (${totals.totalVolume.toFixed(1)} yd³ @ $${config.removalRatePerCubicYard}/yd³):        $${totals.removalFee.toFixed(2)}
 Dump Fee (${config.useTonRate ? `${totals.totalWeight.toFixed(2)} tons` : `${totals.totalVolume.toFixed(1)} yd³`}):                           $${totals.dumpFee.toFixed(2)}
 Labor (${(totals.totalLoadingTime / 60).toFixed(1)} hours @ $${config.laborRatePerHour}/hr):      $${totals.laborCost.toFixed(2)}
@@ -459,41 +456,35 @@ Additional Fees:                             $${estimate.additionalFees.toFixed(
                                            ─────────────
 Subtotal:                                    $${totals.subtotal.toFixed(2)}
 Profit Margin (${config.profitMargin}%):                       $${totals.profitAmount.toFixed(2)}
-                                           ═══���═════════
+                                           ═════════════
 TOTAL JOB PRICE:                             $${totals.total.toFixed(2)}
                                            ═════════════
 
 TERMS & CONDITIONS
-──────────────────��──────────────────────────────────────────
+────────────���────────────────────────────────────────────────
 • This estimate is valid for 30 days
 • Final price may vary based on actual site conditions
 • Payment due upon completion
 • Additional fees apply for hazardous materials
+• Manpower rate ($${config.laborRatePerHour}/hr) is for internal labor cost calculation only
 
 Customer Signature: ____________________  Date: ____________
 
-Company Signature: _____________________  Date: ____________
+Company Signature: _____________________  Date: ____________`;
 
-═════════════════════════════════════════════���═══��═════════════
-                Generated by WasteFinder Calculator
-                    www.wastefinder.com
-════════��══════════��════════════════════════��══════════════════
-`;
-
-    // Create and download the PDF as a text file (for now)
     const blob = new Blob([pdfContent], { type: 'text/plain' });
     const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `Debris_Removal_Estimate_${currentDate.replace(/\//g, '-')}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `debris-removal-estimate-${currentDate.replace(/\//g, '-')}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <Header />
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="space-y-8">
@@ -515,21 +506,15 @@ Company Signature: _____________________  Date: ____________
                   </div>
                 </div>
               </div>
-              <Button
-                onClick={saveConfig}
-                className="bg-white/20 hover:bg-white/30 border-white/30 backdrop-blur-sm text-white shadow-lg transition-all duration-200"
-                size="lg"
-              >
-                <Save className="w-5 h-5 mr-2" />
-                💾 Save Settings
-              </Button>
-            </div>
-
-            {/* Animated background elements */}
-            <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
-              <div className="absolute -top-4 -right-4 w-24 h-24 bg-white/10 rounded-full animate-pulse"></div>
-              <div className="absolute top-1/2 -left-8 w-32 h-32 bg-white/5 rounded-full animate-bounce"></div>
-              <div className="absolute bottom-0 right-1/4 w-16 h-16 bg-white/10 rounded-full animate-pulse delay-1000"></div>
+              <div className="text-right">
+                <Button
+                  onClick={saveConfig}
+                  className="bg-white/20 hover:bg-white/30 border border-white/40 text-white backdrop-blur-sm"
+                >
+                  <Save className="w-4 h-4 mr-2" />
+                  Save Configuration
+                </Button>
+              </div>
             </div>
           </div>
 
@@ -605,9 +590,9 @@ Company Signature: _____________________  Date: ____________
                                 const length = value === "" ? 0 : Number(value);
                                 const width = truckConfig.width ?? 0;
                                 const height = truckConfig.height ?? 0;
-                                const calculatedCapacity = length && width && height ?
+                                const calculatedCapacity = length && width && height ? 
                                   (length * width * height) / 27 : truckConfig.capacity; // convert cubic feet to cubic yards
-
+                                
                                 setTruckConfig({
                                   ...truckConfig,
                                   length,
@@ -629,9 +614,9 @@ Company Signature: _____________________  Date: ____________
                                 const width = value === "" ? 0 : Number(value);
                                 const length = truckConfig.length ?? 0;
                                 const height = truckConfig.height ?? 0;
-                                const calculatedCapacity = length && width && height ?
+                                const calculatedCapacity = length && width && height ? 
                                   (length * width * height) / 27 : truckConfig.capacity;
-
+                                
                                 setTruckConfig({
                                   ...truckConfig,
                                   width,
@@ -653,9 +638,9 @@ Company Signature: _____________________  Date: ____________
                                 const height = value === "" ? 0 : Number(value);
                                 const length = truckConfig.length ?? 0;
                                 const width = truckConfig.width ?? 0;
-                                const calculatedCapacity = length && width && height ?
+                                const calculatedCapacity = length && width && height ? 
                                   (length * width * height) / 27 : truckConfig.capacity;
-
+                                
                                 setTruckConfig({
                                   ...truckConfig,
                                   height,
@@ -770,6 +755,7 @@ Company Signature: _____________________  Date: ____________
                             })}
                           />
                         </div>
+                        <p className="text-xs text-gray-500 mt-1">For calculating worker wages (expense only)</p>
                       </div>
                     </div>
 
@@ -908,11 +894,8 @@ Company Signature: _____________________  Date: ____________
                     />
                   </div>
 
-                  <Separator />
-
-                  <div className="space-y-4">
-                    <h4 className="font-medium">Steps & Access</h4>
-
+                  {/* Steps Configuration */}
+                  <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                     <div className="flex items-center space-x-2">
                       <input
                         type="checkbox"
@@ -920,12 +903,13 @@ Company Signature: _____________________  Date: ____________
                         checked={estimate.hasSteps}
                         onChange={(e) => setEstimate({
                           ...estimate,
-                          hasSteps: e.target.checked,
-                          numberOfSteps: e.target.checked ? estimate.numberOfSteps || 10 : 0,
-                          percentageRequiringSteps: e.target.checked ? estimate.percentageRequiringSteps || 50 : 0
+                          hasSteps: e.target.checked
                         })}
+                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
                       />
-                      <Label htmlFor="hasSteps">Job involves steps</Label>
+                      <Label htmlFor="hasSteps" className="text-gray-700 font-medium">
+                        Job involves steps or stairs
+                      </Label>
                     </div>
 
                     {estimate.hasSteps && (
@@ -1110,7 +1094,7 @@ Company Signature: _____________________  Date: ____________
                         <Package className="w-5 h-5" />
                         📦 Add Items from Library
                       </h3>
-
+                      
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                         {/* Search Input */}
                         <div>
@@ -1376,158 +1360,6 @@ Company Signature: _____________________  Date: ____________
                           </div>
                         </>
                       )}
-                    </div>
-                  </div>
-                </CardContent>
-                </Card>
-
-            </TabsContent>
-          </Tabs>
-        </div>
-      </main>
-      <Footer />
-    </div>
-  );
-}
-
-                            {(jobItem.customWeight || jobItem.customVolume || jobItem.customLoadingTime) && (
-                              <div className="mt-2">
-                                <Badge variant="outline" className="text-xs text-orange-600 border-orange-300">
-                                  Custom Values ✏️
-                                </Badge>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-
-              {/* Cost Breakdown */}
-              <Card className="shadow-xl border-0 bg-gradient-to-br from-white to-yellow-50">
-                <CardHeader className="bg-gradient-to-r from-yellow-500 to-orange-600 text-white rounded-t-lg">
-                  <CardTitle className="flex items-center gap-2">
-                    <div className="p-2 bg-white/20 rounded-lg">
-                      <DollarSign className="w-5 h-5" />
-                    </div>
-                    Professional Cost Breakdown
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-3">
-                      <div className="flex justify-between">
-                        <span>Removal Fee ({totals.totalVolume.toFixed(1)} yd³):</span>
-                        <span className="font-medium">${totals.removalFee.toFixed(2)}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Dump Fee ({config.useTonRate ? `${totals.totalWeight.toFixed(2)} tons` : `${totals.totalVolume.toFixed(1)} yd³`}):</span>
-                        <span className="font-medium">${totals.dumpFee.toFixed(2)}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Labor ({(totals.totalLoadingTime / 60).toFixed(1)}h):</span>
-                        <span className="font-medium">${totals.laborCost.toFixed(2)}</span>
-                      </div>
-                      <div className="ml-4 text-sm text-muted-foreground">
-                        <div>• Loading: {Math.ceil(totals.baseLoadingTime)}min</div>
-                        <div>• Walking: {Math.ceil(totals.walkingTime)}min</div>
-                        {totals.stepsTime > 0 && <div>• Steps: {Math.ceil(totals.stepsTime)}min</div>}
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Fuel ({estimate.distance * 2 * totals.tripsNeeded} mi, {(estimate.distance * 2 * totals.tripsNeeded / estimate.averageMpg).toFixed(1)} gal):</span>
-                        <span className="font-medium">${totals.fuelCost.toFixed(2)}</span>
-                      </div>
-                      {totals.tripSurcharge > 0 && (
-                        <div className="flex justify-between">
-                          <span>Additional Trip Fee:</span>
-                          <span className="font-medium">${totals.tripSurcharge.toFixed(2)}</span>
-                        </div>
-                      )}
-                      <div className="flex justify-between">
-                        <span>Additional Fees:</span>
-                        <span className="font-medium">${estimate.additionalFees.toFixed(2)}</span>
-                      </div>
-                      <Separator />
-                      <div className="flex justify-between">
-                        <span>Subtotal:</span>
-                        <span className="font-medium">${totals.subtotal.toFixed(2)}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Profit ({config.profitMargin}%):</span>
-                        <span className="font-medium text-green-600">${totals.profitAmount.toFixed(2)}</span>
-                      </div>
-                    </div>
-
-                    <div className="relative overflow-hidden bg-gradient-to-br from-green-400 via-blue-500 to-purple-600 rounded-xl p-8 text-white shadow-2xl">
-                      <div className="absolute inset-0 bg-black/10"></div>
-                      <div className="relative z-10 text-center">
-                        <div className="mb-4">
-                          <div className="text-sm text-green-100 mb-2">💰 Total Job Price</div>
-                          <div className="text-6xl font-black mb-2 bg-gradient-to-r from-white to-yellow-200 bg-clip-text text-transparent animate-pulse">
-                            ${totals.total.toFixed(2)}
-                          </div>
-                          <div className="text-green-100 text-lg">
-                            Professional Quote Ready! 🎯
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4 bg-white/10 rounded-lg p-4 backdrop-blur-sm">
-                          <div className="text-center">
-                            <div className="flex items-center justify-center gap-2 mb-1">
-                              <Weight className="w-4 h-4 text-yellow-300" />
-                              <span className="font-bold text-lg">{totals.totalWeight.toFixed(2)} tons</span>
-                            </div>
-                            <div className="text-xs text-blue-100">Total Weight</div>
-                          </div>
-                          <div className="text-center">
-                            <div className="flex items-center justify-center gap-2 mb-1">
-                              <Package className="w-4 h-4 text-yellow-300" />
-                              <span className="font-bold text-lg">{totals.totalVolume.toFixed(1)} yd³</span>
-                            </div>
-                            <div className="text-xs text-blue-100">Total Volume</div>
-                          </div>
-                          <div className="text-center">
-                            <div className="flex items-center justify-center gap-2 mb-1">
-                              <Clock className="w-4 h-4 text-yellow-300" />
-                              <span className="font-bold text-lg">{Math.ceil(totals.totalLoadingTime)}min</span>
-                            </div>
-                            <div className="text-xs text-blue-100">Labor Time</div>
-                          </div>
-                          <div className="text-center">
-                            <div className="flex items-center justify-center gap-2 mb-1">
-                              <Truck className="w-4 h-4 text-yellow-300" />
-                              <span className="font-bold text-lg">{totals.tripsNeeded} trip{totals.tripsNeeded > 1 ? 's' : ''}</span>
-                            </div>
-                            <div className="text-xs text-blue-100">Trips Needed</div>
-                          </div>
-                        </div>
-
-                        <div className="flex gap-3 mt-4">
-                          <Button
-                            className="bg-white text-purple-600 hover:bg-gray-100 font-bold text-lg px-6 py-3 shadow-lg flex-1"
-                            onClick={() => {
-                              const quote = `DEBRIS REMOVAL ESTIMATE\n\nTotal Price: $${totals.total.toFixed(2)}\n\nItems: ${jobItems.length} types, ${jobItems.reduce((sum, item) => sum + item.quantity, 0)} total\nWeight: ${totals.totalWeight.toFixed(2)} tons\nVolume: ${totals.totalVolume.toFixed(1)} cubic yards\nTrips: ${totals.tripsNeeded}\n\nGenerated by WasteFinder Calculator`;
-                              navigator.clipboard.writeText(quote);
-                              alert('Quote copied to clipboard! 📋');
-                            }}
-                          >
-                            📋 Copy Quote
-                          </Button>
-                          <Button
-                            className="bg-gradient-to-r from-red-500 to-pink-600 text-white hover:from-red-600 hover:to-pink-700 font-bold text-lg px-6 py-3 shadow-lg flex-1"
-                            onClick={generatePDF}
-                          >
-                            📄 Download PDF
-                          </Button>
-                        </div>
-                      </div>
-
-                      {/* Animated background elements */}
-                      <div className="absolute top-2 right-2 w-8 h-8 bg-white/20 rounded-full animate-bounce"></div>
-                      <div className="absolute bottom-4 left-4 w-6 h-6 bg-yellow-300/30 rounded-full animate-pulse"></div>
-                      <div className="absolute top-1/2 left-2 w-4 h-4 bg-white/20 rounded-full animate-ping"></div>
                     </div>
                   </div>
                 </CardContent>
