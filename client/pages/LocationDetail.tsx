@@ -117,11 +117,11 @@ export default function LocationDetail() {
   const [reviewAuthor, setReviewAuthor] = useState("");
 
   useEffect(() => {
-    if (id) {
+    if (id || (state && city && locationName)) {
       loadLocationData();
       incrementPageView();
     }
-  }, [id]);
+  }, [id, state, city, locationName]);
 
   const incrementPageView = () => {
     if (!id) return;
