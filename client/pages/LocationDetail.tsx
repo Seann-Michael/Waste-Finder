@@ -142,15 +142,42 @@ export default function LocationDetail() {
   const loadLocationData = async () => {
     setIsLoading(true);
     try {
-      // Fetch location data from server
-      const response = await fetch(`/api/locations/${id}`);
+      let fetchedLocation;
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch location data");
+      // Check if this is a SEO URL (state/city/locationName) or legacy ID URL
+      if (state && city && locationName) {
+        // SEO URL format: /location/state/city/location-name
+        const locationInfo = parseLocationFromUrl({ state, city, locationName });
+        if (!locationInfo) {
+          throw new Error('Invalid URL format');
+        }
+
+        // Search for location by city, state, and name
+        const searchResponse = await fetch(`/api/locations/search?city=${encodeURIComponent(locationInfo.city)}&state=${encodeURIComponent(locationInfo.state)}&name=${encodeURIComponent(locationInfo.name)}`);
+
+        if (!searchResponse.ok) {
+          throw new Error('Location not found');
+        }
+
+        const searchResult = await searchResponse.json();
+        if (!searchResult.locations || searchResult.locations.length === 0) {
+          throw new Error('Location not found');
+        }
+
+        fetchedLocation = searchResult.locations[0];
+      } else if (id) {
+        // Legacy ID-based URL format: /location/:id
+        const response = await fetch(`/api/locations/${id}`);
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch location data");
+        }
+
+        const data = await response.json();
+        fetchedLocation = data.data;
+      } else {
+        throw new Error('Invalid URL parameters');
       }
-
-      const data = await response.json();
-      const fetchedLocation = data.data;
 
       if (!fetchedLocation) {
         throw new Error("Location not found");
