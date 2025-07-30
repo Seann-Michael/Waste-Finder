@@ -460,7 +460,7 @@ Fuel Needed: ${gallonsUsed.toFixed(1)} gallons
 Fuel Cost: $${totals.fuelCost.toFixed(2)}
 
 LABOR BREAKDOWN
-────���────────────────────────────────────────────────────────
+─────────────────────────────────────────────────────────────
 Base Loading Time: ${Math.ceil(totals.baseLoadingTime)} minutes
 Walking Time: ${Math.ceil(totals.walkingTime)} minutes
 ${totals.stepsTime > 0 ? `Steps Time: ${Math.ceil(totals.stepsTime)} minutes` : ''}
@@ -978,7 +978,7 @@ Company Signature: _____________________  Date: ____________`;
                     Professional Cost Breakdown
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-3">
                       {jobItems.length > 0 ? (
