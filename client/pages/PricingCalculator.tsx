@@ -313,7 +313,9 @@ export default function PricingCalculator() {
 
     const tripSurcharge = tripsNeeded > 1 ? (tripsNeeded - 1) * 50 : 0; // $50 per additional trip
 
-    const subtotal = config.baseServiceFee + dumpFee + laborCost + fuelCost + tripSurcharge + estimate.additionalFees;
+    const removalFee = totalVolume * config.removalRatePerCubicYard; // New removal rate charge
+
+    const subtotal = dumpFee + laborCost + fuelCost + tripSurcharge + removalFee + estimate.additionalFees;
     const profitAmount = subtotal * (config.profitMargin / 100);
     const total = subtotal + profitAmount;
 
@@ -371,7 +373,7 @@ export default function PricingCalculator() {
     const gallonsUsed = totalMiles / estimate.averageMpg;
 
     const pdfContent = `
-═══════════════════════════════════════════════════════════════
+══════════════════════════════���════════════════════════════════
                     DEBRIS REMOVAL ESTIMATE
 ═══════════════════════════════════════════════════════════════
 
@@ -395,7 +397,7 @@ Trips Required: ${totals.tripsNeeded}
 Total Labor Time: ${Math.ceil(totals.totalLoadingTime)} minutes
 
 DETAILED ITEMS LIST
-─────────���───────────────────────────────────────────────────
+────────�����───────────────────────────────────────────────────
 ${itemsList}
 
 JOB SITE CONDITIONS
