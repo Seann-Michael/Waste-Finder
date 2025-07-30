@@ -427,7 +427,7 @@ DETAILED ITEMS LIST
 ${itemsList}
 
 JOB SITE CONDITIONS
-───��─────────────────────────────────────────────────────────
+───��─────────────────────────────────────���───────────────────
 Distance to Dump: ${estimate.distance} miles
 Walking Distance: ${estimate.walkingDistance} feet
 ${estimate.hasSteps ? `Steps Required: ${estimate.numberOfSteps} steps (${estimate.percentageRequiringSteps}% of items)` : 'No Steps Required'}
@@ -448,7 +448,7 @@ ${totals.stepsTime > 0 ? `Steps Time: ${Math.ceil(totals.stepsTime)} minutes` : 
 Total Labor Time: ${Math.ceil(totals.totalLoadingTime)} minutes
 
 COST BREAKDOWN
-──────────────────────���──────────────────────────────────────
+───────────��──────────���──────────────────────────────────────
 Removal Fee (${totals.totalVolume.toFixed(1)} yd³ @ $${config.removalRatePerCubicYard}/yd³):        $${totals.removalFee.toFixed(2)}
 Dump Fee (${config.useTonRate ? `${totals.totalWeight.toFixed(2)} tons` : `${totals.totalVolume.toFixed(1)} yd³`}):                           $${totals.dumpFee.toFixed(2)}
 Labor (${(totals.totalLoadingTime / 60).toFixed(1)} hours @ $${config.laborRatePerHour}/hr):      $${totals.laborCost.toFixed(2)}
@@ -934,7 +934,7 @@ Company Signature: _____________________  Date: ____________
                           <Input
                             id="numberOfSteps"
                             type="number"
-                            value={estimate.numberOfSteps}
+                            value={estimate.numberOfSteps ?? 0}
                             onChange={(e) => setEstimate({
                               ...estimate,
                               numberOfSteps: Number(e.target.value)
@@ -947,7 +947,7 @@ Company Signature: _____________________  Date: ____________
                             id="percentageRequiringSteps"
                             type="number"
                             max="100"
-                            value={estimate.percentageRequiringSteps}
+                            value={estimate.percentageRequiringSteps ?? 0}
                             onChange={(e) => setEstimate({
                               ...estimate,
                               percentageRequiringSteps: Number(e.target.value)
