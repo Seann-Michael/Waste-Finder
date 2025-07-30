@@ -394,45 +394,60 @@ export const deleteRSSFeed = async (req: Request, res: Response) => {
 };
 
 /**
+ * Aggregate articles from all active RSS feeds
+ */
+async function aggregateAllFeeds() {
+  console.log('Aggregating articles from all RSS feeds...');
+  aggregatedArticles.length = 0; // Clear existing articles
+
+  for (const feed of rssFeeds.filter(f => f.isActive)) {
+    try {
+      console.log(`Fetching articles from ${feed.name}...`);
+      const rssData = await parser.parseURL(feed.url);
+
+      const articles = rssData.items.slice(0, 20).map((item, index) => ({
+        id: `${feed.id}-${index}`,
+        title: item.title || 'Untitled',
+        description: cleanHtml(item.contentSnippet || item.content || item.summary || '').slice(0, 500),
+        url: item.link || item.guid || '',
+        source: feed.name,
+        category: feed.category,
+        publishedAt: item.pubDate ? new Date(item.pubDate).toISOString() : new Date().toISOString(),
+        author: item.creator || item.author || undefined,
+        imageUrl: extractImageUrl(item),
+        tags: extractTags(item)
+      })).filter(article => article.title && article.url);
+
+      aggregatedArticles.push(...articles);
+      console.log(`Added ${articles.length} articles from ${feed.name}`);
+
+    } catch (error) {
+      console.error(`Error fetching from ${feed.name}:`, error);
+    }
+  }
+
+  // Sort by publication date (newest first)
+  aggregatedArticles.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+  console.log(`Total aggregated articles: ${aggregatedArticles.length}`);
+}
+
+/**
  * Get aggregated news articles from all active feeds
  */
 export const getAggregatedNews = async (req: Request, res: Response) => {
   try {
-    const { category, limit = 50, offset = 0 } = req.query;
+    const { category, limit = 20, offset = 0 } = req.query;
 
-    // In production, this would aggregate from database/cache
-    const mockArticles = [
-      {
-        id: "1",
-        title: "New Recycling Technologies Transform Waste Management Industry",
-        description: "Advanced sorting technologies and AI-powered systems are revolutionizing how we process recyclable materials, leading to higher efficiency rates and reduced contamination.",
-        url: "https://example.com/recycling-tech",
-        source: "Environmental Today",
-        category: "technology",
-        publishedAt: "2024-01-20T14:30:00Z",
-        imageUrl: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400",
-        author: "Sarah Johnson",
-        tags: ["recycling", "technology", "AI", "sustainability"]
-      },
-      {
-        id: "2",
-        title: "Federal Regulations Update: New Standards for Landfill Operations",
-        description: "The EPA announces updated environmental standards for landfill operations, focusing on methane capture and groundwater protection.",
-        url: "https://example.com/federal-regulations",
-        source: "Policy Watch",
-        category: "policy",
-        publishedAt: "2024-01-19T10:15:00Z",
-        imageUrl: "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=400",
-        author: "Michael Chen",
-        tags: ["policy", "EPA", "regulations", "environment"]
-      }
-    ];
+    // If we have no aggregated articles or feeds, try to aggregate
+    if (aggregatedArticles.length === 0 && rssFeeds.length > 0) {
+      await aggregateAllFeeds();
+    }
 
-    let filteredArticles = mockArticles;
+    let filteredArticles = aggregatedArticles;
 
     // Filter by category if specified
     if (category && category !== 'all') {
-      filteredArticles = mockArticles.filter(article => article.category === category);
+      filteredArticles = aggregatedArticles.filter(article => article.category === category);
     }
 
     // Apply pagination
@@ -445,7 +460,8 @@ export const getAggregatedNews = async (req: Request, res: Response) => {
       articles: paginatedArticles,
       total: filteredArticles.length,
       limit: Number(limit),
-      offset: Number(offset)
+      offset: Number(offset),
+      sources: rssFeeds.filter(f => f.isActive).length
     });
 
   } catch (error) {
