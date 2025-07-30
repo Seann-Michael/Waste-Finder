@@ -348,7 +348,7 @@ export default function PricingCalculator() {
 
     // Calculate total line item costs (use custom costs if set, otherwise calculate from volume/dump rates)
     const totalLineItemCosts = jobItems.reduce((sum, item) => {
-      if (item.customLineItemCost) {
+      if (item.customLineItemCost !== undefined) {
         return sum + item.customLineItemCost;
       } else {
         const weight = item.customWeight ?? item.debrisItem?.weightPerItem ?? 0;
@@ -471,7 +471,7 @@ ${totals.stepsTime > 0 ? `Steps Time: ${Math.ceil(totals.stepsTime)} minutes` : 
 Total Labor Time: ${Math.ceil(totals.totalLoadingTime)} minutes
 
 COST BREAKDOWN
-─────────────────────────────────────────────────────────────
+───────────────────────────────���─────────────────────────────
 Removal Fee (${totals.totalVolume.toFixed(1)} yd³ @ $${config.removalRatePerCubicYard}/yd³):        $${totals.removalFee.toFixed(2)}
 Dump Fee (${config.useTonRate ? `${totals.totalWeight.toFixed(2)} tons` : `${totals.totalVolume.toFixed(1)} yd³`}):                           $${totals.dumpFee.toFixed(2)}
 Labor (${(totals.totalLoadingTime / 60).toFixed(1)} hours @ $${config.laborRatePerHour}/hr):      $${totals.laborCost.toFixed(2)}
@@ -1208,7 +1208,7 @@ Company Signature: _____________________  Date: ____________`;
                               if (id === 'mattress_set_full') return '🛏️';
                               if (id === 'mattress_set_queen') return '🛏️';
                               if (id === 'mattress_set_king') return '🛏️';
-                              if (id === 'bed_frame') return '����️';
+                              if (id === 'bed_frame') return '🛏️';
                               if (id === 'dresser') return '🗄️';
                               if (id === 'nightstand') return '🕯️';
                               if (id === 'armoire') return '👔';
