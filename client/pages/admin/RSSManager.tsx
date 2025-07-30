@@ -255,21 +255,42 @@ export default function RSSManager() {
   };
 
   const handleRefresh = async (feedId: string) => {
+    const feed = feeds.find(f => f.id === feedId);
+    if (!feed) return;
+
     try {
-      setFeeds(prev => prev.map(feed =>
-        feed.id === feedId
-          ? { ...feed, lastUpdated: new Date().toISOString(), articleCount: feed.articleCount + Math.floor(Math.random() * 5) }
-          : feed
-      ));
-      toast({
-        title: "RSS Feed Refreshed",
-        description: "The RSS feed has been manually refreshed.",
-      });
+      const response = await fetch(`/api/rss/parse?url=${encodeURIComponent(feed.url)}`);
+      const result = await response.json();
+
+      if (result.articles) {
+        setFeeds(prev => prev.map(f =>
+          f.id === feedId
+            ? {
+                ...f,
+                lastUpdated: new Date().toISOString(),
+                articleCount: result.articles.length,
+                status: "active",
+                errorMessage: undefined
+              }
+            : f
+        ));
+        toast({
+          title: "RSS Feed Refreshed",
+          description: `Successfully loaded ${result.articles.length} articles from "${result.title}"`,
+        });
+      } else {
+        throw new Error(result.error || 'Failed to parse RSS feed');
+      }
     } catch (error) {
+      setFeeds(prev => prev.map(f =>
+        f.id === feedId
+          ? { ...f, status: "error", errorMessage: error instanceof Error ? error.message : "Unknown error" }
+          : f
+      ));
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to refresh RSS feed. Please try again.",
+        description: "Failed to refresh RSS feed. Please check the URL.",
       });
     }
   };
