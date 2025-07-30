@@ -21,6 +21,27 @@ const parser = new Parser({
   }
 });
 
+/**
+ * Sanitize and decode RSS URL
+ */
+function sanitizeRSSUrl(url: string): string {
+  // Decode the double-encoded URL
+  try {
+    url = decodeURIComponent(url);
+  } catch (e) {
+    // If decoding fails, use the original URL
+  }
+
+  // Sanitize URL: fix HTML entities and special characters
+  url = url
+    .replace(/&amp;/g, '&')  // Fix HTML encoded ampersands
+    .replace(/‑/g, '-')      // Fix en-dash to regular hyphen
+    .replace(/–/g, '-')      // Fix em-dash to regular hyphen
+    .trim();
+
+  return url;
+}
+
 interface ParsedFeed {
   title: string;
   description: string;
