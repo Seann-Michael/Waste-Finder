@@ -33,6 +33,45 @@ export function formatPhoneNumber(phone: string): string {
 }
 
 /**
+ * Converts a string to SEO-friendly URL slug
+ * Removes special characters, spaces become hyphens, lowercase
+ */
+export function createSlug(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-') // Replace multiple hyphens with single
+    .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
+}
+
+/**
+ * Generates SEO-friendly location URL
+ * Format: /location/state/city/location-name
+ */
+export function generateLocationUrl(location: { state: string; city: string; name: string }): string {
+  const state = createSlug(location.state);
+  const city = createSlug(location.city);
+  const name = createSlug(location.name);
+  return `/location/${state}/${city}/${name}`;
+}
+
+/**
+ * Extracts location data from SEO URL parameters
+ */
+export function parseLocationFromUrl(params: { state?: string; city?: string; locationName?: string }) {
+  if (!params.state || !params.city || !params.locationName) {
+    return null;
+  }
+
+  return {
+    state: params.state.replace(/-/g, ' '),
+    city: params.city.replace(/-/g, ' '),
+    name: params.locationName.replace(/-/g, ' ')
+  };
+}
+
+/**
  * Validates and normalizes phone numbers
  * Returns true if phone number is valid (10-15 digits)
  */
