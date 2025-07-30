@@ -427,7 +427,7 @@ export default function PricingCalculator() {
 Generated on: ${currentDate}
 
 COMPANY INFORMATION
-─────────────────────────────────────────────────────────────
+────────────────────────────────────────────────────��────────
 Company: ________________________________
 Customer: _______________________________
 Job Address: ____________________________
@@ -455,7 +455,7 @@ ITEMIZED LIST:
 ${itemsList}
 
 FUEL & TRAVEL DETAILS
-─────────────────────────────────────────────────────────────
+��────────────────────────────────────────────────────────────
 Vehicle MPG: ${estimate.averageMpg}
 Fuel Price: $${estimate.fuelPricePerGallon}/gallon
 Total Miles: ${estimate.distance} × 2 (round trip) × ${totals.tripsNeeded} trips = ${totalMiles} miles
@@ -463,7 +463,7 @@ Fuel Needed: ${gallonsUsed.toFixed(1)} gallons
 Fuel Cost: $${totals.fuelCost.toFixed(2)}
 
 LABOR BREAKDOWN
-──────���──────────────────────────────────────────────────────
+─────────────────────────────────────────────────────────────
 Base Loading Time: ${Math.ceil(totals.baseLoadingTime)} minutes
 Walking Time: ${Math.ceil(totals.walkingTime)} minutes
 ${totals.stepsTime > 0 ? `Steps Time: ${Math.ceil(totals.stepsTime)} minutes` : ''}
@@ -1187,35 +1187,56 @@ Company Signature: _____________________  Date: ____________`;
                             // Function to get appropriate icon for each item type
                             const getItemIcon = (itemName: string, category: string) => {
                               const name = itemName.toLowerCase();
+                              // Hot Tubs & Spas
                               if (name.includes('hot tub')) return '🛁';
+                              // Living Room
                               if (name.includes('couch') || name.includes('sofa')) return '🛋️';
-                              if (name.includes('chair')) return '💺';
+                              if (name.includes('recliner') || name.includes('chair')) return '💺';
+                              if (name.includes('coffee table')) return '🪑';
+                              if (name.includes('entertainment')) return '📺';
+                              // Bedroom
                               if (name.includes('mattress') || name.includes('bed')) return '🛏️';
-                              if (name.includes('dresser') || name.includes('nightstand')) return '🗄️';
-                              if (name.includes('desk') || name.includes('table')) return '🪑';
-                              if (name.includes('refrigerator') || name.includes('fridge')) return '❄️';
+                              if (name.includes('dresser') || name.includes('armoire') || name.includes('wardrobe')) return '🗄️';
+                              if (name.includes('nightstand')) return '🛏️';
+                              // Dining & Office
+                              if (name.includes('dining') && name.includes('table')) return '🍽️';
+                              if (name.includes('dining') && name.includes('chair')) return '🪑';
+                              if (name.includes('china cabinet')) return '🏺';
+                              if (name.includes('office') || name.includes('desk')) return '💼';
+                              if (name.includes('file cabinet') || name.includes('bookshelf')) return '📚';
+                              // Major Appliances
+                              if (name.includes('refrigerator')) return '❄️';
                               if (name.includes('freezer')) return '🧊';
-                              if (name.includes('washer') || name.includes('dryer')) return '🧺';
-                              if (name.includes('stove') || name.includes('oven')) return '����';
+                              if (name.includes('washer')) return '🧺';
+                              if (name.includes('dryer')) return '🧺';
+                              if (name.includes('stove') || name.includes('range')) return '🔥';
                               if (name.includes('dishwasher')) return '🍽️';
-                              if (name.includes('microwave')) return '📡';
-                              if (name.includes('tv') || name.includes('dlp')) return '📺';
-                              if (name.includes('computer') || name.includes('monitor')) return '💻';
-                              if (name.includes('brick') || name.includes('cinder')) return '🧱';
-                              if (name.includes('shingles')) return '🏠';
-                              if (name.includes('decking') || name.includes('2x4')) return '🪵';
-                              if (name.includes('drywall')) return '⬜';
-                              if (name.includes('carpet')) return '🧶';
-                              if (name.includes('bathtub')) return '🛁';
-                              if (name.includes('books')) return '📚';
-                              if (name.includes('dirt')) return '🪨';
-                              if (name.includes('clothes')) return '👕';
-                              if (name.includes('boxes')) return '📦';
-                              if (name.includes('exercise')) return '💪';
                               if (name.includes('water heater')) return '🔥';
-                              if (name.includes('tree') || name.includes('branch')) return '🌳';
+                              // Electronics
+                              if (name.includes('tv')) return '📺';
+                              if (name.includes('computer')) return '💻';
+                              if (name.includes('exercise')) return '💪';
+                              if (name.includes('piano')) return '🎹';
+                              // Construction
+                              if (name.includes('drywall')) return '⬜';
+                              if (name.includes('flooring')) return '🔳';
+                              if (name.includes('lumber')) return '🪵';
+                              if (name.includes('shingles')) return '🏠';
+                              if (name.includes('concrete') || name.includes('brick')) return '🧱';
+                              // Bathroom
+                              if (name.includes('bathtub')) return '🛁';
+                              if (name.includes('toilet')) return '🚽';
+                              if (name.includes('vanity')) return '🪞';
+                              // Outdoor
+                              if (name.includes('patio')) return '🪑';
                               if (name.includes('lawn mower')) return '🚜';
-                              if (name.includes('leaves')) return '🍃';
+                              if (name.includes('grill')) return '🔥';
+                              if (name.includes('shed')) return '🏠';
+                              if (name.includes('yard waste')) return '🍃';
+                              // Miscellaneous
+                              if (name.includes('boxes')) return '📦';
+                              if (name.includes('clothing') || name.includes('textile')) return '👕';
+                              if (name.includes('mixed debris')) return '🗑️';
                               return '📋'; // default icon
                             };
 
