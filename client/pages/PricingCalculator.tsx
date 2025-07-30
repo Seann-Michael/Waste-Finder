@@ -445,7 +445,7 @@ Walking Distance: ${estimate.walkingDistance} feet
 ${estimate.hasSteps ? `Steps: ${estimate.numberOfSteps} steps (${estimate.percentageRequiringSteps}% of items)` : 'No steps involved'}
 
 DEBRIS ITEMS
-─────────────────────────────────────────────────────────────
+──────��──────────────────────────────────────────────────────
 Total Items: ${jobItems.length} types, ${totalItems} pieces
 Total Weight: ${totals.totalWeight.toFixed(2)} tons
 Total Volume: ${totals.totalVolume.toFixed(1)} cubic yards
@@ -1219,7 +1219,7 @@ Company Signature: _____________________  Date: ____________`;
                               if (id === 'china_cabinet') return '🏺';
 
                               // Office Furniture
-                              if (id === 'office_desk') return '���';
+                              if (id === 'office_desk') return '💼';
                               if (id === 'file_cabinet') return '🗃️';
                               if (id === 'bookshelf') return '📚';
 
@@ -1400,7 +1400,7 @@ Company Signature: _____________________  Date: ____________`;
                                   </div>
 
                                   {/* Editable Properties with Line Item Cost */}
-                                  <div className="grid grid-cols-4 gap-3">
+                                  <div className="grid grid-cols-5 gap-3">
                                     <div>
                                       <Label htmlFor={`weight-${jobItem.debrisItem.id}`} className="text-xs text-blue-700">
                                         Weight (lbs)
