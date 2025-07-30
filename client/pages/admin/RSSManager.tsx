@@ -278,7 +278,8 @@ export default function RSSManager() {
     if (!feed) return;
 
     try {
-      const response = await fetch(`/api/rss/parse?url=${encodeURIComponent(feed.url)}`);
+      const encodedUrl = encodeURIComponent(encodeURIComponent(feed.url));
+      const response = await fetch(`/api/rss/parse?url=${encodedUrl}`);
       const result = await response.json();
 
       if (result.articles) {
