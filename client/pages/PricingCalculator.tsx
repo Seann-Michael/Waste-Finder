@@ -415,7 +415,7 @@ DETAILED ITEMS LIST
 ${itemsList}
 
 JOB SITE CONDITIONS
-──────────────────────────────────────────��──────────────────
+─────────────────────────────────────────────────────────────
 Distance to Dump: ${estimate.distance} miles
 Walking Distance: ${estimate.walkingDistance} feet
 ${estimate.hasSteps ? `Steps Required: ${estimate.numberOfSteps} steps (${estimate.percentageRequiringSteps}% of items)` : 'No Steps Required'}
@@ -1252,9 +1252,9 @@ Company Signature: _____________________  Date: ____________
                   <CardContent className="p-6">
                     <div className="space-y-3">
                       {jobItems.map((jobItem) => {
-                        const currentWeight = jobItem.customWeight ?? jobItem.debrisItem.weightPerItem;
-                        const currentVolume = jobItem.customVolume ?? jobItem.debrisItem.volumePerItem;
-                        const currentLoadingTime = jobItem.customLoadingTime ?? jobItem.debrisItem.loadingTimePerItem;
+                        const currentWeight = jobItem.customWeight ?? jobItem.debrisItem?.weightPerItem ?? 0;
+                        const currentVolume = jobItem.customVolume ?? jobItem.debrisItem?.volumePerItem ?? 0;
+                        const currentLoadingTime = jobItem.customLoadingTime ?? jobItem.debrisItem?.loadingTimePerItem ?? 0;
 
                         // Calculate individual item pricing
                         const itemVolumeCost = (currentVolume * jobItem.quantity) * config.removalRatePerCubicYard;
