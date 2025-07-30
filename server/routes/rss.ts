@@ -12,10 +12,15 @@
  */
 
 import { Request, Response } from "express";
+import Parser from 'rss-parser';
 
-/**
- * Mock RSS parser - In production, use a proper RSS parser library like 'rss-parser'
- */
+const parser = new Parser({
+  timeout: 10000,
+  headers: {
+    'User-Agent': 'WasteFinder RSS Aggregator 1.0'
+  }
+});
+
 interface ParsedFeed {
   title: string;
   description: string;
@@ -36,7 +41,7 @@ interface ParsedFeed {
 export const parseRSSFeed = async (req: Request, res: Response) => {
   try {
     const { url } = req.query;
-    
+
     if (!url || typeof url !== 'string') {
       return res.status(400).json({
         error: 'RSS feed URL is required'
@@ -95,7 +100,7 @@ export const parseRSSFeed = async (req: Request, res: Response) => {
 export const testRSSFeed = async (req: Request, res: Response) => {
   try {
     const { url } = req.query;
-    
+
     if (!url || typeof url !== 'string') {
       return res.status(400).json({
         error: 'RSS feed URL is required'
@@ -282,7 +287,7 @@ export const deleteRSSFeed = async (req: Request, res: Response) => {
     }
 
     // In production, this would delete from database
-    res.json({ 
+    res.json({
       success: true,
       message: 'RSS feed deleted successfully'
     });
@@ -339,7 +344,7 @@ export const getAggregatedNews = async (req: Request, res: Response) => {
 
     // Apply pagination
     const paginatedArticles = filteredArticles.slice(
-      Number(offset), 
+      Number(offset),
       Number(offset) + Number(limit)
     );
 
