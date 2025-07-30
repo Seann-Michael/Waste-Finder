@@ -401,7 +401,7 @@ export default function PricingCalculator() {
     const pdfContent = `
 ═══════════════════════════════════════════════════════════════
                     DEBRIS REMOVAL ESTIMATE
-═══════════════════════════��═══════════════════════════════════
+═════════════════════════��═��═══════════════════════════════════
 
 Generated: ${currentDate}
 Company: ________________________________
@@ -427,7 +427,7 @@ DETAILED ITEMS LIST
 ${itemsList}
 
 JOB SITE CONDITIONS
-───��─────────────────────────────────────────────────────────
+��──��─────────────────────────────────────────────────────────
 Distance to Dump: ${estimate.distance} miles
 Walking Distance: ${estimate.walkingDistance} feet
 ${estimate.hasSteps ? `Steps Required: ${estimate.numberOfSteps} steps (${estimate.percentageRequiringSteps}% of items)` : 'No Steps Required'}
@@ -448,7 +448,7 @@ ${totals.stepsTime > 0 ? `Steps Time: ${Math.ceil(totals.stepsTime)} minutes` : 
 Total Labor Time: ${Math.ceil(totals.totalLoadingTime)} minutes
 
 COST BREAKDOWN
-─────────────────────────────���───────────────────────────────
+─────────────────────────────────────────────────────────────
 Removal Fee (${totals.totalVolume.toFixed(1)} yd³ @ $${config.removalRatePerCubicYard}/yd³):        $${totals.removalFee.toFixed(2)}
 Dump Fee (${config.useTonRate ? `${totals.totalWeight.toFixed(2)} tons` : `${totals.totalVolume.toFixed(1)} yd³`}):                           $${totals.dumpFee.toFixed(2)}
 Labor (${(totals.totalLoadingTime / 60).toFixed(1)} hours @ $${config.laborRatePerHour}/hr):      $${totals.laborCost.toFixed(2)}
@@ -743,7 +743,7 @@ Company Signature: _____________________  Date: ____________
                             id="dumpRate"
                             type="number"
                             className="pl-8"
-                            value={config.useTonRate ? config.dumpRatePerTon : config.dumpRatePerCubicYard}
+                            value={config.useTonRate ? (config.dumpRatePerTon ?? 85) : (config.dumpRatePerCubicYard ?? 45)}
                             onChange={(e) => setConfig({
                               ...config,
                               ...(config.useTonRate
@@ -762,7 +762,7 @@ Company Signature: _____________________  Date: ____________
                             id="laborRate"
                             type="number"
                             className="pl-8"
-                            value={config.laborRatePerHour}
+                            value={config.laborRatePerHour ?? 25}
                             onChange={(e) => setConfig({
                               ...config,
                               laborRatePerHour: Number(e.target.value)
@@ -781,7 +781,7 @@ Company Signature: _____________________  Date: ____________
                             id="removalRate"
                             type="number"
                             className="pl-8"
-                            value={config.removalRatePerCubicYard}
+                            value={config.removalRatePerCubicYard ?? 35}
                             onChange={(e) => setConfig({
                               ...config,
                               removalRatePerCubicYard: Number(e.target.value)
@@ -794,7 +794,7 @@ Company Signature: _____________________  Date: ____________
                         <Input
                           id="profitMargin"
                           type="number"
-                          value={config.profitMargin}
+                          value={config.profitMargin ?? 35}
                           onChange={(e) => setConfig({
                             ...config,
                             profitMargin: Number(e.target.value)
