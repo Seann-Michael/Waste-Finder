@@ -57,6 +57,11 @@ const adminNavItems = [
     icon: FileText,
   },
   {
+    title: "Page Management",
+    href: "/admin/pages",
+    icon: FileText,
+  },
+  {
     title: "Settings",
     href: "/admin/settings",
     icon: Settings,
