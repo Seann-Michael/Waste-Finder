@@ -5,12 +5,65 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
 import {
   Calculator,
   Scale,
   ArrowUpDown,
   RotateCcw,
+  Package,
 } from "lucide-react";
+
+interface DebrisType {
+  id: string;
+  name: string;
+  category: string;
+  weightPerUnit: number; // pounds per typical unit
+  volumePerUnit: number; // cubic yards per typical unit
+  unit: string; // "each", "cubic yard", "square foot", "bundle", etc.
+  description: string;
+  icon: string;
+}
+
+const DEBRIS_TYPES: DebrisType[] = [
+  // Construction Materials
+  { id: "concrete", name: "Concrete", category: "Construction", weightPerUnit: 4000, volumePerUnit: 1.0, unit: "cubic yard", description: "Broken concrete, sidewalks, driveways", icon: "🧱" },
+  { id: "asphalt", name: "Asphalt", category: "Construction", weightPerUnit: 3000, volumePerUnit: 1.0, unit: "cubic yard", description: "Asphalt pavement, shingles", icon: "🛣️" },
+  { id: "brick", name: "Brick", category: "Construction", weightPerUnit: 3500, volumePerUnit: 1.0, unit: "cubic yard", description: "Clay bricks, masonry", icon: "🧱" },
+  { id: "drywall", name: "Drywall", category: "Construction", weightPerUnit: 50, volumePerUnit: 0.03, unit: "sheet (4x8)", description: "Gypsum wallboard sheets", icon: "⬜" },
+  { id: "lumber", name: "Lumber", category: "Construction", weightPerUnit: 2000, volumePerUnit: 1.0, unit: "cubic yard", description: "Wood boards, framing", icon: "🪵" },
+  { id: "roofing", name: "Roofing Shingles", category: "Construction", weightPerUnit: 80, volumePerUnit: 0.05, unit: "bundle", description: "Asphalt roof shingles", icon: "🏠" },
+  { id: "siding", name: "Siding", category: "Construction", weightPerUnit: 1500, volumePerUnit: 1.0, unit: "cubic yard", description: "Vinyl, wood, or fiber cement", icon: "🏠" },
+
+  // Metals
+  { id: "steel", name: "Steel", category: "Metal", weightPerUnit: 15000, volumePerUnit: 1.0, unit: "cubic yard", description: "Steel beams, rebar, appliances", icon: "🔩" },
+  { id: "aluminum", name: "Aluminum", category: "Metal", weightPerUnit: 1400, volumePerUnit: 1.0, unit: "cubic yard", description: "Aluminum siding, cans, gutters", icon: "📦" },
+  { id: "copper", name: "Copper", category: "Metal", weightPerUnit: 18000, volumePerUnit: 1.0, unit: "cubic yard", description: "Copper pipes, wiring", icon: "🔶" },
+
+  // Green Waste
+  { id: "yard_waste", name: "Yard Waste", category: "Organic", weightPerUnit: 400, volumePerUnit: 1.0, unit: "cubic yard", description: "Grass, leaves, small branches", icon: "🍃" },
+  { id: "tree_logs", name: "Tree Logs", category: "Organic", weightPerUnit: 2000, volumePerUnit: 1.0, unit: "cubic yard", description: "Cut tree trunks and large logs", icon: "🪵" },
+  { id: "stumps", name: "Tree Stumps", category: "Organic", weightPerUnit: 2500, volumePerUnit: 1.0, unit: "cubic yard", description: "Root balls and stumps", icon: "🌳" },
+
+  // Dirt & Stone
+  { id: "topsoil", name: "Topsoil", category: "Earth", weightPerUnit: 2200, volumePerUnit: 1.0, unit: "cubic yard", description: "Regular dirt and topsoil", icon: "🟫" },
+  { id: "clay", name: "Clay", category: "Earth", weightPerUnit: 2800, volumePerUnit: 1.0, unit: "cubic yard", description: "Heavy clay soil", icon: "🟤" },
+  { id: "sand", name: "Sand", category: "Earth", weightPerUnit: 2700, volumePerUnit: 1.0, unit: "cubic yard", description: "Construction sand", icon: "🏖️" },
+  { id: "gravel", name: "Gravel", category: "Earth", weightPerUnit: 3000, volumePerUnit: 1.0, unit: "cubic yard", description: "Crushed stone, gravel", icon: "🪨" },
+  { id: "rock", name: "Rock/Stone", category: "Earth", weightPerUnit: 4500, volumePerUnit: 1.0, unit: "cubic yard", description: "Natural stone, boulders", icon: "🪨" },
+
+  // Mixed Materials
+  { id: "mixed_debris", name: "Mixed C&D Debris", category: "Mixed", weightPerUnit: 800, volumePerUnit: 1.0, unit: "cubic yard", description: "Construction & demolition mix", icon: "🗑️" },
+  { id: "household", name: "Household Items", category: "Mixed", weightPerUnit: 300, volumePerUnit: 1.0, unit: "cubic yard", description: "General household debris", icon: "🏠" },
+  { id: "furniture", name: "Furniture", category: "Mixed", weightPerUnit: 400, volumePerUnit: 1.0, unit: "cubic yard", description: "Mixed furniture pieces", icon: "🛋️" },
+
+  // Specialty Items
+  { id: "appliances", name: "Appliances", category: "Appliances", weightPerUnit: 200, volumePerUnit: 0.4, unit: "each", description: "Washers, dryers, fridges", icon: "🔌" },
+  { id: "mattresses", name: "Mattresses", category: "Furniture", weightPerUnit: 60, volumePerUnit: 0.6, unit: "each", description: "Mattress and box spring", icon: "🛏️" },
+  { id: "tires", name: "Tires", category: "Auto", weightPerUnit: 25, volumePerUnit: 0.1, unit: "each", description: "Car and truck tires", icon: "🛞" },
+  { id: "electronics", name: "Electronics", category: "Electronics", weightPerUnit: 500, volumePerUnit: 1.0, unit: "cubic yard", description: "TVs, computers, e-waste", icon: "📺" },
+];
 
 export default function DebrisWeightCalculator() {
   const [pounds, setPounds] = useState<string>("");
@@ -269,7 +322,7 @@ Generated by WasteFinder Debris Weight Calculator`;
                   <li>• Export results to save your conversion</li>
                 </ul>
                 <div className="mt-4 text-xs text-green-600">
-                  <strong>Common conversion factors:</strong> Mixed debris (800-1200), Concrete (4000), 
+                  <strong>Common conversion factors:</strong> Mixed debris (800-1200), Concrete (4000),
                   Wood (1500-2000), Steel (15000), Aluminum (1400), Dirt (2200-2800)
                 </div>
               </CardContent>
