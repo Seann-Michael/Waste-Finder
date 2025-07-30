@@ -76,78 +76,81 @@ interface JobEstimate {
 }
 
 const DEBRIS_ITEMS: DebrisItem[] = [
-  // Hot Tubs
-  { id: "hot_tub_4", name: "4 Person Hot Tub", category: "Hot Tubs", weightPerItem: 0.8, volumePerItem: 1.2, loadingTimePerItem: 45 },
-  { id: "hot_tub_6", name: "6 Person Hot Tub", category: "Hot Tubs", weightPerItem: 1.2, volumePerItem: 1.8, loadingTimePerItem: 60 },
-  { id: "hot_tub_8", name: "8 Person Hot Tub", category: "Hot Tubs", weightPerItem: 1.6, volumePerItem: 2.4, loadingTimePerItem: 75 },
+  // Hot Tubs & Spas
+  { id: "hot_tub_small", name: "Hot Tub (4-6 Person)", category: "Hot Tubs", weightPerItem: 1.0, volumePerItem: 1.5, loadingTimePerItem: 50 },
+  { id: "hot_tub_large", name: "Hot Tub (7+ Person)", category: "Hot Tubs", weightPerItem: 1.6, volumePerItem: 2.4, loadingTimePerItem: 75 },
 
-  // Couches & Seating
-  { id: "couch_3_person", name: "Couch (3 Person)", category: "Furniture", weightPerItem: 0.06, volumePerItem: 0.6, loadingTimePerItem: 10 },
-  { id: "couch_sectional", name: "Sectional Couch", category: "Furniture", weightPerItem: 0.12, volumePerItem: 1.2, loadingTimePerItem: 18 },
-  { id: "sofa_bed", name: "Sofa Bed", category: "Furniture", weightPerItem: 0.08, volumePerItem: 0.7, loadingTimePerItem: 12 },
-  { id: "chair", name: "Chair", category: "Furniture", weightPerItem: 0.015, volumePerItem: 0.15, loadingTimePerItem: 3 },
+  // Living Room Furniture
+  { id: "sectional_couch", name: "Sectional Couch", category: "Furniture", weightPerItem: 0.12, volumePerItem: 1.2, loadingTimePerItem: 18 },
+  { id: "standard_couch", name: "Standard Couch", category: "Furniture", weightPerItem: 0.07, volumePerItem: 0.6, loadingTimePerItem: 12 },
+  { id: "sofa_bed", name: "Sofa Bed", category: "Furniture", weightPerItem: 0.08, volumePerItem: 0.7, loadingTimePerItem: 15 },
+  { id: "recliner", name: "Recliner Chair", category: "Furniture", weightPerItem: 0.04, volumePerItem: 0.25, loadingTimePerItem: 8 },
+  { id: "coffee_table", name: "Coffee Table", category: "Furniture", weightPerItem: 0.03, volumePerItem: 0.15, loadingTimePerItem: 5 },
+  { id: "entertainment_center", name: "Entertainment Center", category: "Furniture", weightPerItem: 0.08, volumePerItem: 0.4, loadingTimePerItem: 12 },
 
-  // Beds & Mattresses
-  { id: "twin_mattress", name: "Twin Mattress", category: "Furniture", weightPerItem: 0.02, volumePerItem: 0.4, loadingTimePerItem: 4 },
-  { id: "full_mattress", name: "Full Mattress", category: "Furniture", weightPerItem: 0.025, volumePerItem: 0.5, loadingTimePerItem: 5 },
-  { id: "queen_mattress", name: "Queen Mattress", category: "Furniture", weightPerItem: 0.03, volumePerItem: 0.6, loadingTimePerItem: 6 },
-  { id: "king_mattress", name: "King Mattress", category: "Furniture", weightPerItem: 0.04, volumePerItem: 0.8, loadingTimePerItem: 8 },
-  { id: "twin_box_spring", name: "Twin Box Spring", category: "Furniture", weightPerItem: 0.015, volumePerItem: 0.4, loadingTimePerItem: 4 },
-  { id: "full_box_spring", name: "Full Box Spring", category: "Furniture", weightPerItem: 0.02, volumePerItem: 0.5, loadingTimePerItem: 5 },
-  { id: "queen_box_spring", name: "Queen Box Spring", category: "Furniture", weightPerItem: 0.025, volumePerItem: 0.6, loadingTimePerItem: 6 },
-  { id: "king_box_spring", name: "King Box Spring", category: "Furniture", weightPerItem: 0.03, volumePerItem: 0.8, loadingTimePerItem: 8 },
-  { id: "bed_frame", name: "Bed Frame", category: "Furniture", weightPerItem: 0.04, volumePerItem: 0.3, loadingTimePerItem: 6 },
+  // Bedroom Furniture
+  { id: "mattress_set_twin", name: "Twin Mattress Set", category: "Bedroom", weightPerItem: 0.035, volumePerItem: 0.8, loadingTimePerItem: 8 },
+  { id: "mattress_set_full", name: "Full Mattress Set", category: "Bedroom", weightPerItem: 0.045, volumePerItem: 1.0, loadingTimePerItem: 10 },
+  { id: "mattress_set_queen", name: "Queen Mattress Set", category: "Bedroom", weightPerItem: 0.055, volumePerItem: 1.2, loadingTimePerItem: 12 },
+  { id: "mattress_set_king", name: "King Mattress Set", category: "Bedroom", weightPerItem: 0.07, volumePerItem: 1.6, loadingTimePerItem: 15 },
+  { id: "bed_frame", name: "Bed Frame", category: "Bedroom", weightPerItem: 0.04, volumePerItem: 0.3, loadingTimePerItem: 8 },
+  { id: "dresser", name: "Dresser", category: "Bedroom", weightPerItem: 0.07, volumePerItem: 0.4, loadingTimePerItem: 10 },
+  { id: "nightstand", name: "Nightstand", category: "Bedroom", weightPerItem: 0.025, volumePerItem: 0.15, loadingTimePerItem: 5 },
+  { id: "armoire", name: "Armoire/Wardrobe", category: "Bedroom", weightPerItem: 0.1, volumePerItem: 0.6, loadingTimePerItem: 15 },
 
-  // Dressers & Storage
-  { id: "dresser_chest", name: "Dresser of Drawers", category: "Furniture", weightPerItem: 0.08, volumePerItem: 0.4, loadingTimePerItem: 8 },
-  { id: "dresser", name: "Dresser", category: "Furniture", weightPerItem: 0.06, volumePerItem: 0.35, loadingTimePerItem: 6 },
-  { id: "nightstand", name: "Night Stand", category: "Furniture", weightPerItem: 0.025, volumePerItem: 0.15, loadingTimePerItem: 3 },
+  // Dining Room Furniture
+  { id: "dining_table", name: "Dining Table", category: "Furniture", weightPerItem: 0.06, volumePerItem: 0.3, loadingTimePerItem: 10 },
+  { id: "dining_chairs", name: "Dining Chairs (set of 4)", category: "Furniture", weightPerItem: 0.05, volumePerItem: 0.4, loadingTimePerItem: 8 },
+  { id: "china_cabinet", name: "China Cabinet", category: "Furniture", weightPerItem: 0.08, volumePerItem: 0.5, loadingTimePerItem: 12 },
 
-  // Desks & Tables
-  { id: "computer_desk", name: "Computer Desk", category: "Furniture", weightPerItem: 0.04, volumePerItem: 0.25, loadingTimePerItem: 5 },
-  { id: "dining_table", name: "Dining Table", category: "Furniture", weightPerItem: 0.06, volumePerItem: 0.3, loadingTimePerItem: 6 },
+  // Office Furniture
+  { id: "office_desk", name: "Office Desk", category: "Furniture", weightPerItem: 0.05, volumePerItem: 0.3, loadingTimePerItem: 8 },
+  { id: "file_cabinet", name: "File Cabinet", category: "Furniture", weightPerItem: 0.04, volumePerItem: 0.15, loadingTimePerItem: 6 },
+  { id: "bookshelf", name: "Bookshelf", category: "Furniture", weightPerItem: 0.045, volumePerItem: 0.25, loadingTimePerItem: 8 },
 
-  // Appliances
-  { id: "refrigerator", name: "Refrigerator", category: "Appliances", weightPerItem: 0.15, volumePerItem: 0.4, loadingTimePerItem: 15 },
-  { id: "sub_zero_fridge", name: "Sub Zero Refrigerator", category: "Appliances", weightPerItem: 0.25, volumePerItem: 0.6, loadingTimePerItem: 25 },
-  { id: "deep_freezer", name: "Deep Freezer", category: "Appliances", weightPerItem: 0.12, volumePerItem: 0.35, loadingTimePerItem: 12 },
-  { id: "washer", name: "Washing Machine", category: "Appliances", weightPerItem: 0.125, volumePerItem: 0.3, loadingTimePerItem: 12 },
-  { id: "dryer", name: "Dryer", category: "Appliances", weightPerItem: 0.075, volumePerItem: 0.25, loadingTimePerItem: 10 },
-  { id: "stove", name: "Stove/Oven", category: "Appliances", weightPerItem: 0.1, volumePerItem: 0.35, loadingTimePerItem: 12 },
-  { id: "dishwasher", name: "Dishwasher", category: "Appliances", weightPerItem: 0.06, volumePerItem: 0.2, loadingTimePerItem: 10 },
-  { id: "microwave", name: "Microwave", category: "Appliances", weightPerItem: 0.02, volumePerItem: 0.05, loadingTimePerItem: 2 },
+  // Major Appliances
+  { id: "refrigerator", name: "Refrigerator (Standard)", category: "Appliances", weightPerItem: 0.15, volumePerItem: 0.4, loadingTimePerItem: 18 },
+  { id: "refrigerator_large", name: "Refrigerator (Large/French Door)", category: "Appliances", weightPerItem: 0.2, volumePerItem: 0.5, loadingTimePerItem: 25 },
+  { id: "washer", name: "Washing Machine", category: "Appliances", weightPerItem: 0.125, volumePerItem: 0.3, loadingTimePerItem: 15 },
+  { id: "dryer", name: "Dryer", category: "Appliances", weightPerItem: 0.075, volumePerItem: 0.25, loadingTimePerItem: 12 },
+  { id: "stove", name: "Stove/Range", category: "Appliances", weightPerItem: 0.1, volumePerItem: 0.35, loadingTimePerItem: 15 },
+  { id: "dishwasher", name: "Dishwasher", category: "Appliances", weightPerItem: 0.06, volumePerItem: 0.2, loadingTimePerItem: 12 },
+  { id: "freezer_chest", name: "Chest Freezer", category: "Appliances", weightPerItem: 0.08, volumePerItem: 0.3, loadingTimePerItem: 12 },
+  { id: "freezer_upright", name: "Upright Freezer", category: "Appliances", weightPerItem: 0.1, volumePerItem: 0.35, loadingTimePerItem: 15 },
+  { id: "water_heater", name: "Water Heater", category: "Appliances", weightPerItem: 0.065, volumePerItem: 0.15, loadingTimePerItem: 15 },
 
-  // Electronics
-  { id: "dlp_tv", name: "DLP TV", category: "Electronics", weightPerItem: 0.06, volumePerItem: 0.2, loadingTimePerItem: 8 },
-  { id: "tv_large", name: "Large TV (50\"+)", category: "Electronics", weightPerItem: 0.04, volumePerItem: 0.15, loadingTimePerItem: 6 },
-  { id: "tv_small", name: "Small TV (32\" or less)", category: "Electronics", weightPerItem: 0.015, volumePerItem: 0.08, loadingTimePerItem: 3 },
-  { id: "computer", name: "Desktop Computer", category: "Electronics", weightPerItem: 0.01, volumePerItem: 0.05, loadingTimePerItem: 2 },
-  { id: "monitor", name: "Computer Monitor", category: "Electronics", weightPerItem: 0.008, volumePerItem: 0.04, loadingTimePerItem: 2 },
+  // Electronics & Equipment
+  { id: "tv_large", name: "Large TV (55\"+)", category: "Electronics", weightPerItem: 0.04, volumePerItem: 0.15, loadingTimePerItem: 8 },
+  { id: "tv_medium", name: "Medium TV (32-54\")", category: "Electronics", weightPerItem: 0.025, volumePerItem: 0.1, loadingTimePerItem: 6 },
+  { id: "computer_setup", name: "Computer Setup", category: "Electronics", weightPerItem: 0.02, volumePerItem: 0.08, loadingTimePerItem: 5 },
+  { id: "exercise_equipment", name: "Exercise Equipment", category: "Electronics", weightPerItem: 0.06, volumePerItem: 0.2, loadingTimePerItem: 10 },
+  { id: "piano_upright", name: "Upright Piano", category: "Electronics", weightPerItem: 0.35, volumePerItem: 0.8, loadingTimePerItem: 45 },
+  { id: "piano_baby_grand", name: "Baby Grand Piano", category: "Electronics", weightPerItem: 0.5, volumePerItem: 1.2, loadingTimePerItem: 60 },
 
-  // Construction Materials
-  { id: "brick", name: "Brick", category: "Construction", weightPerItem: 0.0025, volumePerItem: 0.001, loadingTimePerItem: 0.5 },
-  { id: "cinderblock", name: "Cinder Block", category: "Construction", weightPerItem: 0.02, volumePerItem: 0.008, loadingTimePerItem: 2 },
-  { id: "shingles", name: "Shingles (bundle)", category: "Construction", weightPerItem: 0.04, volumePerItem: 0.02, loadingTimePerItem: 3 },
-  { id: "cut_decking", name: "Cut Decking (board)", category: "Construction", weightPerItem: 0.01, volumePerItem: 0.015, loadingTimePerItem: 2 },
-  { id: "cut_2x4", name: "Cut 2x4 (piece)", category: "Construction", weightPerItem: 0.005, volumePerItem: 0.008, loadingTimePerItem: 1 },
-  { id: "drywall_sheet", name: "Drywall Sheet", category: "Construction", weightPerItem: 0.025, volumePerItem: 0.02, loadingTimePerItem: 3 },
-  { id: "carpet_roll", name: "Carpet Roll (12x10ft)", category: "Construction", weightPerItem: 0.04, volumePerItem: 0.3, loadingTimePerItem: 8 },
+  // Construction & Renovation
+  { id: "drywall", name: "Drywall (per sheet)", category: "Construction", weightPerItem: 0.025, volumePerItem: 0.02, loadingTimePerItem: 3 },
+  { id: "flooring", name: "Flooring Materials (per sq ft)", category: "Construction", weightPerItem: 0.002, volumePerItem: 0.001, loadingTimePerItem: 0.5 },
+  { id: "lumber", name: "Lumber Bundle", category: "Construction", weightPerItem: 0.05, volumePerItem: 0.1, loadingTimePerItem: 8 },
+  { id: "shingles", name: "Shingles (bundle)", category: "Construction", weightPerItem: 0.04, volumePerItem: 0.02, loadingTimePerItem: 5 },
+  { id: "concrete_debris", name: "Concrete Debris (cubic yard)", category: "Construction", weightPerItem: 2.0, volumePerItem: 1.0, loadingTimePerItem: 25 },
+  { id: "brick_debris", name: "Brick/Block Debris (cubic yard)", category: "Construction", weightPerItem: 1.8, volumePerItem: 1.0, loadingTimePerItem: 20 },
 
-  // Bathroom Items
-  { id: "bathtub", name: "Bathtub", category: "Bathroom", weightPerItem: 0.15, volumePerItem: 0.5, loadingTimePerItem: 20 },
+  // Bathroom Fixtures
+  { id: "bathtub", name: "Bathtub", category: "Bathroom", weightPerItem: 0.15, volumePerItem: 0.5, loadingTimePerItem: 25 },
+  { id: "toilet", name: "Toilet", category: "Bathroom", weightPerItem: 0.05, volumePerItem: 0.15, loadingTimePerItem: 8 },
+  { id: "vanity", name: "Bathroom Vanity", category: "Bathroom", weightPerItem: 0.06, volumePerItem: 0.3, loadingTimePerItem: 10 },
 
-  // Miscellaneous Items
-  { id: "books", name: "Books (box)", category: "Miscellaneous", weightPerItem: 0.03, volumePerItem: 0.05, loadingTimePerItem: 2 },
-  { id: "dirt", name: "Dirt (cubic yard)", category: "Miscellaneous", weightPerItem: 1.3, volumePerItem: 1.0, loadingTimePerItem: 15 },
-  { id: "clothes", name: "Clothes (bag)", category: "Miscellaneous", weightPerItem: 0.01, volumePerItem: 0.1, loadingTimePerItem: 1 },
-  { id: "moving_boxes", name: "Moving Boxes", category: "Miscellaneous", weightPerItem: 0.02, volumePerItem: 0.05, loadingTimePerItem: 1 },
-  { id: "exercise_equipment", name: "Exercise Equipment", category: "Miscellaneous", weightPerItem: 0.06, volumePerItem: 0.2, loadingTimePerItem: 8 },
-  { id: "water_heater", name: "Water Heater", category: "Miscellaneous", weightPerItem: 0.065, volumePerItem: 0.15, loadingTimePerItem: 12 },
+  // Outdoor & Yard Items
+  { id: "patio_furniture_set", name: "Patio Furniture Set", category: "Outdoor", weightPerItem: 0.08, volumePerItem: 0.6, loadingTimePerItem: 15 },
+  { id: "lawn_mower", name: "Lawn Mower", category: "Outdoor", weightPerItem: 0.04, volumePerItem: 0.15, loadingTimePerItem: 8 },
+  { id: "grill", name: "Outdoor Grill", category: "Outdoor", weightPerItem: 0.06, volumePerItem: 0.2, loadingTimePerItem: 10 },
+  { id: "shed_contents", name: "Shed Contents (cubic yard)", category: "Outdoor", weightPerItem: 0.3, volumePerItem: 1.0, loadingTimePerItem: 15 },
 
-  // Yard Waste
-  { id: "tree_branch", name: "Tree Branch (large)", category: "Yard Waste", weightPerItem: 0.015, volumePerItem: 0.2, loadingTimePerItem: 4 },
-  { id: "lawn_mower", name: "Lawn Mower", category: "Yard Waste", weightPerItem: 0.04, volumePerItem: 0.15, loadingTimePerItem: 6 },
-  { id: "bag_leaves", name: "Bag of Leaves", category: "Yard Waste", weightPerItem: 0.01, volumePerItem: 0.1, loadingTimePerItem: 1 },
+  // Bulk Items
+  { id: "household_boxes", name: "Household Boxes (per box)", category: "Miscellaneous", weightPerItem: 0.025, volumePerItem: 0.05, loadingTimePerItem: 2 },
+  { id: "clothing_bags", name: "Clothing/Textile Bags (per bag)", category: "Miscellaneous", weightPerItem: 0.015, volumePerItem: 0.08, loadingTimePerItem: 2 },
+  { id: "mixed_debris", name: "Mixed Debris (cubic yard)", category: "Miscellaneous", weightPerItem: 0.4, volumePerItem: 1.0, loadingTimePerItem: 12 },
+  { id: "yard_waste", name: "Yard Waste (cubic yard)", category: "Outdoor", weightPerItem: 0.2, volumePerItem: 1.0, loadingTimePerItem: 10 },
 ];
 
 const TRUCK_CONFIGURATIONS: TruckConfig[] = [
@@ -460,7 +463,7 @@ Fuel Needed: ${gallonsUsed.toFixed(1)} gallons
 Fuel Cost: $${totals.fuelCost.toFixed(2)}
 
 LABOR BREAKDOWN
-─────────────────────────────────────────────────────────────
+──────���──────────────────────────────────────────────────────
 Base Loading Time: ${Math.ceil(totals.baseLoadingTime)} minutes
 Walking Time: ${Math.ceil(totals.walkingTime)} minutes
 ${totals.stepsTime > 0 ? `Steps Time: ${Math.ceil(totals.stepsTime)} minutes` : ''}
@@ -1193,7 +1196,7 @@ Company Signature: _____________________  Date: ____________`;
                               if (name.includes('refrigerator') || name.includes('fridge')) return '❄️';
                               if (name.includes('freezer')) return '🧊';
                               if (name.includes('washer') || name.includes('dryer')) return '🧺';
-                              if (name.includes('stove') || name.includes('oven')) return '🔥';
+                              if (name.includes('stove') || name.includes('oven')) return '����';
                               if (name.includes('dishwasher')) return '🍽️';
                               if (name.includes('microwave')) return '📡';
                               if (name.includes('tv') || name.includes('dlp')) return '📺';
