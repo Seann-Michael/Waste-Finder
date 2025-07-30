@@ -445,7 +445,7 @@ Walking Distance: ${estimate.walkingDistance} feet
 ${estimate.hasSteps ? `Steps: ${estimate.numberOfSteps} steps (${estimate.percentageRequiringSteps}% of items)` : 'No steps involved'}
 
 DEBRIS ITEMS
-─────────────────────────────────────────────────────────────
+──────────────────────────────────────────────────────���──────
 Total Items: ${jobItems.length} types, ${totalItems} pieces
 Total Weight: ${totals.totalWeight.toFixed(2)} tons
 Total Volume: ${totals.totalVolume.toFixed(1)} cubic yards
@@ -471,7 +471,7 @@ ${totals.stepsTime > 0 ? `Steps Time: ${Math.ceil(totals.stepsTime)} minutes` : 
 Total Labor Time: ${Math.ceil(totals.totalLoadingTime)} minutes
 
 COST BREAKDOWN
-─────────────────────────────────────────────────────────────
+────────���────────────────────────────────────────────────────
 Removal Fee (${totals.totalVolume.toFixed(1)} yd³ @ $${config.removalRatePerCubicYard}/yd³):        $${totals.removalFee.toFixed(2)}
 Dump Fee (${config.useTonRate ? `${totals.totalWeight.toFixed(2)} tons` : `${totals.totalVolume.toFixed(1)} yd³`}):                           $${totals.dumpFee.toFixed(2)}
 Labor (${(totals.totalLoadingTime / 60).toFixed(1)} hours @ $${config.laborRatePerHour}/hr):      $${totals.laborCost.toFixed(2)}
@@ -1229,7 +1229,7 @@ Company Signature: _____________________  Date: ____________`;
                               if (id === 'washer') return '🧺';
                               if (id === 'dryer') return '🌪️';
                               if (id === 'stove') return '🔥';
-                              if (id === 'dishwasher') return '🍽��';
+                              if (id === 'dishwasher') return '🍽️';
                               if (id === 'freezer_chest') return '📦';
                               if (id === 'freezer_upright') return '🧊';
                               if (id === 'water_heater') return '♨️';
@@ -1336,15 +1336,15 @@ Company Signature: _____________________  Date: ____________`;
                               const currentVolume = jobItem.customVolume ?? jobItem.debrisItem?.volumePerItem ?? 0;
                               const currentLoadingTime = jobItem.customLoadingTime ?? jobItem.debrisItem?.loadingTimePerItem ?? 0;
 
-                              // Calculate line item cost for this specific item
+                              // Calculate default line item cost for reference only
                               const itemVolumeCost = (currentVolume * jobItem.quantity) * config.removalRatePerCubicYard;
                               const itemDumpCost = config.useTonRate
                                 ? (currentWeight * jobItem.quantity) * config.dumpRatePerTon
                                 : (currentVolume * jobItem.quantity) * config.dumpRatePerCubicYard;
                               const defaultLineItemCost = itemVolumeCost + itemDumpCost;
 
-                              // Use custom line item cost if set, otherwise use calculated cost
-                              const lineItemCost = jobItem.customLineItemCost ?? defaultLineItemCost;
+                              // Use custom line item cost if set (manual override), otherwise use calculated cost
+                              const lineItemCost = jobItem.customLineItemCost !== undefined ? jobItem.customLineItemCost : defaultLineItemCost;
 
                               return (
                                 <div key={jobItem.debrisItem.id} className="border border-blue-200 rounded-lg bg-blue-50/50 p-4 shadow-sm">
