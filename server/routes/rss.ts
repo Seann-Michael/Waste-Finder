@@ -25,6 +25,47 @@ const parser = new Parser({
 const rssFeeds: any[] = [];
 const aggregatedArticles: any[] = [];
 
+// Initialize with sample RSS feeds for testing
+const initializeSampleFeeds = async () => {
+  if (rssFeeds.length === 0) {
+    const sampleFeeds = [
+      {
+        id: "sample-1",
+        name: "Reuters Business",
+        url: "https://feeds.reuters.com/reuters/businessNews",
+        category: "business",
+        description: "Business news from Reuters",
+        isActive: true,
+        updateFrequency: 6,
+        status: "active",
+        articleCount: 0,
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: "sample-2",
+        name: "Environmental News",
+        url: "https://www.sciencedaily.com/rss/earth_climate/environmental_science.xml",
+        category: "climate",
+        description: "Environmental science news",
+        isActive: true,
+        updateFrequency: 12,
+        status: "active",
+        articleCount: 0,
+        createdAt: new Date().toISOString()
+      }
+    ];
+
+    rssFeeds.push(...sampleFeeds);
+    console.log(`Initialized ${sampleFeeds.length} sample RSS feeds`);
+
+    // Trigger initial aggregation
+    setTimeout(() => aggregateAllFeeds(), 2000);
+  }
+};
+
+// Initialize sample feeds on module load
+initializeSampleFeeds();
+
 /**
  * Sanitize and decode RSS URL
  */
