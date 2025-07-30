@@ -486,7 +486,7 @@ TOTAL JOB PRICE:                             $${totals.total.toFixed(2)}
                                            ═════════════
 
 TERMS & CONDITIONS
-────────────────────────────��────────────────────────────────
+─────────────────────────────────────────────────────────────
 • This estimate is valid for 30 days
 • Final price may vary based on actual site conditions
 • Payment due upon completion
@@ -1197,6 +1197,7 @@ Company Signature: _____________________  Date: ____________`;
                               // Living Room Furniture
                               if (id === 'sectional_couch') return '🛋️';
                               if (id === 'standard_couch') return '🛋️';
+                              if (id === 'reclining_couch') return '💺';
                               if (id === 'sofa_bed') return '🛏️';
                               if (id === 'recliner') return '💺';
                               if (id === 'coffee_table') return '🪑';
@@ -1228,7 +1229,7 @@ Company Signature: _____________________  Date: ____________`;
                               if (id === 'washer') return '🧺';
                               if (id === 'dryer') return '🌪️';
                               if (id === 'stove') return '🔥';
-                              if (id === 'dishwasher') return '🍽️';
+                              if (id === 'dishwasher') return '🍽��';
                               if (id === 'freezer_chest') return '📦';
                               if (id === 'freezer_upright') return '🧊';
                               if (id === 'water_heater') return '♨️';
