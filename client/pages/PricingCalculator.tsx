@@ -445,7 +445,7 @@ Walking Distance: ${estimate.walkingDistance} feet
 ${estimate.hasSteps ? `Steps: ${estimate.numberOfSteps} steps (${estimate.percentageRequiringSteps}% of items)` : 'No steps involved'}
 
 DEBRIS ITEMS
-──────��──────────────────────────────────────────────────────
+─────────────────────────────────────────────────────────────
 Total Items: ${jobItems.length} types, ${totalItems} pieces
 Total Weight: ${totals.totalWeight.toFixed(2)} tons
 Total Volume: ${totals.totalVolume.toFixed(1)} cubic yards
@@ -456,7 +456,7 @@ ITEMIZED LIST:
 ${itemsList}
 
 FUEL & TRAVEL DETAILS
-─────────────────────────────────────────────────────────────
+───────────────────────────────────────────���─────────────────
 Vehicle MPG: ${estimate.averageMpg}
 Fuel Price: $${estimate.fuelPricePerGallon}/gallon
 Total Miles: ${estimate.distance} × 2 (round trip) × ${totals.tripsNeeded} trips = ${totalMiles} miles
@@ -1465,7 +1465,7 @@ Company Signature: _____________________  Date: ____________`;
                                           id={`cost-${jobItem.debrisItem.id}`}
                                           type="number"
                                           step="0.01"
-                                          value={jobItem.customLineItemCost !== undefined ? (jobItem.customLineItemCost / jobItem.quantity) : ""}
+                                          value={jobItem.customLineItemCost !== undefined ? (jobItem.customLineItemCost / jobItem.quantity).toFixed(2) : ""}
                                           onChange={(e) => {
                                             const value = e.target.value;
                                             if (value === "") {
@@ -1479,11 +1479,36 @@ Company Signature: _____________________  Date: ____________`;
                                             }
                                           }}
                                           className="h-8 text-xs border-blue-300 focus:border-blue-500 pl-6"
-                                          placeholder={`Auto: $${(defaultLineItemCost / jobItem.quantity).toFixed(2)}`}
+                                          placeholder={`${(defaultLineItemCost / jobItem.quantity).toFixed(2)}`}
                                         />
                                       </div>
-                                      <div className="text-xs text-gray-500 mt-1">
-                                        {jobItem.customLineItemCost !== undefined ? "Custom price" : "Auto calc"}
+                                    </div>
+                                    <div>
+                                      <Label htmlFor={`total-${jobItem.debrisItem.id}`} className="text-xs text-blue-700">
+                                        Total Price ($)
+                                      </Label>
+                                      <div className="relative">
+                                        <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">$</span>
+                                        <Input
+                                          id={`total-${jobItem.debrisItem.id}`}
+                                          type="number"
+                                          step="0.01"
+                                          value={jobItem.customLineItemCost !== undefined ? jobItem.customLineItemCost.toFixed(2) : ""}
+                                          onChange={(e) => {
+                                            const value = e.target.value;
+                                            if (value === "") {
+                                              updateJobItemProperty(jobItem.debrisItem.id, 'customLineItemCost', undefined);
+                                            } else {
+                                              const numValue = parseFloat(value);
+                                              if (!isNaN(numValue)) {
+                                                // Store total cost directly
+                                                updateJobItemProperty(jobItem.debrisItem.id, 'customLineItemCost', numValue);
+                                              }
+                                            }
+                                          }}
+                                          className="h-8 text-xs border-blue-300 focus:border-blue-500 pl-6"
+                                          placeholder={`${defaultLineItemCost.toFixed(2)}`}
+                                        />
                                       </div>
                                     </div>
                                   </div>
