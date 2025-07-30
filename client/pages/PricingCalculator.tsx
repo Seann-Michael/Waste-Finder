@@ -77,8 +77,8 @@ interface JobEstimate {
 
 const DEBRIS_ITEMS: DebrisItem[] = [
   // Hot Tubs & Spas
-  { id: "hot_tub_small", name: "Hot Tub (4-6 Person)", category: "Hot Tubs", weightPerItem: 1.0, volumePerItem: 1.5, loadingTimePerItem: 50 },
-  { id: "hot_tub_large", name: "Hot Tub (7+ Person)", category: "Hot Tubs", weightPerItem: 1.6, volumePerItem: 2.4, loadingTimePerItem: 75 },
+  { id: "hot_tub_small", name: "Hot Tub (4-6 Person)", category: "Hot Tubs", weightPerItem: 1.0, volumePerItem: 6.5, loadingTimePerItem: 50 },
+  { id: "hot_tub_large", name: "Hot Tub (7+ Person)", category: "Hot Tubs", weightPerItem: 1.6, volumePerItem: 9.0, loadingTimePerItem: 75 },
 
   // Living Room Furniture
   { id: "sectional_couch", name: "Sectional Couch", category: "Furniture", weightPerItem: 0.12, volumePerItem: 1.2, loadingTimePerItem: 18 },
@@ -427,7 +427,7 @@ export default function PricingCalculator() {
 Generated on: ${currentDate}
 
 COMPANY INFORMATION
-────────────────────────────────────────────────────��────────
+─────────────────────────────────────────────────────────────
 Company: ________________________________
 Customer: _______________________________
 Job Address: ____________________________
@@ -455,7 +455,7 @@ ITEMIZED LIST:
 ${itemsList}
 
 FUEL & TRAVEL DETAILS
-��────────────────────────────────────────────────────────────
+─────────────────────────────────────────────────────────────
 Vehicle MPG: ${estimate.averageMpg}
 Fuel Price: $${estimate.fuelPricePerGallon}/gallon
 Total Miles: ${estimate.distance} × 2 (round trip) × ${totals.tripsNeeded} trips = ${totalMiles} miles
