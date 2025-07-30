@@ -282,7 +282,7 @@ export default function PricingCalculator() {
     }
   };
 
-  const updateJobItemProperty = (itemId: string, property: 'customWeight' | 'customVolume' | 'customLoadingTime', value: number) => {
+  const updateJobItemProperty = (itemId: string, property: 'customWeight' | 'customVolume' | 'customLoadingTime' | 'customLineItemCost', value: number) => {
     setJobItems(jobItems.map(item =>
       item.debrisItem.id === itemId
         ? { ...item, [property]: value }
@@ -412,7 +412,7 @@ Phone: __________________________________
 Email: __________________________________
 
 VEHICLE & SITE CONFIGURATION
-─��───────────────────────────────────────────────────────────
+─────────────────────────────────────────────────────────────
 Vehicle: ${truckConfig.name}
 Capacity: ${truckConfig.capacity} cubic yards
 Payload: ${truckConfig.payload} tons
@@ -1093,7 +1093,7 @@ Company Signature: _____________________  Date: ____________`;
                     <div className="border-2 border-dashed border-blue-300 rounded-lg p-6 bg-blue-50">
                       <h3 className="text-lg font-semibold text-blue-800 mb-4 flex items-center gap-2">
                         <Package className="w-5 h-5" />
-                        �� Add Items from Library
+                        📦 Add Items from Library
                       </h3>
 
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
