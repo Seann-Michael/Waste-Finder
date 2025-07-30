@@ -69,85 +69,45 @@ export default function News() {
   const [selectedSource, setSelectedSource] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
 
-  // Mock data for development
+  // Fetch real articles from RSS feeds
   useEffect(() => {
-    const mockArticles: NewsArticle[] = [
-      {
-        id: "1",
-        title: "New Recycling Technologies Transform Waste Management Industry",
-        description: "Advanced sorting technologies and AI-powered systems are revolutionizing how we process recyclable materials, leading to higher efficiency rates and reduced contamination.",
-        url: "https://example.com/recycling-tech",
-        source: "Environmental Today",
-        category: "technology",
-        publishedAt: "2024-01-20T14:30:00Z",
-        imageUrl: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400",
-        author: "Sarah Johnson",
-        tags: ["recycling", "technology", "AI", "sustainability"]
-      },
-      {
-        id: "2",
-        title: "Federal Regulations Update: New Standards for Landfill Operations",
-        description: "The EPA announces updated environmental standards for landfill operations, focusing on methane capture and groundwater protection.",
-        url: "https://example.com/federal-regulations",
-        source: "Policy Watch",
-        category: "policy",
-        publishedAt: "2024-01-19T10:15:00Z",
-        imageUrl: "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=400",
-        author: "Michael Chen",
-        tags: ["policy", "EPA", "regulations", "environment"]
-      },
-      {
-        id: "3",
-        title: "Circular Economy Success Stories: Companies Leading the Way",
-        description: "Innovative businesses are implementing circular economy principles, reducing waste and creating sustainable business models.",
-        url: "https://example.com/circular-economy",
-        source: "Business Green",
-        category: "business",
-        publishedAt: "2024-01-18T16:45:00Z",
-        imageUrl: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=400",
-        author: "Emma Davis",
-        tags: ["business", "sustainability", "circular economy"]
-      },
-      {
-        id: "4",
-        title: "Community Recycling Programs Show Promising Results",
-        description: "Local communities report significant increases in recycling rates following implementation of comprehensive education and incentive programs.",
-        url: "https://example.com/community-recycling",
-        source: "Local Environmental News",
-        category: "community",
-        publishedAt: "2024-01-17T12:20:00Z",
-        imageUrl: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=400",
-        author: "David Wilson",
-        tags: ["community", "recycling", "education", "local"]
-      },
-      {
-        id: "5",
-        title: "Climate Impact: How Waste Reduction Affects Carbon Footprint",
-        description: "New research reveals the significant impact of waste reduction strategies on overall carbon footprint reduction and climate change mitigation.",
-        url: "https://example.com/climate-impact",
-        source: "Climate Science Today",
-        category: "climate",
-        publishedAt: "2024-01-16T09:30:00Z",
-        imageUrl: "https://images.unsplash.com/photo-1569163139394-de44cb62e4b8?w=400",
-        author: "Dr. Lisa Park",
-        tags: ["climate", "carbon footprint", "research", "environment"]
+    const fetchNews = async () => {
+      try {
+        setIsLoading(true);
+
+        // Fetch articles
+        const newsResponse = await fetch('/api/news?limit=20');
+        const newsData = await newsResponse.json();
+
+        // Fetch RSS feeds for sources
+        const feedsResponse = await fetch('/api/rss/feeds');
+        const feedsData = await feedsResponse.json();
+
+        if (newsData.articles) {
+          setArticles(newsData.articles);
+        }
+
+        if (Array.isArray(feedsData)) {
+          setSources(feedsData.map((feed: any) => ({
+            id: feed.id,
+            name: feed.name,
+            url: feed.url,
+            category: feed.category,
+            isActive: feed.isActive
+          })));
+        }
+
+      } catch (error) {
+        console.error('Error fetching news:', error);
+        // Fallback to empty state
+        setArticles([]);
+        setSources([]);
+      } finally {
+        setIsLoading(false);
       }
-    ];
+    };
 
-    const mockSources: NewsSource[] = [
-      { id: "1", name: "Environmental Today", url: "https://example.com/rss1", category: "technology", isActive: true },
-      { id: "2", name: "Policy Watch", url: "https://example.com/rss2", category: "policy", isActive: true },
-      { id: "3", name: "Business Green", url: "https://example.com/rss3", category: "business", isActive: true },
-      { id: "4", name: "Local Environmental News", url: "https://example.com/rss4", category: "community", isActive: true },
-      { id: "5", name: "Climate Science Today", url: "https://example.com/rss5", category: "climate", isActive: true }
-    ];
-
-    // Simulate API delay
-    setTimeout(() => {
-      setArticles(mockArticles);
-      setSources(mockSources);
-      setIsLoading(false);
-    }, 1000);
+    fetchNews();
   }, []);
 
   const categories = [
