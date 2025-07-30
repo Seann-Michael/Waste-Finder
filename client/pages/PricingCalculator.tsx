@@ -456,7 +456,7 @@ ITEMIZED LIST:
 ${itemsList}
 
 FUEL & TRAVEL DETAILS
-─────────────────────────────────────────────────────────────
+───────────────────────────────────────��─────────────────────
 Vehicle MPG: ${estimate.averageMpg}
 Fuel Price: $${estimate.fuelPricePerGallon}/gallon
 Total Miles: ${estimate.distance} × 2 (round trip) × ${totals.tripsNeeded} trips = ${totalMiles} miles
@@ -471,7 +471,7 @@ ${totals.stepsTime > 0 ? `Steps Time: ${Math.ceil(totals.stepsTime)} minutes` : 
 Total Labor Time: ${Math.ceil(totals.totalLoadingTime)} minutes
 
 COST BREAKDOWN
-───────────────────────────────���─────────────────────────────
+─────────────────────────────────────────────────────────────
 Removal Fee (${totals.totalVolume.toFixed(1)} yd³ @ $${config.removalRatePerCubicYard}/yd³):        $${totals.removalFee.toFixed(2)}
 Dump Fee (${config.useTonRate ? `${totals.totalWeight.toFixed(2)} tons` : `${totals.totalVolume.toFixed(1)} yd³`}):                           $${totals.dumpFee.toFixed(2)}
 Labor (${(totals.totalLoadingTime / 60).toFixed(1)} hours @ $${config.laborRatePerHour}/hr):      $${totals.laborCost.toFixed(2)}
@@ -491,7 +491,7 @@ TERMS & CONDITIONS
 • Final price may vary based on actual site conditions
 • Payment due upon completion
 • Additional fees apply for hazardous materials
-• Manpower rate ($${config.laborRatePerHour}/hr) is for internal labor cost calculation only
+��� Manpower rate ($${config.laborRatePerHour}/hr) is for internal labor cost calculation only
 
 Customer Signature: ____________________  Date: ____________
 
@@ -1198,7 +1198,7 @@ Company Signature: _____________________  Date: ____________`;
                               if (id === 'sectional_couch') return '🛋️';
                               if (id === 'standard_couch') return '🛋️';
                               if (id === 'reclining_couch') return '💺';
-                              if (id === 'sofa_bed') return '🛏️';
+                              if (id === 'sofa_bed') return '����️';
                               if (id === 'recliner') return '💺';
                               if (id === 'coffee_table') return '🪑';
                               if (id === 'entertainment_center') return '📺';
@@ -1465,12 +1465,18 @@ Company Signature: _____________________  Date: ____________`;
                                           id={`cost-${jobItem.debrisItem.id}`}
                                           type="number"
                                           step="0.01"
-                                          value={jobItem.customLineItemCost !== undefined ? jobItem.customLineItemCost.toFixed(2) : ""}
-                                          onChange={(e) => updateJobItemProperty(
-                                            jobItem.debrisItem.id,
-                                            'customLineItemCost',
-                                            e.target.value === "" ? undefined : Number(e.target.value)
-                                          )}
+                                          value={jobItem.customLineItemCost !== undefined ? jobItem.customLineItemCost : ""}
+                                          onChange={(e) => {
+                                            const value = e.target.value;
+                                            if (value === "") {
+                                              updateJobItemProperty(jobItem.debrisItem.id, 'customLineItemCost', undefined);
+                                            } else {
+                                              const numValue = parseFloat(value);
+                                              if (!isNaN(numValue)) {
+                                                updateJobItemProperty(jobItem.debrisItem.id, 'customLineItemCost', numValue);
+                                              }
+                                            }
+                                          }}
                                           className="h-8 text-xs border-blue-300 focus:border-blue-500 pl-6"
                                           placeholder={`Auto: $${defaultLineItemCost.toFixed(2)}`}
                                         />
