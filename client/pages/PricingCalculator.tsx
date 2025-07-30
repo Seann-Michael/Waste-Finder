@@ -342,7 +342,26 @@ export default function PricingCalculator() {
 
     const removalFee = totalVolume * config.removalRatePerCubicYard; // New removal rate charge
 
-    const subtotal = dumpFee + laborCost + fuelCost + tripSurcharge + removalFee + estimate.additionalFees;
+    // Calculate total line item costs (use custom costs if set, otherwise calculate from volume/dump rates)
+    const totalLineItemCosts = jobItems.reduce((sum, item) => {
+      if (item.customLineItemCost) {
+        return sum + item.customLineItemCost;
+      } else {
+        const weight = item.customWeight ?? item.debrisItem?.weightPerItem ?? 0;
+        const volume = item.customVolume ?? item.debrisItem?.volumePerItem ?? 0;
+        const itemVolumeCost = (volume * item.quantity) * config.removalRatePerCubicYard;
+        const itemDumpCost = config.useTonRate
+          ? (weight * item.quantity) * config.dumpRatePerTon
+          : (volume * item.quantity) * config.dumpRatePerCubicYard;
+        return sum + itemVolumeCost + itemDumpCost;
+      }
+    }, 0);
+
+    // Use line item costs instead of separate removal and dump fees when items are present
+    const adjustedRemovalFee = jobItems.length > 0 ? 0 : removalFee;
+    const adjustedDumpFee = jobItems.length > 0 ? 0 : dumpFee;
+
+    const subtotal = adjustedDumpFee + laborCost + fuelCost + tripSurcharge + adjustedRemovalFee + totalLineItemCosts + estimate.additionalFees;
     const profitAmount = subtotal * (config.profitMargin / 100);
     const total = subtotal + profitAmount;
 
@@ -457,12 +476,12 @@ Additional Fees:                             $${estimate.additionalFees.toFixed(
                                            ─────────────
 Subtotal:                                    $${totals.subtotal.toFixed(2)}
 Profit Margin (${config.profitMargin}%):                       $${totals.profitAmount.toFixed(2)}
-                                           ═════════════
+                                           ═════════���═══
 TOTAL JOB PRICE:                             $${totals.total.toFixed(2)}
                                            ═════════════
 
 TERMS & CONDITIONS
-──────��──────────────────────────────────────────────────────
+─────────────────────────────────────────────────────────────
 • This estimate is valid for 30 days
 • Final price may vary based on actual site conditions
 • Payment due upon completion
