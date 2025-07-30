@@ -456,7 +456,7 @@ ITEMIZED LIST:
 ${itemsList}
 
 FUEL & TRAVEL DETAILS
-───────────────────────────────────────────���─────────────────
+───────────────────────────��─────────────────────────────────
 Vehicle MPG: ${estimate.averageMpg}
 Fuel Price: $${estimate.fuelPricePerGallon}/gallon
 Total Miles: ${estimate.distance} × 2 (round trip) × ${totals.tripsNeeded} trips = ${totalMiles} miles
@@ -1240,7 +1240,7 @@ Company Signature: _____________________  Date: ____________`;
                               if (id === 'computer_setup') return '💻';
                               if (id === 'exercise_equipment') return '💪';
                               if (id === 'piano_upright') return '🎹';
-                              if (id === 'piano_baby_grand') return '🎼';
+                              if (id === 'piano_baby_grand') return '����';
 
                               // Construction & Renovation
                               if (id === 'drywall') return '⬜';
@@ -1514,25 +1514,10 @@ Company Signature: _____________________  Date: ____________`;
                                   </div>
 
                                   {/* Totals */}
-                                  <div className="mt-3 p-2 bg-blue-100 rounded border border-blue-200">
-                                    <div className="grid grid-cols-2 gap-4 text-xs">
-                                      <div>
-                                        <div className="font-medium text-blue-800">Physical Totals:</div>
-                                        <div className="text-blue-600">
-                                          {Math.round(currentWeight * jobItem.quantity * 2000)} lbs • {(currentVolume * jobItem.quantity).toFixed(1)} yd³ • {(currentLoadingTime * jobItem.quantity)} min
-                                        </div>
-                                      </div>
-                                      <div>
-                                        <div className="font-medium text-blue-800">Pricing:</div>
-                                        <div className="text-blue-600">
-                                          ${(lineItemCost / jobItem.quantity).toFixed(2)} each × {jobItem.quantity} = <span className="font-bold text-green-600">${lineItemCost.toFixed(2)}</span>
-                                        </div>
-                                      </div>
-                                    </div>
+                                  <div className="mt-2 text-xs text-blue-600">
+                                    Totals: {Math.round(currentWeight * jobItem.quantity * 2000)} lbs • {(currentVolume * jobItem.quantity).toFixed(1)} yd³ • {(currentLoadingTime * jobItem.quantity)} min
                                     {(jobItem.customWeight || jobItem.customVolume || jobItem.customLoadingTime || jobItem.customLineItemCost) && (
-                                      <div className="mt-1 text-center">
-                                        <span className="text-orange-600 font-medium text-xs">(Custom values ✏️)</span>
-                                      </div>
+                                      <span className="ml-2 text-orange-600 font-medium">(Custom values ✏️)</span>
                                     )}
                                   </div>
 
