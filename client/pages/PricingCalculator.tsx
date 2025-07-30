@@ -391,7 +391,7 @@ Trips Required: ${totals.tripsNeeded}
 Total Labor Time: ${Math.ceil(totals.totalLoadingTime)} minutes
 
 DETAILED ITEMS LIST
-─────────────────────────────────────────────────────────────
+─────────���───────────────────────────────────────────────────
 ${itemsList}
 
 JOB SITE CONDITIONS
@@ -501,23 +501,24 @@ Company Signature: _____________________  Date: ____________
           </div>
 
           <Tabs defaultValue="configure" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="configure">Configure</TabsTrigger>
-              <TabsTrigger value="build">Build Job</TabsTrigger>
-              <TabsTrigger value="estimate">Estimate</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="configure">⚙️ Configure & Setup</TabsTrigger>
+              <TabsTrigger value="estimate">🧮 Build & Estimate</TabsTrigger>
             </TabsList>
 
             <TabsContent value="configure" className="space-y-6">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Truck Configuration */}
-                <Card>
-                  <CardHeader>
+                <Card className="shadow-lg border-0 bg-gradient-to-br from-white to-blue-50">
+                  <CardHeader className="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-t-lg">
                     <CardTitle className="flex items-center gap-2">
-                      <Truck className="w-5 h-5" />
+                      <div className="p-2 bg-white/20 rounded-lg">
+                        <Truck className="w-5 h-5" />
+                      </div>
                       Truck/Trailer Configuration
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-4 p-6">
                     <div>
                       <Label htmlFor="truckType">Vehicle Type</Label>
                       <Select
@@ -573,14 +574,16 @@ Company Signature: _____________________  Date: ____________
                 </Card>
 
                 {/* Pricing Configuration */}
-                <Card>
-                  <CardHeader>
+                <Card className="shadow-lg border-0 bg-gradient-to-br from-white to-green-50">
+                  <CardHeader className="bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-t-lg">
                     <CardTitle className="flex items-center gap-2">
-                      <Settings className="w-5 h-5" />
+                      <div className="p-2 bg-white/20 rounded-lg">
+                        <Settings className="w-5 h-5" />
+                      </div>
                       Pricing Configuration
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-4 p-6">
                     <div>
                       <Label>Dump Fee Calculation</Label>
                       <Select
@@ -661,36 +664,192 @@ Company Signature: _____________________  Date: ____________
                   </CardContent>
                 </Card>
               </div>
+
+              {/* Job Site Details & Conditions */}
+              <Card className="shadow-lg border-0 bg-gradient-to-br from-white to-yellow-50">
+                <CardHeader className="bg-gradient-to-r from-yellow-500 to-orange-600 text-white rounded-t-lg">
+                  <CardTitle className="flex items-center gap-2">
+                    <div className="p-2 bg-white/20 rounded-lg">
+                      <Calculator className="w-5 h-5" />
+                    </div>
+                    Job Site Details & Conditions
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6 p-6">
+                  {/* Distance & Vehicle Info */}
+                  <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                    <h4 className="font-semibold text-yellow-800 mb-3 flex items-center gap-2">
+                      <Truck className="w-4 h-4" />
+                      Travel & Fuel Information
+                    </h4>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="distance" className="text-yellow-700">Distance to Dump (miles)</Label>
+                        <Input
+                          id="distance"
+                          type="number"
+                          value={estimate.distance}
+                          onChange={(e) => setEstimate({
+                            ...estimate,
+                            distance: Number(e.target.value)
+                          })}
+                          className="border-yellow-300 focus:border-yellow-500"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="averageMpg" className="text-yellow-700">Vehicle MPG</Label>
+                        <Input
+                          id="averageMpg"
+                          type="number"
+                          step="0.1"
+                          value={estimate.averageMpg}
+                          onChange={(e) => setEstimate({
+                            ...estimate,
+                            averageMpg: Number(e.target.value)
+                          })}
+                          className="border-yellow-300 focus:border-yellow-500"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="fuelPrice" className="text-yellow-700">Fuel Price ($/gallon)</Label>
+                        <Input
+                          id="fuelPrice"
+                          type="number"
+                          step="0.01"
+                          value={estimate.fuelPricePerGallon}
+                          onChange={(e) => setEstimate({
+                            ...estimate,
+                            fuelPricePerGallon: Number(e.target.value)
+                          })}
+                          className="border-yellow-300 focus:border-yellow-500"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="walkingDistance" className="text-yellow-700">Walking Distance (feet)</Label>
+                        <Input
+                          id="walkingDistance"
+                          type="number"
+                          value={estimate.walkingDistance}
+                          onChange={(e) => setEstimate({
+                            ...estimate,
+                            walkingDistance: Number(e.target.value)
+                          })}
+                          className="border-yellow-300 focus:border-yellow-500"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Fuel calculation preview */}
+                    {estimate.distance > 0 && totals.tripsNeeded > 0 && (
+                      <div className="mt-3 p-3 bg-yellow-100 rounded border border-yellow-300">
+                        <div className="text-sm text-yellow-800">
+                          <div>Total Miles: {estimate.distance} × 2 (round trip) × {totals.tripsNeeded} trips = {estimate.distance * 2 * totals.tripsNeeded} miles</div>
+                          <div>Fuel Needed: {(estimate.distance * 2 * totals.tripsNeeded / estimate.averageMpg).toFixed(1)} gallons</div>
+                          <div>Fuel Cost: {(estimate.distance * 2 * totals.tripsNeeded / estimate.averageMpg * estimate.fuelPricePerGallon).toFixed(2)} @ ${estimate.fuelPricePerGallon}/gal</div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Additional Fees */}
+                  <div>
+                    <Label htmlFor="additionalFees" className="text-gray-700 font-medium">Additional Fees ($)</Label>
+                    <Input
+                      id="additionalFees"
+                      type="number"
+                      value={estimate.additionalFees}
+                      onChange={(e) => setEstimate({
+                        ...estimate,
+                        additionalFees: Number(e.target.value)
+                      })}
+                      className="mt-1"
+                    />
+                  </div>
+
+                  <Separator />
+
+                  <div className="space-y-4">
+                    <h4 className="font-medium">Steps & Access</h4>
+
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id="hasSteps"
+                        checked={estimate.hasSteps}
+                        onChange={(e) => setEstimate({
+                          ...estimate,
+                          hasSteps: e.target.checked,
+                          numberOfSteps: e.target.checked ? estimate.numberOfSteps || 10 : 0,
+                          percentageRequiringSteps: e.target.checked ? estimate.percentageRequiringSteps || 50 : 0
+                        })}
+                      />
+                      <Label htmlFor="hasSteps">Job involves steps</Label>
+                    </div>
+
+                    {estimate.hasSteps && (
+                      <div className="grid grid-cols-2 gap-4 ml-6">
+                        <div>
+                          <Label htmlFor="numberOfSteps">Number of Steps</Label>
+                          <Input
+                            id="numberOfSteps"
+                            type="number"
+                            value={estimate.numberOfSteps}
+                            onChange={(e) => setEstimate({
+                              ...estimate,
+                              numberOfSteps: Number(e.target.value)
+                            })}
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="percentageRequiringSteps">% of Items Using Steps</Label>
+                          <Input
+                            id="percentageRequiringSteps"
+                            type="number"
+                            max="100"
+                            value={estimate.percentageRequiringSteps}
+                            onChange={(e) => setEstimate({
+                              ...estimate,
+                              percentageRequiringSteps: Number(e.target.value)
+                            })}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
             </TabsContent>
 
-            <TabsContent value="build" className="space-y-6">
+            <TabsContent value="estimate" className="space-y-6">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Item Library */}
-                <Card>
-                  <CardHeader>
+                <Card className="shadow-lg border-0 bg-gradient-to-br from-white to-purple-50">
+                  <CardHeader className="bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-t-lg">
                     <CardTitle className="flex items-center gap-2">
-                      <Package className="w-5 h-5" />
-                      Item Library ({filteredItems.length} items)
+                      <div className="p-2 bg-white/20 rounded-lg">
+                        <Package className="w-5 h-5" />
+                      </div>
+                      📦 Item Library ({filteredItems.length} items)
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="p-6">
                     <div className="space-y-4">
                       {/* Search Input */}
                       <div>
-                        <Label htmlFor="searchItems">Search Items</Label>
+                        <Label htmlFor="searchItems">🔍 Search Items</Label>
                         <Input
                           id="searchItems"
                           type="text"
                           placeholder="Type to search items..."
                           value={searchTerm}
                           onChange={(e) => setSearchTerm(e.target.value)}
-                          className="w-full"
+                          className="w-full border-purple-300 focus:border-purple-500"
                         />
                       </div>
 
                       {/* Category Filter */}
                       <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                        <SelectTrigger>
+                        <SelectTrigger className="border-purple-300 focus:border-purple-500">
                           <SelectValue placeholder="Filter by category" />
                         </SelectTrigger>
                         <SelectContent>
@@ -711,9 +870,9 @@ Company Signature: _____________________  Date: ____________
                             setSearchTerm("");
                             setSelectedCategory("All");
                           }}
-                          className="w-full"
+                          className="w-full border-purple-300 text-purple-600 hover:bg-purple-50"
                         >
-                          Clear Filters
+                          🗑️ Clear Filters
                         </Button>
                       )}
 
@@ -727,19 +886,19 @@ Company Signature: _____________________  Date: ____________
                           filteredItems.map((item) => (
                             <div
                               key={item.id}
-                              className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
+                              className="flex items-center justify-between p-3 border border-purple-200 rounded-lg hover:bg-purple-50 cursor-pointer transition-colors shadow-sm"
                               onClick={() => addJobItem(item)}
                             >
                               <div className="flex-1">
-                                <div className="font-medium">{item.name}</div>
-                                <div className="text-sm text-muted-foreground">
-                                  <Badge variant="outline" className="mr-1 text-xs">
+                                <div className="font-medium text-purple-800">{item.name}</div>
+                                <div className="text-sm text-purple-600">
+                                  <Badge variant="outline" className="mr-1 text-xs border-purple-300">
                                     {item.category}
                                   </Badge>
                                   {item.weightPerItem} tons • {item.volumePerItem} yd³ • {item.loadingTimePerItem}min
                                 </div>
                               </div>
-                              <Button size="sm" variant="outline" className="ml-2">
+                              <Button size="sm" variant="outline" className="ml-2 border-purple-300 text-purple-600 hover:bg-purple-100">
                                 <Plus className="w-3 h-3" />
                               </Button>
                             </div>
@@ -751,36 +910,39 @@ Company Signature: _____________________  Date: ____________
                 </Card>
 
                 {/* Job Items */}
-                <Card>
-                  <CardHeader>
+                <Card className="shadow-lg border-0 bg-gradient-to-br from-white to-blue-50">
+                  <CardHeader className="bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-t-lg">
                     <CardTitle className="flex items-center gap-2">
-                      <Calculator className="w-5 h-5" />
-                      Job Items ({jobItems.length} types, {jobItems.reduce((sum, item) => sum + item.quantity, 0)} total)
+                      <div className="p-2 bg-white/20 rounded-lg">
+                        <Calculator className="w-5 h-5" />
+                      </div>
+                      🛠️ Job Items ({jobItems.length} types, {jobItems.reduce((sum, item) => sum + item.quantity, 0)} total)
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="p-6">
                     <div className="space-y-3">
                       {jobItems.length === 0 ? (
                         <div className="text-center py-8">
-                          <Package className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                          <p className="text-muted-foreground">
+                          <Package className="w-12 h-12 text-blue-300 mx-auto mb-4" />
+                          <p className="text-blue-600 font-medium">
                             Add items from the library to build your job
                           </p>
-                          <p className="text-sm text-muted-foreground mt-2">
+                          <p className="text-sm text-blue-500 mt-2">
                             Click on any item to add it to your job
                           </p>
                         </div>
                       ) : (
                         <>
                           {/* Clear All Button */}
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-muted-foreground">
-                              Total Weight: {totals.totalWeight.toFixed(2)} tons | Volume: {totals.totalVolume.toFixed(1)} yd³
+                          <div className="flex justify-between items-center bg-blue-50 p-3 rounded border border-blue-200">
+                            <span className="text-sm text-blue-700 font-medium">
+                              📊 Total Weight: {totals.totalWeight.toFixed(2)} tons | Volume: {totals.totalVolume.toFixed(1)} yd³
                             </span>
                             <Button
                               size="sm"
                               variant="outline"
                               onClick={() => setJobItems([])}
+                              className="border-blue-300 text-blue-600 hover:bg-blue-100"
                             >
                               Clear All
                             </Button>
@@ -794,12 +956,12 @@ Company Signature: _____________________  Date: ____________
                               const currentLoadingTime = jobItem.customLoadingTime ?? jobItem.debrisItem.loadingTimePerItem;
 
                               return (
-                                <div key={jobItem.debrisItem.id} className="border rounded-lg bg-muted/20 p-4">
+                                <div key={jobItem.debrisItem.id} className="border border-blue-200 rounded-lg bg-blue-50/50 p-4 shadow-sm">
                                   {/* Item Header */}
                                   <div className="flex items-center justify-between mb-3">
                                     <div className="flex-1">
-                                      <div className="font-medium">{jobItem.debrisItem.name}</div>
-                                      <Badge variant="outline" className="text-xs">
+                                      <div className="font-medium text-blue-800">{jobItem.debrisItem.name}</div>
+                                      <Badge variant="outline" className="text-xs border-blue-300 text-blue-600">
                                         {jobItem.debrisItem.category}
                                       </Badge>
                                     </div>
@@ -811,6 +973,7 @@ Company Signature: _____________________  Date: ____________
                                           jobItem.debrisItem.id,
                                           jobItem.quantity - 1
                                         )}
+                                        className="border-blue-300 text-blue-600 hover:bg-blue-100"
                                       >
                                         <Minus className="w-3 h-3" />
                                       </Button>
@@ -822,7 +985,7 @@ Company Signature: _____________________  Date: ____________
                                           jobItem.debrisItem.id,
                                           Math.max(1, Number(e.target.value))
                                         )}
-                                        className="w-16 text-center"
+                                        className="w-16 text-center border-blue-300 focus:border-blue-500"
                                       />
                                       <Button
                                         size="sm"
@@ -831,6 +994,7 @@ Company Signature: _____________________  Date: ____________
                                           jobItem.debrisItem.id,
                                           jobItem.quantity + 1
                                         )}
+                                        className="border-blue-300 text-blue-600 hover:bg-blue-100"
                                       >
                                         <Plus className="w-3 h-3" />
                                       </Button>
@@ -847,7 +1011,7 @@ Company Signature: _____________________  Date: ____________
                                   {/* Editable Properties */}
                                   <div className="grid grid-cols-3 gap-3">
                                     <div>
-                                      <Label htmlFor={`weight-${jobItem.debrisItem.id}`} className="text-xs">
+                                      <Label htmlFor={`weight-${jobItem.debrisItem.id}`} className="text-xs text-blue-700">
                                         Weight (tons)
                                       </Label>
                                       <Input
@@ -860,12 +1024,12 @@ Company Signature: _____________________  Date: ____________
                                           'customWeight',
                                           Number(e.target.value)
                                         )}
-                                        className="h-8 text-xs"
+                                        className="h-8 text-xs border-blue-300 focus:border-blue-500"
                                         placeholder={jobItem.debrisItem.weightPerItem.toString()}
                                       />
                                     </div>
                                     <div>
-                                      <Label htmlFor={`volume-${jobItem.debrisItem.id}`} className="text-xs">
+                                      <Label htmlFor={`volume-${jobItem.debrisItem.id}`} className="text-xs text-blue-700">
                                         Volume (yd³)
                                       </Label>
                                       <Input
@@ -878,12 +1042,12 @@ Company Signature: _____________________  Date: ____________
                                           'customVolume',
                                           Number(e.target.value)
                                         )}
-                                        className="h-8 text-xs"
+                                        className="h-8 text-xs border-blue-300 focus:border-blue-500"
                                         placeholder={jobItem.debrisItem.volumePerItem.toString()}
                                       />
                                     </div>
                                     <div>
-                                      <Label htmlFor={`time-${jobItem.debrisItem.id}`} className="text-xs">
+                                      <Label htmlFor={`time-${jobItem.debrisItem.id}`} className="text-xs text-blue-700">
                                         Load Time (min)
                                       </Label>
                                       <Input
@@ -896,17 +1060,17 @@ Company Signature: _____________________  Date: ____________
                                           'customLoadingTime',
                                           Number(e.target.value)
                                         )}
-                                        className="h-8 text-xs"
+                                        className="h-8 text-xs border-blue-300 focus:border-blue-500"
                                         placeholder={jobItem.debrisItem.loadingTimePerItem.toString()}
                                       />
                                     </div>
                                   </div>
 
                                   {/* Totals */}
-                                  <div className="mt-2 text-xs text-muted-foreground">
+                                  <div className="mt-2 text-xs text-blue-600">
                                     Total: {(currentWeight * jobItem.quantity).toFixed(2)} tons • {(currentVolume * jobItem.quantity).toFixed(1)} yd³ • {(currentLoadingTime * jobItem.quantity)} min
                                     {(jobItem.customWeight || jobItem.customVolume || jobItem.customLoadingTime) && (
-                                      <span className="ml-2 text-orange-600">(Custom values)</span>
+                                      <span className="ml-2 text-orange-600 font-medium">(Custom values ✏️)</span>
                                     )}
                                   </div>
 
@@ -927,9 +1091,9 @@ Company Signature: _____________________  Date: ____________
                                             : item
                                         ));
                                       }}
-                                      className="mt-2 h-6 text-xs"
+                                      className="mt-2 h-6 text-xs text-blue-600 hover:bg-blue-100"
                                     >
-                                      Reset to Defaults
+                                      🔄 Reset to Defaults
                                     </Button>
                                   )}
                                 </div>
@@ -942,206 +1106,50 @@ Company Signature: _____________________  Date: ____________
                   </CardContent>
                 </Card>
               </div>
-            </TabsContent>
 
-            <TabsContent value="estimate" className="space-y-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Job Details */}
-                <Card className="shadow-lg border-0 bg-gradient-to-br from-white to-blue-50">
-                  <CardHeader className="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-t-lg">
-                    <CardTitle className="flex items-center gap-2">
-                      <div className="p-2 bg-white/20 rounded-lg">
-                        <Calculator className="w-5 h-5" />
-                      </div>
-                      Job Details & Site Conditions
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-6 p-6">
-                    {/* Distance & Vehicle Info */}
-                    <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                      <h4 className="font-semibold text-blue-800 mb-3 flex items-center gap-2">
-                        <Truck className="w-4 h-4" />
-                        Travel & Fuel Information
-                      </h4>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <Label htmlFor="distance" className="text-blue-700">Distance to Dump (miles)</Label>
-                          <Input
-                            id="distance"
-                            type="number"
-                            value={estimate.distance}
-                            onChange={(e) => setEstimate({
-                              ...estimate,
-                              distance: Number(e.target.value)
-                            })}
-                            className="border-blue-300 focus:border-blue-500"
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="averageMpg" className="text-blue-700">Vehicle MPG</Label>
-                          <Input
-                            id="averageMpg"
-                            type="number"
-                            step="0.1"
-                            value={estimate.averageMpg}
-                            onChange={(e) => setEstimate({
-                              ...estimate,
-                              averageMpg: Number(e.target.value)
-                            })}
-                            className="border-blue-300 focus:border-blue-500"
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="fuelPrice" className="text-blue-700">Fuel Price ($/gallon)</Label>
-                          <Input
-                            id="fuelPrice"
-                            type="number"
-                            step="0.01"
-                            value={estimate.fuelPricePerGallon}
-                            onChange={(e) => setEstimate({
-                              ...estimate,
-                              fuelPricePerGallon: Number(e.target.value)
-                            })}
-                            className="border-blue-300 focus:border-blue-500"
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="walkingDistance" className="text-blue-700">Walking Distance (feet)</Label>
-                          <Input
-                            id="walkingDistance"
-                            type="number"
-                            value={estimate.walkingDistance}
-                            onChange={(e) => setEstimate({
-                              ...estimate,
-                              walkingDistance: Number(e.target.value)
-                            })}
-                            className="border-blue-300 focus:border-blue-500"
-                          />
-                        </div>
-                      </div>
-
-                      {/* Fuel calculation preview */}
-                      {estimate.distance > 0 && totals.tripsNeeded > 0 && (
-                        <div className="mt-3 p-3 bg-blue-100 rounded border border-blue-300">
-                          <div className="text-sm text-blue-800">
-                            <div>Total Miles: {estimate.distance} × 2 (round trip) × {totals.tripsNeeded} trips = {estimate.distance * 2 * totals.tripsNeeded} miles</div>
-                            <div>Fuel Needed: {(estimate.distance * 2 * totals.tripsNeeded / estimate.averageMpg).toFixed(1)} gallons</div>
-                            <div>Fuel Cost: {(estimate.distance * 2 * totals.tripsNeeded / estimate.averageMpg * estimate.fuelPricePerGallon).toFixed(2)} @ ${estimate.fuelPricePerGallon}/gal</div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Additional Fees */}
-                    <div>
-                      <Label htmlFor="additionalFees" className="text-gray-700 font-medium">Additional Fees ($)</Label>
-                      <Input
-                        id="additionalFees"
-                        type="number"
-                        value={estimate.additionalFees}
-                        onChange={(e) => setEstimate({
-                          ...estimate,
-                          additionalFees: Number(e.target.value)
-                        })}
-                        className="mt-1"
-                      />
-                    </div>
-
-                    <Separator />
-
-                    <div className="space-y-4">
-                      <h4 className="font-medium">Steps & Access</h4>
-
-                      <div className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
-                          id="hasSteps"
-                          checked={estimate.hasSteps}
-                          onChange={(e) => setEstimate({
-                            ...estimate,
-                            hasSteps: e.target.checked,
-                            numberOfSteps: e.target.checked ? estimate.numberOfSteps || 10 : 0,
-                            percentageRequiringSteps: e.target.checked ? estimate.percentageRequiringSteps || 50 : 0
-                          })}
-                        />
-                        <Label htmlFor="hasSteps">Job involves steps</Label>
-                      </div>
-
-                      {estimate.hasSteps && (
-                        <div className="grid grid-cols-2 gap-4 ml-6">
-                          <div>
-                            <Label htmlFor="numberOfSteps">Number of Steps</Label>
-                            <Input
-                              id="numberOfSteps"
-                              type="number"
-                              value={estimate.numberOfSteps}
-                              onChange={(e) => setEstimate({
-                                ...estimate,
-                                numberOfSteps: Number(e.target.value)
-                              })}
-                            />
-                          </div>
-                          <div>
-                            <Label htmlFor="percentageRequiringSteps">% of Items Using Steps</Label>
-                            <Input
-                              id="percentageRequiringSteps"
-                              type="number"
-                              max="100"
-                              value={estimate.percentageRequiringSteps}
-                              onChange={(e) => setEstimate({
-                                ...estimate,
-                                percentageRequiringSteps: Number(e.target.value)
-                              })}
-                            />
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Capacity Check */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
+              {/* Capacity Analysis */}
+              <Card className="shadow-lg border-0 bg-gradient-to-br from-white to-orange-50">
+                <CardHeader className="bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-t-lg">
+                  <CardTitle className="flex items-center gap-2">
+                    <div className="p-2 bg-white/20 rounded-lg">
                       <Truck className="w-5 h-5" />
-                      Capacity Analysis
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <span>Volume:</span>
-                        <div className="flex items-center gap-2">
-                          <span>{totals.totalVolume.toFixed(1)} / {truckConfig.capacity} yd³</span>
-                          <Badge variant={totals.volumeLimit ? "default" : "destructive"}>
-                            {totals.volumeLimit ? "OK" : "OVER"}
-                          </Badge>
-                        </div>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span>Weight:</span>
-                        <div className="flex items-center gap-2">
-                          <span>{totals.totalWeight.toFixed(2)} / {truckConfig.payload} tons</span>
-                          <Badge variant={totals.weightLimit ? "default" : "destructive"}>
-                            {totals.weightLimit ? "OK" : "OVER"}
-                          </Badge>
-                        </div>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span>Trips Needed:</span>
-                        <Badge variant={totals.tripsNeeded > 1 ? "secondary" : "default"}>
-                          {totals.tripsNeeded}
+                    </div>
+                    🚛 Capacity Analysis
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4 p-6">
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center p-3 bg-orange-50 rounded border border-orange-200">
+                      <span className="font-medium text-orange-800">Volume:</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-orange-700">{totals.totalVolume.toFixed(1)} / {truckConfig.capacity} yd³</span>
+                        <Badge variant={totals.volumeLimit ? "default" : "destructive"} className={totals.volumeLimit ? "bg-green-500" : ""}>
+                          {totals.volumeLimit ? "✅ OK" : "⚠️ OVER"}
                         </Badge>
                       </div>
-                      <div className="flex justify-between items-center">
-                        <span>Loading Time:</span>
-                        <span>{Math.ceil(totals.totalLoadingTime)} minutes</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-orange-50 rounded border border-orange-200">
+                      <span className="font-medium text-orange-800">Weight:</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-orange-700">{totals.totalWeight.toFixed(2)} / {truckConfig.payload} tons</span>
+                        <Badge variant={totals.weightLimit ? "default" : "destructive"} className={totals.weightLimit ? "bg-green-500" : ""}>
+                          {totals.weightLimit ? "✅ OK" : "⚠️ OVER"}
+                        </Badge>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
-              </div>
+                    <div className="flex justify-between items-center p-3 bg-orange-50 rounded border border-orange-200">
+                      <span className="font-medium text-orange-800">Trips Needed:</span>
+                      <Badge variant={totals.tripsNeeded > 1 ? "secondary" : "default"} className="text-lg">
+                        🚚 {totals.tripsNeeded} trip{totals.tripsNeeded > 1 ? 's' : ''}
+                      </Badge>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-orange-50 rounded border border-orange-200">
+                      <span className="font-medium text-orange-800">Loading Time:</span>
+                      <span className="text-orange-700 font-medium">⏱️ {Math.ceil(totals.totalLoadingTime)} minutes</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
               {/* Selected Items Summary */}
               {jobItems.length > 0 && (
