@@ -234,6 +234,7 @@ export const testRSSFeed = async (req: Request, res: Response) => {
  */
 export const getRSSFeeds = async (req: Request, res: Response) => {
   try {
+    console.log(`GET /api/rss/feeds - Returning ${rssFeeds.length} feeds`);
     res.json(rssFeeds);
   } catch (error) {
     console.error('Get RSS feeds error:', error);
