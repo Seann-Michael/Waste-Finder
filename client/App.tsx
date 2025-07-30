@@ -78,6 +78,7 @@ const AppRoutes = () => (
     <Route path="/news" element={<News />} />
     <Route path="/news/article/:id" element={<NewsArticle />} />
     <Route path="/pricing-calculator" element={<PricingCalculator />} />
+    <Route path="/debris-weight-calculator" element={<DebrisWeightCalculator />} />
 
     {/* Admin routes with separate loading */}
     <Route
