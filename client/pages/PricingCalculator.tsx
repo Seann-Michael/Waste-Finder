@@ -401,7 +401,7 @@ export default function PricingCalculator() {
     const pdfContent = `
 ═══���═══════════════════════════════════════════════════════════
                     DEBRIS REMOVAL ESTIMATE
-═══════════════════════════��═══════════════════════════════════
+══════════���════════════════��═══════════════════════════════════
 
 Generated: ${currentDate}
 Company: ________________________________
@@ -423,7 +423,7 @@ Trips Required: ${totals.tripsNeeded}
 Total Labor Time: ${Math.ceil(totals.totalLoadingTime)} minutes
 
 DETAILED ITEMS LIST
-─────────���────────────────────────���──────────────────────────
+─────────���────────────────────────���────────────────────────���─
 ${itemsList}
 
 JOB SITE CONDITIONS
@@ -448,7 +448,7 @@ ${totals.stepsTime > 0 ? `Steps Time: ${Math.ceil(totals.stepsTime)} minutes` : 
 Total Labor Time: ${Math.ceil(totals.totalLoadingTime)} minutes
 
 COST BREAKDOWN
-───────────��──────────���──────────────────────────────────────
+───────────��─────────������──────────────────────────────────────
 Removal Fee (${totals.totalVolume.toFixed(1)} yd³ @ $${config.removalRatePerCubicYard}/yd³):        $${totals.removalFee.toFixed(2)}
 Dump Fee (${config.useTonRate ? `${totals.totalWeight.toFixed(2)} tons` : `${totals.totalVolume.toFixed(1)} yd³`}):                           $${totals.dumpFee.toFixed(2)}
 Labor (${(totals.totalLoadingTime / 60).toFixed(1)} hours @ $${config.laborRatePerHour}/hr):      $${totals.laborCost.toFixed(2)}
@@ -962,84 +962,228 @@ Company Signature: _____________________  Date: ____________
             </TabsContent>
 
             <TabsContent value="estimate" className="space-y-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Item Library */}
-                <Card className="shadow-lg border-0 bg-gradient-to-br from-white to-purple-50">
-                  <CardHeader className="bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-t-lg">
-                    <CardTitle className="flex items-center gap-2">
-                      <div className="p-2 bg-white/20 rounded-lg">
-                        <Package className="w-5 h-5" />
+              {/* Cost Breakdown - Moved to Top */}
+              <Card className="shadow-xl border-0 bg-gradient-to-br from-white to-yellow-50">
+                <CardHeader className="bg-gradient-to-r from-yellow-500 to-orange-600 text-white rounded-t-lg">
+                  <CardTitle className="flex items-center gap-2">
+                    <div className="p-2 bg-white/20 rounded-lg">
+                      <DollarSign className="w-5 h-5" />
+                    </div>
+                    Professional Cost Breakdown
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-3">
+                      <div className="flex justify-between">
+                        <span>Removal Fee ({totals.totalVolume.toFixed(1)} yd³):</span>
+                        <span className="font-medium">${totals.removalFee.toFixed(2)}</span>
                       </div>
-                      📦 Item Library ({filteredItems.length} items)
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-6">
-                    <div className="space-y-4">
-                      {/* Search Input */}
-                      <div>
-                        <Label htmlFor="searchItems">🔍 Search Items</Label>
-                        <Input
-                          id="searchItems"
-                          type="text"
-                          placeholder="Type to search items..."
-                          value={searchTerm}
-                          onChange={(e) => setSearchTerm(e.target.value)}
-                          className="w-full border-purple-300 focus:border-purple-500"
-                        />
+                      <div className="flex justify-between">
+                        <span>Dump Fee ({config.useTonRate ? `${totals.totalWeight.toFixed(2)} tons` : `${totals.totalVolume.toFixed(1)} yd³`}):</span>
+                        <span className="font-medium">${totals.dumpFee.toFixed(2)}</span>
                       </div>
-
-                      {/* Category Filter */}
-                      <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                        <SelectTrigger className="border-purple-300 focus:border-purple-500">
-                          <SelectValue placeholder="Filter by category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {categories.map((category) => (
-                            <SelectItem key={category} value={category}>
-                              {category}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-
-                      {/* Clear Filters */}
-                      {(searchTerm || selectedCategory !== "All") && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            setSearchTerm("");
-                            setSelectedCategory("All");
-                          }}
-                          className="w-full border-purple-300 text-purple-600 hover:bg-purple-50"
-                        >
-                          🗑️ Clear Filters
-                        </Button>
+                      <div className="flex justify-between">
+                        <span>Labor ({(totals.totalLoadingTime / 60).toFixed(1)}h):</span>
+                        <span className="font-medium">${totals.laborCost.toFixed(2)}</span>
+                      </div>
+                      <div className="ml-4 text-sm text-muted-foreground">
+                        <div>• Loading: {Math.ceil(totals.baseLoadingTime)}min</div>
+                        <div>• Walking: {Math.ceil(totals.walkingTime)}min</div>
+                        {totals.stepsTime > 0 && <div>• Steps: {Math.ceil(totals.stepsTime)}min</div>}
+                        <div className="text-xs text-orange-600 mt-1">💡 Manpower Rate (${config.laborRatePerHour ?? 25}/hr) is for calculating worker wages - not added to job price</div>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Fuel ({estimate.distance * 2 * totals.tripsNeeded} mi, {(estimate.distance * 2 * totals.tripsNeeded / estimate.averageMpg).toFixed(1)} gal):</span>
+                        <span className="font-medium">${totals.fuelCost.toFixed(2)}</span>
+                      </div>
+                      {totals.tripSurcharge > 0 && (
+                        <div className="flex justify-between">
+                          <span>Additional Trip Fee:</span>
+                          <span className="font-medium">${totals.tripSurcharge.toFixed(2)}</span>
+                        </div>
                       )}
+                      <div className="flex justify-between">
+                        <span>Additional Fees:</span>
+                        <span className="font-medium">${estimate.additionalFees.toFixed(2)}</span>
+                      </div>
+                      <Separator />
+                      <div className="flex justify-between">
+                        <span>Subtotal:</span>
+                        <span className="font-medium">${totals.subtotal.toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Profit ({config.profitMargin}%):</span>
+                        <span className="font-medium text-green-600">${totals.profitAmount.toFixed(2)}</span>
+                      </div>
+                    </div>
 
-                      {/* Items List */}
-                      <div className="space-y-2 max-h-80 overflow-y-auto">
+                    <div className="relative overflow-hidden bg-gradient-to-br from-green-400 via-blue-500 to-purple-600 rounded-xl p-8 text-white shadow-2xl">
+                      <div className="absolute inset-0 bg-black/10"></div>
+                      <div className="relative z-10 text-center">
+                        <div className="mb-4">
+                          <div className="text-sm text-green-100 mb-2">💰 Total Job Price</div>
+                          <div className="text-6xl font-black mb-2 bg-gradient-to-r from-white to-yellow-200 bg-clip-text text-transparent animate-pulse">
+                            ${totals.total.toFixed(2)}
+                          </div>
+                          <div className="text-green-100 text-lg">
+                            Professional Quote Ready! 🎯
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4 bg-white/10 rounded-lg p-4 backdrop-blur-sm">
+                          <div className="text-center">
+                            <div className="flex items-center justify-center gap-2 mb-1">
+                              <Weight className="w-4 h-4 text-yellow-300" />
+                              <span className="font-bold text-lg">{totals.totalWeight.toFixed(2)} tons</span>
+                            </div>
+                            <div className="text-xs text-blue-100">Total Weight</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="flex items-center justify-center gap-2 mb-1">
+                              <Package className="w-4 h-4 text-yellow-300" />
+                              <span className="font-bold text-lg">{totals.totalVolume.toFixed(1)} yd³</span>
+                            </div>
+                            <div className="text-xs text-blue-100">Total Volume</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="flex items-center justify-center gap-2 mb-1">
+                              <Clock className="w-4 h-4 text-yellow-300" />
+                              <span className="font-bold text-lg">{Math.ceil(totals.totalLoadingTime)}min</span>
+                            </div>
+                            <div className="text-xs text-blue-100">Labor Time</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="flex items-center justify-center gap-2 mb-1">
+                              <Truck className="w-4 h-4 text-yellow-300" />
+                              <span className="font-bold text-lg">{totals.tripsNeeded} trip{totals.tripsNeeded > 1 ? 's' : ''}</span>
+                            </div>
+                            <div className="text-xs text-blue-100">Trips Needed</div>
+                          </div>
+                        </div>
+
+                        <div className="flex gap-3 mt-4">
+                          <Button
+                            className="bg-white text-purple-600 hover:bg-gray-100 font-bold text-lg px-6 py-3 shadow-lg flex-1"
+                            onClick={() => {
+                              const quote = `DEBRIS REMOVAL ESTIMATE\n\nTotal Price: $${totals.total.toFixed(2)}\n\nItems: ${jobItems.length} types, ${jobItems.reduce((sum, item) => sum + item.quantity, 0)} total\nWeight: ${totals.totalWeight.toFixed(2)} tons\nVolume: ${totals.totalVolume.toFixed(1)} cubic yards\nTrips: ${totals.tripsNeeded}\n\nGenerated by WasteFinder Calculator`;
+                              navigator.clipboard.writeText(quote);
+                              alert('Quote copied to clipboard! 📋');
+                            }}
+                          >
+                            📋 Copy Quote
+                          </Button>
+                          <Button
+                            className="bg-gradient-to-r from-red-500 to-pink-600 text-white hover:from-red-600 hover:to-pink-700 font-bold text-lg px-6 py-3 shadow-lg flex-1"
+                            onClick={generatePDF}
+                          >
+                            📄 Download PDF
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Animated background elements */}
+                      <div className="absolute top-2 right-2 w-8 h-8 bg-white/20 rounded-full animate-bounce"></div>
+                      <div className="absolute bottom-4 left-4 w-6 h-6 bg-yellow-300/30 rounded-full animate-pulse"></div>
+                      <div className="absolute top-1/2 left-2 w-4 h-4 bg-white/20 rounded-full animate-ping"></div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Job Items - Full Width Below Cost Breakdown */}
+              <Card className="shadow-lg border-0 bg-gradient-to-br from-white to-blue-50">
+                <CardHeader className="bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-t-lg">
+                  <CardTitle className="flex items-center gap-2">
+                    <div className="p-2 bg-white/20 rounded-lg">
+                      <Calculator className="w-5 h-5" />
+                    </div>
+                    🛠️ Job Items ({jobItems.length} types, {jobItems.reduce((sum, item) => sum + item.quantity, 0)} total)
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="space-y-6">
+                    {/* Item Library Integration */}
+                    <div className="border-2 border-dashed border-blue-300 rounded-lg p-6 bg-blue-50">
+                      <h3 className="text-lg font-semibold text-blue-800 mb-4 flex items-center gap-2">
+                        <Package className="w-5 h-5" />
+                        📦 Add Items from Library
+                      </h3>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        {/* Search Input */}
+                        <div>
+                          <Label htmlFor="searchItems">🔍 Search Items</Label>
+                          <Input
+                            id="searchItems"
+                            type="text"
+                            placeholder="Type to search items..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full border-blue-300 focus:border-blue-500"
+                          />
+                        </div>
+
+                        {/* Category Filter */}
+                        <div>
+                          <Label>Filter by Category</Label>
+                          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                            <SelectTrigger className="border-blue-300 focus:border-blue-500">
+                              <SelectValue placeholder="Filter by category" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {categories.map((category) => (
+                                <SelectItem key={category} value={category}>
+                                  {category}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        {/* Clear Filters */}
+                        <div className="flex items-end">
+                          {(searchTerm || selectedCategory !== "All") && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                setSearchTerm("");
+                                setSelectedCategory("All");
+                              }}
+                              className="w-full border-blue-300 text-blue-600 hover:bg-blue-100"
+                            >
+                              🗑️ Clear Filters
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Items Grid */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-60 overflow-y-auto">
                         {filteredItems.length === 0 ? (
-                          <div className="text-center py-8 text-muted-foreground">
+                          <div className="col-span-full text-center py-8 text-muted-foreground">
                             No items found matching your search
                           </div>
                         ) : (
                           filteredItems.map((item) => (
                             <div
                               key={item.id}
-                              className="flex items-center justify-between p-3 border border-purple-200 rounded-lg hover:bg-purple-50 cursor-pointer transition-colors shadow-sm"
+                              className="flex items-center justify-between p-3 border border-blue-200 rounded-lg hover:bg-blue-100 cursor-pointer transition-colors shadow-sm"
                               onClick={() => addJobItem(item)}
                             >
                               <div className="flex-1">
-                                <div className="font-medium text-purple-800">{item.name}</div>
-                                <div className="text-sm text-purple-600">
-                                  <Badge variant="outline" className="mr-1 text-xs border-purple-300">
+                                <div className="font-medium text-blue-800 text-sm">{item.name}</div>
+                                <div className="text-xs text-blue-600">
+                                  <Badge variant="outline" className="mr-1 text-xs border-blue-300">
                                     {item.category}
                                   </Badge>
-                                  {item.weightPerItem} tons • {item.volumePerItem} yd³ • {item.loadingTimePerItem}min
+                                </div>
+                                <div className="text-xs text-blue-500 mt-1">
+                                  {item.weightPerItem}t • {item.volumePerItem}yd³ • {item.loadingTimePerItem}min
                                 </div>
                               </div>
-                              <Button size="sm" variant="outline" className="ml-2 border-purple-300 text-purple-600 hover:bg-purple-100">
+                              <Button size="sm" variant="outline" className="ml-2 border-blue-300 text-blue-600 hover:bg-blue-200">
                                 <Plus className="w-3 h-3" />
                               </Button>
                             </div>
@@ -1047,26 +1191,14 @@ Company Signature: _____________________  Date: ____________
                         )}
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
 
-                {/* Job Items */}
-                <Card className="shadow-lg border-0 bg-gradient-to-br from-white to-blue-50">
-                  <CardHeader className="bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-t-lg">
-                    <CardTitle className="flex items-center gap-2">
-                      <div className="p-2 bg-white/20 rounded-lg">
-                        <Calculator className="w-5 h-5" />
-                      </div>
-                      🛠️ Job Items ({jobItems.length} types, {jobItems.reduce((sum, item) => sum + item.quantity, 0)} total)
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-6">
+                    {/* Added Job Items - Full Width */}
                     <div className="space-y-3">
                       {jobItems.length === 0 ? (
                         <div className="text-center py-8">
                           <Package className="w-12 h-12 text-blue-300 mx-auto mb-4" />
                           <p className="text-blue-600 font-medium">
-                            Add items from the library to build your job
+                            Add items from the library above to build your job
                           </p>
                           <p className="text-sm text-blue-500 mt-2">
                             Click on any item to add it to your job
@@ -1074,23 +1206,23 @@ Company Signature: _____________________  Date: ____________
                         </div>
                       ) : (
                         <>
-                          {/* Clear All Button */}
-                          <div className="flex justify-between items-center bg-blue-50 p-3 rounded border border-blue-200">
+                          {/* Summary Header */}
+                          <div className="flex justify-between items-center bg-blue-100 p-4 rounded-lg border border-blue-300">
                             <span className="text-sm text-blue-700 font-medium">
-                              📊 Total Weight: {totals.totalWeight.toFixed(2)} tons | Volume: {totals.totalVolume.toFixed(1)} yd³
+                              📊 Total Weight: {totals.totalWeight.toFixed(2)} tons | Volume: {totals.totalVolume.toFixed(1)} yd³ | Items: {jobItems.reduce((sum, item) => sum + item.quantity, 0)}
                             </span>
                             <Button
                               size="sm"
                               variant="outline"
                               onClick={() => setJobItems([])}
-                              className="border-blue-300 text-blue-600 hover:bg-blue-100"
+                              className="border-blue-300 text-blue-600 hover:bg-blue-200"
                             >
                               Clear All
                             </Button>
                           </div>
 
-                          {/* Items List */}
-                          <div className="space-y-3 max-h-80 overflow-y-auto">
+                          {/* Items List - Full Width */}
+                          <div className="space-y-3">
                             {jobItems.map((jobItem) => {
                               const currentWeight = jobItem.customWeight ?? jobItem.debrisItem?.weightPerItem ?? 0;
                               const currentVolume = jobItem.customVolume ?? jobItem.debrisItem?.volumePerItem ?? 0;
