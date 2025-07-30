@@ -83,6 +83,7 @@ const DEBRIS_ITEMS: DebrisItem[] = [
   // Living Room Furniture (Realistic dimensions)
   { id: "sectional_couch", name: "Sectional Couch", category: "Furniture", weightPerItem: 0.15, volumePerItem: 7.0, loadingTimePerItem: 25 },
   { id: "standard_couch", name: "Standard Couch", category: "Furniture", weightPerItem: 0.08, volumePerItem: 2.3, loadingTimePerItem: 15 },
+  { id: "reclining_couch", name: "Reclining Couch", category: "Furniture", weightPerItem: 0.12, volumePerItem: 4.5, loadingTimePerItem: 22 },
   { id: "sofa_bed", name: "Sofa Bed", category: "Furniture", weightPerItem: 0.1, volumePerItem: 3.5, loadingTimePerItem: 20 },
   { id: "recliner", name: "Recliner Chair", category: "Furniture", weightPerItem: 0.06, volumePerItem: 1.3, loadingTimePerItem: 12 },
   { id: "coffee_table", name: "Coffee Table", category: "Furniture", weightPerItem: 0.04, volumePerItem: 0.4, loadingTimePerItem: 8 },
@@ -455,7 +456,7 @@ ITEMIZED LIST:
 ${itemsList}
 
 FUEL & TRAVEL DETAILS
-─────────────────────────────��───────────────────────────────
+─────────────────────────────────────────────────────────────
 Vehicle MPG: ${estimate.averageMpg}
 Fuel Price: $${estimate.fuelPricePerGallon}/gallon
 Total Miles: ${estimate.distance} × 2 (round trip) × ${totals.tripsNeeded} trips = ${totalMiles} miles
@@ -485,7 +486,7 @@ TOTAL JOB PRICE:                             $${totals.total.toFixed(2)}
                                            ═════════════
 
 TERMS & CONDITIONS
-─────────────────────────────────────────────────────────────
+────────────────────────────��────────────────────────────────
 • This estimate is valid for 30 days
 • Final price may vary based on actual site conditions
 • Payment due upon completion
