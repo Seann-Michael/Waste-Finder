@@ -266,7 +266,7 @@ export default function LocationCard({ location }: LocationCardProps) {
             ))}
           </div>
           <Button asChild size="sm" className="w-full text-sm h-8">
-            <Link to={`/location/${location.id}`}>View Details</Link>
+            <Link to={generateLocationUrl(location)}>View Details</Link>
           </Button>
         </div>
       </div>
