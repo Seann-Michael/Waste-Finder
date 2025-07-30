@@ -384,7 +384,7 @@ Customer: _______________________________
 Job Address: ____________________________
 
 VEHICLE CONFIGURATION
-─────────────────────────────────────────────────────────────
+──���──────────────────────────────────────────────────────────
 Vehicle: ${truckConfig.name}
 Capacity: ${truckConfig.capacity} cubic yards
 Payload: ${truckConfig.payload} tons
@@ -408,7 +408,7 @@ Walking Distance: ${estimate.walkingDistance} feet
 ${estimate.hasSteps ? `Steps Required: ${estimate.numberOfSteps} steps (${estimate.percentageRequiringSteps}% of items)` : 'No Steps Required'}
 
 FUEL & TRAVEL CALCULATION
-─────────────────────────────────────────────────────────────
+──────────────────────────────────────────��──────────────────
 Vehicle MPG: ${estimate.averageMpg}
 Fuel Price: $${estimate.fuelPricePerGallon}/gallon
 Total Miles: ${estimate.distance} × 2 (round trip) × ${totals.tripsNeeded} trips = ${totalMiles} miles
@@ -1234,43 +1234,88 @@ Company Signature: _____________________  Date: ____________
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="p-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="space-y-3">
                       {jobItems.map((jobItem) => {
                         const currentWeight = jobItem.customWeight ?? jobItem.debrisItem.weightPerItem;
                         const currentVolume = jobItem.customVolume ?? jobItem.debrisItem.volumePerItem;
                         const currentLoadingTime = jobItem.customLoadingTime ?? jobItem.debrisItem.loadingTimePerItem;
 
+                        // Calculate individual item pricing
+                        const itemVolumeCost = (currentVolume * jobItem.quantity) * config.removalRatePerCubicYard;
+                        const itemDumpCost = config.useTonRate
+                          ? (currentWeight * jobItem.quantity) * config.dumpRatePerTon
+                          : (currentVolume * jobItem.quantity) * config.dumpRatePerCubicYard;
+                        const itemLaborCost = ((currentLoadingTime * jobItem.quantity) / 60) * config.laborRatePerHour;
+                        const itemTotalCost = itemVolumeCost + itemDumpCost + itemLaborCost;
+
                         return (
                           <div key={jobItem.debrisItem.id} className="bg-white border border-green-200 rounded-lg p-4 shadow-sm">
-                            <div className="flex items-center justify-between mb-2">
-                              <div className="font-medium text-gray-800">{jobItem.debrisItem.name}</div>
-                              <Badge variant="secondary" className="text-lg font-bold">
-                                {jobItem.quantity}×
-                              </Badge>
+                            <div className="flex items-center justify-between mb-3">
+                              <div className="flex items-center gap-3">
+                                <Badge variant="secondary" className="text-lg font-bold px-3 py-1">
+                                  {jobItem.quantity}×
+                                </Badge>
+                                <div>
+                                  <div className="font-medium text-gray-800">{jobItem.debrisItem.name}</div>
+                                  <Badge variant="outline" className="text-xs mt-1">
+                                    {jobItem.debrisItem.category}
+                                  </Badge>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <div className="text-right">
+                                  <div className="font-bold text-green-600">${itemTotalCost.toFixed(2)}</div>
+                                  <div className="text-xs text-gray-500">Total Price</div>
+                                </div>
+                                <Button
+                                  variant="destructive"
+                                  size="sm"
+                                  onClick={() => {
+                                    setJobItems(jobItems.filter(item => item.debrisItem.id !== jobItem.debrisItem.id));
+                                  }}
+                                  className="p-2"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </div>
                             </div>
-                            <div className="text-sm text-gray-600 mb-2">
-                              <Badge variant="outline" className="text-xs mb-1">
-                                {jobItem.debrisItem.category}
-                              </Badge>
-                            </div>
-                            <div className="space-y-1 text-xs text-gray-600">
+
+                            <div className="grid grid-cols-3 gap-3 text-xs text-gray-600">
                               <div className="flex justify-between">
                                 <span>Weight:</span>
-                                <span className="font-medium">{(currentWeight * jobItem.quantity).toFixed(2)} tons</span>
+                                <span className="font-medium">{(currentWeight * jobItem.quantity).toFixed(2)}t</span>
                               </div>
                               <div className="flex justify-between">
                                 <span>Volume:</span>
-                                <span className="font-medium">{(currentVolume * jobItem.quantity).toFixed(1)} yd³</span>
+                                <span className="font-medium">{(currentVolume * jobItem.quantity).toFixed(1)}yd³</span>
                               </div>
                               <div className="flex justify-between">
                                 <span>Load Time:</span>
-                                <span className="font-medium">{currentLoadingTime * jobItem.quantity} min</span>
+                                <span className="font-medium">{Math.ceil(currentLoadingTime * jobItem.quantity)}min</span>
                               </div>
                             </div>
+
+                            <div className="mt-3 pt-2 border-t border-gray-200">
+                              <div className="grid grid-cols-3 gap-3 text-xs">
+                                <div className="flex justify-between">
+                                  <span className="text-gray-500">Removal:</span>
+                                  <span className="font-medium">${itemVolumeCost.toFixed(2)}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-gray-500">Dump:</span>
+                                  <span className="font-medium">${itemDumpCost.toFixed(2)}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-gray-500">Labor:</span>
+                                  <span className="font-medium">${itemLaborCost.toFixed(2)}</span>
+                                </div>
+                              </div>
+                            </div>
+
                             {(jobItem.customWeight || jobItem.customVolume || jobItem.customLoadingTime) && (
                               <div className="mt-2">
                                 <Badge variant="outline" className="text-xs text-orange-600 border-orange-300">
-                                  Custom Values
+                                  Custom Values ✏️
                                 </Badge>
                               </div>
                             )}
