@@ -399,7 +399,7 @@ export default function PricingCalculator() {
     const gallonsUsed = totalMiles / estimate.averageMpg;
 
     const pdfContent = `
-═══���═══════════════════════════════════════════════════════════
+═══���═══════════════════════════════════════════════════════��═══
                     DEBRIS REMOVAL ESTIMATE
 ══════════���════════════════��═══════════════════════════════════
 
@@ -1378,25 +1378,15 @@ Company Signature: _____________________  Date: ____________
                     </div>
                   </CardContent>
                 </Card>
-              </div>
-                                <span className="font-medium">{(currentVolume * jobItem.quantity).toFixed(1)}yd³</span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span>Load Time:</span>
-                                <span className="font-medium">{Math.ceil(currentLoadingTime * jobItem.quantity)}min</span>
-                              </div>
-                            </div>
 
-                            <div className="mt-3 pt-2 border-t border-gray-200">
-                              <div className="grid grid-cols-3 gap-3 text-xs">
-                                <div className="flex justify-between">
-                                  <span className="text-gray-500">Removal:</span>
-                                  <span className="font-medium">${itemVolumeCost.toFixed(2)}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span className="text-gray-500">Dump:</span>
-                                  <span className="font-medium">${itemDumpCost.toFixed(2)}</span>
-                                </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
+}
                                 <div className="flex justify-between">
                                   <span className="text-gray-500">Labor:</span>
                                   <span className="font-medium">${itemLaborCost.toFixed(2)}</span>
