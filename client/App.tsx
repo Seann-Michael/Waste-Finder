@@ -75,6 +75,7 @@ const AppRoutes = () => (
     <Route path="/suggest-location" element={<SuggestLocation />} />
     <Route path="/resources" element={<Resources />} />
     <Route path="/location/:id" element={<LocationDetail />} />
+    <Route path="/location/:state/:city/:locationName" element={<LocationDetail />} />
     <Route path="/blog" element={<Blog />} />
     <Route path="/blog/:slug" element={<BlogPost />} />
     <Route path="/news" element={<News />} />
