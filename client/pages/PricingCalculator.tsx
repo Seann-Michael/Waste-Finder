@@ -965,15 +965,7 @@ Company Signature: _____________________  Date: ____________`;
                   </div>
                 </div>
               </div>
-              <div className="text-right">
-                <Button
-                  onClick={saveConfig}
-                  className="bg-white/20 hover:bg-white/30 border border-white/40 text-white backdrop-blur-sm"
-                >
-                  <Save className="w-4 h-4 mr-2" />
-                  Save Configuration
-                </Button>
-              </div>
+
             </div>
           </div>
 
@@ -2295,7 +2287,7 @@ Company Signature: _____________________  Date: ____________`;
                                       }}
                                       className="mt-2 h-6 text-xs text-blue-600 hover:bg-blue-100"
                                     >
-                                      🔄 Reset to Defaults
+                                      �� Reset to Defaults
                                     </Button>
                                   )}
                                 </div>
