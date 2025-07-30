@@ -357,9 +357,9 @@ export default function News() {
                         <span>{getTimeAgo(article.publishedAt)}</span>
                       </div>
                       <CardTitle className="text-lg leading-tight hover:text-primary transition-colors">
-                        <Link to={`/news/article/${article.id}`}>
+                        <a href={article.url} target="_blank" rel="noopener noreferrer" className="hover:text-primary">
                           {article.title}
-                        </Link>
+                        </a>
                       </CardTitle>
                     </CardHeader>
 
