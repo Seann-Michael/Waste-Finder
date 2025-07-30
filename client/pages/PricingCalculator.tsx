@@ -464,7 +464,7 @@ Fuel Needed: ${gallonsUsed.toFixed(1)} gallons
 Fuel Cost: $${totals.fuelCost.toFixed(2)}
 
 LABOR BREAKDOWN
-──────────────────────────────────────────────���──────────────
+─────────────────────────────────────────────────────────────
 Base Loading Time: ${Math.ceil(totals.baseLoadingTime)} minutes
 Walking Time: ${Math.ceil(totals.walkingTime)} minutes
 ${totals.stepsTime > 0 ? `Steps Time: ${Math.ceil(totals.stepsTime)} minutes` : ''}
@@ -478,7 +478,7 @@ Labor (${(totals.totalLoadingTime / 60).toFixed(1)} hours @ $${config.laborRateP
 Fuel (${gallonsUsed.toFixed(1)} gallons @ $${estimate.fuelPricePerGallon}/gal):              $${totals.fuelCost.toFixed(2)}${totals.tripSurcharge > 0 ? `
 Additional Trip Fee:                         $${totals.tripSurcharge.toFixed(2)}` : ''}
 Additional Fees:                             $${estimate.additionalFees.toFixed(2)}
-                                           ────���────────
+                                           ─────────────
 Subtotal:                                    $${totals.subtotal.toFixed(2)}
 Profit Margin (${config.profitMargin}%):                       $${totals.profitAmount.toFixed(2)}
                                            ═════════════
@@ -1457,7 +1457,7 @@ Company Signature: _____________________  Date: ____________`;
                                     </div>
                                     <div>
                                       <Label htmlFor={`cost-${jobItem.debrisItem.id}`} className="text-xs text-blue-700">
-                                        Line Cost ($)
+                                        Price Per Item ($)
                                       </Label>
                                       <div className="relative">
                                         <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">$</span>
@@ -1465,7 +1465,7 @@ Company Signature: _____________________  Date: ____________`;
                                           id={`cost-${jobItem.debrisItem.id}`}
                                           type="number"
                                           step="0.01"
-                                          value={jobItem.customLineItemCost !== undefined ? jobItem.customLineItemCost : ""}
+                                          value={jobItem.customLineItemCost !== undefined ? (jobItem.customLineItemCost / jobItem.quantity) : ""}
                                           onChange={(e) => {
                                             const value = e.target.value;
                                             if (value === "") {
@@ -1473,16 +1473,17 @@ Company Signature: _____________________  Date: ____________`;
                                             } else {
                                               const numValue = parseFloat(value);
                                               if (!isNaN(numValue)) {
-                                                updateJobItemProperty(jobItem.debrisItem.id, 'customLineItemCost', numValue);
+                                                // Store total cost (per item price × quantity)
+                                                updateJobItemProperty(jobItem.debrisItem.id, 'customLineItemCost', numValue * jobItem.quantity);
                                               }
                                             }
                                           }}
                                           className="h-8 text-xs border-blue-300 focus:border-blue-500 pl-6"
-                                          placeholder={`Auto: $${defaultLineItemCost.toFixed(2)}`}
+                                          placeholder={`Auto: $${(defaultLineItemCost / jobItem.quantity).toFixed(2)}`}
                                         />
                                       </div>
                                       <div className="text-xs text-gray-500 mt-1">
-                                        {jobItem.customLineItemCost !== undefined ? "Custom price set" : "Using auto calculation"}
+                                        {jobItem.customLineItemCost !== undefined ? "Custom price" : "Auto calc"}
                                       </div>
                                     </div>
                                   </div>
