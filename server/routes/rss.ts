@@ -57,33 +57,29 @@ export const parseRSSFeed = async (req: Request, res: Response) => {
       });
     }
 
-    // In production, you would use a library like 'rss-parser' here
-    // For demo purposes, we'll return mock data
-    const mockFeedData: ParsedFeed = {
-      title: "Environmental News Feed",
-      description: "Latest environmental and waste management news",
-      articles: [
-        {
-          title: "New Recycling Technologies Transform Waste Management Industry",
-          description: "Advanced sorting technologies and AI-powered systems are revolutionizing how we process recyclable materials, leading to higher efficiency rates and reduced contamination.",
-          url: "https://example.com/recycling-tech",
-          publishedAt: new Date().toISOString(),
-          author: "Sarah Johnson",
-          imageUrl: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400",
-          tags: ["recycling", "technology", "AI", "sustainability"]
-        },
-        {
-          title: "Federal Regulations Update: New Standards for Landfill Operations",
-          description: "The EPA announces updated environmental standards for landfill operations, focusing on methane capture and groundwater protection.",
-          url: "https://example.com/federal-regulations",
-          publishedAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-          author: "Michael Chen",
-          tags: ["policy", "EPA", "regulations", "environment"]
-        }
-      ]
+    console.log('Parsing RSS feed:', url);
+
+    // Parse the actual RSS feed
+    const feed = await parser.parseURL(url);
+
+    const articles = feed.items.slice(0, 50).map(item => ({
+      title: item.title || 'Untitled',
+      description: cleanHtml(item.contentSnippet || item.content || item.summary || '').slice(0, 500),
+      url: item.link || item.guid || '',
+      publishedAt: item.pubDate ? new Date(item.pubDate).toISOString() : new Date().toISOString(),
+      author: item.creator || item.author || undefined,
+      imageUrl: extractImageUrl(item),
+      tags: extractTags(item)
+    })).filter(article => article.title && article.url);
+
+    const feedData: ParsedFeed = {
+      title: feed.title || 'RSS Feed',
+      description: feed.description || '',
+      articles
     };
 
-    res.json(mockFeedData);
+    console.log(`Successfully parsed ${articles.length} articles from ${feed.title}`);
+    res.json(feedData);
 
   } catch (error) {
     console.error('RSS parsing error:', error);
@@ -93,6 +89,66 @@ export const parseRSSFeed = async (req: Request, res: Response) => {
     });
   }
 };
+
+/**
+ * Clean HTML content
+ */
+function cleanHtml(content: string): string {
+  return content
+    .replace(/<[^>]*>/g, '') // Remove HTML tags
+    .replace(/&[^;]+;/g, ' ') // Remove HTML entities
+    .replace(/\s+/g, ' ') // Normalize whitespace
+    .trim();
+}
+
+/**
+ * Extract image URL from RSS item
+ */
+function extractImageUrl(item: any): string | undefined {
+  // Try different image fields
+  if (item.enclosure?.url && item.enclosure.type?.includes('image')) {
+    return item.enclosure.url;
+  }
+
+  if (item['media:content'] && item['media:content'].$.url) {
+    return item['media:content'].$.url;
+  }
+
+  if (item['media:thumbnail'] && item['media:thumbnail'].$.url) {
+    return item['media:thumbnail'].$.url;
+  }
+
+  // Try to extract from content
+  if (item.content) {
+    const imgMatch = item.content.match(/<img[^>]+src=["']([^"']+)["'][^>]*>/i);
+    if (imgMatch && imgMatch[1]) {
+      return imgMatch[1];
+    }
+  }
+
+  return undefined;
+}
+
+/**
+ * Extract tags from RSS item
+ */
+function extractTags(item: any): string[] {
+  const tags: string[] = [];
+
+  if (item.categories) {
+    tags.push(...item.categories);
+  }
+
+  if (item.category) {
+    if (Array.isArray(item.category)) {
+      tags.push(...item.category);
+    } else {
+      tags.push(item.category);
+    }
+  }
+
+  return tags.slice(0, 10);
+}
 
 /**
  * Test RSS feed validity
