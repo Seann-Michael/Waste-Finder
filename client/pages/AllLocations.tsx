@@ -18,6 +18,7 @@ import LocationCard from "../components/LocationCard";
 import AdSense from "../components/AdSense";
 import GoogleMapsEmbed from "../components/GoogleMapsEmbed";
 import { Location } from "../shared/api";
+import { generateLocationUrl } from "../lib/utils";
 
 interface SearchLocation {
   zipCode: string;
