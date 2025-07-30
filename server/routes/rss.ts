@@ -173,13 +173,19 @@ export const testRSSFeed = async (req: Request, res: Response) => {
       });
     }
 
-    // In production, you would actually test the RSS feed here
-    // For demo purposes, we'll simulate a successful test
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
+    console.log('Testing RSS feed:', url);
+
+    // Actually test the RSS feed
+    const feed = await parser.parseURL(url);
+
+    const articleCount = feed.items ? feed.items.length : 0;
+
+    console.log(`RSS feed test successful: ${feed.title} with ${articleCount} articles`);
 
     res.json({
       valid: true,
-      articleCount: Math.floor(Math.random() * 50) + 10,
+      articleCount,
+      feedTitle: feed.title || 'Unknown Feed',
       lastUpdated: new Date().toISOString()
     });
 
