@@ -444,7 +444,7 @@ Walking Distance: ${estimate.walkingDistance} feet
 ${estimate.hasSteps ? `Steps: ${estimate.numberOfSteps} steps (${estimate.percentageRequiringSteps}% of items)` : 'No steps involved'}
 
 DEBRIS ITEMS
-──────────────────────────────────────────────────────────��──
+─────────────────────────────────────────────────────────────
 Total Items: ${jobItems.length} types, ${totalItems} pieces
 Total Weight: ${totals.totalWeight.toFixed(2)} tons
 Total Volume: ${totals.totalVolume.toFixed(1)} cubic yards
@@ -455,7 +455,7 @@ ITEMIZED LIST:
 ${itemsList}
 
 FUEL & TRAVEL DETAILS
-─────────────────────────────────────────────────────────────
+─────────────────────────────��───────────────────────────────
 Vehicle MPG: ${estimate.averageMpg}
 Fuel Price: $${estimate.fuelPricePerGallon}/gallon
 Total Miles: ${estimate.distance} × 2 (round trip) × ${totals.tripsNeeded} trips = ${totalMiles} miles
@@ -470,7 +470,7 @@ ${totals.stepsTime > 0 ? `Steps Time: ${Math.ceil(totals.stepsTime)} minutes` : 
 Total Labor Time: ${Math.ceil(totals.totalLoadingTime)} minutes
 
 COST BREAKDOWN
-────────────��────────────────────────────────────────────────
+─────────────────────────────────────────────────────────────
 Removal Fee (${totals.totalVolume.toFixed(1)} yd³ @ $${config.removalRatePerCubicYard}/yd³):        $${totals.removalFee.toFixed(2)}
 Dump Fee (${config.useTonRate ? `${totals.totalWeight.toFixed(2)} tons` : `${totals.totalVolume.toFixed(1)} yd³`}):                           $${totals.dumpFee.toFixed(2)}
 Labor (${(totals.totalLoadingTime / 60).toFixed(1)} hours @ $${config.laborRatePerHour}/hr):      $${totals.laborCost.toFixed(2)}
@@ -1187,56 +1187,84 @@ Company Signature: _____________________  Date: ____________`;
                             // Function to get appropriate icon for each item type
                             const getItemIcon = (itemName: string, category: string) => {
                               const name = itemName.toLowerCase();
+                              const id = item.id;
+
                               // Hot Tubs & Spas
-                              if (name.includes('hot tub')) return '🛁';
-                              // Living Room
-                              if (name.includes('couch') || name.includes('sofa')) return '🛋️';
-                              if (name.includes('recliner') || name.includes('chair')) return '💺';
-                              if (name.includes('coffee table')) return '🪑';
-                              if (name.includes('entertainment')) return '📺';
-                              // Bedroom
-                              if (name.includes('mattress') || name.includes('bed')) return '🛏️';
-                              if (name.includes('dresser') || name.includes('armoire') || name.includes('wardrobe')) return '🗄️';
-                              if (name.includes('nightstand')) return '🛏️';
-                              // Dining & Office
-                              if (name.includes('dining') && name.includes('table')) return '🍽️';
-                              if (name.includes('dining') && name.includes('chair')) return '🪑';
-                              if (name.includes('china cabinet')) return '🏺';
-                              if (name.includes('office') || name.includes('desk')) return '💼';
-                              if (name.includes('file cabinet') || name.includes('bookshelf')) return '📚';
+                              if (id === 'hot_tub_small') return '🛁';
+                              if (id === 'hot_tub_large') return '♨️';
+
+                              // Living Room Furniture
+                              if (id === 'sectional_couch') return '🛋️';
+                              if (id === 'standard_couch') return '🛋️';
+                              if (id === 'sofa_bed') return '🛏️';
+                              if (id === 'recliner') return '💺';
+                              if (id === 'coffee_table') return '🪑';
+                              if (id === 'entertainment_center') return '📺';
+
+                              // Bedroom Furniture
+                              if (id === 'mattress_set_twin') return '🛏️';
+                              if (id === 'mattress_set_full') return '🛏️';
+                              if (id === 'mattress_set_queen') return '🛏️';
+                              if (id === 'mattress_set_king') return '🛏️';
+                              if (id === 'bed_frame') return '🛏️';
+                              if (id === 'dresser') return '🗄️';
+                              if (id === 'nightstand') return '🕯️';
+                              if (id === 'armoire') return '👔';
+
+                              // Dining Room Furniture
+                              if (id === 'dining_table') return '🍽️';
+                              if (id === 'dining_chairs') return '🪑';
+                              if (id === 'china_cabinet') return '🏺';
+
+                              // Office Furniture
+                              if (id === 'office_desk') return '💼';
+                              if (id === 'file_cabinet') return '🗃️';
+                              if (id === 'bookshelf') return '📚';
+
                               // Major Appliances
-                              if (name.includes('refrigerator')) return '❄️';
-                              if (name.includes('freezer')) return '🧊';
-                              if (name.includes('washer')) return '🧺';
-                              if (name.includes('dryer')) return '🧺';
-                              if (name.includes('stove') || name.includes('range')) return '🔥';
-                              if (name.includes('dishwasher')) return '🍽️';
-                              if (name.includes('water heater')) return '🔥';
-                              // Electronics
-                              if (name.includes('tv')) return '📺';
-                              if (name.includes('computer')) return '💻';
-                              if (name.includes('exercise')) return '💪';
-                              if (name.includes('piano')) return '🎹';
-                              // Construction
-                              if (name.includes('drywall')) return '⬜';
-                              if (name.includes('flooring')) return '🔳';
-                              if (name.includes('lumber')) return '🪵';
-                              if (name.includes('shingles')) return '🏠';
-                              if (name.includes('concrete') || name.includes('brick')) return '🧱';
-                              // Bathroom
-                              if (name.includes('bathtub')) return '🛁';
-                              if (name.includes('toilet')) return '🚽';
-                              if (name.includes('vanity')) return '🪞';
-                              // Outdoor
-                              if (name.includes('patio')) return '🪑';
-                              if (name.includes('lawn mower')) return '🚜';
-                              if (name.includes('grill')) return '🔥';
-                              if (name.includes('shed')) return '🏠';
-                              if (name.includes('yard waste')) return '🍃';
-                              // Miscellaneous
-                              if (name.includes('boxes')) return '📦';
-                              if (name.includes('clothing') || name.includes('textile')) return '👕';
-                              if (name.includes('mixed debris')) return '🗑️';
+                              if (id === 'refrigerator') return '❄️';
+                              if (id === 'refrigerator_large') return '🧊';
+                              if (id === 'washer') return '🧺';
+                              if (id === 'dryer') return '🌪️';
+                              if (id === 'stove') return '🔥';
+                              if (id === 'dishwasher') return '🍽️';
+                              if (id === 'freezer_chest') return '📦';
+                              if (id === 'freezer_upright') return '🧊';
+                              if (id === 'water_heater') return '♨️';
+
+                              // Electronics & Equipment
+                              if (id === 'tv_large') return '📺';
+                              if (id === 'tv_medium') return '📺';
+                              if (id === 'computer_setup') return '💻';
+                              if (id === 'exercise_equipment') return '💪';
+                              if (id === 'piano_upright') return '🎹';
+                              if (id === 'piano_baby_grand') return '🎼';
+
+                              // Construction & Renovation
+                              if (id === 'drywall') return '⬜';
+                              if (id === 'flooring') return '🟫';
+                              if (id === 'lumber') return '🪵';
+                              if (id === 'shingles') return '🏠';
+                              if (id === 'concrete_debris') return '🧱';
+                              if (id === 'brick_debris') return '🧱';
+
+                              // Bathroom Fixtures
+                              if (id === 'bathtub') return '🛁';
+                              if (id === 'toilet') return '🚽';
+                              if (id === 'vanity') return '🪞';
+
+                              // Outdoor & Yard Items
+                              if (id === 'patio_furniture_set') return '🏡';
+                              if (id === 'lawn_mower') return '🚜';
+                              if (id === 'grill') return '🍖';
+                              if (id === 'shed_contents') return '🏠';
+
+                              // Bulk Items
+                              if (id === 'household_boxes') return '📦';
+                              if (id === 'clothing_bags') return '👕';
+                              if (id === 'mixed_debris') return '🗑️';
+                              if (id === 'yard_waste') return '🍃';
+
                               return '📋'; // default icon
                             };
 
