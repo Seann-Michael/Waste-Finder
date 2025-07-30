@@ -575,6 +575,7 @@ export default function PricingCalculator() {
     loadingTimeMultiplier: 3, // 3 minutes per cubic yard
   });
 
+  const [currentStep, setCurrentStep] = useState(1);
   const [jobItems, setJobItems] = useState<JobItem[]>([]);
   const [estimate, setEstimate] = useState<JobEstimate>({
     distance: 0,
