@@ -234,36 +234,7 @@ export const testRSSFeed = async (req: Request, res: Response) => {
  */
 export const getRSSFeeds = async (req: Request, res: Response) => {
   try {
-    // In production, this would fetch from database
-    const mockFeeds = [
-      {
-        id: "1",
-        name: "Environmental Today",
-        url: "https://environmentaltoday.com/rss",
-        category: "technology",
-        description: "Latest environmental technology news",
-        isActive: true,
-        updateFrequency: 6,
-        lastUpdated: "2024-01-20T14:30:00Z",
-        status: "active",
-        articleCount: 45
-      },
-      {
-        id: "2",
-        name: "Policy Watch",
-        url: "https://policywatch.org/feed",
-        category: "policy",
-        description: "Environmental policy and regulation updates",
-        isActive: true,
-        updateFrequency: 12,
-        lastUpdated: "2024-01-20T08:15:00Z",
-        status: "active",
-        articleCount: 23
-      }
-    ];
-
-    res.json(mockFeeds);
-
+    res.json(rssFeeds);
   } catch (error) {
     console.error('Get RSS feeds error:', error);
     res.status(500).json({
