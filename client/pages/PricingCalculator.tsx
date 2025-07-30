@@ -887,7 +887,7 @@ ITEMIZED LIST:
 ${itemsList}
 
 FUEL & TRAVEL DETAILS
-───────────────────────────��─��───────────────────────────────
+──────────────���────────────��─��───────────────────────────────
 Vehicle MPG: ${estimate.averageMpg}
 Fuel Price: $${estimate.fuelPricePerGallon}/gallon
 Total Miles: ${estimate.distance} × 2 (round trip) × ${totals.tripsNeeded} trips = ${totalMiles} miles
@@ -921,7 +921,7 @@ TOTAL JOB PRICE:                             $${totals.total.toFixed(2)}
                                            ═════════════
 
 TERMS & CONDITIONS
-──────────────��──────────────────────────────────────────────
+─────────────────────────────────────────────────────────────
 • This estimate is valid for 30 days
 • Final price may vary based on actual site conditions
 • Payment due upon completion
@@ -2206,8 +2206,7 @@ Company Signature: _____________________  Date: ____________`;
                                         </span>
                                         <Input
                                           id={`total-${jobItem.debrisItem.id}`}
-                                          type="number"
-                                          step="0.01"
+                                          type="text"
                                           value={
                                             jobItem.customLineItemCost !==
                                             undefined
@@ -2218,14 +2217,19 @@ Company Signature: _____________________  Date: ____________`;
                                           }
                                           onChange={(e) => {
                                             const value = e.target.value;
+
+                                            // Allow empty value
                                             if (value === "") {
                                               updateJobItemProperty(
                                                 jobItem.debrisItem.id,
                                                 "customLineItemCost",
                                                 undefined,
                                               );
-                                            } else {
-                                              // Allow decimal input and validate on blur
+                                              return;
+                                            }
+
+                                            // Allow typing decimal numbers
+                                            if (/^\d*\.?\d*$/.test(value)) {
                                               const numValue = parseFloat(value);
                                               if (!isNaN(numValue) && numValue >= 0) {
                                                 // Store total cost directly
