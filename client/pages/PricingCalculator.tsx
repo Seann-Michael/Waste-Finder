@@ -452,7 +452,7 @@ ITEMIZED LIST:
 ${itemsList}
 
 FUEL & TRAVEL DETAILS
-─────────────────────────────���───────────────────────────────
+─────────────────────────────────────────────────────────────
 Vehicle MPG: ${estimate.averageMpg}
 Fuel Price: $${estimate.fuelPricePerGallon}/gallon
 Total Miles: ${estimate.distance} × 2 (round trip) × ${totals.tripsNeeded} trips = ${totalMiles} miles
@@ -460,7 +460,7 @@ Fuel Needed: ${gallonsUsed.toFixed(1)} gallons
 Fuel Cost: $${totals.fuelCost.toFixed(2)}
 
 LABOR BREAKDOWN
-─────────────────────────────────────────────────────────────
+────���────────────────────────────────────────────────────────
 Base Loading Time: ${Math.ceil(totals.baseLoadingTime)} minutes
 Walking Time: ${Math.ceil(totals.walkingTime)} minutes
 ${totals.stepsTime > 0 ? `Steps Time: ${Math.ceil(totals.stepsTime)} minutes` : ''}
@@ -981,14 +981,23 @@ Company Signature: _____________________  Date: ____________`;
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-3">
-                      <div className="flex justify-between">
-                        <span>Removal Fee ({totals.totalVolume.toFixed(1)} yd³):</span>
-                        <span className="font-medium">${totals.removalFee.toFixed(2)}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Dump Fee ({config.useTonRate ? `${totals.totalWeight.toFixed(2)} tons` : `${totals.totalVolume.toFixed(1)} yd³`}):</span>
-                        <span className="font-medium">${totals.dumpFee.toFixed(2)}</span>
-                      </div>
+                      {jobItems.length > 0 ? (
+                        <div className="flex justify-between">
+                          <span>Line Item Costs ({jobItems.length} item types):</span>
+                          <span className="font-medium">${totals.totalLineItemCosts.toFixed(2)}</span>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="flex justify-between">
+                            <span>Removal Fee ({totals.totalVolume.toFixed(1)} yd³):</span>
+                            <span className="font-medium">${totals.removalFee.toFixed(2)}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Dump Fee ({config.useTonRate ? `${totals.totalWeight.toFixed(2)} tons` : `${totals.totalVolume.toFixed(1)} yd³`}):</span>
+                            <span className="font-medium">${totals.dumpFee.toFixed(2)}</span>
+                          </div>
+                        </>
+                      )}
                       <div className="flex justify-between">
                         <span>Labor ({(totals.totalLoadingTime / 60).toFixed(1)}h):</span>
                         <span className="font-medium">${totals.laborCost.toFixed(2)}</span>
@@ -1112,7 +1121,7 @@ Company Signature: _____________________  Date: ____________`;
                     <div className="border-2 border-dashed border-blue-300 rounded-lg p-6 bg-blue-50">
                       <h3 className="text-lg font-semibold text-blue-800 mb-4 flex items-center gap-2">
                         <Package className="w-5 h-5" />
-                        �� Add Items from Library
+                        📦 Add Items from Library
                       </h3>
 
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
