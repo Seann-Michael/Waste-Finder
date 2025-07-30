@@ -49,7 +49,9 @@ const BulkUploadFacilities = lazy(
 );
 const RSSManager = lazy(() => import("./pages/admin/RSSManager"));
 const PricingCalculator = lazy(() => import("./pages/PricingCalculator"));
-const DebrisWeightCalculator = lazy(() => import("./pages/DebrisWeightCalculator"));
+const DebrisWeightCalculator = lazy(
+  () => import("./pages/DebrisWeightCalculator"),
+);
 
 import AdminRoute from "./components/admin/AdminRoute";
 
@@ -78,7 +80,10 @@ const AppRoutes = () => (
     <Route path="/news" element={<News />} />
     <Route path="/news/article/:id" element={<NewsArticle />} />
     <Route path="/pricing-calculator" element={<PricingCalculator />} />
-    <Route path="/debris-weight-calculator" element={<DebrisWeightCalculator />} />
+    <Route
+      path="/debris-weight-calculator"
+      element={<DebrisWeightCalculator />}
+    />
 
     {/* Admin routes with separate loading */}
     <Route
@@ -218,11 +223,7 @@ const AppRoutes = () => (
 
 const RouterWrapper = ({ children }: { children: React.ReactNode }) => {
   // Use HashRouter to avoid browser history API issues
-  return (
-    <HashRouter>
-      {children}
-    </HashRouter>
-  );
+  return <HashRouter>{children}</HashRouter>;
 };
 
 const App = () => (
@@ -234,7 +235,9 @@ const App = () => (
             <Toaster />
             <Sonner />
             <RouterWrapper>
-              <Suspense fallback={<PageLoading message="Loading application..." />}>
+              <Suspense
+                fallback={<PageLoading message="Loading application..." />}
+              >
                 <AppRoutes />
               </Suspense>
             </RouterWrapper>
@@ -258,7 +261,7 @@ if (!root) {
 if (import.meta.hot) {
   import.meta.hot.dispose(() => {
     // Simple cleanup for HashRouter
-    console.log('HMR: Cleaning up router');
+    console.log("HMR: Cleaning up router");
   });
 }
 

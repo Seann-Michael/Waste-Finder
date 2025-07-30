@@ -5,7 +5,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import {
   Calculator,
@@ -28,41 +34,266 @@ interface DebrisType {
 
 const DEBRIS_TYPES: DebrisType[] = [
   // Construction Materials
-  { id: "concrete", name: "Concrete", category: "Construction", weightPerUnit: 4000, volumePerUnit: 1.0, unit: "cubic yard", description: "Broken concrete, sidewalks, driveways", icon: "🧱" },
-  { id: "asphalt", name: "Asphalt", category: "Construction", weightPerUnit: 3000, volumePerUnit: 1.0, unit: "cubic yard", description: "Asphalt pavement, shingles", icon: "🛣️" },
-  { id: "brick", name: "Brick", category: "Construction", weightPerUnit: 3500, volumePerUnit: 1.0, unit: "cubic yard", description: "Clay bricks, masonry", icon: "🧱" },
-  { id: "drywall", name: "Drywall", category: "Construction", weightPerUnit: 50, volumePerUnit: 0.03, unit: "sheet (4x8)", description: "Gypsum wallboard sheets", icon: "⬜" },
-  { id: "lumber", name: "Lumber", category: "Construction", weightPerUnit: 2000, volumePerUnit: 1.0, unit: "cubic yard", description: "Wood boards, framing", icon: "🪵" },
-  { id: "roofing", name: "Roofing Shingles", category: "Construction", weightPerUnit: 80, volumePerUnit: 0.05, unit: "bundle", description: "Asphalt roof shingles", icon: "🏠" },
-  { id: "siding", name: "Siding", category: "Construction", weightPerUnit: 1500, volumePerUnit: 1.0, unit: "cubic yard", description: "Vinyl, wood, or fiber cement", icon: "🏠" },
+  {
+    id: "concrete",
+    name: "Concrete",
+    category: "Construction",
+    weightPerUnit: 4000,
+    volumePerUnit: 1.0,
+    unit: "cubic yard",
+    description: "Broken concrete, sidewalks, driveways",
+    icon: "🧱",
+  },
+  {
+    id: "asphalt",
+    name: "Asphalt",
+    category: "Construction",
+    weightPerUnit: 3000,
+    volumePerUnit: 1.0,
+    unit: "cubic yard",
+    description: "Asphalt pavement, shingles",
+    icon: "🛣️",
+  },
+  {
+    id: "brick",
+    name: "Brick",
+    category: "Construction",
+    weightPerUnit: 3500,
+    volumePerUnit: 1.0,
+    unit: "cubic yard",
+    description: "Clay bricks, masonry",
+    icon: "🧱",
+  },
+  {
+    id: "drywall",
+    name: "Drywall",
+    category: "Construction",
+    weightPerUnit: 50,
+    volumePerUnit: 0.03,
+    unit: "sheet (4x8)",
+    description: "Gypsum wallboard sheets",
+    icon: "⬜",
+  },
+  {
+    id: "lumber",
+    name: "Lumber",
+    category: "Construction",
+    weightPerUnit: 2000,
+    volumePerUnit: 1.0,
+    unit: "cubic yard",
+    description: "Wood boards, framing",
+    icon: "🪵",
+  },
+  {
+    id: "roofing",
+    name: "Roofing Shingles",
+    category: "Construction",
+    weightPerUnit: 80,
+    volumePerUnit: 0.05,
+    unit: "bundle",
+    description: "Asphalt roof shingles",
+    icon: "🏠",
+  },
+  {
+    id: "siding",
+    name: "Siding",
+    category: "Construction",
+    weightPerUnit: 1500,
+    volumePerUnit: 1.0,
+    unit: "cubic yard",
+    description: "Vinyl, wood, or fiber cement",
+    icon: "🏠",
+  },
 
   // Metals
-  { id: "steel", name: "Steel", category: "Metal", weightPerUnit: 15000, volumePerUnit: 1.0, unit: "cubic yard", description: "Steel beams, rebar, appliances", icon: "🔩" },
-  { id: "aluminum", name: "Aluminum", category: "Metal", weightPerUnit: 1400, volumePerUnit: 1.0, unit: "cubic yard", description: "Aluminum siding, cans, gutters", icon: "📦" },
-  { id: "copper", name: "Copper", category: "Metal", weightPerUnit: 18000, volumePerUnit: 1.0, unit: "cubic yard", description: "Copper pipes, wiring", icon: "🔶" },
+  {
+    id: "steel",
+    name: "Steel",
+    category: "Metal",
+    weightPerUnit: 15000,
+    volumePerUnit: 1.0,
+    unit: "cubic yard",
+    description: "Steel beams, rebar, appliances",
+    icon: "🔩",
+  },
+  {
+    id: "aluminum",
+    name: "Aluminum",
+    category: "Metal",
+    weightPerUnit: 1400,
+    volumePerUnit: 1.0,
+    unit: "cubic yard",
+    description: "Aluminum siding, cans, gutters",
+    icon: "📦",
+  },
+  {
+    id: "copper",
+    name: "Copper",
+    category: "Metal",
+    weightPerUnit: 18000,
+    volumePerUnit: 1.0,
+    unit: "cubic yard",
+    description: "Copper pipes, wiring",
+    icon: "🔶",
+  },
 
   // Green Waste
-  { id: "yard_waste", name: "Yard Waste", category: "Organic", weightPerUnit: 400, volumePerUnit: 1.0, unit: "cubic yard", description: "Grass, leaves, small branches", icon: "🍃" },
-  { id: "tree_logs", name: "Tree Logs", category: "Organic", weightPerUnit: 2000, volumePerUnit: 1.0, unit: "cubic yard", description: "Cut tree trunks and large logs", icon: "🪵" },
-  { id: "stumps", name: "Tree Stumps", category: "Organic", weightPerUnit: 2500, volumePerUnit: 1.0, unit: "cubic yard", description: "Root balls and stumps", icon: "🌳" },
+  {
+    id: "yard_waste",
+    name: "Yard Waste",
+    category: "Organic",
+    weightPerUnit: 400,
+    volumePerUnit: 1.0,
+    unit: "cubic yard",
+    description: "Grass, leaves, small branches",
+    icon: "🍃",
+  },
+  {
+    id: "tree_logs",
+    name: "Tree Logs",
+    category: "Organic",
+    weightPerUnit: 2000,
+    volumePerUnit: 1.0,
+    unit: "cubic yard",
+    description: "Cut tree trunks and large logs",
+    icon: "🪵",
+  },
+  {
+    id: "stumps",
+    name: "Tree Stumps",
+    category: "Organic",
+    weightPerUnit: 2500,
+    volumePerUnit: 1.0,
+    unit: "cubic yard",
+    description: "Root balls and stumps",
+    icon: "🌳",
+  },
 
   // Dirt & Stone
-  { id: "topsoil", name: "Topsoil", category: "Earth", weightPerUnit: 2200, volumePerUnit: 1.0, unit: "cubic yard", description: "Regular dirt and topsoil", icon: "🟫" },
-  { id: "clay", name: "Clay", category: "Earth", weightPerUnit: 2800, volumePerUnit: 1.0, unit: "cubic yard", description: "Heavy clay soil", icon: "🟤" },
-  { id: "sand", name: "Sand", category: "Earth", weightPerUnit: 2700, volumePerUnit: 1.0, unit: "cubic yard", description: "Construction sand", icon: "🏖️" },
-  { id: "gravel", name: "Gravel", category: "Earth", weightPerUnit: 3000, volumePerUnit: 1.0, unit: "cubic yard", description: "Crushed stone, gravel", icon: "🪨" },
-  { id: "rock", name: "Rock/Stone", category: "Earth", weightPerUnit: 4500, volumePerUnit: 1.0, unit: "cubic yard", description: "Natural stone, boulders", icon: "🪨" },
+  {
+    id: "topsoil",
+    name: "Topsoil",
+    category: "Earth",
+    weightPerUnit: 2200,
+    volumePerUnit: 1.0,
+    unit: "cubic yard",
+    description: "Regular dirt and topsoil",
+    icon: "🟫",
+  },
+  {
+    id: "clay",
+    name: "Clay",
+    category: "Earth",
+    weightPerUnit: 2800,
+    volumePerUnit: 1.0,
+    unit: "cubic yard",
+    description: "Heavy clay soil",
+    icon: "🟤",
+  },
+  {
+    id: "sand",
+    name: "Sand",
+    category: "Earth",
+    weightPerUnit: 2700,
+    volumePerUnit: 1.0,
+    unit: "cubic yard",
+    description: "Construction sand",
+    icon: "🏖️",
+  },
+  {
+    id: "gravel",
+    name: "Gravel",
+    category: "Earth",
+    weightPerUnit: 3000,
+    volumePerUnit: 1.0,
+    unit: "cubic yard",
+    description: "Crushed stone, gravel",
+    icon: "🪨",
+  },
+  {
+    id: "rock",
+    name: "Rock/Stone",
+    category: "Earth",
+    weightPerUnit: 4500,
+    volumePerUnit: 1.0,
+    unit: "cubic yard",
+    description: "Natural stone, boulders",
+    icon: "🪨",
+  },
 
   // Mixed Materials
-  { id: "mixed_debris", name: "Mixed C&D Debris", category: "Mixed", weightPerUnit: 800, volumePerUnit: 1.0, unit: "cubic yard", description: "Construction & demolition mix", icon: "🗑️" },
-  { id: "household", name: "Household Items", category: "Mixed", weightPerUnit: 300, volumePerUnit: 1.0, unit: "cubic yard", description: "General household debris", icon: "🏠" },
-  { id: "furniture", name: "Furniture", category: "Mixed", weightPerUnit: 400, volumePerUnit: 1.0, unit: "cubic yard", description: "Mixed furniture pieces", icon: "🛋️" },
+  {
+    id: "mixed_debris",
+    name: "Mixed C&D Debris",
+    category: "Mixed",
+    weightPerUnit: 800,
+    volumePerUnit: 1.0,
+    unit: "cubic yard",
+    description: "Construction & demolition mix",
+    icon: "🗑️",
+  },
+  {
+    id: "household",
+    name: "Household Items",
+    category: "Mixed",
+    weightPerUnit: 300,
+    volumePerUnit: 1.0,
+    unit: "cubic yard",
+    description: "General household debris",
+    icon: "🏠",
+  },
+  {
+    id: "furniture",
+    name: "Furniture",
+    category: "Mixed",
+    weightPerUnit: 400,
+    volumePerUnit: 1.0,
+    unit: "cubic yard",
+    description: "Mixed furniture pieces",
+    icon: "🛋️",
+  },
 
   // Specialty Items
-  { id: "appliances", name: "Appliances", category: "Appliances", weightPerUnit: 200, volumePerUnit: 0.4, unit: "each", description: "Washers, dryers, fridges", icon: "🔌" },
-  { id: "mattresses", name: "Mattresses", category: "Furniture", weightPerUnit: 60, volumePerUnit: 0.6, unit: "each", description: "Mattress and box spring", icon: "🛏️" },
-  { id: "tires", name: "Tires", category: "Auto", weightPerUnit: 25, volumePerUnit: 0.1, unit: "each", description: "Car and truck tires", icon: "🛞" },
-  { id: "electronics", name: "Electronics", category: "Electronics", weightPerUnit: 500, volumePerUnit: 1.0, unit: "cubic yard", description: "TVs, computers, e-waste", icon: "📺" },
+  {
+    id: "appliances",
+    name: "Appliances",
+    category: "Appliances",
+    weightPerUnit: 200,
+    volumePerUnit: 0.4,
+    unit: "each",
+    description: "Washers, dryers, fridges",
+    icon: "🔌",
+  },
+  {
+    id: "mattresses",
+    name: "Mattresses",
+    category: "Furniture",
+    weightPerUnit: 60,
+    volumePerUnit: 0.6,
+    unit: "each",
+    description: "Mattress and box spring",
+    icon: "🛏️",
+  },
+  {
+    id: "tires",
+    name: "Tires",
+    category: "Auto",
+    weightPerUnit: 25,
+    volumePerUnit: 0.1,
+    unit: "each",
+    description: "Car and truck tires",
+    icon: "🛞",
+  },
+  {
+    id: "electronics",
+    name: "Electronics",
+    category: "Electronics",
+    weightPerUnit: 500,
+    volumePerUnit: 1.0,
+    unit: "cubic yard",
+    description: "TVs, computers, e-waste",
+    icon: "📺",
+  },
 ];
 
 export default function DebrisWeightCalculator() {
@@ -73,13 +304,20 @@ export default function DebrisWeightCalculator() {
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   // Sort items alphabetically
-  const sortedDebrisTypes = [...DEBRIS_TYPES].sort((a, b) => a.name.localeCompare(b.name));
-  const categories = ["All", ...Array.from(new Set(sortedDebrisTypes.map(item => item.category)))];
+  const sortedDebrisTypes = [...DEBRIS_TYPES].sort((a, b) =>
+    a.name.localeCompare(b.name),
+  );
+  const categories = [
+    "All",
+    ...Array.from(new Set(sortedDebrisTypes.map((item) => item.category))),
+  ];
 
   // Filter items by category and search term
-  const filteredItems = sortedDebrisTypes.filter(item => {
-    const matchesCategory = selectedCategory === "All" || item.category === selectedCategory;
-    const matchesSearch = searchTerm === "" ||
+  const filteredItems = sortedDebrisTypes.filter((item) => {
+    const matchesCategory =
+      selectedCategory === "All" || item.category === selectedCategory;
+    const matchesSearch =
+      searchTerm === "" ||
       item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.description.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
@@ -87,7 +325,12 @@ export default function DebrisWeightCalculator() {
 
   const handlePoundsChange = (value: string) => {
     setPounds(value);
-    if (value && !isNaN(Number(value)) && conversionFactor && !isNaN(Number(conversionFactor))) {
+    if (
+      value &&
+      !isNaN(Number(value)) &&
+      conversionFactor &&
+      !isNaN(Number(conversionFactor))
+    ) {
       const poundsNum = Number(value);
       const factorNum = Number(conversionFactor);
       const yardsResult = poundsNum / factorNum;
@@ -99,7 +342,12 @@ export default function DebrisWeightCalculator() {
 
   const handleYardsChange = (value: string) => {
     setYards(value);
-    if (value && !isNaN(Number(value)) && conversionFactor && !isNaN(Number(conversionFactor))) {
+    if (
+      value &&
+      !isNaN(Number(value)) &&
+      conversionFactor &&
+      !isNaN(Number(conversionFactor))
+    ) {
       const yardsNum = Number(value);
       const factorNum = Number(conversionFactor);
       const poundsResult = yardsNum * factorNum;
@@ -145,15 +393,15 @@ Conversion Factor: ${conversionFactor} lbs per cubic yard
 RESULTS:
 Weight: ${pounds} lbs
 Volume: ${yards} cubic yards
-${Number(pounds) ? `Weight in tons: ${(Number(pounds) / 2000).toFixed(2)} tons` : ''}
+${Number(pounds) ? `Weight in tons: ${(Number(pounds) / 2000).toFixed(2)} tons` : ""}
 
 Generated by WasteFinder Debris Weight Calculator`;
 
-    const blob = new Blob([results], { type: 'text/plain' });
+    const blob = new Blob([results], { type: "text/plain" });
     const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
-    link.download = `debris-conversion-${new Date().toISOString().split('T')[0]}.txt`;
+    link.download = `debris-conversion-${new Date().toISOString().split("T")[0]}.txt`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -212,7 +460,9 @@ Generated by WasteFinder Debris Weight Calculator`;
                   {/* Search and Filter */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
-                      <Label htmlFor="searchDebris">🔍 Search Debris Types</Label>
+                      <Label htmlFor="searchDebris">
+                        🔍 Search Debris Types
+                      </Label>
                       <Input
                         id="searchDebris"
                         type="text"
@@ -224,7 +474,10 @@ Generated by WasteFinder Debris Weight Calculator`;
                     </div>
                     <div>
                       <Label>Filter by Category</Label>
-                      <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                      <Select
+                        value={selectedCategory}
+                        onValueChange={setSelectedCategory}
+                      >
                         <SelectTrigger className="border-purple-300 focus:border-purple-500">
                           <SelectValue />
                         </SelectTrigger>
@@ -270,19 +523,31 @@ Generated by WasteFinder Debris Weight Calculator`;
                           <div className="flex items-center gap-3 flex-1">
                             <div className="text-2xl">{debrisType.icon}</div>
                             <div className="flex-1">
-                              <div className="font-medium text-purple-800 text-sm">{debrisType.name}</div>
+                              <div className="font-medium text-purple-800 text-sm">
+                                {debrisType.name}
+                              </div>
                               <div className="text-xs text-purple-600">
-                                <Badge variant="outline" className="mr-1 text-xs border-purple-300">
+                                <Badge
+                                  variant="outline"
+                                  className="mr-1 text-xs border-purple-300"
+                                >
                                   {debrisType.category}
                                 </Badge>
                               </div>
                               <div className="text-xs text-purple-500 mt-1">
-                                {debrisType.weightPerUnit.toLocaleString()} lbs per {debrisType.unit}
+                                {debrisType.weightPerUnit.toLocaleString()} lbs
+                                per {debrisType.unit}
                               </div>
-                              <div className="text-xs text-gray-500">{debrisType.description}</div>
+                              <div className="text-xs text-gray-500">
+                                {debrisType.description}
+                              </div>
                             </div>
                           </div>
-                          <Button size="sm" variant="outline" className="ml-2 border-purple-300 text-purple-600 hover:bg-purple-200">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="ml-2 border-purple-300 text-purple-600 hover:bg-purple-200"
+                          >
                             Use Factor
                           </Button>
                         </div>
@@ -307,19 +572,25 @@ Generated by WasteFinder Debris Weight Calculator`;
                 <div className="space-y-6">
                   {/* Conversion Factor */}
                   <div className="bg-gradient-to-r from-purple-100 to-blue-100 p-4 rounded-lg border border-purple-200">
-                    <Label htmlFor="conversionFactor" className="text-sm font-medium text-purple-800 block mb-2">
+                    <Label
+                      htmlFor="conversionFactor"
+                      className="text-sm font-medium text-purple-800 block mb-2"
+                    >
                       🎯 Conversion Factor (lbs per cubic yard)
                     </Label>
                     <Input
                       id="conversionFactor"
                       type="number"
                       value={conversionFactor}
-                      onChange={(e) => handleConversionFactorChange(e.target.value)}
+                      onChange={(e) =>
+                        handleConversionFactorChange(e.target.value)
+                      }
                       placeholder="2000"
                       className="border-purple-300 focus:border-purple-500 bg-white"
                     />
                     <p className="text-xs text-purple-600 mt-1">
-                      Common values: Mixed debris (800-1200), Concrete (4000), Wood (1500-2000), Metal (1400-15000)
+                      Common values: Mixed debris (800-1200), Concrete (4000),
+                      Wood (1500-2000), Metal (1400-15000)
                     </p>
                   </div>
 
@@ -327,7 +598,10 @@ Generated by WasteFinder Debris Weight Calculator`;
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Pounds Input */}
                     <div className="space-y-2">
-                      <Label htmlFor="pounds" className="text-lg font-semibold text-blue-800 flex items-center gap-2">
+                      <Label
+                        htmlFor="pounds"
+                        className="text-lg font-semibold text-blue-800 flex items-center gap-2"
+                      >
                         <Scale className="w-5 h-5" />
                         Weight (Pounds)
                       </Label>
@@ -355,7 +629,10 @@ Generated by WasteFinder Debris Weight Calculator`;
 
                     {/* Yards Input */}
                     <div className="space-y-2">
-                      <Label htmlFor="yards" className="text-lg font-semibold text-blue-800 flex items-center gap-2">
+                      <Label
+                        htmlFor="yards"
+                        className="text-lg font-semibold text-blue-800 flex items-center gap-2"
+                      >
                         <Calculator className="w-5 h-5" />
                         Volume (Cubic Yards)
                       </Label>
@@ -386,7 +663,9 @@ Generated by WasteFinder Debris Weight Calculator`;
                   {/* Results Display */}
                   {(pounds || yards) && conversionFactor && (
                     <div className="bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-xl p-6 mt-6">
-                      <h3 className="text-xl font-bold mb-4 text-center">📊 Conversion Results</h3>
+                      <h3 className="text-xl font-bold mb-4 text-center">
+                        📊 Conversion Results
+                      </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="bg-white/20 rounded-lg p-4 text-center backdrop-blur-sm">
                           <div className="text-2xl font-black text-yellow-200">
@@ -403,7 +682,9 @@ Generated by WasteFinder Debris Weight Calculator`;
                           <div className="text-2xl font-black text-yellow-200">
                             {yards || "0"}
                           </div>
-                          <div className="text-sm text-green-100">Cubic Yards</div>
+                          <div className="text-sm text-green-100">
+                            Cubic Yards
+                          </div>
                           {yards && (
                             <div className="text-xs text-green-200 mt-1">
                               ({(Number(yards) * 27).toFixed(1)} cubic feet)
@@ -436,17 +717,26 @@ Generated by WasteFinder Debris Weight Calculator`;
           {/* Instructions */}
           <Card className="border-green-200 bg-green-50 max-w-4xl mx-auto">
             <CardContent className="p-6">
-              <h3 className="font-semibold text-green-800 mb-3">💡 How to Use</h3>
+              <h3 className="font-semibold text-green-800 mb-3">
+                💡 How to Use
+              </h3>
               <ul className="space-y-2 text-sm text-green-700">
-                <li>• Click any debris type to automatically set its conversion factor</li>
-                <li>• Or manually set the conversion factor (lbs per cubic yard) for your debris type</li>
+                <li>
+                  • Click any debris type to automatically set its conversion
+                  factor
+                </li>
+                <li>
+                  • Or manually set the conversion factor (lbs per cubic yard)
+                  for your debris type
+                </li>
                 <li>• Enter weight in pounds OR volume in cubic yards</li>
                 <li>• The other value will automatically calculate</li>
                 <li>• Export results to save your conversion</li>
               </ul>
               <div className="mt-4 text-xs text-green-600">
-                <strong>Browse the debris library</strong> to see weight specifications for different materials.
-                Click any item to use its conversion factor.
+                <strong>Browse the debris library</strong> to see weight
+                specifications for different materials. Click any item to use
+                its conversion factor.
               </div>
             </CardContent>
           </Card>

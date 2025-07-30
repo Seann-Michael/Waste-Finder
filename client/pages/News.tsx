@@ -76,11 +76,11 @@ export default function News() {
         setIsLoading(true);
 
         // Fetch articles
-        const newsResponse = await fetch('/api/news?limit=20');
+        const newsResponse = await fetch("/api/news?limit=20");
         const newsData = await newsResponse.json();
 
         // Fetch RSS feeds for sources
-        const feedsResponse = await fetch('/api/rss/feeds');
+        const feedsResponse = await fetch("/api/rss/feeds");
         const feedsData = await feedsResponse.json();
 
         if (newsData.articles) {
@@ -88,17 +88,18 @@ export default function News() {
         }
 
         if (Array.isArray(feedsData)) {
-          setSources(feedsData.map((feed: any) => ({
-            id: feed.id,
-            name: feed.name,
-            url: feed.url,
-            category: feed.category,
-            isActive: feed.isActive
-          })));
+          setSources(
+            feedsData.map((feed: any) => ({
+              id: feed.id,
+              name: feed.name,
+              url: feed.url,
+              category: feed.category,
+              isActive: feed.isActive,
+            })),
+          );
         }
-
       } catch (error) {
-        console.error('Error fetching news:', error);
+        console.error("Error fetching news:", error);
         // Fallback to empty state
         setArticles([]);
         setSources([]);
@@ -116,27 +117,38 @@ export default function News() {
     { value: "policy", label: "Policy & Regulations" },
     { value: "business", label: "Business" },
     { value: "community", label: "Community" },
-    { value: "climate", label: "Climate & Environment" }
+    { value: "climate", label: "Climate & Environment" },
   ];
 
   const filteredArticles = articles
-    .filter(article => {
-      const matchesSearch = searchQuery === "" ||
+    .filter((article) => {
+      const matchesSearch =
+        searchQuery === "" ||
         article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         article.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        article.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+        article.tags.some((tag) =>
+          tag.toLowerCase().includes(searchQuery.toLowerCase()),
+        );
 
-      const matchesCategory = selectedCategory === "all" || article.category === selectedCategory;
-      const matchesSource = selectedSource === "all" || article.source === selectedSource;
+      const matchesCategory =
+        selectedCategory === "all" || article.category === selectedCategory;
+      const matchesSource =
+        selectedSource === "all" || article.source === selectedSource;
 
       return matchesSearch && matchesCategory && matchesSource;
     })
     .sort((a, b) => {
       switch (sortBy) {
         case "newest":
-          return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
+          return (
+            new Date(b.publishedAt).getTime() -
+            new Date(a.publishedAt).getTime()
+          );
         case "oldest":
-          return new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime();
+          return (
+            new Date(a.publishedAt).getTime() -
+            new Date(b.publishedAt).getTime()
+          );
         case "title":
           return a.title.localeCompare(b.title);
         default:
@@ -149,14 +161,16 @@ export default function News() {
     return date.toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
-      day: "numeric"
+      day: "numeric",
     });
   };
 
   const getTimeAgo = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
-    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
+    const diffInMinutes = Math.floor(
+      (now.getTime() - date.getTime()) / (1000 * 60),
+    );
 
     if (diffInMinutes < 60) {
       return `${diffInMinutes}m ago`;
@@ -173,7 +187,7 @@ export default function News() {
       policy: "bg-purple-100 text-purple-800",
       business: "bg-green-100 text-green-800",
       community: "bg-orange-100 text-orange-800",
-      climate: "bg-red-100 text-red-800"
+      climate: "bg-red-100 text-red-800",
     };
     return colors[category] || "bg-gray-100 text-gray-800";
   };
@@ -193,7 +207,8 @@ export default function News() {
               </h1>
             </div>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Stay updated with the latest news and insights from the waste management and environmental industry
+              Stay updated with the latest news and insights from the waste
+              management and environmental industry
             </p>
           </div>
 
@@ -203,14 +218,18 @@ export default function News() {
               <CardContent className="p-4 text-center">
                 <Globe className="w-6 h-6 text-primary mx-auto mb-2" />
                 <div className="text-2xl font-bold">{sources.length}</div>
-                <div className="text-sm text-muted-foreground">News Sources</div>
+                <div className="text-sm text-muted-foreground">
+                  News Sources
+                </div>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-4 text-center">
                 <TrendingUp className="w-6 h-6 text-primary mx-auto mb-2" />
                 <div className="text-2xl font-bold">{articles.length}</div>
-                <div className="text-sm text-muted-foreground">Latest Articles</div>
+                <div className="text-sm text-muted-foreground">
+                  Latest Articles
+                </div>
               </CardContent>
             </Card>
             <Card>
@@ -237,7 +256,9 @@ export default function News() {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
-                  <label className="text-sm font-medium mb-2 block">Search</label>
+                  <label className="text-sm font-medium mb-2 block">
+                    Search
+                  </label>
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                     <Input
@@ -250,8 +271,13 @@ export default function News() {
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium mb-2 block">Category</label>
-                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <label className="text-sm font-medium mb-2 block">
+                    Category
+                  </label>
+                  <Select
+                    value={selectedCategory}
+                    onValueChange={setSelectedCategory}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
@@ -266,8 +292,13 @@ export default function News() {
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium mb-2 block">Source</label>
-                  <Select value={selectedSource} onValueChange={setSelectedSource}>
+                  <label className="text-sm font-medium mb-2 block">
+                    Source
+                  </label>
+                  <Select
+                    value={selectedSource}
+                    onValueChange={setSelectedSource}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Select source" />
                     </SelectTrigger>
@@ -283,7 +314,9 @@ export default function News() {
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium mb-2 block">Sort By</label>
+                  <label className="text-sm font-medium mb-2 block">
+                    Sort By
+                  </label>
                   <Select value={sortBy} onValueChange={setSortBy}>
                     <SelectTrigger>
                       <SelectValue placeholder="Sort by" />
@@ -311,7 +344,9 @@ export default function News() {
             </div>
           ) : filteredArticles.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-muted-foreground">No articles found matching your criteria.</p>
+              <p className="text-muted-foreground">
+                No articles found matching your criteria.
+              </p>
               <Button
                 variant="outline"
                 onClick={() => {
@@ -328,13 +363,17 @@ export default function News() {
             <>
               <div className="mb-6">
                 <p className="text-muted-foreground">
-                  Showing {filteredArticles.length} of {articles.length} articles
+                  Showing {filteredArticles.length} of {articles.length}{" "}
+                  articles
                 </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredArticles.map((article) => (
-                  <Card key={article.id} className="hover:shadow-lg transition-shadow">
+                  <Card
+                    key={article.id}
+                    className="hover:shadow-lg transition-shadow"
+                  >
                     {article.imageUrl && (
                       <div className="relative h-48 overflow-hidden rounded-t-lg">
                         <img
@@ -344,7 +383,9 @@ export default function News() {
                         />
                         <div className="absolute top-3 left-3">
                           <Badge className={getCategoryColor(article.category)}>
-                            {categories.find(c => c.value === article.category)?.label || article.category}
+                            {categories.find(
+                              (c) => c.value === article.category,
+                            )?.label || article.category}
                           </Badge>
                         </div>
                       </div>
@@ -357,7 +398,12 @@ export default function News() {
                         <span>{getTimeAgo(article.publishedAt)}</span>
                       </div>
                       <CardTitle className="text-lg leading-tight hover:text-primary transition-colors">
-                        <a href={article.url} target="_blank" rel="noopener noreferrer" className="hover:text-primary">
+                        <a
+                          href={article.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-primary"
+                        >
                           {article.title}
                         </a>
                       </CardTitle>
@@ -390,7 +436,11 @@ export default function News() {
                       {article.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1 mt-3">
                           {article.tags.slice(0, 3).map((tag) => (
-                            <Badge key={tag} variant="outline" className="text-xs">
+                            <Badge
+                              key={tag}
+                              variant="outline"
+                              className="text-xs"
+                            >
                               {tag}
                             </Badge>
                           ))}

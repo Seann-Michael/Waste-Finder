@@ -12,13 +12,13 @@
  */
 
 import { Request, Response } from "express";
-import Parser from 'rss-parser';
+import Parser from "rss-parser";
 
 const parser = new Parser({
   timeout: 10000,
   headers: {
-    'User-Agent': 'WasteFinder RSS Aggregator 1.0'
-  }
+    "User-Agent": "WasteFinder RSS Aggregator 1.0",
+  },
 });
 
 // In-memory storage for RSS feeds (in production, use database)
@@ -39,7 +39,7 @@ const initializeSampleFeeds = async () => {
         updateFrequency: 6,
         status: "active",
         articleCount: 0,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       },
       {
         id: "sample-2",
@@ -51,8 +51,8 @@ const initializeSampleFeeds = async () => {
         updateFrequency: 12,
         status: "active",
         articleCount: 0,
-        createdAt: new Date().toISOString()
-      }
+        createdAt: new Date().toISOString(),
+      },
     ];
 
     rssFeeds.push(...sampleFeeds);
@@ -79,9 +79,9 @@ function sanitizeRSSUrl(url: string): string {
 
   // Sanitize URL: fix HTML entities and special characters
   url = url
-    .replace(/&amp;/g, '&')  // Fix HTML encoded ampersands
-    .replace(/‑/g, '-')      // Fix en-dash to regular hyphen
-    .replace(/–/g, '-')      // Fix em-dash to regular hyphen
+    .replace(/&amp;/g, "&") // Fix HTML encoded ampersands
+    .replace(/‑/g, "-") // Fix en-dash to regular hyphen
+    .replace(/–/g, "-") // Fix em-dash to regular hyphen
     .trim();
 
   return url;
@@ -108,9 +108,9 @@ export const parseRSSFeed = async (req: Request, res: Response) => {
   try {
     let { url } = req.query;
 
-    if (!url || typeof url !== 'string') {
+    if (!url || typeof url !== "string") {
       return res.status(400).json({
-        error: 'RSS feed URL is required'
+        error: "RSS feed URL is required",
       });
     }
 
@@ -122,39 +122,47 @@ export const parseRSSFeed = async (req: Request, res: Response) => {
       new URL(url);
     } catch {
       return res.status(400).json({
-        error: 'Invalid URL format'
+        error: "Invalid URL format",
       });
     }
 
-    console.log('Parsing RSS feed:', url);
+    console.log("Parsing RSS feed:", url);
 
     // Parse the actual RSS feed
     const feed = await parser.parseURL(url);
 
-    const articles = feed.items.slice(0, 50).map(item => ({
-      title: item.title || 'Untitled',
-      description: cleanHtml(item.contentSnippet || item.content || item.summary || '').slice(0, 500),
-      url: item.link || item.guid || '',
-      publishedAt: item.pubDate ? new Date(item.pubDate).toISOString() : new Date().toISOString(),
-      author: item.creator || item.author || undefined,
-      imageUrl: extractImageUrl(item),
-      tags: extractTags(item)
-    })).filter(article => article.title && article.url);
+    const articles = feed.items
+      .slice(0, 50)
+      .map((item) => ({
+        title: item.title || "Untitled",
+        description: cleanHtml(
+          item.contentSnippet || item.content || item.summary || "",
+        ).slice(0, 500),
+        url: item.link || item.guid || "",
+        publishedAt: item.pubDate
+          ? new Date(item.pubDate).toISOString()
+          : new Date().toISOString(),
+        author: item.creator || item.author || undefined,
+        imageUrl: extractImageUrl(item),
+        tags: extractTags(item),
+      }))
+      .filter((article) => article.title && article.url);
 
     const feedData: ParsedFeed = {
-      title: feed.title || 'RSS Feed',
-      description: feed.description || '',
-      articles
+      title: feed.title || "RSS Feed",
+      description: feed.description || "",
+      articles,
     };
 
-    console.log(`Successfully parsed ${articles.length} articles from ${feed.title}`);
+    console.log(
+      `Successfully parsed ${articles.length} articles from ${feed.title}`,
+    );
     res.json(feedData);
-
   } catch (error) {
-    console.error('RSS parsing error:', error);
+    console.error("RSS parsing error:", error);
     res.status(500).json({
-      error: 'Failed to parse RSS feed',
-      details: error instanceof Error ? error.message : 'Unknown error'
+      error: "Failed to parse RSS feed",
+      details: error instanceof Error ? error.message : "Unknown error",
     });
   }
 };
@@ -164,9 +172,9 @@ export const parseRSSFeed = async (req: Request, res: Response) => {
  */
 function cleanHtml(content: string): string {
   return content
-    .replace(/<[^>]*>/g, '') // Remove HTML tags
-    .replace(/&[^;]+;/g, ' ') // Remove HTML entities
-    .replace(/\s+/g, ' ') // Normalize whitespace
+    .replace(/<[^>]*>/g, "") // Remove HTML tags
+    .replace(/&[^;]+;/g, " ") // Remove HTML entities
+    .replace(/\s+/g, " ") // Normalize whitespace
     .trim();
 }
 
@@ -175,16 +183,16 @@ function cleanHtml(content: string): string {
  */
 function extractImageUrl(item: any): string | undefined {
   // Try different image fields
-  if (item.enclosure?.url && item.enclosure.type?.includes('image')) {
+  if (item.enclosure?.url && item.enclosure.type?.includes("image")) {
     return item.enclosure.url;
   }
 
-  if (item['media:content'] && item['media:content'].$.url) {
-    return item['media:content'].$.url;
+  if (item["media:content"] && item["media:content"].$.url) {
+    return item["media:content"].$.url;
   }
 
-  if (item['media:thumbnail'] && item['media:thumbnail'].$.url) {
-    return item['media:thumbnail'].$.url;
+  if (item["media:thumbnail"] && item["media:thumbnail"].$.url) {
+    return item["media:thumbnail"].$.url;
   }
 
   // Try to extract from content
@@ -226,9 +234,9 @@ export const testRSSFeed = async (req: Request, res: Response) => {
   try {
     let { url } = req.query;
 
-    if (!url || typeof url !== 'string') {
+    if (!url || typeof url !== "string") {
       return res.status(400).json({
-        error: 'RSS feed URL is required'
+        error: "RSS feed URL is required",
       });
     }
 
@@ -241,31 +249,32 @@ export const testRSSFeed = async (req: Request, res: Response) => {
     } catch {
       return res.status(400).json({
         valid: false,
-        error: 'Invalid URL format'
+        error: "Invalid URL format",
       });
     }
 
-    console.log('Testing RSS feed:', url);
+    console.log("Testing RSS feed:", url);
 
     // Actually test the RSS feed
     const feed = await parser.parseURL(url);
 
     const articleCount = feed.items ? feed.items.length : 0;
 
-    console.log(`RSS feed test successful: ${feed.title} with ${articleCount} articles`);
+    console.log(
+      `RSS feed test successful: ${feed.title} with ${articleCount} articles`,
+    );
 
     res.json({
       valid: true,
       articleCount,
-      feedTitle: feed.title || 'Unknown Feed',
-      lastUpdated: new Date().toISOString()
+      feedTitle: feed.title || "Unknown Feed",
+      lastUpdated: new Date().toISOString(),
     });
-
   } catch (error) {
-    console.error('RSS test error:', error);
+    console.error("RSS test error:", error);
     res.json({
       valid: false,
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : "Unknown error",
     });
   }
 };
@@ -278,9 +287,9 @@ export const getRSSFeeds = async (req: Request, res: Response) => {
     console.log(`GET /api/rss/feeds - Returning ${rssFeeds.length} feeds`);
     res.json(rssFeeds);
   } catch (error) {
-    console.error('Get RSS feeds error:', error);
+    console.error("Get RSS feeds error:", error);
     res.status(500).json({
-      error: 'Failed to retrieve RSS feeds'
+      error: "Failed to retrieve RSS feeds",
     });
   }
 };
@@ -290,12 +299,13 @@ export const getRSSFeeds = async (req: Request, res: Response) => {
  */
 export const createRSSFeed = async (req: Request, res: Response) => {
   try {
-    const { name, url, category, description, isActive, updateFrequency } = req.body;
+    const { name, url, category, description, isActive, updateFrequency } =
+      req.body;
 
     // Validation
     if (!name || !url || !category) {
       return res.status(400).json({
-        error: 'Name, URL, and category are required'
+        error: "Name, URL, and category are required",
       });
     }
 
@@ -307,7 +317,7 @@ export const createRSSFeed = async (req: Request, res: Response) => {
       new URL(sanitizedUrl);
     } catch {
       return res.status(400).json({
-        error: 'Invalid URL format'
+        error: "Invalid URL format",
       });
     }
 
@@ -321,7 +331,7 @@ export const createRSSFeed = async (req: Request, res: Response) => {
       updateFrequency: updateFrequency || 6,
       status: "active",
       articleCount: 0,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
 
     // Store in memory (in production, save to database)
@@ -334,11 +344,10 @@ export const createRSSFeed = async (req: Request, res: Response) => {
 
     console.log(`Added RSS feed: ${name} - ${sanitizedUrl}`);
     res.status(201).json(newFeed);
-
   } catch (error) {
-    console.error('Create RSS feed error:', error);
+    console.error("Create RSS feed error:", error);
     res.status(500).json({
-      error: 'Failed to create RSS feed'
+      error: "Failed to create RSS feed",
     });
   }
 };
@@ -349,11 +358,12 @@ export const createRSSFeed = async (req: Request, res: Response) => {
 export const updateRSSFeed = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { name, url, category, description, isActive, updateFrequency } = req.body;
+    const { name, url, category, description, isActive, updateFrequency } =
+      req.body;
 
     if (!id) {
       return res.status(400).json({
-        error: 'Feed ID is required'
+        error: "Feed ID is required",
       });
     }
 
@@ -363,7 +373,7 @@ export const updateRSSFeed = async (req: Request, res: Response) => {
         new URL(url);
       } catch {
         return res.status(400).json({
-          error: 'Invalid URL format'
+          error: "Invalid URL format",
         });
       }
     }
@@ -377,15 +387,14 @@ export const updateRSSFeed = async (req: Request, res: Response) => {
       description,
       isActive,
       updateFrequency,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
 
     res.json(updatedFeed);
-
   } catch (error) {
-    console.error('Update RSS feed error:', error);
+    console.error("Update RSS feed error:", error);
     res.status(500).json({
-      error: 'Failed to update RSS feed'
+      error: "Failed to update RSS feed",
     });
   }
 };
@@ -399,20 +408,19 @@ export const deleteRSSFeed = async (req: Request, res: Response) => {
 
     if (!id) {
       return res.status(400).json({
-        error: 'Feed ID is required'
+        error: "Feed ID is required",
       });
     }
 
     // In production, this would delete from database
     res.json({
       success: true,
-      message: 'RSS feed deleted successfully'
+      message: "RSS feed deleted successfully",
     });
-
   } catch (error) {
-    console.error('Delete RSS feed error:', error);
+    console.error("Delete RSS feed error:", error);
     res.status(500).json({
-      error: 'Failed to delete RSS feed'
+      error: "Failed to delete RSS feed",
     });
   }
 };
@@ -421,37 +429,46 @@ export const deleteRSSFeed = async (req: Request, res: Response) => {
  * Aggregate articles from all active RSS feeds
  */
 async function aggregateAllFeeds() {
-  console.log('Aggregating articles from all RSS feeds...');
+  console.log("Aggregating articles from all RSS feeds...");
   aggregatedArticles.length = 0; // Clear existing articles
 
-  for (const feed of rssFeeds.filter(f => f.isActive)) {
+  for (const feed of rssFeeds.filter((f) => f.isActive)) {
     try {
       console.log(`Fetching articles from ${feed.name}...`);
       const rssData = await parser.parseURL(feed.url);
 
-      const articles = rssData.items.slice(0, 20).map((item, index) => ({
-        id: `${feed.id}-${index}`,
-        title: item.title || 'Untitled',
-        description: cleanHtml(item.contentSnippet || item.content || item.summary || '').slice(0, 500),
-        url: item.link || item.guid || '',
-        source: feed.name,
-        category: feed.category,
-        publishedAt: item.pubDate ? new Date(item.pubDate).toISOString() : new Date().toISOString(),
-        author: item.creator || item.author || undefined,
-        imageUrl: extractImageUrl(item),
-        tags: extractTags(item)
-      })).filter(article => article.title && article.url);
+      const articles = rssData.items
+        .slice(0, 20)
+        .map((item, index) => ({
+          id: `${feed.id}-${index}`,
+          title: item.title || "Untitled",
+          description: cleanHtml(
+            item.contentSnippet || item.content || item.summary || "",
+          ).slice(0, 500),
+          url: item.link || item.guid || "",
+          source: feed.name,
+          category: feed.category,
+          publishedAt: item.pubDate
+            ? new Date(item.pubDate).toISOString()
+            : new Date().toISOString(),
+          author: item.creator || item.author || undefined,
+          imageUrl: extractImageUrl(item),
+          tags: extractTags(item),
+        }))
+        .filter((article) => article.title && article.url);
 
       aggregatedArticles.push(...articles);
       console.log(`Added ${articles.length} articles from ${feed.name}`);
-
     } catch (error) {
       console.error(`Error fetching from ${feed.name}:`, error);
     }
   }
 
   // Sort by publication date (newest first)
-  aggregatedArticles.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+  aggregatedArticles.sort(
+    (a, b) =>
+      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
+  );
   console.log(`Total aggregated articles: ${aggregatedArticles.length}`);
 }
 
@@ -462,25 +479,29 @@ export const getAggregatedNews = async (req: Request, res: Response) => {
   try {
     const { category, limit = 20, offset = 0 } = req.query;
 
-    console.log(`GET /api/news - Feeds: ${rssFeeds.length}, Articles: ${aggregatedArticles.length}`);
+    console.log(
+      `GET /api/news - Feeds: ${rssFeeds.length}, Articles: ${aggregatedArticles.length}`,
+    );
 
     // If we have no aggregated articles or feeds, try to aggregate
     if (aggregatedArticles.length === 0 && rssFeeds.length > 0) {
-      console.log('No aggregated articles found, triggering aggregation...');
+      console.log("No aggregated articles found, triggering aggregation...");
       await aggregateAllFeeds();
     }
 
     let filteredArticles = aggregatedArticles;
 
     // Filter by category if specified
-    if (category && category !== 'all') {
-      filteredArticles = aggregatedArticles.filter(article => article.category === category);
+    if (category && category !== "all") {
+      filteredArticles = aggregatedArticles.filter(
+        (article) => article.category === category,
+      );
     }
 
     // Apply pagination
     const paginatedArticles = filteredArticles.slice(
       Number(offset),
-      Number(offset) + Number(limit)
+      Number(offset) + Number(limit),
     );
 
     res.json({
@@ -488,13 +509,12 @@ export const getAggregatedNews = async (req: Request, res: Response) => {
       total: filteredArticles.length,
       limit: Number(limit),
       offset: Number(offset),
-      sources: rssFeeds.filter(f => f.isActive).length
+      sources: rssFeeds.filter((f) => f.isActive).length,
     });
-
   } catch (error) {
-    console.error('Get aggregated news error:', error);
+    console.error("Get aggregated news error:", error);
     res.status(500).json({
-      error: 'Failed to retrieve news articles'
+      error: "Failed to retrieve news articles",
     });
   }
 };
