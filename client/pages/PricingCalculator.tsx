@@ -433,7 +433,7 @@ Walking Distance: ${estimate.walkingDistance} feet
 ${estimate.hasSteps ? `Steps Required: ${estimate.numberOfSteps} steps (${estimate.percentageRequiringSteps}% of items)` : 'No Steps Required'}
 
 FUEL & TRAVEL CALCULATION
-──────────────��────────────────────────────���─────────────────
+──────────────���────────────────────────────���─────────────────
 Vehicle MPG: ${estimate.averageMpg}
 Fuel Price: $${estimate.fuelPricePerGallon}/gallon
 Total Miles: ${estimate.distance} × 2 (round trip) × ${totals.tripsNeeded} trips = ${totalMiles} miles
@@ -1378,10 +1378,6 @@ Company Signature: _____________________  Date: ____________
                     </div>
                   </CardContent>
                 </Card>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
 
             </TabsContent>
           </Tabs>
@@ -1391,12 +1387,6 @@ Company Signature: _____________________  Date: ____________
     </div>
   );
 }
-                                <div className="flex justify-between">
-                                  <span className="text-gray-500">Labor:</span>
-                                  <span className="font-medium">${itemLaborCost.toFixed(2)}</span>
-                                </div>
-                              </div>
-                            </div>
 
                             {(jobItem.customWeight || jobItem.customVolume || jobItem.customLoadingTime) && (
                               <div className="mt-2">
