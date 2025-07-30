@@ -887,7 +887,7 @@ ITEMIZED LIST:
 ${itemsList}
 
 FUEL & TRAVEL DETAILS
-───────────────────────────��─────────────────────────────────
+───────────────────────────��─��───────────────────────────────
 Vehicle MPG: ${estimate.averageMpg}
 Fuel Price: $${estimate.fuelPricePerGallon}/gallon
 Total Miles: ${estimate.distance} × 2 (round trip) × ${totals.tripsNeeded} trips = ${totalMiles} miles
@@ -2172,9 +2172,9 @@ Company Signature: _____________________  Date: ____________`;
                                                 undefined,
                                               );
                                             } else {
-                                              const numValue =
-                                                parseFloat(value);
-                                              if (!isNaN(numValue)) {
+                                              // Allow decimal input and validate on blur
+                                              const numValue = parseFloat(value);
+                                              if (!isNaN(numValue) && numValue >= 0) {
                                                 // Store total cost (per item price × quantity)
                                                 updateJobItemProperty(
                                                   jobItem.debrisItem.id,
