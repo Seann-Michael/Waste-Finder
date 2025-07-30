@@ -286,7 +286,7 @@ export default function PricingCalculator() {
     }
   };
 
-  const updateJobItemProperty = (itemId: string, property: 'customWeight' | 'customVolume' | 'customLoadingTime' | 'customLineItemCost', value: number) => {
+  const updateJobItemProperty = (itemId: string, property: 'customWeight' | 'customVolume' | 'customLoadingTime' | 'customLineItemCost', value: number | undefined) => {
     setJobItems(jobItems.map(item =>
       item.debrisItem.id === itemId
         ? { ...item, [property]: value }
@@ -456,7 +456,7 @@ ITEMIZED LIST:
 ${itemsList}
 
 FUEL & TRAVEL DETAILS
-───────────────────────────────────────��─────────────────────
+─────────────────────────────────────────────────────────────
 Vehicle MPG: ${estimate.averageMpg}
 Fuel Price: $${estimate.fuelPricePerGallon}/gallon
 Total Miles: ${estimate.distance} × 2 (round trip) × ${totals.tripsNeeded} trips = ${totalMiles} miles
@@ -464,7 +464,7 @@ Fuel Needed: ${gallonsUsed.toFixed(1)} gallons
 Fuel Cost: $${totals.fuelCost.toFixed(2)}
 
 LABOR BREAKDOWN
-─────────────────────────────────────────────────────────────
+──────────────────────────────────────────────���──────────────
 Base Loading Time: ${Math.ceil(totals.baseLoadingTime)} minutes
 Walking Time: ${Math.ceil(totals.walkingTime)} minutes
 ${totals.stepsTime > 0 ? `Steps Time: ${Math.ceil(totals.stepsTime)} minutes` : ''}
@@ -478,7 +478,7 @@ Labor (${(totals.totalLoadingTime / 60).toFixed(1)} hours @ $${config.laborRateP
 Fuel (${gallonsUsed.toFixed(1)} gallons @ $${estimate.fuelPricePerGallon}/gal):              $${totals.fuelCost.toFixed(2)}${totals.tripSurcharge > 0 ? `
 Additional Trip Fee:                         $${totals.tripSurcharge.toFixed(2)}` : ''}
 Additional Fees:                             $${estimate.additionalFees.toFixed(2)}
-                                           ─────────────
+                                           ────���────────
 Subtotal:                                    $${totals.subtotal.toFixed(2)}
 Profit Margin (${config.profitMargin}%):                       $${totals.profitAmount.toFixed(2)}
                                            ═════════════
@@ -491,7 +491,7 @@ TERMS & CONDITIONS
 • Final price may vary based on actual site conditions
 • Payment due upon completion
 • Additional fees apply for hazardous materials
-��� Manpower rate ($${config.laborRatePerHour}/hr) is for internal labor cost calculation only
+• Manpower rate ($${config.laborRatePerHour}/hr) is for internal labor cost calculation only
 
 Customer Signature: ____________________  Date: ____________
 
@@ -1198,7 +1198,7 @@ Company Signature: _____________________  Date: ____________`;
                               if (id === 'sectional_couch') return '🛋️';
                               if (id === 'standard_couch') return '🛋️';
                               if (id === 'reclining_couch') return '💺';
-                              if (id === 'sofa_bed') return '����️';
+                              if (id === 'sofa_bed') return '🛏️';
                               if (id === 'recliner') return '💺';
                               if (id === 'coffee_table') return '🪑';
                               if (id === 'entertainment_center') return '📺';
