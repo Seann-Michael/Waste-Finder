@@ -373,7 +373,7 @@ export default function PricingCalculator() {
     const pdfContent = `
 ═══════════════════════════════════════════════════════════════
                     DEBRIS REMOVAL ESTIMATE
-════════════════════��══════════════════════════════════════════
+═══════════════════════════════════════════════════════════════
 
 Generated: ${currentDate}
 Company: ________________________________
@@ -399,7 +399,7 @@ DETAILED ITEMS LIST
 ${itemsList}
 
 JOB SITE CONDITIONS
-─��───────────────────────────────────────────────────────────
+─────────────────────────────────────────────────────────────
 Distance to Dump: ${estimate.distance} miles
 Walking Distance: ${estimate.walkingDistance} feet
 ${estimate.hasSteps ? `Steps Required: ${estimate.numberOfSteps} steps (${estimate.percentageRequiringSteps}% of items)` : 'No Steps Required'}
@@ -420,7 +420,7 @@ ${totals.stepsTime > 0 ? `Steps Time: ${Math.ceil(totals.stepsTime)} minutes` : 
 Total Labor Time: ${Math.ceil(totals.totalLoadingTime)} minutes
 
 COST BREAKDOWN
-────────────────────────────────────────────��────────────────
+─────────────────────────────────────────────────────────────
 Base Service Fee:                           $${config.baseServiceFee.toFixed(2)}
 Dump Fee (${config.useTonRate ? `${totals.totalWeight.toFixed(2)} tons` : `${totals.totalVolume.toFixed(1)} yd³`}):                           $${totals.dumpFee.toFixed(2)}
 Labor (${(totals.totalLoadingTime / 60).toFixed(1)} hours @ $${config.laborRatePerHour}/hr):      $${totals.laborCost.toFixed(2)}
@@ -435,7 +435,7 @@ TOTAL JOB PRICE:                             $${totals.total.toFixed(2)}
                                            ═════════════
 
 TERMS & CONDITIONS
-───────────────────────────────────��─────────────────────────
+─────────────────────────────────────────────────────────────
 • This estimate is valid for 30 days
 • Final price may vary based on actual site conditions
 • Payment due upon completion
@@ -706,45 +706,57 @@ Company Signature: _____________________  Date: ____________
                         <Label htmlFor="dumpRate">
                           Dump Rate (${config.useTonRate ? "per ton" : "per yd³"})
                         </Label>
-                        <Input
-                          id="dumpRate"
-                          type="number"
-                          value={config.useTonRate ? config.dumpRatePerTon : config.dumpRatePerCubicYard}
-                          onChange={(e) => setConfig({
-                            ...config,
-                            ...(config.useTonRate
-                              ? { dumpRatePerTon: Number(e.target.value) }
-                              : { dumpRatePerCubicYard: Number(e.target.value) }
-                            )
-                          })}
-                        />
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                          <Input
+                            id="dumpRate"
+                            type="number"
+                            className="pl-8"
+                            value={config.useTonRate ? config.dumpRatePerTon : config.dumpRatePerCubicYard}
+                            onChange={(e) => setConfig({
+                              ...config,
+                              ...(config.useTonRate
+                                ? { dumpRatePerTon: Number(e.target.value) }
+                                : { dumpRatePerCubicYard: Number(e.target.value) }
+                              )
+                            })}
+                          />
+                        </div>
                       </div>
                       <div>
-                        <Label htmlFor="laborRate">Labor Rate ($/hour)</Label>
-                        <Input
-                          id="laborRate"
-                          type="number"
-                          value={config.laborRatePerHour}
-                          onChange={(e) => setConfig({
-                            ...config,
-                            laborRatePerHour: Number(e.target.value)
-                          })}
-                        />
+                        <Label htmlFor="laborRate">Manpower Rate ($/hour)</Label>
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                          <Input
+                            id="laborRate"
+                            type="number"
+                            className="pl-8"
+                            value={config.laborRatePerHour}
+                            onChange={(e) => setConfig({
+                              ...config,
+                              laborRatePerHour: Number(e.target.value)
+                            })}
+                          />
+                        </div>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="baseServiceFee">Base Service Fee ($)</Label>
-                        <Input
-                          id="baseServiceFee"
-                          type="number"
-                          value={config.baseServiceFee}
-                          onChange={(e) => setConfig({
-                            ...config,
-                            baseServiceFee: Number(e.target.value)
-                          })}
-                        />
+                        <Label htmlFor="removalRate">Removal Rate ($/yd³)</Label>
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                          <Input
+                            id="removalRate"
+                            type="number"
+                            className="pl-8"
+                            value={config.removalRatePerCubicYard}
+                            onChange={(e) => setConfig({
+                              ...config,
+                              removalRatePerCubicYard: Number(e.target.value)
+                            })}
+                          />
+                        </div>
                       </div>
                       <div>
                         <Label htmlFor="profitMargin">Profit Margin (%)</Label>
