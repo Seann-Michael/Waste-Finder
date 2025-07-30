@@ -189,12 +189,30 @@ export default function PricingCalculator() {
   // Sort items alphabetically
   const sortedItems = [...DEBRIS_ITEMS].sort((a, b) => a.name.localeCompare(b.name));
 
+  // Cookie helper functions
+  const setCookie = (name: string, value: string, days: number = 30) => {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+  };
+
+  const getCookie = (name: string): string | null => {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for(let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+      if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+  };
+
   useEffect(() => {
-    // Load saved configuration
-    const savedConfig = localStorage.getItem('debris-calculator-config');
+    // Load saved configuration from cookies
+    const savedConfig = getCookie('debris-calculator-config');
     if (savedConfig) {
       try {
-        const parsed = JSON.parse(savedConfig);
+        const parsed = JSON.parse(decodeURIComponent(savedConfig));
         if (parsed.config) setConfig(parsed.config);
         if (parsed.truckConfig) setTruckConfig(parsed.truckConfig);
       } catch (error) {
@@ -204,11 +222,9 @@ export default function PricingCalculator() {
   }, []);
 
   const saveConfig = () => {
-    localStorage.setItem('debris-calculator-config', JSON.stringify({
-      config,
-      truckConfig
-    }));
-    alert('Configuration saved successfully!');
+    const configData = JSON.stringify({ config, truckConfig });
+    setCookie('debris-calculator-config', encodeURIComponent(configData), 30);
+    alert('Configuration saved to your browser for 30 days! 🍪');
   };
 
   const addJobItem = (debrisItem: DebrisItem) => {
@@ -329,6 +345,120 @@ export default function PricingCalculator() {
     return matchesCategory && matchesSearch;
   });
 
+  // PDF Generation Function
+  const generatePDF = () => {
+    const currentDate = new Date().toLocaleDateString();
+    const totalItems = jobItems.reduce((sum, item) => sum + item.quantity, 0);
+
+    // Create detailed items list
+    const itemsList = jobItems.map(item => {
+      const weight = item.customWeight ?? item.debrisItem.weightPerItem;
+      const volume = item.customVolume ?? item.debrisItem.volumePerItem;
+      const loadTime = item.customLoadingTime ?? item.debrisItem.loadingTimePerItem;
+      const customNote = (item.customWeight || item.customVolume || item.customLoadingTime) ? ' (Custom)' : '';
+
+      return `${item.quantity}× ${item.debrisItem.name}${customNote}
+        Category: ${item.debrisItem.category}
+        Weight: ${(weight * item.quantity).toFixed(2)} tons | Volume: ${(volume * item.quantity).toFixed(1)} yd³ | Load Time: ${loadTime * item.quantity} min`;
+    }).join('\n\n');
+
+    // Calculate fuel details
+    const totalMiles = estimate.distance * 2 * totals.tripsNeeded;
+    const gallonsUsed = totalMiles / estimate.averageMpg;
+
+    const pdfContent = `
+═══════════════════════════════════════════════════════════════
+                    DEBRIS REMOVAL ESTIMATE
+═══════════════════════════════════════════════════════════════
+
+Generated: ${currentDate}
+Company: ________________________________
+Customer: _______________________________
+Job Address: ____________________________
+
+VEHICLE CONFIGURATION
+─────────────────────────────────────────────────────────────
+Vehicle: ${truckConfig.name}
+Capacity: ${truckConfig.capacity} cubic yards
+Payload: ${truckConfig.payload} tons
+
+JOB SUMMARY
+─────────────────────────────────────────────────────────────
+Total Items: ${jobItems.length} types, ${totalItems} pieces
+Total Weight: ${totals.totalWeight.toFixed(2)} tons
+Total Volume: ${totals.totalVolume.toFixed(1)} cubic yards
+Trips Required: ${totals.tripsNeeded}
+Total Labor Time: ${Math.ceil(totals.totalLoadingTime)} minutes
+
+DETAILED ITEMS LIST
+─────────────────────────────────────────────────────────────
+${itemsList}
+
+JOB SITE CONDITIONS
+─────────────────────────────────────────────────────────────
+Distance to Dump: ${estimate.distance} miles
+Walking Distance: ${estimate.walkingDistance} feet
+${estimate.hasSteps ? `Steps Required: ${estimate.numberOfSteps} steps (${estimate.percentageRequiringSteps}% of items)` : 'No Steps Required'}
+
+FUEL & TRAVEL CALCULATION
+─────────────────────────────────────────────────────────────
+Vehicle MPG: ${estimate.averageMpg}
+Fuel Price: $${estimate.fuelPricePerGallon}/gallon
+Total Miles: ${estimate.distance} × 2 (round trip) × ${totals.tripsNeeded} trips = ${totalMiles} miles
+Fuel Needed: ${gallonsUsed.toFixed(1)} gallons
+Fuel Cost: $${totals.fuelCost.toFixed(2)}
+
+LABOR TIME BREAKDOWN
+─────────────────────────────────────────────────────────────
+Base Loading Time: ${Math.ceil(totals.baseLoadingTime)} minutes
+Walking Time: ${Math.ceil(totals.walkingTime)} minutes
+${totals.stepsTime > 0 ? `Steps Time: ${Math.ceil(totals.stepsTime)} minutes` : ''}
+Total Labor Time: ${Math.ceil(totals.totalLoadingTime)} minutes
+
+COST BREAKDOWN
+─────────────────────────────────────────────────────────────
+Base Service Fee:                           $${config.baseServiceFee.toFixed(2)}
+Dump Fee (${config.useTonRate ? `${totals.totalWeight.toFixed(2)} tons` : `${totals.totalVolume.toFixed(1)} yd³`}):                           $${totals.dumpFee.toFixed(2)}
+Labor (${(totals.totalLoadingTime / 60).toFixed(1)} hours @ $${config.laborRatePerHour}/hr):      $${totals.laborCost.toFixed(2)}
+Fuel (${gallonsUsed.toFixed(1)} gallons @ $${estimate.fuelPricePerGallon}/gal):              $${totals.fuelCost.toFixed(2)}${totals.tripSurcharge > 0 ? `
+Additional Trip Fee:                         $${totals.tripSurcharge.toFixed(2)}` : ''}
+Additional Fees:                             $${estimate.additionalFees.toFixed(2)}
+                                           ─────────────
+Subtotal:                                    $${totals.subtotal.toFixed(2)}
+Profit Margin (${config.profitMargin}%):                       $${totals.profitAmount.toFixed(2)}
+                                           ═════════════
+TOTAL JOB PRICE:                             $${totals.total.toFixed(2)}
+                                           ═════════════
+
+TERMS & CONDITIONS
+─────────────────────────────────────────────────────────────
+• This estimate is valid for 30 days
+• Final price may vary based on actual site conditions
+• Payment due upon completion
+• Additional fees apply for hazardous materials
+
+Customer Signature: ____________________  Date: ____________
+
+Company Signature: _____________________  Date: ____________
+
+═══════════════════════════════════════════════════════════════
+                Generated by WasteFinder Calculator
+                    www.wastefinder.com
+═══════════════════════════════════════════════════════════════
+`;
+
+    // Create and download the PDF as a text file (for now)
+    const blob = new Blob([pdfContent], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Debris_Removal_Estimate_${currentDate.replace(/\//g, '-')}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 flex flex-col">
       <Header />
@@ -358,7 +488,7 @@ export default function PricingCalculator() {
                 size="lg"
               >
                 <Save className="w-5 h-5 mr-2" />
-                Save Configuration
+                💾 Save Settings
               </Button>
             </div>
 
@@ -1172,16 +1302,24 @@ export default function PricingCalculator() {
                           </div>
                         </div>
 
-                        <Button
-                          className="mt-4 bg-white text-purple-600 hover:bg-gray-100 font-bold text-lg px-8 py-3 shadow-lg"
-                          onClick={() => {
-                            const quote = `DEBRIS REMOVAL ESTIMATE\n\nTotal Price: $${totals.total.toFixed(2)}\n\nItems: ${jobItems.length} types, ${jobItems.reduce((sum, item) => sum + item.quantity, 0)} total\nWeight: ${totals.totalWeight.toFixed(2)} tons\nVolume: ${totals.totalVolume.toFixed(1)} cubic yards\nTrips: ${totals.tripsNeeded}\n\nGenerated by WasteFinder Calculator`;
-                            navigator.clipboard.writeText(quote);
-                            alert('Quote copied to clipboard!');
-                          }}
-                        >
-                          📋 Copy Quote
-                        </Button>
+                        <div className="flex gap-3 mt-4">
+                          <Button
+                            className="bg-white text-purple-600 hover:bg-gray-100 font-bold text-lg px-6 py-3 shadow-lg flex-1"
+                            onClick={() => {
+                              const quote = `DEBRIS REMOVAL ESTIMATE\n\nTotal Price: $${totals.total.toFixed(2)}\n\nItems: ${jobItems.length} types, ${jobItems.reduce((sum, item) => sum + item.quantity, 0)} total\nWeight: ${totals.totalWeight.toFixed(2)} tons\nVolume: ${totals.totalVolume.toFixed(1)} cubic yards\nTrips: ${totals.tripsNeeded}\n\nGenerated by WasteFinder Calculator`;
+                              navigator.clipboard.writeText(quote);
+                              alert('Quote copied to clipboard! 📋');
+                            }}
+                          >
+                            📋 Copy Quote
+                          </Button>
+                          <Button
+                            className="bg-gradient-to-r from-red-500 to-pink-600 text-white hover:from-red-600 hover:to-pink-700 font-bold text-lg px-6 py-3 shadow-lg flex-1"
+                            onClick={generatePDF}
+                          >
+                            📄 Download PDF
+                          </Button>
+                        </div>
                       </div>
 
                       {/* Animated background elements */}
