@@ -415,7 +415,7 @@ DETAILED ITEMS LIST
 ${itemsList}
 
 JOB SITE CONDITIONS
-─────────────────────────────────────────────────────────────
+──────────────────────────────────────────��──────────────────
 Distance to Dump: ${estimate.distance} miles
 Walking Distance: ${estimate.walkingDistance} feet
 ${estimate.hasSteps ? `Steps Required: ${estimate.numberOfSteps} steps (${estimate.percentageRequiringSteps}% of items)` : 'No Steps Required'}
@@ -1080,9 +1080,9 @@ Company Signature: _____________________  Date: ____________
                           {/* Items List */}
                           <div className="space-y-3 max-h-80 overflow-y-auto">
                             {jobItems.map((jobItem) => {
-                              const currentWeight = jobItem.customWeight ?? jobItem.debrisItem.weightPerItem;
-                              const currentVolume = jobItem.customVolume ?? jobItem.debrisItem.volumePerItem;
-                              const currentLoadingTime = jobItem.customLoadingTime ?? jobItem.debrisItem.loadingTimePerItem;
+                              const currentWeight = jobItem.customWeight ?? jobItem.debrisItem?.weightPerItem ?? 0;
+                              const currentVolume = jobItem.customVolume ?? jobItem.debrisItem?.volumePerItem ?? 0;
+                              const currentLoadingTime = jobItem.customLoadingTime ?? jobItem.debrisItem?.loadingTimePerItem ?? 0;
 
                               return (
                                 <div key={jobItem.debrisItem.id} className="border border-blue-200 rounded-lg bg-blue-50/50 p-4 shadow-sm">
