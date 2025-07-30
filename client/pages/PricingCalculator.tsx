@@ -27,6 +27,10 @@ interface TruckConfig {
   capacity: number; // cubic yards
   payload: number; // tons
   name: string;
+  // Custom dimensions for custom vehicles
+  length?: number; // feet
+  width?: number; // feet
+  height?: number; // feet
 }
 
 interface PricingConfig {
@@ -369,7 +373,7 @@ export default function PricingCalculator() {
     const pdfContent = `
 ═══════════════════════════════════════════════════════════════
                     DEBRIS REMOVAL ESTIMATE
-═══════════════════════════════════════════════════════════════
+═════��═════════════════════════════════════════════════════════
 
 Generated: ${currentDate}
 Company: ________________________________
@@ -391,7 +395,7 @@ Trips Required: ${totals.tripsNeeded}
 Total Labor Time: ${Math.ceil(totals.totalLoadingTime)} minutes
 
 DETAILED ITEMS LIST
-─────────���───────────────────────────────────────────────────
+─────────���──────────────────────────────────────────────────��
 ${itemsList}
 
 JOB SITE CONDITIONS
@@ -426,7 +430,7 @@ Additional Fees:                             $${estimate.additionalFees.toFixed(
                                            ─────────────
 Subtotal:                                    $${totals.subtotal.toFixed(2)}
 Profit Margin (${config.profitMargin}%):                       $${totals.profitAmount.toFixed(2)}
-                                           ═════════════
+                                           ═══════���═════
 TOTAL JOB PRICE:                             $${totals.total.toFixed(2)}
                                            ═════════════
 
