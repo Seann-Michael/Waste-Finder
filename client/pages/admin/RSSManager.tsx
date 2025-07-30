@@ -135,6 +135,22 @@ export default function RSSManager() {
     setIsLoading(true);
 
     try {
+      // Test RSS feed before saving (for new feeds)
+      if (!editingFeed) {
+        const testResponse = await fetch(`/api/rss/test?url=${encodeURIComponent(formData.url)}`);
+        const testResult = await testResponse.json();
+
+        if (!testResult.valid) {
+          toast({
+            variant: "destructive",
+            title: "Invalid RSS Feed",
+            description: testResult.error || "The RSS feed URL is not valid or accessible.",
+          });
+          setIsLoading(false);
+          return;
+        }
+      }
+
       const feedData: RSSFeed = {
         id: editingFeed?.id || Date.now().toString(),
         name: formData.name,
@@ -144,7 +160,7 @@ export default function RSSManager() {
         isActive: formData.isActive,
         updateFrequency: formData.updateFrequency,
         lastUpdated: editingFeed?.lastUpdated,
-        status: "pending",
+        status: "active",
         articleCount: editingFeed?.articleCount || 0
       };
 
@@ -160,7 +176,7 @@ export default function RSSManager() {
         setFeeds(prev => [...prev, feedData]);
         toast({
           title: "RSS Feed Added",
-          description: "The RSS feed has been successfully added.",
+          description: "The RSS feed has been successfully added and validated.",
         });
       }
 
@@ -170,7 +186,7 @@ export default function RSSManager() {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to save RSS feed. Please try again.",
+        description: "Failed to save RSS feed. Please check the URL and try again.",
       });
     } finally {
       setIsLoading(false);
