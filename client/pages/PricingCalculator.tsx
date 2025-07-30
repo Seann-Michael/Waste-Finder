@@ -222,7 +222,19 @@ export default function PricingCalculator() {
     if (savedConfig) {
       try {
         const parsed = JSON.parse(decodeURIComponent(savedConfig));
-        if (parsed.config) setConfig(parsed.config);
+        if (parsed.config) {
+          setConfig({
+            dumpRatePerTon: 85,
+            dumpRatePerCubicYard: 45,
+            useTonRate: false,
+            laborRatePerHour: 25,
+            fuelCostPerMile: 0.65,
+            removalRatePerCubicYard: 35,
+            profitMargin: 35,
+            loadingTimeMultiplier: 3,
+            ...parsed.config
+          });
+        }
         if (parsed.truckConfig) {
           // Ensure all properties exist with proper defaults
           setTruckConfig({
@@ -436,7 +448,7 @@ ${totals.stepsTime > 0 ? `Steps Time: ${Math.ceil(totals.stepsTime)} minutes` : 
 Total Labor Time: ${Math.ceil(totals.totalLoadingTime)} minutes
 
 COST BREAKDOWN
-─────────────────────────────────────────────────────────────
+─────────────────────────────���───────────────────────────────
 Removal Fee (${totals.totalVolume.toFixed(1)} yd³ @ $${config.removalRatePerCubicYard}/yd³):        $${totals.removalFee.toFixed(2)}
 Dump Fee (${config.useTonRate ? `${totals.totalWeight.toFixed(2)} tons` : `${totals.totalVolume.toFixed(1)} yd³`}):                           $${totals.dumpFee.toFixed(2)}
 Labor (${(totals.totalLoadingTime / 60).toFixed(1)} hours @ $${config.laborRatePerHour}/hr):      $${totals.laborCost.toFixed(2)}
