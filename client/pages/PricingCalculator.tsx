@@ -338,7 +338,7 @@ export default function PricingCalculator() {
     const fuelCost = gallonsUsed * estimate.fuelPricePerGallon;
 
     const tripSurcharge = tripsNeeded > 1 ? (tripsNeeded - 1) * 50 : 0; // $50 per additional trip
-    
+
     const removalFee = totalVolume * config.removalRatePerCubicYard; // New removal rate charge
 
     const subtotal = dumpFee + laborCost + fuelCost + tripSurcharge + removalFee + estimate.additionalFees;
@@ -446,7 +446,7 @@ ${totals.stepsTime > 0 ? `Steps Time: ${Math.ceil(totals.stepsTime)} minutes` : 
 Total Labor Time: ${Math.ceil(totals.totalLoadingTime)} minutes
 
 COST BREAKDOWN
-────────────────────────────────────────────────────────��────
+─────────────────────────────────────────────────────────────
 Removal Fee (${totals.totalVolume.toFixed(1)} yd³ @ $${config.removalRatePerCubicYard}/yd³):        $${totals.removalFee.toFixed(2)}
 Dump Fee (${config.useTonRate ? `${totals.totalWeight.toFixed(2)} tons` : `${totals.totalVolume.toFixed(1)} yd³`}):                           $${totals.dumpFee.toFixed(2)}
 Labor (${(totals.totalLoadingTime / 60).toFixed(1)} hours @ $${config.laborRatePerHour}/hr):      $${totals.laborCost.toFixed(2)}
@@ -461,7 +461,7 @@ TOTAL JOB PRICE:                             $${totals.total.toFixed(2)}
                                            ═════════════
 
 TERMS & CONDITIONS
-────────────���────────────────────────────────────────────────
+─────────────────────────────────────────────────────────────
 • This estimate is valid for 30 days
 • Final price may vary based on actual site conditions
 • Payment due upon completion
@@ -590,9 +590,9 @@ Company Signature: _____________________  Date: ____________`;
                                 const length = value === "" ? 0 : Number(value);
                                 const width = truckConfig.width ?? 0;
                                 const height = truckConfig.height ?? 0;
-                                const calculatedCapacity = length && width && height ? 
+                                const calculatedCapacity = length && width && height ?
                                   (length * width * height) / 27 : truckConfig.capacity; // convert cubic feet to cubic yards
-                                
+
                                 setTruckConfig({
                                   ...truckConfig,
                                   length,
@@ -614,9 +614,9 @@ Company Signature: _____________________  Date: ____________`;
                                 const width = value === "" ? 0 : Number(value);
                                 const length = truckConfig.length ?? 0;
                                 const height = truckConfig.height ?? 0;
-                                const calculatedCapacity = length && width && height ? 
+                                const calculatedCapacity = length && width && height ?
                                   (length * width * height) / 27 : truckConfig.capacity;
-                                
+
                                 setTruckConfig({
                                   ...truckConfig,
                                   width,
@@ -638,9 +638,9 @@ Company Signature: _____________________  Date: ____________`;
                                 const height = value === "" ? 0 : Number(value);
                                 const length = truckConfig.length ?? 0;
                                 const width = truckConfig.width ?? 0;
-                                const calculatedCapacity = length && width && height ? 
+                                const calculatedCapacity = length && width && height ?
                                   (length * width * height) / 27 : truckConfig.capacity;
-                                
+
                                 setTruckConfig({
                                   ...truckConfig,
                                   height,
@@ -1094,7 +1094,7 @@ Company Signature: _____________________  Date: ____________`;
                         <Package className="w-5 h-5" />
                         📦 Add Items from Library
                       </h3>
-                      
+
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                         {/* Search Input */}
                         <div>
@@ -1213,6 +1213,16 @@ Company Signature: _____________________  Date: ____________`;
                               const currentVolume = jobItem.customVolume ?? jobItem.debrisItem?.volumePerItem ?? 0;
                               const currentLoadingTime = jobItem.customLoadingTime ?? jobItem.debrisItem?.loadingTimePerItem ?? 0;
 
+                              // Calculate line item cost for this specific item
+                              const itemVolumeCost = (currentVolume * jobItem.quantity) * config.removalRatePerCubicYard;
+                              const itemDumpCost = config.useTonRate
+                                ? (currentWeight * jobItem.quantity) * config.dumpRatePerTon
+                                : (currentVolume * jobItem.quantity) * config.dumpRatePerCubicYard;
+                              const defaultLineItemCost = itemVolumeCost + itemDumpCost;
+
+                              // Use custom line item cost if set, otherwise use calculated cost
+                              const lineItemCost = jobItem.customLineItemCost ?? defaultLineItemCost;
+
                               return (
                                 <div key={jobItem.debrisItem.id} className="border border-blue-200 rounded-lg bg-blue-50/50 p-4 shadow-sm">
                                   {/* Item Header */}
@@ -1266,24 +1276,24 @@ Company Signature: _____________________  Date: ____________`;
                                     </div>
                                   </div>
 
-                                  {/* Editable Properties */}
-                                  <div className="grid grid-cols-3 gap-3">
+                                  {/* Editable Properties with Line Item Cost */}
+                                  <div className="grid grid-cols-4 gap-3">
                                     <div>
                                       <Label htmlFor={`weight-${jobItem.debrisItem.id}`} className="text-xs text-blue-700">
-                                        Weight (tons)
+                                        Weight (lbs)
                                       </Label>
                                       <Input
                                         id={`weight-${jobItem.debrisItem.id}`}
                                         type="number"
-                                        step="0.001"
-                                        value={currentWeight}
+                                        step="1"
+                                        value={Math.round((currentWeight * 2000))} // Convert tons to pounds
                                         onChange={(e) => updateJobItemProperty(
                                           jobItem.debrisItem.id,
                                           'customWeight',
-                                          Number(e.target.value)
+                                          Number(e.target.value) / 2000 // Convert pounds back to tons
                                         )}
                                         className="h-8 text-xs border-blue-300 focus:border-blue-500"
-                                        placeholder={jobItem.debrisItem.weightPerItem.toString()}
+                                        placeholder={Math.round(jobItem.debrisItem.weightPerItem * 2000).toString()}
                                       />
                                     </div>
                                     <div>
@@ -1322,18 +1332,39 @@ Company Signature: _____________________  Date: ____________`;
                                         placeholder={jobItem.debrisItem.loadingTimePerItem.toString()}
                                       />
                                     </div>
+                                    <div>
+                                      <Label htmlFor={`cost-${jobItem.debrisItem.id}`} className="text-xs text-blue-700">
+                                        Line Cost ($)
+                                      </Label>
+                                      <div className="relative">
+                                        <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">$</span>
+                                        <Input
+                                          id={`cost-${jobItem.debrisItem.id}`}
+                                          type="number"
+                                          step="0.01"
+                                          value={lineItemCost.toFixed(2)}
+                                          onChange={(e) => updateJobItemProperty(
+                                            jobItem.debrisItem.id,
+                                            'customLineItemCost',
+                                            Number(e.target.value)
+                                          )}
+                                          className="h-8 text-xs border-blue-300 focus:border-blue-500 pl-6"
+                                          placeholder={defaultLineItemCost.toFixed(2)}
+                                        />
+                                      </div>
+                                    </div>
                                   </div>
 
                                   {/* Totals */}
                                   <div className="mt-2 text-xs text-blue-600">
-                                    Total: {(currentWeight * jobItem.quantity).toFixed(2)} tons • {(currentVolume * jobItem.quantity).toFixed(1)} yd³ • {(currentLoadingTime * jobItem.quantity)} min
-                                    {(jobItem.customWeight || jobItem.customVolume || jobItem.customLoadingTime) && (
+                                    Total: {Math.round(currentWeight * jobItem.quantity * 2000)} lbs • {(currentVolume * jobItem.quantity).toFixed(1)} yd³ • {(currentLoadingTime * jobItem.quantity)} min • ${lineItemCost.toFixed(2)}
+                                    {(jobItem.customWeight || jobItem.customVolume || jobItem.customLoadingTime || jobItem.customLineItemCost) && (
                                       <span className="ml-2 text-orange-600 font-medium">(Custom values ✏️)</span>
                                     )}
                                   </div>
 
                                   {/* Reset to Defaults */}
-                                  {(jobItem.customWeight || jobItem.customVolume || jobItem.customLoadingTime) && (
+                                  {(jobItem.customWeight || jobItem.customVolume || jobItem.customLoadingTime || jobItem.customLineItemCost) && (
                                     <Button
                                       size="sm"
                                       variant="ghost"
@@ -1344,7 +1375,8 @@ Company Signature: _____________________  Date: ____________`;
                                                 ...item,
                                                 customWeight: undefined,
                                                 customVolume: undefined,
-                                                customLoadingTime: undefined
+                                                customLoadingTime: undefined,
+                                                customLineItemCost: undefined
                                               }
                                             : item
                                         ));
