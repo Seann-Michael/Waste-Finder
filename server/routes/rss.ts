@@ -31,10 +31,10 @@ const initializeSampleFeeds = async () => {
     const sampleFeeds = [
       {
         id: "sample-1",
-        name: "Reuters Business",
-        url: "https://feeds.reuters.com/reuters/businessNews",
+        name: "Google News - Junk Removal",
+        url: "https://news.google.com/rss/search?q=junk%20removal&hl=en-US&gl=US&ceid=US:en",
         category: "business",
-        description: "Business news from Reuters",
+        description: "Latest junk removal news from Google News",
         isActive: true,
         updateFrequency: 6,
         status: "active",
