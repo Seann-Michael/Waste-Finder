@@ -57,7 +57,12 @@ import {
 } from "lucide-react";
 
 export default function LocationDetail() {
-  const { id } = useParams<{ id: string }>();
+  const { id, state, city, locationName } = useParams<{
+    id?: string;
+    state?: string;
+    city?: string;
+    locationName?: string;
+  }>();
   const [location, setLocation] = useState<Location | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [isLoading, setIsLoading] = useState(true);
