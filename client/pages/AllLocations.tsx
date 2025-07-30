@@ -171,7 +171,7 @@ export default function AllLocations() {
   };
 
   const handleLocationClick = (location: Location) => {
-    navigate(`/location/${location.id}`);
+    navigate(generateLocationUrl(location));
   };
 
   const filteredAndSortedLocations = locations
