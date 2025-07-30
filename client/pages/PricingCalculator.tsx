@@ -412,7 +412,7 @@ Phone: __________________________________
 Email: __________________________________
 
 VEHICLE & SITE CONFIGURATION
-──────────��──────────────────────────────────────────────────
+─────────────────────────────────────────────────────────────
 Vehicle: ${truckConfig.name}
 Capacity: ${truckConfig.capacity} cubic yards
 Payload: ${truckConfig.payload} tons
@@ -462,7 +462,7 @@ TOTAL JOB PRICE:                             $${totals.total.toFixed(2)}
                                            ═════════════
 
 TERMS & CONDITIONS
-─────────────────────────────────────────────────────────────
+──────��──────────────────────────────────────────────────────
 • This estimate is valid for 30 days
 • Final price may vary based on actual site conditions
 • Payment due upon completion
@@ -977,7 +977,6 @@ Company Signature: _____________________  Date: ____________`;
                         <div>• Loading: {Math.ceil(totals.baseLoadingTime)}min</div>
                         <div>• Walking: {Math.ceil(totals.walkingTime)}min</div>
                         {totals.stepsTime > 0 && <div>• Steps: {Math.ceil(totals.stepsTime)}min</div>}
-                        <div className="text-xs text-orange-600 mt-1">💡 Manpower Rate (${config.laborRatePerHour ?? 25}/hr) is for calculating worker wages - not added to job price</div>
                       </div>
                       <div className="flex justify-between">
                         <span>Fuel ({estimate.distance * 2 * totals.tripsNeeded} mi, {(estimate.distance * 2 * totals.tripsNeeded / estimate.averageMpg).toFixed(1)} gal):</span>
@@ -1013,7 +1012,7 @@ Company Signature: _____________________  Date: ____________`;
                             ${totals.total.toFixed(2)}
                           </div>
                           <div className="text-green-100 text-lg">
-                            Professional Quote Ready! ��
+                            Professional Quote Ready! 🎯
                           </div>
                         </div>
 
