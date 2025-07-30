@@ -867,7 +867,7 @@ Phone: __________________________________
 Email: __________________________________
 
 VEHICLE & SITE CONFIGURATION
-─────────────────────────────────────────────────────────────
+────────────────────────────────────────────────────��────────
 Vehicle: ${truckConfig.name}
 Capacity: ${truckConfig.capacity} cubic yards
 Payload: ${truckConfig.payload} tons
@@ -2221,9 +2221,9 @@ Company Signature: _____________________  Date: ____________`;
                                                 undefined,
                                               );
                                             } else {
-                                              const numValue =
-                                                parseFloat(value);
-                                              if (!isNaN(numValue)) {
+                                              // Allow decimal input and validate on blur
+                                              const numValue = parseFloat(value);
+                                              if (!isNaN(numValue) && numValue >= 0) {
                                                 // Store total cost directly
                                                 updateJobItemProperty(
                                                   jobItem.debrisItem.id,
