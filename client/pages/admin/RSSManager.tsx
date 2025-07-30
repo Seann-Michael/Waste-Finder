@@ -149,7 +149,7 @@ export default function RSSManager() {
       };
 
       if (editingFeed) {
-        setFeeds(prev => prev.map(feed => 
+        setFeeds(prev => prev.map(feed =>
           feed.id === editingFeed.id ? feedData : feed
         ));
         toast({
@@ -208,26 +208,56 @@ export default function RSSManager() {
 
   const handleTest = async (feedId: string) => {
     setIsTesting(feedId);
-    
-    // Simulate RSS feed testing
-    setTimeout(() => {
-      setFeeds(prev => prev.map(feed => 
-        feed.id === feedId 
-          ? { ...feed, status: "active", errorMessage: undefined }
-          : feed
+
+    const feed = feeds.find(f => f.id === feedId);
+    if (!feed) return;
+
+    try {
+      const response = await fetch(`/api/rss/test?url=${encodeURIComponent(feed.url)}`);
+      const result = await response.json();
+
+      if (result.valid) {
+        setFeeds(prev => prev.map(f =>
+          f.id === feedId
+            ? { ...f, status: "active", errorMessage: undefined, articleCount: result.articleCount }
+            : f
+        ));
+        toast({
+          title: "RSS Feed Test Successful",
+          description: `Found ${result.articleCount} articles from "${result.feedTitle}"`,
+        });
+      } else {
+        setFeeds(prev => prev.map(f =>
+          f.id === feedId
+            ? { ...f, status: "error", errorMessage: result.error }
+            : f
+        ));
+        toast({
+          variant: "destructive",
+          title: "RSS Feed Test Failed",
+          description: result.error,
+        });
+      }
+    } catch (error) {
+      setFeeds(prev => prev.map(f =>
+        f.id === feedId
+          ? { ...f, status: "error", errorMessage: "Network error" }
+          : f
       ));
-      setIsTesting(null);
       toast({
-        title: "RSS Feed Test Successful",
-        description: "The RSS feed is working correctly.",
+        variant: "destructive",
+        title: "RSS Feed Test Failed",
+        description: "Failed to connect to RSS feed",
       });
-    }, 2000);
+    } finally {
+      setIsTesting(null);
+    }
   };
 
   const handleRefresh = async (feedId: string) => {
     try {
-      setFeeds(prev => prev.map(feed => 
-        feed.id === feedId 
+      setFeeds(prev => prev.map(feed =>
+        feed.id === feedId
           ? { ...feed, lastUpdated: new Date().toISOString(), articleCount: feed.articleCount + Math.floor(Math.random() * 5) }
           : feed
       ));
@@ -246,7 +276,7 @@ export default function RSSManager() {
 
   const toggleFeedStatus = async (feedId: string, isActive: boolean) => {
     try {
-      setFeeds(prev => prev.map(feed => 
+      setFeeds(prev => prev.map(feed =>
         feed.id === feedId ? { ...feed, isActive } : feed
       ));
       toast({
@@ -324,7 +354,7 @@ export default function RSSManager() {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
@@ -406,9 +436,9 @@ export default function RSSManager() {
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <a 
-                      href={feed.url} 
-                      target="_blank" 
+                    <a
+                      href={feed.url}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="text-primary hover:underline text-sm"
                     >
@@ -478,7 +508,7 @@ export default function RSSManager() {
           {feeds.length === 0 && (
             <div className="text-center py-8">
               <p className="text-muted-foreground">No RSS feeds configured yet.</p>
-              <Button 
+              <Button
                 onClick={() => setIsDialogOpen(true)}
                 className="mt-4"
               >
@@ -500,7 +530,7 @@ export default function RSSManager() {
               {editingFeed ? "Edit RSS Feed" : "Add RSS Feed"}
             </DialogTitle>
             <DialogDescription>
-              {editingFeed 
+              {editingFeed
                 ? "Update the RSS feed configuration below."
                 : "Add a new RSS feed source for news aggregation."
               }
@@ -522,8 +552,8 @@ export default function RSSManager() {
 
               <div>
                 <Label htmlFor="category">Category *</Label>
-                <Select 
-                  value={formData.category} 
+                <Select
+                  value={formData.category}
                   onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}
                 >
                   <SelectTrigger>
@@ -565,8 +595,8 @@ export default function RSSManager() {
 
             <div>
               <Label htmlFor="updateFrequency">Update Frequency (hours)</Label>
-              <Select 
-                value={formData.updateFrequency.toString()} 
+              <Select
+                value={formData.updateFrequency.toString()}
                 onValueChange={(value) => setFormData(prev => ({ ...prev, updateFrequency: parseInt(value) }))}
               >
                 <SelectTrigger>
