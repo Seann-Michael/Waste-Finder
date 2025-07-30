@@ -373,11 +373,12 @@ export default function PricingCalculator() {
       stepsTime,
       totalLoadingTime,
       tripsNeeded,
-      dumpFee,
+      dumpFee: adjustedDumpFee,
       laborCost,
       fuelCost,
       tripSurcharge,
-      removalFee,
+      removalFee: adjustedRemovalFee,
+      totalLineItemCosts,
       subtotal,
       profitAmount,
       total,
@@ -451,7 +452,7 @@ ITEMIZED LIST:
 ${itemsList}
 
 FUEL & TRAVEL DETAILS
-─────────────────────────────────────────────────────────────
+─────────────────────────────���───────────────────────────────
 Vehicle MPG: ${estimate.averageMpg}
 Fuel Price: $${estimate.fuelPricePerGallon}/gallon
 Total Miles: ${estimate.distance} × 2 (round trip) × ${totals.tripsNeeded} trips = ${totalMiles} miles
@@ -476,7 +477,7 @@ Additional Fees:                             $${estimate.additionalFees.toFixed(
                                            ─────────────
 Subtotal:                                    $${totals.subtotal.toFixed(2)}
 Profit Margin (${config.profitMargin}%):                       $${totals.profitAmount.toFixed(2)}
-                                           ═════════���═══
+                                           ═════════════
 TOTAL JOB PRICE:                             $${totals.total.toFixed(2)}
                                            ═════════════
 
@@ -1111,7 +1112,7 @@ Company Signature: _____________________  Date: ____________`;
                     <div className="border-2 border-dashed border-blue-300 rounded-lg p-6 bg-blue-50">
                       <h3 className="text-lg font-semibold text-blue-800 mb-4 flex items-center gap-2">
                         <Package className="w-5 h-5" />
-                        📦 Add Items from Library
+                        �� Add Items from Library
                       </h3>
 
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
