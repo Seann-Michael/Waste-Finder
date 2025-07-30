@@ -421,8 +421,11 @@ export const getAggregatedNews = async (req: Request, res: Response) => {
   try {
     const { category, limit = 20, offset = 0 } = req.query;
 
+    console.log(`GET /api/news - Feeds: ${rssFeeds.length}, Articles: ${aggregatedArticles.length}`);
+
     // If we have no aggregated articles or feeds, try to aggregate
     if (aggregatedArticles.length === 0 && rssFeeds.length > 0) {
+      console.log('No aggregated articles found, triggering aggregation...');
       await aggregateAllFeeds();
     }
 
