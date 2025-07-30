@@ -187,12 +187,8 @@ export const testRSSFeed = async (req: Request, res: Response) => {
       });
     }
 
-    // Decode the double-encoded URL
-    try {
-      url = decodeURIComponent(url);
-    } catch (e) {
-      // If decoding fails, use the original URL
-    }
+    // Sanitize and decode the URL
+    url = sanitizeRSSUrl(url);
 
     // Validate URL format
     try {
