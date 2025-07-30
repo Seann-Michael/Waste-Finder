@@ -223,7 +223,15 @@ export default function PricingCalculator() {
       try {
         const parsed = JSON.parse(decodeURIComponent(savedConfig));
         if (parsed.config) setConfig(parsed.config);
-        if (parsed.truckConfig) setTruckConfig(parsed.truckConfig);
+        if (parsed.truckConfig) {
+          // Ensure all properties exist with proper defaults
+          setTruckConfig({
+            ...parsed.truckConfig,
+            length: parsed.truckConfig.length ?? 0,
+            width: parsed.truckConfig.width ?? 0,
+            height: parsed.truckConfig.height ?? 0
+          });
+        }
       } catch (error) {
         console.error('Error loading config:', error);
       }
