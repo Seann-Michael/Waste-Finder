@@ -21,6 +21,10 @@ const parser = new Parser({
   }
 });
 
+// In-memory storage for RSS feeds (in production, use database)
+const rssFeeds: any[] = [];
+const aggregatedArticles: any[] = [];
+
 /**
  * Sanitize and decode RSS URL
  */
