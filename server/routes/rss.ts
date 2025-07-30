@@ -40,12 +40,19 @@ interface ParsedFeed {
  */
 export const parseRSSFeed = async (req: Request, res: Response) => {
   try {
-    const { url } = req.query;
+    let { url } = req.query;
 
     if (!url || typeof url !== 'string') {
       return res.status(400).json({
         error: 'RSS feed URL is required'
       });
+    }
+
+    // Decode the double-encoded URL
+    try {
+      url = decodeURIComponent(url);
+    } catch (e) {
+      // If decoding fails, use the original URL
     }
 
     // Validate URL format
