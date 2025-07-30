@@ -966,7 +966,6 @@ Company Signature: _____________________  Date: ____________`;
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
 
@@ -2177,8 +2176,12 @@ Company Signature: _____________________  Date: ____________`;
 
                                             // Allow typing decimal numbers
                                             if (/^\d*\.?\d*$/.test(value)) {
-                                              const numValue = parseFloat(value);
-                                              if (!isNaN(numValue) && numValue >= 0) {
+                                              const numValue =
+                                                parseFloat(value);
+                                              if (
+                                                !isNaN(numValue) &&
+                                                numValue >= 0
+                                              ) {
                                                 // Store total cost (per item price × quantity)
                                                 updateJobItemProperty(
                                                   jobItem.debrisItem.id,
@@ -2230,8 +2233,12 @@ Company Signature: _____________________  Date: ____________`;
 
                                             // Allow typing decimal numbers
                                             if (/^\d*\.?\d*$/.test(value)) {
-                                              const numValue = parseFloat(value);
-                                              if (!isNaN(numValue) && numValue >= 0) {
+                                              const numValue =
+                                                parseFloat(value);
+                                              if (
+                                                !isNaN(numValue) &&
+                                                numValue >= 0
+                                              ) {
                                                 // Store total cost directly
                                                 updateJobItemProperty(
                                                   jobItem.debrisItem.id,
