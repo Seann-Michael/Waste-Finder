@@ -279,17 +279,17 @@ export default function PricingCalculator() {
 
   const calculateJobTotals = () => {
     const totalWeight = jobItems.reduce((sum, item) => {
-      const weight = item.customWeight ?? item.debrisItem.weightPerItem;
+      const weight = item.customWeight ?? item.debrisItem?.weightPerItem ?? 0;
       return sum + (weight * item.quantity);
     }, 0);
 
     const totalVolume = jobItems.reduce((sum, item) => {
-      const volume = item.customVolume ?? item.debrisItem.volumePerItem;
+      const volume = item.customVolume ?? item.debrisItem?.volumePerItem ?? 0;
       return sum + (volume * item.quantity);
     }, 0);
 
     let baseLoadingTime = jobItems.reduce((sum, item) => {
-      const loadingTime = item.customLoadingTime ?? item.debrisItem.loadingTimePerItem;
+      const loadingTime = item.customLoadingTime ?? item.debrisItem?.loadingTimePerItem ?? 0;
       return sum + (loadingTime * item.quantity);
     }, 0);
 
