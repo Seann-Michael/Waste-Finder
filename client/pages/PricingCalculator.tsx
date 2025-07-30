@@ -421,7 +421,7 @@ Walking Distance: ${estimate.walkingDistance} feet
 ${estimate.hasSteps ? `Steps Required: ${estimate.numberOfSteps} steps (${estimate.percentageRequiringSteps}% of items)` : 'No Steps Required'}
 
 FUEL & TRAVEL CALCULATION
-───────────────────────────────────────────���─────────────────
+──────────────��────────────────────────────���─────────────────
 Vehicle MPG: ${estimate.averageMpg}
 Fuel Price: $${estimate.fuelPricePerGallon}/gallon
 Total Miles: ${estimate.distance} × 2 (round trip) × ${totals.tripsNeeded} trips = ${totalMiles} miles
@@ -666,7 +666,7 @@ Company Signature: _____________________  Date: ____________
                         <Input
                           id="capacity"
                           type="number"
-                          value={truckConfig.capacity}
+                          value={truckConfig.capacity ?? 0}
                           onChange={(e) => setTruckConfig({
                             ...truckConfig,
                             capacity: Number(e.target.value)
@@ -679,7 +679,7 @@ Company Signature: _____________________  Date: ____________
                           id="payload"
                           type="number"
                           step="0.1"
-                          value={truckConfig.payload}
+                          value={truckConfig.payload ?? 0}
                           onChange={(e) => setTruckConfig({
                             ...truckConfig,
                             payload: Number(e.target.value)
