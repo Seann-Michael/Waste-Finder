@@ -412,7 +412,7 @@ Phone: __________________________________
 Email: __________________________________
 
 VEHICLE & SITE CONFIGURATION
-─────────────────────────────────────────────────────────────
+──────────��──────────────────────────────────────────────────
 Vehicle: ${truckConfig.name}
 Capacity: ${truckConfig.capacity} cubic yards
 Payload: ${truckConfig.payload} tons
@@ -1013,7 +1013,7 @@ Company Signature: _____________________  Date: ____________`;
                             ${totals.total.toFixed(2)}
                           </div>
                           <div className="text-green-100 text-lg">
-                            Professional Quote Ready! 🎯
+                            Professional Quote Ready! ��
                           </div>
                         </div>
 
@@ -1152,28 +1152,68 @@ Company Signature: _____________________  Date: ____________`;
                             No items found matching your search
                           </div>
                         ) : (
-                          filteredItems.map((item) => (
-                            <div
-                              key={item.id}
-                              className="flex items-center justify-between p-3 border border-blue-200 rounded-lg hover:bg-blue-100 cursor-pointer transition-colors shadow-sm"
-                              onClick={() => addJobItem(item)}
-                            >
-                              <div className="flex-1">
-                                <div className="font-medium text-blue-800 text-sm">{item.name}</div>
-                                <div className="text-xs text-blue-600">
-                                  <Badge variant="outline" className="mr-1 text-xs border-blue-300">
-                                    {item.category}
-                                  </Badge>
+                          filteredItems.map((item) => {
+                            // Function to get appropriate icon for each item type
+                            const getItemIcon = (itemName: string, category: string) => {
+                              const name = itemName.toLowerCase();
+                              if (name.includes('hot tub')) return '🛁';
+                              if (name.includes('couch') || name.includes('sofa')) return '🛋️';
+                              if (name.includes('chair')) return '💺';
+                              if (name.includes('mattress') || name.includes('bed')) return '🛏️';
+                              if (name.includes('dresser') || name.includes('nightstand')) return '🗄️';
+                              if (name.includes('desk') || name.includes('table')) return '🪑';
+                              if (name.includes('refrigerator') || name.includes('fridge')) return '❄️';
+                              if (name.includes('freezer')) return '🧊';
+                              if (name.includes('washer') || name.includes('dryer')) return '🧺';
+                              if (name.includes('stove') || name.includes('oven')) return '🔥';
+                              if (name.includes('dishwasher')) return '🍽️';
+                              if (name.includes('microwave')) return '📡';
+                              if (name.includes('tv') || name.includes('dlp')) return '📺';
+                              if (name.includes('computer') || name.includes('monitor')) return '💻';
+                              if (name.includes('brick') || name.includes('cinder')) return '🧱';
+                              if (name.includes('shingles')) return '🏠';
+                              if (name.includes('decking') || name.includes('2x4')) return '🪵';
+                              if (name.includes('drywall')) return '⬜';
+                              if (name.includes('carpet')) return '🧶';
+                              if (name.includes('bathtub')) return '🛁';
+                              if (name.includes('books')) return '📚';
+                              if (name.includes('dirt')) return '🪨';
+                              if (name.includes('clothes')) return '👕';
+                              if (name.includes('boxes')) return '📦';
+                              if (name.includes('exercise')) return '💪';
+                              if (name.includes('water heater')) return '🔥';
+                              if (name.includes('tree') || name.includes('branch')) return '🌳';
+                              if (name.includes('lawn mower')) return '🚜';
+                              if (name.includes('leaves')) return '🍃';
+                              return '📋'; // default icon
+                            };
+
+                            return (
+                              <div
+                                key={item.id}
+                                className="flex items-center justify-between p-3 border border-blue-200 rounded-lg hover:bg-blue-100 cursor-pointer transition-colors shadow-sm"
+                                onClick={() => addJobItem(item)}
+                              >
+                                <div className="flex items-center gap-2 flex-1">
+                                  <div className="text-2xl">{getItemIcon(item.name, item.category)}</div>
+                                  <div className="flex-1">
+                                    <div className="font-medium text-blue-800 text-sm">{item.name}</div>
+                                    <div className="text-xs text-blue-600">
+                                      <Badge variant="outline" className="mr-1 text-xs border-blue-300">
+                                        {item.category}
+                                      </Badge>
+                                    </div>
+                                    <div className="text-xs text-blue-500 mt-1">
+                                      {Math.round(item.weightPerItem * 2000)}lbs • {item.volumePerItem}yd³ • {item.loadingTimePerItem}min
+                                    </div>
+                                  </div>
                                 </div>
-                                <div className="text-xs text-blue-500 mt-1">
-                                  {item.weightPerItem}t • {item.volumePerItem}yd³ • {item.loadingTimePerItem}min
-                                </div>
+                                <Button size="sm" variant="outline" className="ml-2 border-blue-300 text-blue-600 hover:bg-blue-200">
+                                  <Plus className="w-3 h-3" />
+                                </Button>
                               </div>
-                              <Button size="sm" variant="outline" className="ml-2 border-blue-300 text-blue-600 hover:bg-blue-200">
-                                <Plus className="w-3 h-3" />
-                              </Button>
-                            </div>
-                          ))
+                            );
+                          })
                         )}
                       </div>
                     </div>
