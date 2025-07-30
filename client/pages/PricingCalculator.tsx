@@ -445,7 +445,7 @@ Walking Distance: ${estimate.walkingDistance} feet
 ${estimate.hasSteps ? `Steps: ${estimate.numberOfSteps} steps (${estimate.percentageRequiringSteps}% of items)` : 'No steps involved'}
 
 DEBRIS ITEMS
-──────────────────────────────────────────────────────���──────
+─────────────────────────────────────────────────────────────
 Total Items: ${jobItems.length} types, ${totalItems} pieces
 Total Weight: ${totals.totalWeight.toFixed(2)} tons
 Total Volume: ${totals.totalVolume.toFixed(1)} cubic yards
@@ -471,7 +471,7 @@ ${totals.stepsTime > 0 ? `Steps Time: ${Math.ceil(totals.stepsTime)} minutes` : 
 Total Labor Time: ${Math.ceil(totals.totalLoadingTime)} minutes
 
 COST BREAKDOWN
-────────���────────────────────────────────────────────────────
+─────────────────────────────────────────────────────────────
 Removal Fee (${totals.totalVolume.toFixed(1)} yd³ @ $${config.removalRatePerCubicYard}/yd³):        $${totals.removalFee.toFixed(2)}
 Dump Fee (${config.useTonRate ? `${totals.totalWeight.toFixed(2)} tons` : `${totals.totalVolume.toFixed(1)} yd³`}):                           $${totals.dumpFee.toFixed(2)}
 Labor (${(totals.totalLoadingTime / 60).toFixed(1)} hours @ $${config.laborRatePerHour}/hr):      $${totals.laborCost.toFixed(2)}
@@ -1208,7 +1208,7 @@ Company Signature: _____________________  Date: ____________`;
                               if (id === 'mattress_set_full') return '🛏️';
                               if (id === 'mattress_set_queen') return '🛏️';
                               if (id === 'mattress_set_king') return '🛏️';
-                              if (id === 'bed_frame') return '🛏️';
+                              if (id === 'bed_frame') return '����️';
                               if (id === 'dresser') return '🗄️';
                               if (id === 'nightstand') return '🕯️';
                               if (id === 'armoire') return '👔';
@@ -1465,15 +1465,18 @@ Company Signature: _____________________  Date: ____________`;
                                           id={`cost-${jobItem.debrisItem.id}`}
                                           type="number"
                                           step="0.01"
-                                          value={lineItemCost.toFixed(2)}
+                                          value={jobItem.customLineItemCost !== undefined ? jobItem.customLineItemCost.toFixed(2) : ""}
                                           onChange={(e) => updateJobItemProperty(
                                             jobItem.debrisItem.id,
                                             'customLineItemCost',
-                                            Number(e.target.value)
+                                            e.target.value === "" ? undefined : Number(e.target.value)
                                           )}
                                           className="h-8 text-xs border-blue-300 focus:border-blue-500 pl-6"
-                                          placeholder={defaultLineItemCost.toFixed(2)}
+                                          placeholder={`Auto: $${defaultLineItemCost.toFixed(2)}`}
                                         />
+                                      </div>
+                                      <div className="text-xs text-gray-500 mt-1">
+                                        {jobItem.customLineItemCost !== undefined ? "Custom price set" : "Using auto calculation"}
                                       </div>
                                     </div>
                                   </div>
