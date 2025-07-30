@@ -137,7 +137,9 @@ export default function RSSManager() {
     try {
       // Test RSS feed before saving (for new feeds)
       if (!editingFeed) {
-        const testResponse = await fetch(`/api/rss/test?url=${encodeURIComponent(formData.url)}`);
+        // Double encode the URL to handle complex Google News URLs
+        const encodedUrl = encodeURIComponent(encodeURIComponent(formData.url));
+        const testResponse = await fetch(`/api/rss/test?url=${encodedUrl}`);
         const testResult = await testResponse.json();
 
         if (!testResult.valid) {
