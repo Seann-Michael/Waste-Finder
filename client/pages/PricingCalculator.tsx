@@ -389,7 +389,7 @@ export default function PricingCalculator() {
     const pdfContent = `
 ═══════════════════════════════════════════════════════════════
                     DEBRIS REMOVAL ESTIMATE
-═══════════════════════════════════════════════════════════════
+═══════════════════════════��═══════════════════════════════════
 
 Generated: ${currentDate}
 Company: ________________________________
@@ -415,7 +415,7 @@ DETAILED ITEMS LIST
 ${itemsList}
 
 JOB SITE CONDITIONS
-─────────────────────────────────────────────────────────────
+───��─────────────────────────────────────────────────────────
 Distance to Dump: ${estimate.distance} miles
 Walking Distance: ${estimate.walkingDistance} feet
 ${estimate.hasSteps ? `Steps Required: ${estimate.numberOfSteps} steps (${estimate.percentageRequiringSteps}% of items)` : 'No Steps Required'}
@@ -446,12 +446,12 @@ Additional Fees:                             $${estimate.additionalFees.toFixed(
                                            ─────────────
 Subtotal:                                    $${totals.subtotal.toFixed(2)}
 Profit Margin (${config.profitMargin}%):                       $${totals.profitAmount.toFixed(2)}
-                                           ═════════════
+                                           ═══���═════════
 TOTAL JOB PRICE:                             $${totals.total.toFixed(2)}
                                            ═════════════
 
 TERMS & CONDITIONS
-─────────────────────────────────────────────────────────────
+──────────────────��──────────────────────────────────────────
 • This estimate is valid for 30 days
 • Final price may vary based on actual site conditions
 • Payment due upon completion
@@ -585,7 +585,7 @@ Company Signature: _____________________  Date: ____________
                               id="length"
                               type="number"
                               step="0.1"
-                              value={truckConfig.length ?? ""}
+                              value={truckConfig.length ?? 0}
                               placeholder="0"
                               onChange={(e) => {
                                 const value = e.target.value;
@@ -609,7 +609,7 @@ Company Signature: _____________________  Date: ____________
                               id="width"
                               type="number"
                               step="0.1"
-                              value={truckConfig.width ?? ""}
+                              value={truckConfig.width ?? 0}
                               placeholder="0"
                               onChange={(e) => {
                                 const value = e.target.value;
@@ -633,7 +633,7 @@ Company Signature: _____________________  Date: ____________
                               id="height"
                               type="number"
                               step="0.1"
-                              value={truckConfig.height ?? ""}
+                              value={truckConfig.height ?? 0}
                               placeholder="0"
                               onChange={(e) => {
                                 const value = e.target.value;
