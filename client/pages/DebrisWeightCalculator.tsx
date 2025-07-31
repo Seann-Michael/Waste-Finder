@@ -302,6 +302,21 @@ export default function DebrisWeightCalculator() {
   const [selectedDebris, setSelectedDebris] = useState<DebrisType | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   // Sort items alphabetically for dropdown
   const sortedDebrisTypes = [...DEBRIS_TYPES].sort((a, b) =>
