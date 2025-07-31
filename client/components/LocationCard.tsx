@@ -19,6 +19,7 @@ import {
 interface LocationCardProps {
   location: Location;
   searchedDebrisTypes?: string[]; // Debris types that user searched/filtered for
+  showContactDetails?: boolean; // Whether to show phone and hours
 }
 
 const getLocationIcon = (type: Location["locationType"]) => {
