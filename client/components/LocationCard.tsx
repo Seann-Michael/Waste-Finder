@@ -232,8 +232,8 @@ export default function LocationCard({ location, searchedDebrisTypes = [] }: Loc
               </a>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Phone className="w-4 h-4 text-muted-foreground" />
+          <div className="flex items-start gap-2">
+            <Phone className="w-4 h-4 text-muted-foreground mt-0.5" />
             <a
               href={`tel:${location.phone}`}
               className="text-sm text-primary hover:underline"
@@ -243,34 +243,81 @@ export default function LocationCard({ location, searchedDebrisTypes = [] }: Loc
           </div>
           <div className="flex items-start gap-2">
             <Clock className="w-4 h-4 text-muted-foreground mt-0.5" />
-            <div className="text-sm text-muted-foreground">
+            <div className="text-sm text-muted-foreground leading-relaxed">
               {location.operatingHours.length > 0
                 ? (() => {
                     // Group consecutive days with same hours
                     const hourGroups: { [key: string]: number[] } = {};
+                    const closedDays: number[] = [];
 
                     location.operatingHours.forEach((h) => {
-                      if (h.isClosed) return;
+                      if (h.isClosed) {
+                        closedDays.push(h.dayOfWeek);
+                        return;
+                      }
                       const timeKey = `${formatTo12Hour(h.openTime)}-${formatTo12Hour(h.closeTime)}`;
                       if (!hourGroups[timeKey]) hourGroups[timeKey] = [];
                       hourGroups[timeKey].push(h.dayOfWeek);
                     });
 
                     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                    const results: string[] = [];
 
-                    return Object.entries(hourGroups).map(([timeRange, days]) => {
+                    // Process hour groups
+                    Object.entries(hourGroups).forEach(([timeRange, days]) => {
                       days.sort((a, b) => a - b);
-                      const dayLabels = days.map(d => dayNames[d]);
 
-                      // Condense consecutive days
-                      if (days.length >= 5 && days.includes(1) && days.includes(5)) {
-                        return `Mon-Fri: ${timeRange.replace(/\s?(AM|PM)/g, '$1')}`;
-                      } else if (days.length >= 2) {
-                        return `${dayLabels[0]}-${dayLabels[dayLabels.length-1]}: ${timeRange.replace(/\s?(AM|PM)/g, '$1')}`;
-                      } else {
-                        return `${dayLabels.join(',')}: ${timeRange.replace(/\s?(AM|PM)/g, '$1')}`;
+                      // Check for consecutive weekdays (Mon-Fri)
+                      if (days.length >= 5 && days.includes(1) && days.includes(2) && days.includes(3) && days.includes(4) && days.includes(5)) {
+                        results.push(`Mon-Fri: ${timeRange.replace(/\s?(AM|PM)/g, '$1')}`);
+                        // Remove weekdays from the days array for other processing
+                        days = days.filter(d => ![1,2,3,4,5].includes(d));
                       }
-                    }).join(' • ') || 'Hours vary';
+
+                      // Group remaining consecutive days
+                      let i = 0;
+                      while (i < days.length) {
+                        let endIndex = i;
+                        // Find consecutive days
+                        while (endIndex + 1 < days.length && days[endIndex + 1] === days[endIndex] + 1) {
+                          endIndex++;
+                        }
+
+                        if (i === endIndex) {
+                          // Single day
+                          results.push(`${dayNames[days[i]]}: ${timeRange.replace(/\s?(AM|PM)/g, '$1')}`);
+                        } else {
+                          // Range of days
+                          results.push(`${dayNames[days[i]]}-${dayNames[days[endIndex]]}: ${timeRange.replace(/\s?(AM|PM)/g, '$1')}`);
+                        }
+                        i = endIndex + 1;
+                      }
+                    });
+
+                    // Handle closed days if any
+                    if (closedDays.length > 0 && closedDays.length < 7) {
+                      const closedDayNames = closedDays.sort().map(d => dayNames[d]);
+                      if (closedDays.length === 1) {
+                        results.push(`${closedDayNames[0]}: Closed`);
+                      } else {
+                        results.push(`${closedDayNames.join(', ')}: Closed`);
+                      }
+                    }
+
+                    // If we have more than 2 different time groups, show condensed version
+                    if (results.length > 2) {
+                      const primaryHours = results[0]; // Usually Mon-Fri
+                      return (
+                        <div>
+                          <div>{primaryHours}</div>
+                          <div className="text-xs text-muted-foreground/70 mt-0.5">
+                            +{results.length - 1} more schedules
+                          </div>
+                        </div>
+                      );
+                    }
+
+                    return results.length > 0 ? results.join(' • ') : 'Hours vary';
                   })()
                 : "Call for hours"}
             </div>
