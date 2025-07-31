@@ -116,7 +116,7 @@ export default function ItemManagement() {
   const loadItems = async () => {
     try {
       setIsLoading(true);
-      
+
       // Try to load from API first, fallback to localStorage
       let savedItems = [];
       try {
@@ -137,41 +137,318 @@ export default function ItemManagement() {
         } else {
           // Initialize with sample data
           savedItems = [
+            // Hot Tubs & Spas
             {
-              id: "sample-1",
+              id: "hot_tub_small",
+              name: "Hot Tub (4-6 Person)",
+              category: "Hot Tubs",
+              weightPerItem: 1.0,
+              volumePerItem: 6.5,
+              loadingTimePerItem: 60,
+              iconEmoji: "🛁",
+              description: "Small to medium sized hot tubs",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+            {
+              id: "hot_tub_large",
+              name: "Hot Tub (7+ Person)",
+              category: "Hot Tubs",
+              weightPerItem: 1.6,
+              volumePerItem: 9.5,
+              loadingTimePerItem: 90,
+              iconEmoji: "🛁",
+              description: "Large hot tub or spa",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+
+            // Living Room Furniture
+            {
+              id: "sectional_couch",
+              name: "Sectional Couch",
+              category: "Furniture",
+              weightPerItem: 0.15,
+              volumePerItem: 7.0,
+              loadingTimePerItem: 25,
+              iconEmoji: "🛋️",
+              description: "Large sectional sofa",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+            {
+              id: "standard_couch",
+              name: "Standard Couch",
+              category: "Furniture",
+              weightPerItem: 0.08,
+              volumePerItem: 2.3,
+              loadingTimePerItem: 15,
+              iconEmoji: "🛋️",
+              description: "Regular 3-seater sofa",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+            {
+              id: "reclining_couch",
               name: "Reclining Couch",
               category: "Furniture",
               weightPerItem: 0.12,
               volumePerItem: 4.5,
               loadingTimePerItem: 22,
               iconEmoji: "🛋️",
-              description: "Large reclining sofa, heavy and bulky",
+              description: "Couch with reclining features",
               isActive: true,
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
             },
             {
-              id: "sample-2", 
-              name: "Refrigerator",
-              category: "Appliances",
-              weightPerItem: 0.18,
+              id: "recliner",
+              name: "Recliner Chair",
+              category: "Furniture",
+              weightPerItem: 0.06,
+              volumePerItem: 1.3,
+              loadingTimePerItem: 12,
+              iconEmoji: "💺",
+              description: "Individual reclining chair",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+
+            // Bedroom Furniture
+            {
+              id: "mattress_set_queen",
+              name: "Queen Mattress Set",
+              category: "Bedroom",
+              weightPerItem: 0.06,
+              volumePerItem: 2.6,
+              loadingTimePerItem: 18,
+              iconEmoji: "🛏️",
+              description: "Queen mattress and box spring",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+            {
+              id: "mattress_set_king",
+              name: "King Mattress Set",
+              category: "Bedroom",
+              weightPerItem: 0.08,
               volumePerItem: 3.2,
-              loadingTimePerItem: 35,
-              iconEmoji: "❄️",
-              description: "Standard size refrigerator, requires careful handling",
+              loadingTimePerItem: 22,
+              iconEmoji: "🛏️",
+              description: "King mattress and box spring",
               isActive: true,
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
             },
             {
-              id: "sample-3",
-              name: "Hot Tub (4-6 person)",
+              id: "dresser",
+              name: "Dresser",
+              category: "Bedroom",
+              weightPerItem: 0.08,
+              volumePerItem: 1.5,
+              loadingTimePerItem: 15,
+              iconEmoji: "🗄️",
+              description: "Bedroom dresser with drawers",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+
+            // Major Appliances
+            {
+              id: "refrigerator",
+              name: "Refrigerator (Standard)",
               category: "Appliances",
-              weightPerItem: 0.8,
-              volumePerItem: 6.5,
-              loadingTimePerItem: 120,
+              weightPerItem: 0.15,
+              volumePerItem: 1.4,
+              loadingTimePerItem: 25,
+              iconEmoji: "❄️",
+              description: "Standard size refrigerator",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+            {
+              id: "washer",
+              name: "Washing Machine",
+              category: "Appliances",
+              weightPerItem: 0.125,
+              volumePerItem: 0.7,
+              loadingTimePerItem: 20,
+              iconEmoji: "🌀",
+              description: "Top or front loading washer",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+            {
+              id: "dryer",
+              name: "Dryer",
+              category: "Appliances",
+              weightPerItem: 0.075,
+              volumePerItem: 0.7,
+              loadingTimePerItem: 18,
+              iconEmoji: "🌀",
+              description: "Electric or gas dryer",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+            {
+              id: "stove",
+              name: "Stove/Range",
+              category: "Appliances",
+              weightPerItem: 0.1,
+              volumePerItem: 0.8,
+              loadingTimePerItem: 20,
+              iconEmoji: "🔥",
+              description: "Electric or gas range",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+
+            // Electronics
+            {
+              id: "tv_large",
+              name: 'Large TV (55"+)',
+              category: "Electronics",
+              weightPerItem: 0.04,
+              volumePerItem: 0.3,
+              loadingTimePerItem: 10,
+              iconEmoji: "📺",
+              description: "Large flat screen TV",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+            {
+              id: "piano_upright",
+              name: "Upright Piano",
+              category: "Electronics",
+              weightPerItem: 0.35,
+              volumePerItem: 2.0,
+              loadingTimePerItem: 60,
+              iconEmoji: "🎹",
+              description: "Traditional upright piano",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+
+            // Bathroom Fixtures
+            {
+              id: "bathtub",
+              name: "Bathtub",
+              category: "Bathroom",
+              weightPerItem: 0.15,
+              volumePerItem: 1.8,
+              loadingTimePerItem: 35,
               iconEmoji: "🛁",
-              description: "Medium hot tub, requires special equipment",
+              description: "Standard bathtub",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+            {
+              id: "toilet",
+              name: "Toilet",
+              category: "Bathroom",
+              weightPerItem: 0.05,
+              volumePerItem: 0.3,
+              loadingTimePerItem: 10,
+              iconEmoji: "🚽",
+              description: "Complete toilet unit",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+
+            // Construction Materials
+            {
+              id: "drywall",
+              name: "Drywall (per sheet)",
+              category: "Construction",
+              weightPerItem: 0.025,
+              volumePerItem: 0.03,
+              loadingTimePerItem: 2,
+              iconEmoji: "⬜",
+              description: "4x8 drywall sheet",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+            {
+              id: "concrete_debris",
+              name: "Concrete Debris (cubic yard)",
+              category: "Construction",
+              weightPerItem: 2.0,
+              volumePerItem: 1.0,
+              loadingTimePerItem: 30,
+              iconEmoji: "🧱",
+              description: "Broken concrete per cubic yard",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+
+            // Outdoor Items
+            {
+              id: "patio_furniture_set",
+              name: "Patio Furniture Set",
+              category: "Outdoor",
+              weightPerItem: 0.1,
+              volumePerItem: 2.5,
+              loadingTimePerItem: 20,
+              iconEmoji: "🪑",
+              description: "Complete patio set",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+            {
+              id: "lawn_mower",
+              name: "Lawn Mower",
+              category: "Outdoor",
+              weightPerItem: 0.04,
+              volumePerItem: 0.3,
+              loadingTimePerItem: 10,
+              iconEmoji: "🚜",
+              description: "Push or riding lawn mower",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+
+            // Miscellaneous
+            {
+              id: "mixed_debris",
+              name: "Mixed Debris (cubic yard)",
+              category: "Miscellaneous",
+              weightPerItem: 0.4,
+              volumePerItem: 1.0,
+              loadingTimePerItem: 12,
+              iconEmoji: "🗑️",
+              description: "General mixed debris",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+            {
+              id: "yard_waste",
+              name: "Yard Waste (cubic yard)",
+              category: "Outdoor",
+              weightPerItem: 0.2,
+              volumePerItem: 1.0,
+              loadingTimePerItem: 10,
+              iconEmoji: "🍃",
+              description: "Grass, leaves, branches",
               isActive: true,
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
@@ -197,7 +474,7 @@ export default function ItemManagement() {
     try {
       // Save to localStorage immediately
       localStorage.setItem('admin-debris-items', JSON.stringify(updatedItems));
-      
+
       // Try to save to API
       try {
         await fetch('/api/admin/debris-items', {
@@ -208,7 +485,7 @@ export default function ItemManagement() {
       } catch (error) {
         console.log('API save failed, using localStorage only');
       }
-      
+
       setItems(updatedItems);
     } catch (error) {
       console.error('Error saving items:', error);
@@ -228,7 +505,7 @@ export default function ItemManagement() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       const itemData: DebrisItem = {
         id: editingItem?.id || `item-${Date.now()}`,
@@ -303,7 +580,7 @@ export default function ItemManagement() {
 
   const toggleItemStatus = async (itemId: string, isActive: boolean) => {
     try {
-      const updatedItems = items.map(item => 
+      const updatedItems = items.map(item =>
         item.id === itemId ? { ...item, isActive, updatedAt: new Date().toISOString() } : item
       );
       await saveItems(updatedItems);
@@ -507,7 +784,7 @@ export default function ItemManagement() {
                             <Edit className="w-3 h-3 mr-2" />
                             Edit Item
                           </DropdownMenuItem>
-                          <DropdownMenuItem 
+                          <DropdownMenuItem
                             onClick={() => toggleItemStatus(item.id, !item.isActive)}
                           >
                             {item.isActive ? "Disable" : "Enable"}
@@ -550,7 +827,7 @@ export default function ItemManagement() {
               {editingItem ? "Edit Item" : "Add New Item"}
             </DialogTitle>
             <DialogDescription>
-              {editingItem 
+              {editingItem
                 ? "Update the debris item details below."
                 : "Add a new debris item for the pricing calculator."
               }
@@ -572,8 +849,8 @@ export default function ItemManagement() {
 
               <div>
                 <Label htmlFor="category">Category *</Label>
-                <Select 
-                  value={formData.category} 
+                <Select
+                  value={formData.category}
                   onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}
                 >
                   <SelectTrigger>
