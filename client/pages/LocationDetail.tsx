@@ -159,8 +159,8 @@ export default function LocationDetail() {
 
           console.log('Parsed location info:', locationInfo);
 
-          // Search for location by city, state, and name
-          const searchUrl = `/api/locations/search?city=${encodeURIComponent(locationInfo.city)}&state=${encodeURIComponent(locationInfo.state)}&name=${encodeURIComponent(locationInfo.name)}`;
+          // Search for location using the existing all locations endpoint
+          const searchUrl = `/api/locations/all?search=${encodeURIComponent(locationInfo.name)}`;
           console.log('Searching with URL:', searchUrl);
 
           const searchResponse = await fetch(searchUrl);
@@ -173,11 +173,22 @@ export default function LocationDetail() {
           const searchResult = await searchResponse.json();
           console.log('Search result:', searchResult);
 
-          if (!searchResult.locations || searchResult.locations.length === 0) {
+          if (!searchResult.data || searchResult.data.length === 0) {
             throw new Error('Location not found in search results');
           }
 
-          fetchedLocation = searchResult.locations[0];
+          // Find the best match by city and state
+          const matches = searchResult.data.filter((loc: any) =>
+            loc.city.toLowerCase() === locationInfo.city.toLowerCase() &&
+            loc.state.toLowerCase() === locationInfo.state.toLowerCase()
+          );
+
+          if (matches.length === 0) {
+            // Fallback to first result if no exact city/state match
+            fetchedLocation = searchResult.data[0];
+          } else {
+            fetchedLocation = matches[0];
+          }
         } catch (seoError) {
           console.error('SEO URL processing failed:', seoError);
           // Fallback: try to find location using original parameters as ID
