@@ -48,7 +48,7 @@ const getLocationLabel = (type: Location["locationType"]) => {
   }
 };
 
-export default function LocationCard({ location, searchedDebrisTypes = [] }: LocationCardProps) {
+export default function LocationCard({ location, searchedDebrisTypes = [], showContactDetails = false }: LocationCardProps) {
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
