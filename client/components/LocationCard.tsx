@@ -160,16 +160,19 @@ export default function LocationCard({ location }: LocationCardProps) {
 
         {/* Middle Column - Contact & Hours */}
         <div className="lg:col-span-4 space-y-2">
-          <div className="flex items-center gap-2">
-            <MapPin className="w-4 h-4 text-muted-foreground" />
-            <a
-              href={getDirectionsUrl()}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-primary hover:underline"
-            >
-              {location.address}, {location.city}, {location.state}
-            </a>
+          <div className="flex items-start gap-2">
+            <MapPin className="w-4 h-4 text-muted-foreground mt-0.5" />
+            <div className="flex-1">
+              <a
+                href={getDirectionsUrl()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-primary hover:underline leading-relaxed"
+              >
+                <div>{location.address}</div>
+                <div>{location.city}, {location.state} {location.zipCode}</div>
+              </a>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <Phone className="w-4 h-4 text-muted-foreground" />
@@ -180,27 +183,39 @@ export default function LocationCard({ location }: LocationCardProps) {
               {formatPhoneNumber(location.phone)}
             </a>
           </div>
-          <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground">
+          <div className="flex items-start gap-2">
+            <Clock className="w-4 h-4 text-muted-foreground mt-0.5" />
+            <div className="text-sm text-muted-foreground">
               {location.operatingHours.length > 0
                 ? (() => {
-                    const today = new Date().getDay();
-                    const todayHours = location.operatingHours.find(
-                      (h) => h.dayOfWeek === today,
-                    );
-                    if (todayHours) {
-                      if (todayHours.isClosed) {
-                        return "Closed today";
+                    // Group consecutive days with same hours
+                    const hourGroups: { [key: string]: number[] } = {};
+
+                    location.operatingHours.forEach((h) => {
+                      if (h.isClosed) return;
+                      const timeKey = `${formatTo12Hour(h.openTime)}-${formatTo12Hour(h.closeTime)}`;
+                      if (!hourGroups[timeKey]) hourGroups[timeKey] = [];
+                      hourGroups[timeKey].push(h.dayOfWeek);
+                    });
+
+                    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+                    return Object.entries(hourGroups).map(([timeRange, days]) => {
+                      days.sort((a, b) => a - b);
+                      const dayLabels = days.map(d => dayNames[d]);
+
+                      // Condense consecutive days
+                      if (days.length >= 5 && days.includes(1) && days.includes(5)) {
+                        return `Mon-Fri: ${timeRange.replace(/\s?(AM|PM)/g, '$1')}`;
+                      } else if (days.length >= 2) {
+                        return `${dayLabels[0]}-${dayLabels[dayLabels.length-1]}: ${timeRange.replace(/\s?(AM|PM)/g, '$1')}`;
+                      } else {
+                        return `${dayLabels.join(',')}: ${timeRange.replace(/\s?(AM|PM)/g, '$1')}`;
                       }
-                      const openTime = formatTo12Hour(todayHours.openTime);
-                      const closeTime = formatTo12Hour(todayHours.closeTime);
-                      return `${openTime} - ${closeTime}`;
-                    }
-                    return "Hours vary";
+                    }).join(' • ') || 'Hours vary';
                   })()
                 : "Call for hours"}
-            </span>
+            </div>
           </div>
         </div>
 
@@ -226,28 +241,56 @@ export default function LocationCard({ location }: LocationCardProps) {
           {/* Pricing Information */}
           <div className="mb-3">
             {location.debrisTypes.some((debris) => debris.price) ? (
-              <div className="space-y-1">
-                <span className="text-sm font-medium text-gray-700">
+              <div className="space-y-2">
+                <span className="text-sm font-semibold text-gray-800">
                   Pricing:
                 </span>
-                {location.debrisTypes
-                  .filter((debris) => debris.price)
-                  .slice(0, 2)
-                  .map((debris) => (
-                    <div key={debris.id} className="text-sm text-gray-600">
-                      {debris.name}: ${debris.price}
-                      {debris.priceDetails ? ` ${debris.priceDetails}` : ""}
-                    </div>
-                  ))}
-                {location.debrisTypes.filter((debris) => debris.price).length >
-                  2 && (
-                  <div className="text-sm text-gray-500">
-                    +
-                    {location.debrisTypes.filter((debris) => debris.price)
-                      .length - 2}{" "}
-                    more
-                  </div>
-                )}
+                {(() => {
+                  // Priority order for pricing display
+                  const priorityOrder = ['Municipal Waste', 'General Waste', 'Household Waste', 'Construction Debris', 'Construction Waste', 'C&D Debris', 'Yard Waste', 'Green Waste', 'Organic Waste'];
+
+                  const pricedDebris = location.debrisTypes.filter((debris) => debris.price);
+                  const prioritized: typeof pricedDebris = [];
+                  const remaining: typeof pricedDebris = [];
+
+                  // Sort by priority
+                  priorityOrder.forEach(priority => {
+                    const found = pricedDebris.find(debris =>
+                      debris.name.toLowerCase().includes(priority.toLowerCase()) ||
+                      priority.toLowerCase().includes(debris.name.toLowerCase())
+                    );
+                    if (found && !prioritized.includes(found)) {
+                      prioritized.push(found);
+                    }
+                  });
+
+                  // Add remaining items
+                  pricedDebris.forEach(debris => {
+                    if (!prioritized.includes(debris)) {
+                      remaining.push(debris);
+                    }
+                  });
+
+                  const sortedDebris = [...prioritized, ...remaining];
+
+                  return (
+                    <>
+                      {sortedDebris.slice(0, 3).map((debris) => (
+                        <div key={debris.id} className="flex justify-between items-center">
+                          <span className="text-sm text-gray-700">{debris.name}:</span>
+                          <span className="text-sm font-bold text-green-700 bg-green-50 px-2 py-1 rounded">
+                            ${debris.price}{debris.priceDetails ? `/${debris.priceDetails}` : '/ton'}
+                          </span>
+                        </div>
+                      ))}
+                      {sortedDebris.length > 3 && (
+                        <div className="text-sm text-primary font-medium cursor-pointer hover:underline">
+                          See {sortedDebris.length - 3} more pricing options →
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
               </div>
             ) : (
               <div className="text-sm text-gray-500">Call for pricing</div>
