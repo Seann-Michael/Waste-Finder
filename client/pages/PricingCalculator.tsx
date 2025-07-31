@@ -594,8 +594,61 @@ export default function PricingCalculator() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [searchTerm, setSearchTerm] = useState<string>("");
 
+  // Load debris items from admin storage
+  useEffect(() => {
+    const loadDebrisItems = async () => {
+      try {
+        setIsLoadingItems(true);
+
+        // Try to load from API first, fallback to localStorage
+        let items = [];
+        try {
+          const response = await fetch('/api/admin/debris-items');
+          if (response.ok) {
+            const data = await response.json();
+            items = data.items || [];
+          }
+        } catch (error) {
+          console.log('API not available, using localStorage');
+        }
+
+        // Fallback to localStorage
+        if (items.length === 0) {
+          const localItems = localStorage.getItem('admin-debris-items');
+          if (localItems) {
+            items = JSON.parse(localItems);
+          } else {
+            // Use fallback DEBRIS_ITEMS if no admin data exists
+            items = DEBRIS_ITEMS;
+          }
+        }
+
+        // Convert admin items to calculator format if needed
+        const formattedItems = items.map((item: any) => ({
+          id: item.id,
+          name: item.name,
+          category: item.category,
+          weightPerItem: item.weightPerItem,
+          volumePerItem: item.volumePerItem,
+          loadingTimePerItem: item.loadingTimePerItem,
+          icon: item.iconEmoji || "📦",
+        })).filter((item: any) => item.isActive !== false);
+
+        setDebrisItems(formattedItems);
+      } catch (error) {
+        console.error('Error loading debris items:', error);
+        // Fallback to hardcoded items
+        setDebrisItems(DEBRIS_ITEMS);
+      } finally {
+        setIsLoadingItems(false);
+      }
+    };
+
+    loadDebrisItems();
+  }, []);
+
   // Sort items alphabetically
-  const sortedItems = [...DEBRIS_ITEMS].sort((a, b) =>
+  const sortedItems = [...debrisItems].sort((a, b) =>
     a.name.localeCompare(b.name),
   );
 
