@@ -70,6 +70,11 @@ export default function Header() {
       href: "/suggest-location",
       active: location.pathname === "/suggest-location",
     },
+    {
+      name: "Contact",
+      href: "/contact",
+      active: location.pathname === "/contact",
+    },
   ];
 
   return (
