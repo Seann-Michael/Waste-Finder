@@ -1,11 +1,12 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Mobile-responsive utility classes */
+/* Import custom styles first */
 @import "./styles/mobile-responsive.css";
 @import "./styles/mobile-enhancements.css";
 @import "./styles/article.css";
+
+/* Then Tailwind directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Base mobile-first responsive styles */
 @layer base {
