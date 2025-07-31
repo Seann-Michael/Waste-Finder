@@ -365,7 +365,10 @@ export default function AllLocations() {
                             key={location.id}
                             location={location}
                             onClick={() => handleLocationClick(location)}
-                            searchedDebrisTypes={filters.debrisTypes || []}
+                            searchedDebrisTypes={(() => {
+                              const debrisFromParams = searchParams.get('debrisTypes');
+                              return debrisFromParams ? debrisFromParams.split(',') : [];
+                            })()}
                           />
                         ))}
                       </div>
