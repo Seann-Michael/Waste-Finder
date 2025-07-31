@@ -219,16 +219,7 @@ const AppRoutes = () => (
       }
     />
 
-    <Route
-      path="/admin/pages"
-      element={
-        <Suspense fallback={<PageLoading message="Loading page management..." />}>
-          <AdminRoute>
-            <PageManagement />
-          </AdminRoute>
-        </Suspense>
-      }
-    />
+
 
     <Route
       path="/admin/items"
