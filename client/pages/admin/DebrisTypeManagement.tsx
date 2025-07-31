@@ -122,7 +122,7 @@ export default function DebrisTypeManagement() {
   const loadDebrisTypes = async () => {
     try {
       setIsLoading(true);
-      
+
       // Try to load from API first, fallback to localStorage
       let savedTypes = [];
       try {
@@ -141,8 +141,9 @@ export default function DebrisTypeManagement() {
         if (localTypes) {
           savedTypes = JSON.parse(localTypes);
         } else {
-          // Initialize with sample data
+          // Initialize with complete sample data
           savedTypes = [
+            // Construction Materials
             {
               id: "concrete",
               name: "Concrete",
@@ -157,6 +158,86 @@ export default function DebrisTypeManagement() {
               updatedAt: new Date().toISOString(),
             },
             {
+              id: "asphalt",
+              name: "Asphalt",
+              category: "Construction",
+              weightPerUnit: 3000,
+              volumePerUnit: 1.0,
+              unit: "cubic yard",
+              description: "Asphalt pavement, shingles",
+              iconEmoji: "🛣️",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+            {
+              id: "brick",
+              name: "Brick",
+              category: "Construction",
+              weightPerUnit: 3500,
+              volumePerUnit: 1.0,
+              unit: "cubic yard",
+              description: "Clay bricks, masonry",
+              iconEmoji: "🧱",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+            {
+              id: "drywall",
+              name: "Drywall",
+              category: "Construction",
+              weightPerUnit: 50,
+              volumePerUnit: 0.03,
+              unit: "sheet (4x8)",
+              description: "Gypsum wallboard sheets",
+              iconEmoji: "⬜",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+            {
+              id: "lumber",
+              name: "Lumber",
+              category: "Construction",
+              weightPerUnit: 2000,
+              volumePerUnit: 1.0,
+              unit: "cubic yard",
+              description: "Wood boards, framing",
+              iconEmoji: "🪵",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+            {
+              id: "roofing",
+              name: "Roofing Shingles",
+              category: "Construction",
+              weightPerUnit: 80,
+              volumePerUnit: 0.05,
+              unit: "bundle",
+              description: "Asphalt roof shingles",
+              iconEmoji: "🏠",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+            {
+              id: "siding",
+              name: "Siding",
+              category: "Construction",
+              weightPerUnit: 1500,
+              volumePerUnit: 1.0,
+              unit: "cubic yard",
+              description: "Vinyl, wood, or fiber cement",
+              iconEmoji: "🏠",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+
+            // Metals
+            {
               id: "steel",
               name: "Steel",
               category: "Metal",
@@ -169,6 +250,34 @@ export default function DebrisTypeManagement() {
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
             },
+            {
+              id: "aluminum",
+              name: "Aluminum",
+              category: "Metal",
+              weightPerUnit: 1400,
+              volumePerUnit: 1.0,
+              unit: "cubic yard",
+              description: "Aluminum siding, cans, gutters",
+              iconEmoji: "📦",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+            {
+              id: "copper",
+              name: "Copper",
+              category: "Metal",
+              weightPerUnit: 18000,
+              volumePerUnit: 1.0,
+              unit: "cubic yard",
+              description: "Copper pipes, wiring",
+              iconEmoji: "🔶",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+
+            // Green Waste
             {
               id: "yard_waste",
               name: "Yard Waste",
@@ -183,6 +292,34 @@ export default function DebrisTypeManagement() {
               updatedAt: new Date().toISOString(),
             },
             {
+              id: "tree_logs",
+              name: "Tree Logs",
+              category: "Organic",
+              weightPerUnit: 2000,
+              volumePerUnit: 1.0,
+              unit: "cubic yard",
+              description: "Cut tree trunks and large logs",
+              iconEmoji: "🪵",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+            {
+              id: "stumps",
+              name: "Tree Stumps",
+              category: "Organic",
+              weightPerUnit: 2500,
+              volumePerUnit: 1.0,
+              unit: "cubic yard",
+              description: "Root balls and stumps",
+              iconEmoji: "🌳",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+
+            // Dirt & Stone
+            {
               id: "topsoil",
               name: "Topsoil",
               category: "Earth",
@@ -191,6 +328,153 @@ export default function DebrisTypeManagement() {
               unit: "cubic yard",
               description: "Regular dirt and topsoil",
               iconEmoji: "🟫",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+            {
+              id: "clay",
+              name: "Clay",
+              category: "Earth",
+              weightPerUnit: 2800,
+              volumePerUnit: 1.0,
+              unit: "cubic yard",
+              description: "Heavy clay soil",
+              iconEmoji: "🟤",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+            {
+              id: "sand",
+              name: "Sand",
+              category: "Earth",
+              weightPerUnit: 2700,
+              volumePerUnit: 1.0,
+              unit: "cubic yard",
+              description: "Construction sand",
+              iconEmoji: "🏖️",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+            {
+              id: "gravel",
+              name: "Gravel",
+              category: "Earth",
+              weightPerUnit: 3000,
+              volumePerUnit: 1.0,
+              unit: "cubic yard",
+              description: "Crushed stone, gravel",
+              iconEmoji: "🪨",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+            {
+              id: "rock",
+              name: "Rock/Stone",
+              category: "Earth",
+              weightPerUnit: 4500,
+              volumePerUnit: 1.0,
+              unit: "cubic yard",
+              description: "Natural stone, boulders",
+              iconEmoji: "🪨",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+
+            // Mixed Materials
+            {
+              id: "mixed_debris",
+              name: "Mixed C&D Debris",
+              category: "Mixed",
+              weightPerUnit: 800,
+              volumePerUnit: 1.0,
+              unit: "cubic yard",
+              description: "Construction & demolition mix",
+              iconEmoji: "🗑️",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+            {
+              id: "household",
+              name: "Household Items",
+              category: "Mixed",
+              weightPerUnit: 300,
+              volumePerUnit: 1.0,
+              unit: "cubic yard",
+              description: "General household debris",
+              iconEmoji: "🏠",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+            {
+              id: "furniture",
+              name: "Furniture",
+              category: "Mixed",
+              weightPerUnit: 400,
+              volumePerUnit: 1.0,
+              unit: "cubic yard",
+              description: "Mixed furniture pieces",
+              iconEmoji: "🛋️",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+
+            // Specialty Items
+            {
+              id: "appliances",
+              name: "Appliances",
+              category: "Appliances",
+              weightPerUnit: 200,
+              volumePerUnit: 0.4,
+              unit: "each",
+              description: "Washers, dryers, fridges",
+              iconEmoji: "🔌",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+            {
+              id: "mattresses",
+              name: "Mattresses",
+              category: "Furniture",
+              weightPerUnit: 60,
+              volumePerUnit: 0.6,
+              unit: "each",
+              description: "Mattress and box spring",
+              iconEmoji: "🛏️",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+            {
+              id: "tires",
+              name: "Tires",
+              category: "Auto",
+              weightPerUnit: 25,
+              volumePerUnit: 0.1,
+              unit: "each",
+              description: "Car and truck tires",
+              iconEmoji: "🛞",
+              isActive: true,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+            {
+              id: "electronics",
+              name: "Electronics",
+              category: "Electronics",
+              weightPerUnit: 500,
+              volumePerUnit: 1.0,
+              unit: "cubic yard",
+              description: "TVs, computers, e-waste",
+              iconEmoji: "📺",
               isActive: true,
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
@@ -216,7 +500,7 @@ export default function DebrisTypeManagement() {
     try {
       // Save to localStorage immediately
       localStorage.setItem('admin-debris-types', JSON.stringify(updatedTypes));
-      
+
       // Try to save to API
       try {
         await fetch('/api/admin/debris-types', {
@@ -227,7 +511,7 @@ export default function DebrisTypeManagement() {
       } catch (error) {
         console.log('API save failed, using localStorage only');
       }
-      
+
       setDebrisTypes(updatedTypes);
     } catch (error) {
       console.error('Error saving debris types:', error);
@@ -247,7 +531,7 @@ export default function DebrisTypeManagement() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       const typeData: DebrisType = {
         id: editingType?.id || `type-${Date.now()}`,
@@ -322,7 +606,7 @@ export default function DebrisTypeManagement() {
 
   const toggleTypeStatus = async (typeId: string, isActive: boolean) => {
     try {
-      const updatedTypes = debrisTypes.map(type => 
+      const updatedTypes = debrisTypes.map(type =>
         type.id === typeId ? { ...type, isActive, updatedAt: new Date().toISOString() } : type
       );
       await saveDebrisTypes(updatedTypes);
@@ -526,7 +810,7 @@ export default function DebrisTypeManagement() {
                             <Edit className="w-3 h-3 mr-2" />
                             Edit Type
                           </DropdownMenuItem>
-                          <DropdownMenuItem 
+                          <DropdownMenuItem
                             onClick={() => toggleTypeStatus(type.id, !type.isActive)}
                           >
                             {type.isActive ? "Disable" : "Enable"}
@@ -569,7 +853,7 @@ export default function DebrisTypeManagement() {
               {editingType ? "Edit Debris Type" : "Add New Debris Type"}
             </DialogTitle>
             <DialogDescription>
-              {editingType 
+              {editingType
                 ? "Update the debris type details below."
                 : "Add a new debris type for the weight calculator."
               }
@@ -591,8 +875,8 @@ export default function DebrisTypeManagement() {
 
               <div>
                 <Label htmlFor="category">Category *</Label>
-                <Select 
-                  value={formData.category} 
+                <Select
+                  value={formData.category}
                   onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}
                 >
                   <SelectTrigger>
@@ -637,8 +921,8 @@ export default function DebrisTypeManagement() {
 
               <div>
                 <Label htmlFor="unit">Unit *</Label>
-                <Select 
-                  value={formData.unit} 
+                <Select
+                  value={formData.unit}
                   onValueChange={(value) => setFormData(prev => ({ ...prev, unit: value }))}
                 >
                   <SelectTrigger>
