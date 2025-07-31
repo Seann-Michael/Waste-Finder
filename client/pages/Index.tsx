@@ -173,12 +173,12 @@ export default function Index() {
       <Header />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary/10 via-background to-accent/5 py-16 px-4">
+      <section className="bg-gradient-to-br from-primary/10 via-background to-accent/5 py-10 px-4">
         <div className="max-w-7xl mx-auto text-center">
           <div className="max-w-3xl mx-auto">
             <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
-              Find Waste Disposal Locations
-              <span className="text-primary block">Near You</span>
+              Find Waste Disposal
+              <span className="text-primary block">Locations Near You</span>
             </h1>
             <p className="text-xl text-muted-foreground mb-8">
               Search our comprehensive database of landfills, transfer stations,
