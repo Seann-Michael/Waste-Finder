@@ -231,6 +231,28 @@ const AppRoutes = () => (
       }
     />
 
+    <Route
+      path="/admin/items"
+      element={
+        <Suspense fallback={<PageLoading message="Loading item management..." />}>
+          <AdminRoute>
+            <ItemManagement />
+          </AdminRoute>
+        </Suspense>
+      }
+    />
+
+    <Route
+      path="/admin/debris-types"
+      element={
+        <Suspense fallback={<PageLoading message="Loading debris type management..." />}>
+          <AdminRoute>
+            <DebrisTypeManagement />
+          </AdminRoute>
+        </Suspense>
+      }
+    />
+
     {/* Catch-all route */}
     <Route path="*" element={<NotFound />} />
   </Routes>
