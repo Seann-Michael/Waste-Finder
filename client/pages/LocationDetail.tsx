@@ -147,41 +147,71 @@ export default function LocationDetail() {
       // Check if this is a SEO URL (state/city/locationName) or legacy ID URL
       if (state && city && locationName) {
         // SEO URL format: /location/state/city/location-name
-        const locationInfo = parseLocationFromUrl({ state, city, locationName });
-        if (!locationInfo) {
-          throw new Error('Invalid URL format');
+        console.log('Loading location with SEO URL:', { state, city, locationName });
+
+        try {
+          const locationInfo = parseLocationFromUrl({ state, city, locationName });
+          if (!locationInfo) {
+            throw new Error('Invalid URL format');
+          }
+
+          console.log('Parsed location info:', locationInfo);
+
+          // Search for location by city, state, and name
+          const searchUrl = `/api/locations/search?city=${encodeURIComponent(locationInfo.city)}&state=${encodeURIComponent(locationInfo.state)}&name=${encodeURIComponent(locationInfo.name)}`;
+          console.log('Searching with URL:', searchUrl);
+
+          const searchResponse = await fetch(searchUrl);
+
+          if (!searchResponse.ok) {
+            console.log('Search response not ok:', searchResponse.status, searchResponse.statusText);
+            throw new Error(`Location search failed: ${searchResponse.status}`);
+          }
+
+          const searchResult = await searchResponse.json();
+          console.log('Search result:', searchResult);
+
+          if (!searchResult.locations || searchResult.locations.length === 0) {
+            throw new Error('Location not found in search results');
+          }
+
+          fetchedLocation = searchResult.locations[0];
+        } catch (seoError) {
+          console.error('SEO URL processing failed:', seoError);
+          // Fallback: try to find location using original parameters as ID
+          if (locationName) {
+            console.log('Attempting fallback with locationName as ID:', locationName);
+            const response = await fetch(`/api/locations/${locationName}`);
+            if (response.ok) {
+              const data = await response.json();
+              fetchedLocation = data.data || data;
+            }
+          }
+          if (!fetchedLocation) {
+            throw seoError;
+          }
         }
-
-        // Search for location by city, state, and name
-        const searchResponse = await fetch(`/api/locations/search?city=${encodeURIComponent(locationInfo.city)}&state=${encodeURIComponent(locationInfo.state)}&name=${encodeURIComponent(locationInfo.name)}`);
-
-        if (!searchResponse.ok) {
-          throw new Error('Location not found');
-        }
-
-        const searchResult = await searchResponse.json();
-        if (!searchResult.locations || searchResult.locations.length === 0) {
-          throw new Error('Location not found');
-        }
-
-        fetchedLocation = searchResult.locations[0];
       } else if (id) {
         // Legacy ID-based URL format: /location/:id
+        console.log('Loading location with ID:', id);
         const response = await fetch(`/api/locations/${id}`);
 
         if (!response.ok) {
-          throw new Error("Failed to fetch location data");
+          console.log('ID response not ok:', response.status, response.statusText);
+          throw new Error(`Failed to fetch location data: ${response.status}`);
         }
 
         const data = await response.json();
-        fetchedLocation = data.data;
+        fetchedLocation = data.data || data;
       } else {
-        throw new Error('Invalid URL parameters');
+        throw new Error('No valid URL parameters provided');
       }
 
       if (!fetchedLocation) {
-        throw new Error("Location not found");
+        throw new Error("Location data is empty");
       }
+
+      console.log('Successfully loaded location:', fetchedLocation);
 
       // Mock reviews data (this would typically come from a separate API endpoint)
       const mockReviews: Review[] = [
