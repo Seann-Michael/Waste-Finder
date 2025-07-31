@@ -555,6 +555,26 @@ export default function LocationDetail() {
     );
   }
 
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col">
+        <Header />
+        <main className="flex-1">
+          <div className="max-w-7xl mx-auto px-4 py-8">
+            <div className="text-center space-y-4">
+              <h1 className="text-2xl font-bold text-destructive">Location Not Found</h1>
+              <p className="text-muted-foreground">{error}</p>
+              <Button asChild variant="outline">
+                <Link to="/locations">Back to Locations</Link>
+              </Button>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   if (!location) {
     return (
       <div className="min-h-screen bg-background flex flex-col">
