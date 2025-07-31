@@ -191,23 +191,6 @@ export default function SearchForm({
               </p>
             )}
           </div>
-              type="submit"
-              className="px-8 h-11 bg-primary hover:bg-primary/90 text-white font-semibold"
-              disabled={isLoading || zipCode.length !== 5}
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Searching...
-                </>
-              ) : (
-                <>
-                  <Search className="w-4 h-4 mr-2" />
-                  Find Locations
-                </>
-              )}
-            </Button>
-          </div>
 
           {/* Advanced Options Toggle */}
           {showAdvanced && (
