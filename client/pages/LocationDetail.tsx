@@ -66,6 +66,7 @@ export default function LocationDetail() {
   const [location, setLocation] = useState<Location | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [showSuggestionForm, setShowSuggestionForm] = useState(false);
   const [pageViews, setPageViews] = useState(0);
