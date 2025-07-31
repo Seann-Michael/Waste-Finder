@@ -205,26 +205,12 @@ export default function Index() {
           </div>
 
           {/* Search Form */}
-          <div className="max-w-2xl mx-auto mb-12">
+          <div className="max-w-2xl mx-auto">
             <SearchForm
               onSearch={handleSearch}
               isLoading={isSearching}
               showAdvanced={false}
             />
-          </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-primary">
-                {locationCounts.total.toLocaleString()}
-              </div>
-              <div className="text-muted-foreground">Verified Locations</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-primary">50</div>
-              <div className="text-muted-foreground">States Covered</div>
-            </div>
           </div>
         </div>
       </section>
