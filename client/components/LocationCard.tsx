@@ -324,8 +324,9 @@ export default function LocationCard({ location, searchedDebrisTypes = [], showC
                     return results.length > 0 ? results.join(' • ') : 'Hours vary';
                   })()
                 : "Call for hours"}
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Right Column - Services & Actions */}
