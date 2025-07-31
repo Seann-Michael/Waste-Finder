@@ -1,6 +1,6 @@
 /**
  * News Carousel Component - Homepage Featured Articles
- * 
+ *
  * PURPOSE: Display rotating featured news articles on the homepage
  */
 
@@ -9,12 +9,12 @@ import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-  ChevronLeft, 
-  ChevronRight, 
-  ExternalLink, 
-  Calendar, 
-  Clock, 
+import {
+  ChevronLeft,
+  ChevronRight,
+  ExternalLink,
+  Calendar,
+  Clock,
   TrendingUp,
   Newspaper
 } from 'lucide-react';
@@ -76,7 +76,7 @@ export default function NewsCarousel() {
     const date = new Date(dateString);
     const now = new Date();
     const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
-    
+
     if (diffInHours < 24) {
       return `${diffInHours}h ago`;
     } else {
@@ -207,9 +207,9 @@ export default function NewsCarousel() {
                       </Link>
                     </Button>
                     <Button asChild variant="outline" size="sm">
-                      <a 
-                        href={currentArticle.url} 
-                        target="_blank" 
+                      <a
+                        href={currentArticle.url}
+                        target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-1"
                       >
@@ -260,8 +260,8 @@ export default function NewsCarousel() {
                 key={index}
                 onClick={() => goToSlide(index)}
                 className={`w-3 h-3 rounded-full transition-colors ${
-                  index === currentIndex 
-                    ? 'bg-primary' 
+                  index === currentIndex
+                    ? 'bg-primary'
                     : 'bg-muted-foreground/30 hover:bg-muted-foreground/50'
                 }`}
               />
