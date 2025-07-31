@@ -365,6 +365,7 @@ export default function AllLocations() {
                             key={location.id}
                             location={location}
                             onClick={() => handleLocationClick(location)}
+                            searchedDebrisTypes={filters.debrisTypes || []}
                           />
                         ))}
                       </div>
