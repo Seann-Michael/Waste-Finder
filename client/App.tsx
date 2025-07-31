@@ -12,6 +12,7 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { PageLoading } from "@/components/LoadingStates";
 import { initSentry } from "@/lib/monitoring";
 import { initSessionRecording } from "@/lib/sessionRecording";
+import { initializeSampleArticles } from "@/lib/sampleArticles";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import {
@@ -64,6 +65,9 @@ const queryClient = new QueryClient();
 // Monitoring services disabled to prevent router conflicts
 // initSentry();
 // initSessionRecording();
+
+// Initialize sample articles for demonstration
+initializeSampleArticles();
 
 // Monitoring provider component - disabled to prevent conflicts
 const MonitoringProvider = ({ children }: { children: React.ReactNode }) => {
