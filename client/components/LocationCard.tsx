@@ -241,7 +241,7 @@ export default function LocationCard({ location, searchedDebrisTypes = [] }: Loc
               {formatPhoneNumber(location.phone)}
             </a>
           </div>
-          <div className="flex items-start gap-2 mt-1">
+          <div className="flex items-start gap-2">
             <Clock className="w-4 h-4 text-muted-foreground mt-0.5" />
             <div className="text-sm text-muted-foreground leading-relaxed">
               {location.operatingHours.length > 0
