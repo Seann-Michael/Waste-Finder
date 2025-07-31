@@ -148,7 +148,7 @@ export default function SearchForm({
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* ZIP Code Input - Centered */}
-          <div className="flex flex-col items-center gap-4">
+          <div className="flex flex-col items-center gap-3">
             <label
               htmlFor="zipCode"
               className="text-sm font-medium text-gray-700 block text-center"
@@ -168,6 +168,29 @@ export default function SearchForm({
                 className="w-24 text-center text-lg font-mono border-2 focus:border-primary"
               />
               <Button
+                type="submit"
+                className="px-8 h-11 bg-primary hover:bg-primary/90 text-white font-semibold"
+                disabled={isLoading || zipCode.length !== 5}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Searching...
+                  </>
+                ) : (
+                  <>
+                    <Search className="w-4 h-4 mr-2" />
+                    Generate
+                  </>
+                )}
+              </Button>
+            </div>
+            {zipCode.length > 0 && zipCode.length < 5 && (
+              <p className="text-xs text-gray-500 text-center">
+                Please enter a complete 5-digit ZIP code
+              </p>
+            )}
+          </div>
               type="submit"
               className="px-8 h-11 bg-primary hover:bg-primary/90 text-white font-semibold"
               disabled={isLoading || zipCode.length !== 5}
