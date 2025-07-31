@@ -149,13 +149,13 @@ export default function SearchForm({
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* ZIP Code Input - Centered */}
           <div className="flex flex-col items-center gap-4">
-            <div className="space-y-2 text-center">
-              <label
-                htmlFor="zipCode"
-                className="text-sm font-medium text-gray-700 block"
-              >
-                ZIP Code
-              </label>
+            <label
+              htmlFor="zipCode"
+              className="text-sm font-medium text-gray-700 block text-center"
+            >
+              ZIP Code
+            </label>
+            <div className="flex items-center gap-3 justify-center">
               <Input
                 id="zipCode"
                 type="text"
@@ -165,17 +165,9 @@ export default function SearchForm({
                 pattern="[0-9]{5}"
                 maxLength={5}
                 required
-                className="w-24 text-center text-lg font-mono border-2 focus:border-primary mx-auto"
+                className="w-24 text-center text-lg font-mono border-2 focus:border-primary"
               />
-              {zipCode.length > 0 && zipCode.length < 5 && (
-                <p className="text-xs text-gray-500">
-                  Please enter a complete 5-digit ZIP code
-                </p>
-              )}
-            </div>
-
-            {/* Find Locations Button - Centered Below */}
-            <Button
+              <Button
               type="submit"
               className="px-8 h-11 bg-primary hover:bg-primary/90 text-white font-semibold"
               disabled={isLoading || zipCode.length !== 5}
