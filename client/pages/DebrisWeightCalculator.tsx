@@ -299,29 +299,20 @@ const DEBRIS_TYPES: DebrisType[] = [
 export default function DebrisWeightCalculator() {
   const [pounds, setPounds] = useState<string>("");
   const [yards, setYards] = useState<string>("");
-  const [conversionFactor, setConversionFactor] = useState<string>("2000"); // Default: 2000 lbs per cubic yard (typical mixed debris)
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [selectedDebris, setSelectedDebris] = useState<DebrisType | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
-  // Sort items alphabetically
+  // Sort items alphabetically for dropdown
   const sortedDebrisTypes = [...DEBRIS_TYPES].sort((a, b) =>
     a.name.localeCompare(b.name),
   );
-  const categories = [
-    "All",
-    ...Array.from(new Set(sortedDebrisTypes.map((item) => item.category))),
-  ];
 
-  // Filter items by category and search term
-  const filteredItems = sortedDebrisTypes.filter((item) => {
-    const matchesCategory =
-      selectedCategory === "All" || item.category === selectedCategory;
-    const matchesSearch =
-      searchTerm === "" ||
-      item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.description.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  // Filter items based on search term for dropdown
+  const filteredItems = sortedDebrisTypes.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handlePoundsChange = (value: string) => {
     setPounds(value);
