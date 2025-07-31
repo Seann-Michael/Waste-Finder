@@ -62,6 +62,16 @@ const adminNavItems = [
     icon: FileText,
   },
   {
+    title: "Pricing Items",
+    href: "/admin/items",
+    icon: Calculator,
+  },
+  {
+    title: "Debris Types",
+    href: "/admin/debris-types",
+    icon: Scale,
+  },
+  {
     title: "Settings",
     href: "/admin/settings",
     icon: Settings,
