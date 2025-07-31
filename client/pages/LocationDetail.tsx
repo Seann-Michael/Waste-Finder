@@ -254,6 +254,7 @@ export default function LocationDetail() {
       setReviews(mockReviews);
     } catch (error) {
       console.error("Error loading location:", error);
+      setError(error instanceof Error ? error.message : 'Failed to load location data');
     } finally {
       setIsLoading(false);
     }
