@@ -233,18 +233,21 @@ export default function LocationCard({ location, searchedDebrisTypes = [], showC
               </a>
             </div>
           </div>
-          <div className="flex items-start gap-2">
-            <Phone className="w-4 h-4 text-muted-foreground mt-0.5" />
-            <a
-              href={`tel:${location.phone}`}
-              className="text-sm text-primary hover:underline"
-            >
-              {formatPhoneNumber(location.phone)}
-            </a>
-          </div>
-          <div className="flex items-start gap-2">
-            <Clock className="w-4 h-4 text-muted-foreground mt-0.5" />
-            <div className="text-sm text-muted-foreground leading-relaxed">
+          {showContactDetails && (
+            <div className="flex items-start gap-2">
+              <Phone className="w-4 h-4 text-muted-foreground mt-0.5" />
+              <a
+                href={`tel:${location.phone}`}
+                className="text-sm text-primary hover:underline"
+              >
+                {formatPhoneNumber(location.phone)}
+              </a>
+            </div>
+          )}
+          {showContactDetails && (
+            <div className="flex items-start gap-2">
+              <Clock className="w-4 h-4 text-muted-foreground mt-0.5" />
+              <div className="text-sm text-muted-foreground leading-relaxed">
               {location.operatingHours.length > 0
                 ? (() => {
                     // Group consecutive days with same hours
