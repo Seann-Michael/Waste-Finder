@@ -191,17 +191,41 @@ export default function LocationDetail() {
           }
         } catch (seoError) {
           console.error('SEO URL processing failed:', seoError);
-          // Fallback: try to find location using original parameters as ID
+          // Fallback: try to find location using different strategies
+          console.log('Attempting fallback strategies...');
+
+          // Try using locationName as ID
           if (locationName) {
-            console.log('Attempting fallback with locationName as ID:', locationName);
-            const response = await fetch(`/api/locations/${locationName}`);
-            if (response.ok) {
-              const data = await response.json();
-              fetchedLocation = data.data || data;
+            try {
+              console.log('Attempting fallback with locationName as ID:', locationName);
+              const response = await fetch(`/api/locations/${locationName}`);
+              if (response.ok) {
+                const data = await response.json();
+                fetchedLocation = data.data || data;
+                console.log('Fallback successful with locationName as ID');
+              }
+            } catch (fallbackError) {
+              console.log('Fallback with locationName failed:', fallbackError);
             }
           }
+
+          // Try using city parameter as ID
+          if (!fetchedLocation && city) {
+            try {
+              console.log('Attempting fallback with city as ID:', city);
+              const response = await fetch(`/api/locations/${city}`);
+              if (response.ok) {
+                const data = await response.json();
+                fetchedLocation = data.data || data;
+                console.log('Fallback successful with city as ID');
+              }
+            } catch (fallbackError) {
+              console.log('Fallback with city failed:', fallbackError);
+            }
+          }
+
           if (!fetchedLocation) {
-            throw seoError;
+            throw new Error(`Location not found. Original error: ${seoError.message}`);
           }
         }
       } else if (id) {
