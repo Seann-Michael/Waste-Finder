@@ -316,15 +316,10 @@ export default function DebrisWeightCalculator() {
 
   const handlePoundsChange = (value: string) => {
     setPounds(value);
-    if (
-      value &&
-      !isNaN(Number(value)) &&
-      conversionFactor &&
-      !isNaN(Number(conversionFactor))
-    ) {
+    if (value && !isNaN(Number(value)) && selectedDebris) {
       const poundsNum = Number(value);
-      const factorNum = Number(conversionFactor);
-      const yardsResult = poundsNum / factorNum;
+      const conversionFactor = selectedDebris.weightPerUnit / selectedDebris.volumePerUnit;
+      const yardsResult = poundsNum / conversionFactor;
       setYards(yardsResult.toFixed(2));
     } else if (!value) {
       setYards("");
@@ -333,18 +328,32 @@ export default function DebrisWeightCalculator() {
 
   const handleYardsChange = (value: string) => {
     setYards(value);
-    if (
-      value &&
-      !isNaN(Number(value)) &&
-      conversionFactor &&
-      !isNaN(Number(conversionFactor))
-    ) {
+    if (value && !isNaN(Number(value)) && selectedDebris) {
       const yardsNum = Number(value);
-      const factorNum = Number(conversionFactor);
-      const poundsResult = yardsNum * factorNum;
+      const conversionFactor = selectedDebris.weightPerUnit / selectedDebris.volumePerUnit;
+      const poundsResult = yardsNum * conversionFactor;
       setPounds(poundsResult.toFixed(0));
     } else if (!value) {
       setPounds("");
+    }
+  };
+
+  const handleDebrisSelection = (debris: DebrisType) => {
+    setSelectedDebris(debris);
+    setSearchTerm(debris.name);
+    setIsDropdownOpen(false);
+
+    // Recalculate conversion if either field has a value
+    if (pounds && !isNaN(Number(pounds))) {
+      const poundsNum = Number(pounds);
+      const conversionFactor = debris.weightPerUnit / debris.volumePerUnit;
+      const yardsResult = poundsNum / conversionFactor;
+      setYards(yardsResult.toFixed(2));
+    } else if (yards && !isNaN(Number(yards))) {
+      const yardsNum = Number(yards);
+      const conversionFactor = debris.weightPerUnit / debris.volumePerUnit;
+      const poundsResult = yardsNum * conversionFactor;
+      setPounds(poundsResult.toFixed(0));
     }
   };
 
