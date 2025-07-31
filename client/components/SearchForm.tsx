@@ -159,7 +159,7 @@ export default function SearchForm({
                 pattern="[0-9]{5}"
                 maxLength={5}
                 required
-                className="w-32 text-center text-lg font-mono border-2 focus:border-primary"
+                className="w-36 text-center text-lg font-mono border-2 focus:border-primary"
               />
               <Button
                 type="submit"
