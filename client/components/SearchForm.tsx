@@ -149,23 +149,17 @@ export default function SearchForm({
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* ZIP Code Input - Centered */}
           <div className="flex flex-col items-center gap-3">
-            <label
-              htmlFor="zipCode"
-              className="text-sm font-medium text-gray-700 block text-center"
-            >
-              ZIP Code
-            </label>
             <div className="flex items-center gap-3 justify-center">
               <Input
                 id="zipCode"
                 type="text"
-                placeholder="12345"
+                placeholder="Enter ZIP Code"
                 value={zipCode}
                 onChange={(e) => setZipCode(e.target.value)}
                 pattern="[0-9]{5}"
                 maxLength={5}
                 required
-                className="w-24 text-center text-lg font-mono border-2 focus:border-primary"
+                className="w-32 text-center text-lg font-mono border-2 focus:border-primary"
               />
               <Button
                 type="submit"
@@ -180,7 +174,7 @@ export default function SearchForm({
                 ) : (
                   <>
                     <Search className="w-4 h-4 mr-2" />
-                    Generate
+                    Search
                   </>
                 )}
               </Button>

@@ -33,6 +33,8 @@ const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 const News = lazy(() => import("./pages/News"));
 const NewsArticle = lazy(() => import("./pages/NewsArticle"));
+const Contact = lazy(() => import("./pages/Contact"));
+const GuestPost = lazy(() => import("./pages/GuestPost"));
 
 // Admin pages - separate chunk
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
@@ -88,6 +90,8 @@ const AppRoutes = () => (
     <Route path="/blog/:slug" element={<BlogPost />} />
     <Route path="/news" element={<News />} />
     <Route path="/news/article/:id" element={<NewsArticle />} />
+    <Route path="/contact" element={<Contact />} />
+    <Route path="/guest-post" element={<GuestPost />} />
     <Route path="/pricing-calculator" element={<PricingCalculator />} />
     <Route
       path="/debris-weight-calculator"
