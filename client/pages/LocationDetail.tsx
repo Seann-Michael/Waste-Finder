@@ -142,6 +142,7 @@ export default function LocationDetail() {
 
   const loadLocationData = async () => {
     setIsLoading(true);
+    setError(null);
     try {
       let fetchedLocation;
 
