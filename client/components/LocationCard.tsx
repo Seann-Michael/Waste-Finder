@@ -18,6 +18,7 @@ import {
 
 interface LocationCardProps {
   location: Location;
+  searchedDebrisTypes?: string[]; // Debris types that user searched/filtered for
 }
 
 const getLocationIcon = (type: Location["locationType"]) => {
@@ -46,7 +47,7 @@ const getLocationLabel = (type: Location["locationType"]) => {
   }
 };
 
-export default function LocationCard({ location }: LocationCardProps) {
+export default function LocationCard({ location, searchedDebrisTypes = [] }: LocationCardProps) {
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
@@ -126,6 +127,63 @@ export default function LocationCard({ location }: LocationCardProps) {
     if (mountainStates.includes(state)) return "MT";
     if (pacificStates.includes(state)) return "PT";
     return "Local";
+  };
+
+  const sortDebrisTypesByPriority = (debrisTypes: typeof location.debrisTypes) => {
+    // Priority order:
+    // 1. User searched/filtered debris types
+    // 2. Municipal waste
+    // 3. Construction debris
+    // 4. Yard debris
+    // 5. All others
+
+    const priorityKeywords = {
+      searched: searchedDebrisTypes.map(type => type.toLowerCase()),
+      municipal: ['municipal', 'general', 'household', 'residential', 'domestic'],
+      construction: ['construction', 'c&d', 'demolition', 'building', 'concrete', 'drywall', 'lumber'],
+      yard: ['yard', 'green', 'organic', 'garden', 'landscaping', 'tree', 'grass', 'leaves']
+    };
+
+    const getDebrisTypePriority = (debrisType: any) => {
+      const name = debrisType.name.toLowerCase();
+
+      // Check if it matches user search/filter (highest priority)
+      if (priorityKeywords.searched.some(searched =>
+        name.includes(searched) || searched.includes(name)
+      )) {
+        return 1;
+      }
+
+      // Check municipal waste
+      if (priorityKeywords.municipal.some(keyword => name.includes(keyword))) {
+        return 2;
+      }
+
+      // Check construction debris
+      if (priorityKeywords.construction.some(keyword => name.includes(keyword))) {
+        return 3;
+      }
+
+      // Check yard waste
+      if (priorityKeywords.yard.some(keyword => name.includes(keyword))) {
+        return 4;
+      }
+
+      // All others
+      return 5;
+    };
+
+    return [...debrisTypes].sort((a, b) => {
+      const priorityA = getDebrisTypePriority(a);
+      const priorityB = getDebrisTypePriority(b);
+
+      if (priorityA !== priorityB) {
+        return priorityA - priorityB;
+      }
+
+      // If same priority, sort alphabetically
+      return a.name.localeCompare(b.name);
+    });
   };
 
   return (
@@ -222,20 +280,32 @@ export default function LocationCard({ location }: LocationCardProps) {
         {/* Right Column - Services & Actions */}
         <div className="lg:col-span-4">
           <div className="flex flex-wrap gap-1 mb-3">
-            {location.debrisTypes.slice(0, 2).map((debris) => (
-              <Badge
-                key={debris.id}
-                variant="outline"
-                className="text-sm px-2 py-1"
-              >
-                {debris.name}
-              </Badge>
-            ))}
-            {location.debrisTypes.length > 2 && (
-              <Badge variant="outline" className="text-sm px-2 py-1">
-                +{location.debrisTypes.length - 2}
-              </Badge>
-            )}
+            {(() => {
+              const sortedDebrisTypes = sortDebrisTypesByPriority(location.debrisTypes);
+              return (
+                <>
+                  {sortedDebrisTypes.slice(0, 2).map((debris) => (
+                    <Badge
+                      key={debris.id}
+                      variant="outline"
+                      className={`text-sm px-2 py-1 ${
+                        searchedDebrisTypes.some(searched =>
+                          debris.name.toLowerCase().includes(searched.toLowerCase()) ||
+                          searched.toLowerCase().includes(debris.name.toLowerCase())
+                        ) ? 'bg-blue-50 border-blue-300 text-blue-800' : ''
+                      }`}
+                    >
+                      {debris.name}
+                    </Badge>
+                  ))}
+                  {sortedDebrisTypes.length > 2 && (
+                    <Badge variant="outline" className="text-sm px-2 py-1">
+                      +{sortedDebrisTypes.length - 2}
+                    </Badge>
+                  )}
+                </>
+              );
+            })()}
           </div>
 
           {/* Pricing Information */}
