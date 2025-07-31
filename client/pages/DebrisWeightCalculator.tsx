@@ -387,8 +387,8 @@ export default function DebrisWeightCalculator() {
     const results = `DEBRIS WEIGHT TO VOLUME CONVERSION
 Generated on: ${new Date().toLocaleDateString()}
 
-CONVERSION SETTINGS:
-Conversion Factor: ${conversionFactor} lbs per cubic yard
+DEBRIS TYPE: ${selectedDebris?.name || 'Not selected'} (${selectedDebris?.category || 'N/A'})
+Conversion Factor: ${selectedDebris ? (selectedDebris.weightPerUnit / selectedDebris.volumePerUnit).toFixed(0) : '0'} lbs per cubic yard
 
 RESULTS:
 Weight: ${pounds} lbs
