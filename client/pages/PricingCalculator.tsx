@@ -558,6 +558,8 @@ const TRUCK_CONFIGURATIONS: TruckConfig[] = [
 ];
 
 export default function PricingCalculator() {
+  const [debrisItems, setDebrisItems] = useState<DebrisItem[]>([]);
+  const [isLoadingItems, setIsLoadingItems] = useState(true);
   const [truckConfig, setTruckConfig] = useState<TruckConfig>({
     ...TRUCK_CONFIGURATIONS[2],
     length: 0,
@@ -921,7 +923,7 @@ TOTAL JOB PRICE:                             $${totals.total.toFixed(2)}
                                            ═════════════
 
 TERMS & CONDITIONS
-─────────────────────────────────────────────────────────────
+────────────────────────────────────────────────────────��────
 • This estimate is valid for 30 days
 • Final price may vary based on actual site conditions
 • Payment due upon completion
