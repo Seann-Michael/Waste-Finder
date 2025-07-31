@@ -48,6 +48,9 @@ const BulkUploadFacilities = lazy(
   () => import("./pages/admin/BulkUploadFacilities"),
 );
 const RSSManager = lazy(() => import("./pages/admin/RSSManager"));
+const PageManagement = lazy(() => import("./pages/admin/PageManagement"));
+const ItemManagement = lazy(() => import("./pages/admin/ItemManagement"));
+const DebrisTypeManagement = lazy(() => import("./pages/admin/DebrisTypeManagement"));
 const PricingCalculator = lazy(() => import("./pages/PricingCalculator"));
 const DebrisWeightCalculator = lazy(
   () => import("./pages/DebrisWeightCalculator"),
@@ -212,6 +215,17 @@ const AppRoutes = () => (
         <Suspense fallback={<PageLoading message="Loading RSS manager..." />}>
           <AdminRoute>
             <RSSManager />
+          </AdminRoute>
+        </Suspense>
+      }
+    />
+
+    <Route
+      path="/admin/pages"
+      element={
+        <Suspense fallback={<PageLoading message="Loading page management..." />}>
+          <AdminRoute>
+            <PageManagement />
           </AdminRoute>
         </Suspense>
       }
