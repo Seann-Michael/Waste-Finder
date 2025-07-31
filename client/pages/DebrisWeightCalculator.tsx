@@ -42,7 +42,7 @@ const DEBRIS_TYPES: DebrisType[] = [
     volumePerUnit: 1.0,
     unit: "cubic yard",
     description: "Broken concrete, sidewalks, driveways",
-    icon: "🧱",
+    icon: "��",
   },
   {
     id: "asphalt",
@@ -306,6 +306,50 @@ export default function DebrisWeightCalculator() {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // Load debris types from admin storage
+  useEffect(() => {
+    const loadDebrisTypes = async () => {
+      try {
+        setIsLoadingTypes(true);
+
+        // Try to load from API first, fallback to localStorage
+        let types = [];
+        try {
+          const response = await fetch('/api/admin/debris-types');
+          if (response.ok) {
+            const data = await response.json();
+            types = data.types || [];
+          }
+        } catch (error) {
+          console.log('API not available, using localStorage');
+        }
+
+        // Fallback to localStorage
+        if (types.length === 0) {
+          const localTypes = localStorage.getItem('admin-debris-types');
+          if (localTypes) {
+            types = JSON.parse(localTypes);
+          } else {
+            // Use fallback DEBRIS_TYPES if no admin data exists
+            types = DEBRIS_TYPES;
+          }
+        }
+
+        // Filter only active types
+        const activeTypes = types.filter((type: any) => type.isActive !== false);
+        setDebrisTypes(activeTypes);
+      } catch (error) {
+        console.error('Error loading debris types:', error);
+        // Fallback to hardcoded types
+        setDebrisTypes(DEBRIS_TYPES);
+      } finally {
+        setIsLoadingTypes(false);
+      }
+    };
+
+    loadDebrisTypes();
+  }, []);
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -321,7 +365,7 @@ export default function DebrisWeightCalculator() {
   }, []);
 
   // Sort items alphabetically for dropdown
-  const sortedDebrisTypes = [...DEBRIS_TYPES].sort((a, b) =>
+  const sortedDebrisTypes = [...debrisTypes].sort((a, b) =>
     a.name.localeCompare(b.name),
   );
 
