@@ -48,7 +48,6 @@ const BulkUploadFacilities = lazy(
   () => import("./pages/admin/BulkUploadFacilities"),
 );
 const RSSManager = lazy(() => import("./pages/admin/RSSManager"));
-const PageManagement = lazy(() => import("./pages/admin/PageManagement"));
 const ItemManagement = lazy(() => import("./pages/admin/ItemManagement"));
 const DebrisTypeManagement = lazy(() => import("./pages/admin/DebrisTypeManagement"));
 const PricingCalculator = lazy(() => import("./pages/PricingCalculator"));
