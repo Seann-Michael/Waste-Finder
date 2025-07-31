@@ -232,6 +232,9 @@ export default function Index() {
       {/* AdSense Banner */}
       <AdSense placement="homepage" className="py-6 px-4" />
 
+      {/* News Carousel Section */}
+      <NewsCarousel />
+
       {/* Location Types Section */}
       <section className="py-16 px-4">
         <div className="max-w-7xl mx-auto">

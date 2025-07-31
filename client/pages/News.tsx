@@ -37,6 +37,7 @@ import {
   Globe,
   Rss,
 } from "lucide-react";
+import { getManagedArticles, searchArticles } from "@/lib/articleStore";
 
 interface NewsArticle {
   id: string;
@@ -69,38 +70,50 @@ export default function News() {
   const [selectedSource, setSelectedSource] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
 
-  // Fetch real articles from RSS feeds
+  // Fetch articles from managed store and RSS feeds
   useEffect(() => {
     const fetchNews = async () => {
       try {
         setIsLoading(true);
 
-        // Fetch articles
-        const newsResponse = await fetch("/api/news?limit=20");
-        const newsData = await newsResponse.json();
+        // Load managed articles first
+        const managedArticles = getManagedArticles();
+
+        // If no managed articles, try to fetch from RSS
+        if (managedArticles.length === 0) {
+          try {
+            const newsResponse = await fetch("/api/news?limit=20");
+            const newsData = await newsResponse.json();
+            if (newsData.articles) {
+              setArticles(newsData.articles);
+            }
+          } catch (rssError) {
+            console.error("Error fetching RSS articles:", rssError);
+          }
+        } else {
+          setArticles(managedArticles);
+        }
 
         // Fetch RSS feeds for sources
-        const feedsResponse = await fetch("/api/rss/feeds");
-        const feedsData = await feedsResponse.json();
-
-        if (newsData.articles) {
-          setArticles(newsData.articles);
-        }
-
-        if (Array.isArray(feedsData)) {
-          setSources(
-            feedsData.map((feed: any) => ({
-              id: feed.id,
-              name: feed.name,
-              url: feed.url,
-              category: feed.category,
-              isActive: feed.isActive,
-            })),
-          );
+        try {
+          const feedsResponse = await fetch("/api/rss/feeds");
+          const feedsData = await feedsResponse.json();
+          if (Array.isArray(feedsData)) {
+            setSources(
+              feedsData.map((feed: any) => ({
+                id: feed.id,
+                name: feed.name,
+                url: feed.url,
+                category: feed.category,
+                isActive: feed.isActive,
+              })),
+            );
+          }
+        } catch (feedsError) {
+          console.error("Error fetching feeds:", feedsError);
         }
       } catch (error) {
-        console.error("Error fetching news:", error);
-        // Fallback to empty state
+        console.error("Error loading news:", error);
         setArticles([]);
         setSources([]);
       } finally {
@@ -398,14 +411,12 @@ export default function News() {
                         <span>{getTimeAgo(article.publishedAt)}</span>
                       </div>
                       <CardTitle className="text-lg leading-tight hover:text-primary transition-colors">
-                        <a
-                          href={article.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <Link
+                          to={`/news/article/${article.id}`}
                           className="hover:text-primary"
                         >
                           {article.title}
-                        </a>
+                        </Link>
                       </CardTitle>
                     </CardHeader>
 
@@ -420,17 +431,24 @@ export default function News() {
                           {formatDate(article.publishedAt)}
                         </div>
 
-                        <Button asChild variant="ghost" size="sm">
-                          <a
-                            href={article.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-1"
-                          >
-                            Read More
-                            <ExternalLink className="w-3 h-3" />
-                          </a>
-                        </Button>
+                        <div className="flex items-center gap-2">
+                          <Button asChild variant="ghost" size="sm">
+                            <Link to={`/news/article/${article.id}`}>
+                              Read Article
+                            </Link>
+                          </Button>
+                          <Button asChild variant="outline" size="sm">
+                            <a
+                              href={article.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-1"
+                            >
+                              Source
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                          </Button>
+                        </div>
                       </div>
 
                       {article.tags.length > 0 && (
