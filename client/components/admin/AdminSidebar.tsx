@@ -18,6 +18,7 @@ import {
   Menu,
   X,
   Calculator,
+  Scale,
 } from "lucide-react";
 
 const adminNavItems = [
