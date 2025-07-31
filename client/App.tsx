@@ -48,6 +48,8 @@ const BulkUploadFacilities = lazy(
   () => import("./pages/admin/BulkUploadFacilities"),
 );
 const RSSManager = lazy(() => import("./pages/admin/RSSManager"));
+const ArticleManagement = lazy(() => import("./pages/admin/ArticleManagement"));
+const AIContentSettings = lazy(() => import("./pages/admin/AIContentSettings"));
 const ItemManagement = lazy(() => import("./pages/admin/ItemManagement"));
 const DebrisTypeManagement = lazy(() => import("./pages/admin/DebrisTypeManagement"));
 const PricingCalculator = lazy(() => import("./pages/PricingCalculator"));
@@ -219,7 +221,27 @@ const AppRoutes = () => (
       }
     />
 
+    <Route
+      path="/admin/articles"
+      element={
+        <Suspense fallback={<PageLoading message="Loading article management..." />}>
+          <AdminRoute>
+            <ArticleManagement />
+          </AdminRoute>
+        </Suspense>
+      }
+    />
 
+    <Route
+      path="/admin/ai-content-settings"
+      element={
+        <Suspense fallback={<PageLoading message="Loading AI settings..." />}>
+          <AdminRoute>
+            <AIContentSettings />
+          </AdminRoute>
+        </Suspense>
+      }
+    />
 
     <Route
       path="/admin/items"

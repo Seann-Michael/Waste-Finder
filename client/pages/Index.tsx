@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import FacebookCTA from "@/components/FacebookCTA";
 import AdSense from "@/components/AdSense";
 import SearchForm, { SearchParams } from "@/components/SearchForm";
+import NewsCarousel from "@/components/NewsCarousel";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";

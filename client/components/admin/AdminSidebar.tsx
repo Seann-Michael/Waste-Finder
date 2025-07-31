@@ -58,6 +58,11 @@ const adminNavItems = [
     icon: FileText,
   },
   {
+    title: "Article Management",
+    href: "/admin/articles",
+    icon: FileText,
+  },
+  {
     title: "Pricing Items",
     href: "/admin/items",
     icon: Calculator,
