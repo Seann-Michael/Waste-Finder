@@ -439,22 +439,32 @@ async function aggregateAllFeeds() {
 
       const articles = rssData.items
         .slice(0, 20)
-        .map((item, index) => ({
-          id: `${feed.id}-${index}`,
-          title: item.title || "Untitled",
-          description: cleanHtml(
-            item.contentSnippet || item.content || item.summary || "",
-          ).slice(0, 500),
-          url: item.link || item.guid || "",
-          source: feed.name,
-          category: feed.category,
-          publishedAt: item.pubDate
-            ? new Date(item.pubDate).toISOString()
-            : new Date().toISOString(),
-          author: item.creator || item.author || undefined,
-          imageUrl: extractImageUrl(item),
-          tags: extractTags(item),
-        }))
+        .map((item, index) => {
+          const id = `${feed.id}-${Date.now()}-${index}`;
+          const title = item.title || "Untitled";
+          return {
+            id,
+            title,
+            description: cleanHtml(
+              item.contentSnippet || item.content || item.summary || "",
+            ).slice(0, 500),
+            content: item.content || item.contentSnippet || item.summary || "",
+            url: item.link || item.guid || "",
+            source: feed.name,
+            category: feed.category,
+            publishedAt: item.pubDate
+              ? new Date(item.pubDate).toISOString()
+              : new Date().toISOString(),
+            author: item.creator || item.author || undefined,
+            imageUrl: extractImageUrl(item),
+            tags: extractTags(item),
+            // Additional fields for managed articles
+            featured: false,
+            slug: createSlugFromTitle(title),
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          };
+        })
         .filter((article) => article.title && article.url);
 
       aggregatedArticles.push(...articles);
@@ -470,6 +480,19 @@ async function aggregateAllFeeds() {
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
   );
   console.log(`Total aggregated articles: ${aggregatedArticles.length}`);
+}
+
+/**
+ * Create URL-friendly slug from title
+ */
+function createSlugFromTitle(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+    .substring(0, 60); // Limit length for URLs
 }
 
 /**
