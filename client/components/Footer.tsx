@@ -146,6 +146,11 @@ export default function Footer() {
                     Admin Login
                   </Link>
                 </li>
+                <li>
+                  <Link to="/sitemap" className="hover:text-primary">
+                    Sitemap
+                  </Link>
+                </li>
                 <li>Privacy Policy</li>
                 <li>Terms of Service</li>
               </ul>
