@@ -138,6 +138,15 @@ export default function AdminLogin() {
               {mode === "forgot-password" && "Enter your email to receive reset instructions"}
               {mode === "reset-sent" && "We've sent password reset instructions to your email"}
             </CardDescription>
+            {mode === "login" && (
+              <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-left">
+                <p className="text-sm font-medium text-yellow-800 mb-2">Development Credentials:</p>
+                <div className="text-xs text-yellow-700 space-y-1">
+                  <div><strong>Username:</strong> admin</div>
+                  <div><strong>Password:</strong> admin123</div>
+                </div>
+              </div>
+            )}
           </CardHeader>
           <CardContent>
             {error && (
