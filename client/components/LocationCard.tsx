@@ -431,7 +431,7 @@ export default function LocationCard({ location, searchedDebrisTypes = [], showC
             ))}
           </div>
           <Button asChild size="sm" className="w-full text-sm h-8">
-            <Link to={generateLocationUrl(location)}>View Details</Link>
+            <Link to={generateLocationUrl(location)}>View More Details</Link>
           </Button>
         </div>
       </div>
