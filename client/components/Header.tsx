@@ -205,12 +205,21 @@ export default function Header() {
                     className="w-full mt-2 bg-green-600 text-white hover:bg-green-700"
                   >
                     <a
-                      href={contentSettings.marketingButtonUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      href="/local-dumpster-rental"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      {contentSettings.marketingButtonText}
+                      Marketing for Dumpster Rentals
+                    </a>
+                  </Button>
+                  <Button
+                    asChild
+                    className="w-full mt-2 bg-blue-600 text-white hover:bg-blue-700"
+                  >
+                    <a
+                      href="/local-junk-removal"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      Marketing for Junk Removal
                     </a>
                   </Button>
                 </nav>
