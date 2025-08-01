@@ -44,6 +44,7 @@ const DigitalMarketingJunkRemoval = lazy(() => import("./pages/DigitalMarketingJ
 const DigitalMarketingDumpsterRental = lazy(() => import("./pages/DigitalMarketingDumpsterRental"));
 const LocalSEOJunkRemoval = lazy(() => import("./pages/LocalSEOJunkRemoval"));
 const LocalSEODumpsterRental = lazy(() => import("./pages/LocalSEODumpsterRental"));
+const Sitemap = lazy(() => import("./pages/Sitemap"));
 
 // Admin pages - separate chunk
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
