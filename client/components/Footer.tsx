@@ -96,42 +96,39 @@ export default function Footer() {
             </div>
             <div>
               <h4 className="font-semibold mb-3">
-                For Dumpster & Junk Removal
+                For Junk Removal
               </h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>
-                  <a
-                    href="https://yourmarketingagency.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-primary"
-                  >
+                  <Link to="/digital-marketing-junk-removal" className="hover:text-primary">
                     Digital Marketing
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="https://yourmarketingagency.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-primary"
-                  >
+                  <Link to="/local-seo-junk-removal" className="hover:text-primary">
                     Local SEO Services
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://yourmarketingagency.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-primary"
-                  >
-                    Lead Generation
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <Link to="/local-junk-removal" className="hover:text-primary">
                     Local Junk Removal Companies
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-3">
+                For Dumpster Rental
+              </h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li>
+                  <Link to="/digital-marketing-dumpster-rental" className="hover:text-primary">
+                    Digital Marketing
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/local-seo-dumpster-rental" className="hover:text-primary">
+                    Local SEO Services
                   </Link>
                 </li>
                 <li>
