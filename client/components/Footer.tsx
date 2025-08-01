@@ -129,6 +129,16 @@ export default function Footer() {
                     Lead Generation
                   </a>
                 </li>
+                <li>
+                  <Link to="/local-junk-removal" className="hover:text-primary">
+                    Local Junk Removal Companies
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/local-dumpster-rental" className="hover:text-primary">
+                    Local Dumpster Rental Companies
+                  </Link>
+                </li>
               </ul>
             </div>
             <div>
