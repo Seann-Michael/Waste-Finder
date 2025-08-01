@@ -110,6 +110,11 @@ export default function Footer() {
                   </Link>
                 </li>
                 <li>
+                  <Link to="/lead-generation-junk-removal" className="hover:text-primary">
+                    Lead Generation
+                  </Link>
+                </li>
+                <li>
                   <Link to="/local-junk-removal" className="hover:text-primary">
                     Local Junk Removal Companies
                   </Link>
@@ -129,6 +134,11 @@ export default function Footer() {
                 <li>
                   <Link to="/local-seo-dumpster-rental" className="hover:text-primary">
                     Local SEO Services
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/lead-generation" className="hover:text-primary">
+                    Lead Generation
                   </Link>
                 </li>
                 <li>
