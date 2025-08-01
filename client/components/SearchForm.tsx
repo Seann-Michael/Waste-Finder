@@ -153,7 +153,7 @@ export default function SearchForm({
               <Input
                 id="zipCode"
                 type="text"
-                placeholder="Enter ZIP Code"
+                placeholder="12345"
                 value={zipCode}
                 onChange={(e) => setZipCode(e.target.value)}
                 pattern="[0-9]{5}"
