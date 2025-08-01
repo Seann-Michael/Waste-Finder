@@ -107,7 +107,7 @@ export default function AdminSidebar({ isOpen, onToggle }: AdminSidebarProps) {
 
       {/* Sidebar */}
       <div className={cn(
-        "fixed right-0 top-0 h-full w-64 bg-white border-l border-border shadow-sm z-30 overflow-y-auto transition-transform duration-300",
+        "fixed right-0 top-0 h-full w-64 bg-white border-l border-border shadow-sm z-30 overflow-y-auto transition-transform duration-300 flex flex-col",
         "lg:right-auto lg:left-0 lg:border-r lg:border-l-0 lg:translate-x-0", // Always visible on large screens, positioned left
         isOpen ? "translate-x-0" : "translate-x-full" // Hidden on mobile unless open, slides from right
       )}>
