@@ -186,22 +186,35 @@ export default function Index() {
             </p>
           </div>
 
-          {/* Marketing CTA Button */}
-          <div className="max-w-xl mx-auto mb-8">
-            <Button
-              asChild
-              size="lg"
-              className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-3 text-lg shadow-lg"
-            >
-              <a
-                href={contentSettings.homeMarketingButtonUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2"
+          {/* Marketing CTA Section */}
+          <div className="max-w-xl mx-auto mb-8 text-center">
+            <h2 className="text-2xl font-bold text-foreground mb-4">Need More Customers?</h2>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button
+                asChild
+                size="lg"
+                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 text-lg shadow-lg"
               >
-                Click: {contentSettings.homeMarketingButtonText}
-              </a>
-            </Button>
+                <a
+                  href="/local-junk-removal"
+                  className="flex items-center justify-center gap-2"
+                >
+                  Junk Removal
+                </a>
+              </Button>
+              <Button
+                asChild
+                size="lg"
+                className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 text-lg shadow-lg"
+              >
+                <a
+                  href="/local-dumpster-rental"
+                  className="flex items-center justify-center gap-2"
+                >
+                  Dumpster Rental
+                </a>
+              </Button>
+            </div>
           </div>
 
           {/* Search Form */}
