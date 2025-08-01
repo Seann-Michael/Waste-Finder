@@ -37,6 +37,13 @@ const Contact = lazy(() => import("./pages/Contact"));
 const GuestPost = lazy(() => import("./pages/GuestPost"));
 const LocalJunkRemoval = lazy(() => import("./pages/LocalJunkRemoval"));
 const LocalDumpsterRental = lazy(() => import("./pages/LocalDumpsterRental"));
+const DigitalMarketing = lazy(() => import("./pages/DigitalMarketing"));
+const LocalSEO = lazy(() => import("./pages/LocalSEO"));
+const LeadGeneration = lazy(() => import("./pages/LeadGeneration"));
+const DigitalMarketingJunkRemoval = lazy(() => import("./pages/DigitalMarketingJunkRemoval"));
+const DigitalMarketingDumpsterRental = lazy(() => import("./pages/DigitalMarketingDumpsterRental"));
+const LocalSEOJunkRemoval = lazy(() => import("./pages/LocalSEOJunkRemoval"));
+const LocalSEODumpsterRental = lazy(() => import("./pages/LocalSEODumpsterRental"));
 
 // Admin pages - separate chunk
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
@@ -96,6 +103,9 @@ const AppRoutes = () => (
     <Route path="/guest-post" element={<GuestPost />} />
     <Route path="/local-junk-removal" element={<LocalJunkRemoval />} />
     <Route path="/local-dumpster-rental" element={<LocalDumpsterRental />} />
+    <Route path="/digital-marketing" element={<DigitalMarketing />} />
+    <Route path="/local-seo" element={<LocalSEO />} />
+    <Route path="/lead-generation" element={<LeadGeneration />} />
     <Route path="/pricing-calculator" element={<PricingCalculator />} />
     <Route
       path="/debris-weight-calculator"
