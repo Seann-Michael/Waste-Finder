@@ -35,6 +35,8 @@ const News = lazy(() => import("./pages/News"));
 const NewsArticle = lazy(() => import("./pages/NewsArticle"));
 const Contact = lazy(() => import("./pages/Contact"));
 const GuestPost = lazy(() => import("./pages/GuestPost"));
+const LocalJunkRemoval = lazy(() => import("./pages/LocalJunkRemoval"));
+const LocalDumpsterRental = lazy(() => import("./pages/LocalDumpsterRental"));
 
 // Admin pages - separate chunk
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
