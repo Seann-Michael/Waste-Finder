@@ -111,6 +111,7 @@ const AppRoutes = () => (
     <Route path="/digital-marketing-dumpster-rental" element={<DigitalMarketingDumpsterRental />} />
     <Route path="/local-seo-junk-removal" element={<LocalSEOJunkRemoval />} />
     <Route path="/local-seo-dumpster-rental" element={<LocalSEODumpsterRental />} />
+    <Route path="/sitemap" element={<Sitemap />} />
     <Route path="/pricing-calculator" element={<PricingCalculator />} />
     <Route
       path="/debris-weight-calculator"
