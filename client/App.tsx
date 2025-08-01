@@ -94,6 +94,8 @@ const AppRoutes = () => (
     <Route path="/news/article/:id" element={<NewsArticle />} />
     <Route path="/contact" element={<Contact />} />
     <Route path="/guest-post" element={<GuestPost />} />
+    <Route path="/local-junk-removal" element={<LocalJunkRemoval />} />
+    <Route path="/local-dumpster-rental" element={<LocalDumpsterRental />} />
     <Route path="/pricing-calculator" element={<PricingCalculator />} />
     <Route
       path="/debris-weight-calculator"
