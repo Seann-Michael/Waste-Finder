@@ -189,7 +189,7 @@ export default function Index() {
           {/* Marketing CTA Section */}
           <div className="max-w-xl mx-auto mb-8 text-center">
             <h2 className="text-2xl font-bold text-foreground mb-4">Need More Customers?</h2>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-row gap-4 justify-center flex-wrap">
               <Button
                 asChild
                 size="lg"
