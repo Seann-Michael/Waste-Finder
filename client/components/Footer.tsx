@@ -157,7 +157,18 @@ export default function Footer() {
             </div>
           </div>
           <div className="border-t border-border mt-6 md:mt-8 pt-6 md:pt-8 text-center text-xs md:text-sm text-muted-foreground">
-            © 2024 WasteFinder. All rights reserved.
+            <div className="mb-2">© 2024 WasteFinder. All rights reserved.</div>
+            <div>
+              Powered by{" "}
+              <a
+                href="https://localcontractorleads.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline"
+              >
+                LeadGen
+              </a>
+            </div>
           </div>
         </div>
       </div>
