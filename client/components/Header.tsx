@@ -109,8 +109,8 @@ export default function Header() {
         )}
 
         <header className="bg-white border-b border-border shadow-sm">
-          <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
-            <div className="flex justify-between items-center h-14 sm:h-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center h-16 sm:h-18">
               {/* Logo */}
               <Link to="/" className="flex items-center space-x-1 sm:space-x-2">
                 <div className="w-7 h-7 sm:w-8 sm:h-8 bg-primary rounded-lg flex items-center justify-center">
