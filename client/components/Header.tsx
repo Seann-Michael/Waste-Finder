@@ -81,26 +81,29 @@ export default function Header() {
     <>
       {/* Sticky Header Container with iOS Safari fixes */}
       <div className="mobile-header-fix">
-        {/* Admin Editable Banner */}
-        <div className="bg-primary text-primary-foreground py-2 px-4 text-center text-sm">
-          <a
-            href={contentSettings.bannerUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {contentSettings.bannerText}
-          </a>
-        </div>
+        {/* Marketing Banner - Only show if not admin or prioritize admin banner */}
+        {!isAdmin && (
+          <div className="bg-gradient-to-r from-blue-600 to-green-600 text-white py-2 px-4 text-center text-sm">
+            <a
+              href={contentSettings.bannerUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline"
+            >
+              {contentSettings.bannerText}
+            </a>
+          </div>
+        )}
 
-        {/* Admin Indicator */}
+        {/* Admin Indicator - Replaces marketing banner when admin logged in */}
         {isAdmin && (
-          <div className="bg-yellow-500 text-black py-2 px-4 text-xs font-medium text-center">
+          <div className="bg-orange-500 text-white py-2 px-4 text-xs font-medium text-center">
             <Link
               to="/admin"
               className="flex items-center justify-center gap-2 hover:underline"
             >
               <Shield className="w-3 h-3" />
-              <span>ADMIN MODE - You are logged in as administrator</span>
+              <span>ADMIN MODE ACTIVE</span>
             </Link>
           </div>
         )}
