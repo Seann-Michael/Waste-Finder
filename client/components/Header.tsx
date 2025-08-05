@@ -117,7 +117,7 @@ export default function Header() {
                   <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-primary-foreground" />
                 </div>
                 <span className="text-lg sm:text-xl font-bold text-foreground">
-                  WasteFinder
+                  DumpNearMe
                 </span>
               </Link>
 
