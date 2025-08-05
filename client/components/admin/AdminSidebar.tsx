@@ -125,7 +125,7 @@ export default function AdminSidebar({ isOpen, onToggle }: AdminSidebarProps) {
       </div>
 
       {/* Navigation */}
-      <nav className="p-4">
+      <nav className="flex-1 overflow-y-auto p-4 pb-20">
         <div className="space-y-2">
           {adminNavItems.map((item) => {
             const isActive = location.pathname === item.href;
@@ -177,7 +177,7 @@ export default function AdminSidebar({ isOpen, onToggle }: AdminSidebarProps) {
       {/* Footer */}
       <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-border bg-muted/30">
         <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <span>WasteFinder Admin</span>
+          <span>DumpNearMe Admin</span>
           <span>v1.0</span>
         </div>
       </div>
