@@ -56,7 +56,7 @@ export default function Footer() {
                   <MapPin className="w-5 h-5 text-primary-foreground" />
                 </div>
                 <span className="text-lg md:text-xl font-bold">
-                  WasteFinder
+                  DumpNearMe
                 </span>
               </div>
               <p className="text-muted-foreground text-sm">
