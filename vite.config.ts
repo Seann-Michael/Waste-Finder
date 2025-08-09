@@ -19,7 +19,11 @@ export default defineConfig(({ mode }) => ({
           vendor: ["react", "react-dom", "react-router-dom"],
 
           // UI components (simplified)
-          ui: ["@radix-ui/react-dialog", "@radix-ui/react-select", "lucide-react"],
+          ui: [
+            "@radix-ui/react-dialog",
+            "@radix-ui/react-select",
+            "lucide-react",
+          ],
 
           // Admin pages (lazy loaded)
           admin: [
