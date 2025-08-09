@@ -107,6 +107,8 @@ const AppRoutes = () => (
     <Route path="/debrisweightcalculator" element={<Navigate to="/debris-weight-calculator" replace />} />
     <Route path="/Contact" element={<Navigate to="/contact" replace />} />
     <Route path="/Blog" element={<Navigate to="/blog" replace />} />
+    <Route path="/BlogPost" element={<Navigate to="/blog" replace />} />
+    <Route path="/blogpost" element={<Navigate to="/blog" replace />} />
     <Route path="/News" element={<Navigate to="/news" replace />} />
     <Route path="/location/:id" element={<LocationDetail />} />
     <Route path="/location/:state/:city/:locationName" element={<LocationDetail />} />
