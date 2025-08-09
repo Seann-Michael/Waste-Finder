@@ -1,147 +1,68 @@
-import * as Sentry from "@sentry/react";
+/**
+ * Basic monitoring utilities without external dependencies
+ * Sentry has been removed to simplify builds and reduce dependencies
+ */
 
 /**
- * Initialize Sentry for error tracking and performance monitoring
+ * Simple event tracking for development/debugging
  */
-export function initSentry() {
-  // Temporarily disable Sentry to prevent script errors
-  console.log("Sentry initialization disabled to prevent script errors");
-  return;
-
-  // Only initialize in production or when SENTRY_DSN is provided
-  const dsn = import.meta.env.VITE_SENTRY_DSN;
-  const environment = import.meta.env.VITE_ENVIRONMENT || "development";
-
-  if (!dsn && environment === "production") {
-    console.warn("Sentry DSN not configured. Error tracking disabled.");
-    return;
-  }
-
-  Sentry.init({
-    dsn,
-    environment,
-    integrations: [
-      Sentry.browserTracingIntegration({
-        // Set sampling rates
-        tracePropagationTargets: ["localhost", /^\//],
-      }),
-    ],
-
-    // Performance monitoring
-    tracesSampleRate: environment === "production" ? 0.1 : 1.0,
-
-    // Session replay
-    replaysSessionSampleRate: environment === "production" ? 0.1 : 1.0,
-    replaysOnErrorSampleRate: 1.0,
-
-    // Error filtering
-    beforeSend(event, hint) {
-      // Filter out known development errors
-      const error = hint.originalException;
-
-      // Ignore React dev warnings
-      if (error && error.toString().includes("Warning:")) {
-        return null;
-      }
-
-      // Ignore network errors from localhost
-      if (error && error.toString().includes("localhost")) {
-        return null;
-      }
-
-      return event;
-    },
-
-    // Additional configuration
-    debug: environment === "development",
-    release: import.meta.env.VITE_APP_VERSION || "1.0.0",
-  });
-}
-
-/**
- * Log custom events for business metrics
- */
-export function trackEvent(eventName: string, data?: Record<string, any>) {
-  try {
-    if (typeof Sentry !== 'undefined' && Sentry.addBreadcrumb) {
-      Sentry.addBreadcrumb({
-        message: eventName,
-        level: "info",
-        data,
-      });
-    }
-  } catch (error) {
-    console.warn('Failed to track event:', error);
+export function trackEvent(eventName: string, properties?: Record<string, any>) {
+  if (import.meta.env.DEV) {
+    console.log(`Event: ${eventName}`, properties);
   }
 }
 
 /**
- * Track user interactions
+ * Simple error logging without external services
+ */
+export function logError(error: Error, context?: Record<string, any>) {
+  if (import.meta.env.DEV) {
+    console.error("Error:", error.message, context);
+  }
+}
+
+/**
+ * Track user actions for debugging
  */
 export function trackUserAction(action: string, details?: Record<string, any>) {
-  try {
-    if (typeof Sentry !== 'undefined' && Sentry.setTag && Sentry.addBreadcrumb) {
-      Sentry.setTag("user_action", action);
-      Sentry.addBreadcrumb({
-        message: `User action: ${action}`,
-        level: "info",
-        data: details,
-      });
-    }
-  } catch (error) {
-    console.warn('Failed to track user action:', error);
+  if (import.meta.env.DEV) {
+    console.log(`User Action: ${action}`, details);
   }
 }
 
 /**
- * Track API response times
+ * Simple API call tracking
  */
-export function trackAPICall(
+export function trackApiCall(
   endpoint: string,
+  method: string,
   duration: number,
-  status: number,
+  status: number
 ) {
-  Sentry.addBreadcrumb({
-    message: `API call: ${endpoint}`,
-    level: status >= 400 ? "error" : "info",
-    data: {
-      endpoint,
-      duration_ms: duration,
-      status,
-    },
-  });
-}
-
-/**
- * Set user context for error tracking
- */
-export function setUserContext(user: {
-  id: string;
-  email?: string;
-  role?: string;
-}) {
-  try {
-    if (typeof Sentry !== 'undefined' && Sentry.setUser) {
-      Sentry.setUser({
-        id: user.id,
-        email: user.email,
-        role: user.role,
-      });
-    }
-  } catch (error) {
-    console.warn('Failed to set user context:', error);
+  if (import.meta.env.DEV) {
+    console.log(`API Call: ${method} ${endpoint} - ${status} (${duration}ms)`);
   }
 }
 
 /**
- * Clear user context on logout
+ * Set user context (simplified)
+ */
+export function setUserContext(user: { id: string; email?: string }) {
+  if (import.meta.env.DEV) {
+    console.log("User context set:", user.id);
+  }
+}
+
+/**
+ * Clear user context
  */
 export function clearUserContext() {
-  try {
-    if (typeof Sentry !== 'undefined' && Sentry.setUser) {
-      Sentry.setUser(null);
-    }
-  } catch (error) {
-    console.warn('Failed to clear user context:', error);
+  if (import.meta.env.DEV) {
+    console.log("User context cleared");
   }
+}
+
+// Backward compatibility - empty function
+export function initSentry() {
+  // Sentry removed - this is now a no-op function
 }
