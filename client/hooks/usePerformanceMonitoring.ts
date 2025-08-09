@@ -20,7 +20,7 @@ export function usePerformanceMonitoring() {
       console.log("Performance metric:", metric);
     }
 
-    // Track in Sentry
+    // Track performance metric
     trackEvent("performance_metric", {
       metric_name: metric.name,
       value: metric.value,
