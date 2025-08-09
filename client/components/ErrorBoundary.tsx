@@ -38,7 +38,8 @@ export class ErrorBoundary extends Component<Props, State> {
 
     // Log to error reporting service in production
     if (process.env.NODE_ENV === "production") {
-      // Example: Sentry.captureException(error, { extra: errorInfo });
+      // Error logging could be added here if needed
+      console.error("Production error:", error, errorInfo);
     }
   }
 
