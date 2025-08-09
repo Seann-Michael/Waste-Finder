@@ -94,10 +94,20 @@ const AppRoutes = () => (
     <Route path="/locations" element={<Locations />} />
     <Route path="/all-locations" element={<AllLocations />} />
     <Route path="/suggest-location" element={<SuggestLocation />} />
-    {/* Redirect for common URL variations */}
+    <Route path="/resources" element={<Resources />} />
+
+    {/* Redirect routes for common URL variations and case mismatches */}
     <Route path="/SuggestLocation" element={<Navigate to="/suggest-location" replace />} />
     <Route path="/suggestlocation" element={<Navigate to="/suggest-location" replace />} />
-    <Route path="/resources" element={<Resources />} />
+    <Route path="/AllLocations" element={<Navigate to="/all-locations" replace />} />
+    <Route path="/alllocations" element={<Navigate to="/all-locations" replace />} />
+    <Route path="/PricingCalculator" element={<Navigate to="/pricing-calculator" replace />} />
+    <Route path="/pricingcalculator" element={<Navigate to="/pricing-calculator" replace />} />
+    <Route path="/DebrisWeightCalculator" element={<Navigate to="/debris-weight-calculator" replace />} />
+    <Route path="/debrisweightcalculator" element={<Navigate to="/debris-weight-calculator" replace />} />
+    <Route path="/Contact" element={<Navigate to="/contact" replace />} />
+    <Route path="/Blog" element={<Navigate to="/blog" replace />} />
+    <Route path="/News" element={<Navigate to="/news" replace />} />
     <Route path="/location/:id" element={<LocationDetail />} />
     <Route path="/location/:state/:city/:locationName" element={<LocationDetail />} />
     <Route path="/blog" element={<Blog />} />
