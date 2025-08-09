@@ -21,7 +21,7 @@ import { trackAPICall } from "./monitoring";
  * - Timeout errors: Configurable timeout with retry
  *
  * MONITORING INTEGRATION:
- * - Sentry integration for error tracking
+ * - Basic error logging for debugging
  * - Performance metrics for API response times
  * - Custom events for business logic tracking
  *
