@@ -375,27 +375,29 @@ const RouterWrapper = ({ children }: { children: React.ReactNode }) => {
   return <HashRouter>{children}</HashRouter>;
 };
 
-const App = () => (
-  <ErrorBoundary>
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <MonitoringProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <RouterWrapper>
-              <Suspense
-                fallback={<PageLoading message="Loading application..." />}
-              >
-                <AppRoutes />
-              </Suspense>
-            </RouterWrapper>
-          </TooltipProvider>
-        </MonitoringProvider>
-      </AuthProvider>
-    </QueryClientProvider>
-  </ErrorBoundary>
-);
+const App = () => {
+  return (
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <MonitoringProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              <RouterWrapper>
+                <Suspense
+                  fallback={<PageLoading message="Loading application..." />}
+                >
+                  <AppRoutes />
+                </Suspense>
+              </RouterWrapper>
+            </TooltipProvider>
+          </MonitoringProvider>
+        </AuthProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
+  );
+};
 
 // Ensure root is only created once, even with HMR
 const container = document.getElementById("root")!;
