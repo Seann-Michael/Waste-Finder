@@ -413,24 +413,9 @@ if (!root) {
   (window as any).__react_root = root;
 }
 
-// Enhanced HMR handling
+// Minimal HMR handling to prevent client errors
 if (import.meta.hot) {
-  import.meta.hot.dispose(() => {
-    // Proper cleanup to prevent memory leaks
-    if (root && typeof root.unmount === 'function') {
-      try {
-        // Don't unmount during HMR, just log
-        console.log("HMR: Module updated");
-      } catch (error) {
-        console.warn("HMR cleanup warning:", error);
-      }
-    }
-  });
-
-  // Accept HMR updates
-  import.meta.hot.accept(() => {
-    console.log("HMR: App module accepted");
-  });
+  import.meta.hot.accept();
 }
 
 // Render with error boundary
