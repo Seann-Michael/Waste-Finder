@@ -41,11 +41,19 @@ const LocalDumpsterRental = lazy(() => import("./pages/LocalDumpsterRental"));
 const DigitalMarketing = lazy(() => import("./pages/DigitalMarketing"));
 const LocalSEO = lazy(() => import("./pages/LocalSEO"));
 const LeadGeneration = lazy(() => import("./pages/LeadGeneration"));
-const DigitalMarketingJunkRemoval = lazy(() => import("./pages/DigitalMarketingJunkRemoval"));
-const DigitalMarketingDumpsterRental = lazy(() => import("./pages/DigitalMarketingDumpsterRental"));
+const DigitalMarketingJunkRemoval = lazy(
+  () => import("./pages/DigitalMarketingJunkRemoval"),
+);
+const DigitalMarketingDumpsterRental = lazy(
+  () => import("./pages/DigitalMarketingDumpsterRental"),
+);
 const LocalSEOJunkRemoval = lazy(() => import("./pages/LocalSEOJunkRemoval"));
-const LocalSEODumpsterRental = lazy(() => import("./pages/LocalSEODumpsterRental"));
-const LeadGenerationJunkRemoval = lazy(() => import("./pages/LeadGenerationJunkRemoval"));
+const LocalSEODumpsterRental = lazy(
+  () => import("./pages/LocalSEODumpsterRental"),
+);
+const LeadGenerationJunkRemoval = lazy(
+  () => import("./pages/LeadGenerationJunkRemoval"),
+);
 const Sitemap = lazy(() => import("./pages/Sitemap"));
 
 // Admin pages - separate chunk
@@ -66,7 +74,9 @@ const RSSManager = lazy(() => import("./pages/admin/RSSManager"));
 const ArticleManagement = lazy(() => import("./pages/admin/ArticleManagement"));
 const AIContentSettings = lazy(() => import("./pages/admin/AIContentSettings"));
 const ItemManagement = lazy(() => import("./pages/admin/ItemManagement"));
-const DebrisTypeManagement = lazy(() => import("./pages/admin/DebrisTypeManagement"));
+const DebrisTypeManagement = lazy(
+  () => import("./pages/admin/DebrisTypeManagement"),
+);
 const PricingCalculator = lazy(() => import("./pages/PricingCalculator"));
 const DebrisWeightCalculator = lazy(
   () => import("./pages/DebrisWeightCalculator"),
@@ -97,21 +107,48 @@ const AppRoutes = () => (
     <Route path="/resources" element={<Resources />} />
 
     {/* Redirect routes for common URL variations and case mismatches */}
-    <Route path="/SuggestLocation" element={<Navigate to="/suggest-location" replace />} />
-    <Route path="/suggestlocation" element={<Navigate to="/suggest-location" replace />} />
-    <Route path="/AllLocations" element={<Navigate to="/all-locations" replace />} />
-    <Route path="/alllocations" element={<Navigate to="/all-locations" replace />} />
-    <Route path="/PricingCalculator" element={<Navigate to="/pricing-calculator" replace />} />
-    <Route path="/pricingcalculator" element={<Navigate to="/pricing-calculator" replace />} />
-    <Route path="/DebrisWeightCalculator" element={<Navigate to="/debris-weight-calculator" replace />} />
-    <Route path="/debrisweightcalculator" element={<Navigate to="/debris-weight-calculator" replace />} />
+    <Route
+      path="/SuggestLocation"
+      element={<Navigate to="/suggest-location" replace />}
+    />
+    <Route
+      path="/suggestlocation"
+      element={<Navigate to="/suggest-location" replace />}
+    />
+    <Route
+      path="/AllLocations"
+      element={<Navigate to="/all-locations" replace />}
+    />
+    <Route
+      path="/alllocations"
+      element={<Navigate to="/all-locations" replace />}
+    />
+    <Route
+      path="/PricingCalculator"
+      element={<Navigate to="/pricing-calculator" replace />}
+    />
+    <Route
+      path="/pricingcalculator"
+      element={<Navigate to="/pricing-calculator" replace />}
+    />
+    <Route
+      path="/DebrisWeightCalculator"
+      element={<Navigate to="/debris-weight-calculator" replace />}
+    />
+    <Route
+      path="/debrisweightcalculator"
+      element={<Navigate to="/debris-weight-calculator" replace />}
+    />
     <Route path="/Contact" element={<Navigate to="/contact" replace />} />
     <Route path="/Blog" element={<Navigate to="/blog" replace />} />
     <Route path="/BlogPost" element={<Navigate to="/blog" replace />} />
     <Route path="/blogpost" element={<Navigate to="/blog" replace />} />
     <Route path="/News" element={<Navigate to="/news" replace />} />
     <Route path="/location/:id" element={<LocationDetail />} />
-    <Route path="/location/:state/:city/:locationName" element={<LocationDetail />} />
+    <Route
+      path="/location/:state/:city/:locationName"
+      element={<LocationDetail />}
+    />
     <Route path="/blog" element={<Blog />} />
     <Route path="/blog/:slug" element={<BlogPost />} />
     <Route path="/news" element={<News />} />
@@ -123,11 +160,23 @@ const AppRoutes = () => (
     <Route path="/digital-marketing" element={<DigitalMarketing />} />
     <Route path="/local-seo" element={<LocalSEO />} />
     <Route path="/lead-generation" element={<LeadGeneration />} />
-    <Route path="/digital-marketing-junk-removal" element={<DigitalMarketingJunkRemoval />} />
-    <Route path="/digital-marketing-dumpster-rental" element={<DigitalMarketingDumpsterRental />} />
+    <Route
+      path="/digital-marketing-junk-removal"
+      element={<DigitalMarketingJunkRemoval />}
+    />
+    <Route
+      path="/digital-marketing-dumpster-rental"
+      element={<DigitalMarketingDumpsterRental />}
+    />
     <Route path="/local-seo-junk-removal" element={<LocalSEOJunkRemoval />} />
-    <Route path="/local-seo-dumpster-rental" element={<LocalSEODumpsterRental />} />
-    <Route path="/lead-generation-junk-removal" element={<LeadGenerationJunkRemoval />} />
+    <Route
+      path="/local-seo-dumpster-rental"
+      element={<LocalSEODumpsterRental />}
+    />
+    <Route
+      path="/lead-generation-junk-removal"
+      element={<LeadGenerationJunkRemoval />}
+    />
     <Route path="/sitemap" element={<Sitemap />} />
     <Route path="/pricing-calculator" element={<PricingCalculator />} />
     <Route
@@ -269,7 +318,9 @@ const AppRoutes = () => (
     <Route
       path="/admin/articles"
       element={
-        <Suspense fallback={<PageLoading message="Loading article management..." />}>
+        <Suspense
+          fallback={<PageLoading message="Loading article management..." />}
+        >
           <AdminRoute>
             <ArticleManagement />
           </AdminRoute>
@@ -291,7 +342,9 @@ const AppRoutes = () => (
     <Route
       path="/admin/items"
       element={
-        <Suspense fallback={<PageLoading message="Loading item management..." />}>
+        <Suspense
+          fallback={<PageLoading message="Loading item management..." />}
+        >
           <AdminRoute>
             <ItemManagement />
           </AdminRoute>
@@ -302,7 +355,9 @@ const AppRoutes = () => (
     <Route
       path="/admin/debris-types"
       element={
-        <Suspense fallback={<PageLoading message="Loading debris type management..." />}>
+        <Suspense
+          fallback={<PageLoading message="Loading debris type management..." />}
+        >
           <AdminRoute>
             <DebrisTypeManagement />
           </AdminRoute>

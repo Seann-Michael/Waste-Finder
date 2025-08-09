@@ -6,7 +6,10 @@
 /**
  * Simple event tracking for development/debugging
  */
-export function trackEvent(eventName: string, properties?: Record<string, any>) {
+export function trackEvent(
+  eventName: string,
+  properties?: Record<string, any>,
+) {
   if (import.meta.env.DEV) {
     console.log(`Event: ${eventName}`, properties);
   }
@@ -37,7 +40,7 @@ export function trackApiCall(
   endpoint: string,
   method: string,
   duration: number,
-  status: number
+  status: number,
 ) {
   if (import.meta.env.DEV) {
     console.log(`API Call: ${method} ${endpoint} - ${status} (${duration}ms)`);

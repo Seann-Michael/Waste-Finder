@@ -13,12 +13,12 @@ export default defineConfig({
 
   build: {
     outDir: "dist/spa",
-    
+
     // Fast build settings
     minify: "esbuild", // Fastest minifier
-    sourcemap: false,  // No source maps for speed
-    target: "esnext",  // Modern browsers only
-    
+    sourcemap: false, // No source maps for speed
+    target: "esnext", // Modern browsers only
+
     // Simple chunk strategy
     rollupOptions: {
       output: {
@@ -28,7 +28,7 @@ export default defineConfig({
         },
       },
     },
-    
+
     // Increase limits to avoid warnings
     chunkSizeWarningLimit: 2000,
   },
