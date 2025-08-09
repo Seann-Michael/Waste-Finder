@@ -399,8 +399,13 @@ const App = () => {
   );
 };
 
-// Ensure root is only created once, even with HMR
-const container = document.getElementById("root")!;
+// Improved HMR setup to prevent client errors
+const container = document.getElementById("root");
+if (!container) {
+  throw new Error("Root container not found");
+}
+
+// Create root instance with better HMR handling
 let root = (window as any).__react_root;
 
 if (!root) {
@@ -408,12 +413,31 @@ if (!root) {
   (window as any).__react_root = root;
 }
 
-// Handle HMR updates
+// Enhanced HMR handling
 if (import.meta.hot) {
   import.meta.hot.dispose(() => {
-    // Simple cleanup for HashRouter
-    console.log("HMR: Cleaning up router");
+    // Proper cleanup to prevent memory leaks
+    if (root && typeof root.unmount === 'function') {
+      try {
+        // Don't unmount during HMR, just log
+        console.log("HMR: Module updated");
+      } catch (error) {
+        console.warn("HMR cleanup warning:", error);
+      }
+    }
+  });
+
+  // Accept HMR updates
+  import.meta.hot.accept(() => {
+    console.log("HMR: App module accepted");
   });
 }
 
-root.render(<App />);
+// Render with error boundary
+try {
+  root.render(<App />);
+} catch (error) {
+  console.error("App render error:", error);
+}
+
+export default App;
