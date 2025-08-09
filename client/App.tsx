@@ -94,6 +94,9 @@ const AppRoutes = () => (
     <Route path="/locations" element={<Locations />} />
     <Route path="/all-locations" element={<AllLocations />} />
     <Route path="/suggest-location" element={<SuggestLocation />} />
+    {/* Redirect for common URL variations */}
+    <Route path="/SuggestLocation" element={<Navigate to="/suggest-location" replace />} />
+    <Route path="/suggestlocation" element={<Navigate to="/suggest-location" replace />} />
     <Route path="/resources" element={<Resources />} />
     <Route path="/location/:id" element={<LocationDetail />} />
     <Route path="/location/:state/:city/:locationName" element={<LocationDetail />} />
