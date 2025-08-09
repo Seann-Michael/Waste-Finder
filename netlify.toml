@@ -1,13 +1,13 @@
 [build]
-  command = "npm run build:netlify"
+  command = "npm ci --prefer-offline --no-audit --no-fund && npm run build:netlify"
   functions = "netlify/functions"
   publish = "dist/spa"
 
 [build.environment]
   NODE_VERSION = "18"
-  NPM_FLAGS = "--prefer-offline --no-audit --no-fund"
   NODE_OPTIONS = "--max-old-space-size=4096"
-  NETLIFY_BUILD_TIMEOUT = "900"
+  VITE_APP_ENV = "production"
+  DISABLE_SENTRY = "true"
 
 
 [functions]
