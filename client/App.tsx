@@ -10,7 +10,7 @@ import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { PageLoading } from "@/components/LoadingStates";
-import { initSentry } from "@/lib/monitoring";
+// Sentry monitoring removed
 import { initSessionRecording } from "@/lib/sessionRecording";
 import { initializeSampleArticles } from "@/lib/sampleArticles";
 import Header from "@/components/Header";
