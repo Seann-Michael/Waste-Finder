@@ -15,78 +15,32 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks: {
-          // Vendor chunk for large libraries
+          // Core React libraries
           vendor: ["react", "react-dom", "react-router-dom"],
 
-          // UI components chunk
-          ui: [
-            "@radix-ui/react-dialog",
-            "@radix-ui/react-select",
-            "@radix-ui/react-toast",
-            "@radix-ui/react-tooltip",
-            "@radix-ui/react-dropdown-menu",
-            "lucide-react",
-          ],
+          // UI components (simplified)
+          ui: ["@radix-ui/react-dialog", "@radix-ui/react-select", "lucide-react"],
 
-          // Form handling chunk
-          forms: ["react-hook-form", "@hookform/resolvers"],
-
-          // Query and state management
-          query: ["@tanstack/react-query"],
-
-          // Monitoring and analytics
-          monitoring: ["@sentry/react", "web-vitals"],
-
-          // Utilities
-          utils: ["clsx", "tailwind-merge", "date-fns"],
-
-          // Admin pages (separate chunk for admin-only code)
+          // Admin pages (lazy loaded)
           admin: [
-            "./client/pages/admin/AddLocation.tsx",
             "./client/pages/admin/AdminSettings.tsx",
             "./client/pages/admin/LocationDataTable.tsx",
-            "./client/pages/admin/Marketing.tsx",
-            "./client/pages/admin/BlogAdmin.tsx",
           ],
         },
       },
     },
 
-    // Optimize dependencies
-    optimizeDeps: {
-      include: [
-        "react",
-        "react-dom",
-        "react-router-dom",
-        "@tanstack/react-query",
-        "react-hook-form",
-        "lucide-react",
-      ],
-      exclude: [
-        // Exclude unused heavy dependencies
-        "three",
-        "@react-three/fiber",
-        "@react-three/drei",
-      ],
-    },
+    // Fast minification for Netlify
+    minify: mode === "production" ? "esbuild" : false,
 
-    // Performance optimizations
-    minify: mode === "production" ? "terser" : false,
-    terserOptions:
-      mode === "production"
-        ? {
-            compress: {
-              drop_console: true,
-              drop_debugger: true,
-            },
-          }
-        : {},
+    // No source maps in production for faster builds
+    sourcemap: false,
 
-    // Source map for debugging in development
-    sourcemap: mode === "development",
+    // Increase chunk size limit to reduce chunks
+    chunkSizeWarningLimit: 1000,
 
-    // Chunk size warnings
-    chunkSizeWarningLimit: 500,
+    // Target modern browsers for smaller bundles
+    target: "esnext",
   },
 
   plugins: [
