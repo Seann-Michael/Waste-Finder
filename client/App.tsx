@@ -76,8 +76,7 @@ import AdminRoute from "./components/admin/AdminRoute";
 
 const queryClient = new QueryClient();
 
-// Monitoring services disabled to prevent router conflicts
-// initSentry();
+// Monitoring services removed for cleaner builds
 // initSessionRecording();
 
 // Initialize sample articles for demonstration
