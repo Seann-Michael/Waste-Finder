@@ -84,7 +84,7 @@ initializeSampleArticles();
 
 // Monitoring provider component - disabled to prevent conflicts
 const MonitoringProvider = ({ children }: { children: React.ReactNode }) => {
-  // Disable monitoring to prevent router conflicts
+  // Disable all monitoring in production builds to prevent conflicts and hanging
   return <>{children}</>;
 };
 
