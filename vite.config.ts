@@ -52,15 +52,7 @@ export default defineConfig(({ mode }) => ({
       tsDecorators: true,
     }),
     expressPlugin(),
-    // Disable Sentry for faster builds - can be re-enabled later if needed
-    // mode === "production" && process.env.SENTRY_AUTH_TOKEN
-    //   ? sentryVitePlugin({
-    //       org: process.env.SENTRY_ORG,
-    //       project: process.env.SENTRY_PROJECT,
-    //       authToken: process.env.SENTRY_AUTH_TOKEN,
-    //     })
-    //   : null,
-  ].filter(Boolean),
+  ],
 
   resolve: {
     alias: {
