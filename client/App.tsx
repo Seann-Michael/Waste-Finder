@@ -15,11 +15,12 @@ import { initSessionRecording } from "@/lib/sessionRecording";
 import { initializeSampleArticles } from "@/lib/sampleArticles";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import {
-  usePerformanceMonitoring,
-  useBundlePerformance,
-  useMemoryMonitoring,
-} from "@/hooks/usePerformanceMonitoring";
+// Performance monitoring disabled for production builds
+// import {
+//   usePerformanceMonitoring,
+//   useBundlePerformance,
+//   useMemoryMonitoring,
+// } from "@/hooks/usePerformanceMonitoring";
 
 // Lazy load pages for code splitting
 const Index = lazy(() => import("./pages/Index"));
