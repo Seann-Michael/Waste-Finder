@@ -22,14 +22,14 @@ import Footer from "@/components/Footer";
 //   useMemoryMonitoring,
 // } from "@/hooks/usePerformanceMonitoring";
 
-// Lazy load pages for code splitting
-const Index = lazy(() => import("./pages/Index"));
-const Locations = lazy(() => import("./pages/Locations"));
-const AllLocations = lazy(() => import("./pages/AllLocations"));
-const LocationDetail = lazy(() => import("./pages/LocationDetail"));
-const SuggestLocation = lazy(() => import("./pages/SuggestLocation"));
-const Resources = lazy(() => import("./pages/Resources"));
-const NotFound = lazy(() => import("./pages/NotFound"));
+// Lazy load pages for code splitting with error handling
+const Index = lazy(() => import("./pages/Index").catch(() => ({ default: () => <div>Error loading page</div> })));
+const Locations = lazy(() => import("./pages/Locations").catch(() => ({ default: () => <div>Error loading page</div> })));
+const AllLocations = lazy(() => import("./pages/AllLocations").catch(() => ({ default: () => <div>Error loading page</div> })));
+const LocationDetail = lazy(() => import("./pages/LocationDetail").catch(() => ({ default: () => <div>Error loading page</div> })));
+const SuggestLocation = lazy(() => import("./pages/SuggestLocation").catch(() => ({ default: () => <div>Error loading page</div> })));
+const Resources = lazy(() => import("./pages/Resources").catch(() => ({ default: () => <div>Error loading page</div> })));
+const NotFound = lazy(() => import("./pages/NotFound").catch(() => ({ default: () => <div>Error loading page</div> })));
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 const News = lazy(() => import("./pages/News"));
