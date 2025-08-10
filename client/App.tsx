@@ -87,9 +87,7 @@ const MonitoringProvider = ({ children }: { children: React.ReactNode }) => {
 };
 
 const AppRoutes = () => (
-  <>
-    <Header />
-    <Routes>
+  <Routes>
     <Route path="/" element={<Index />} />
     <Route path="/locations" element={<Locations />} />
     <Route path="/all-locations" element={<AllLocations />} />
@@ -357,9 +355,7 @@ const AppRoutes = () => (
 
     {/* Catch-all route */}
     <Route path="*" element={<NotFound />} />
-    </Routes>
-    <Footer />
-  </>
+  </Routes>
 );
 
 const RouterWrapper = ({ children }: { children: React.ReactNode }) => {
