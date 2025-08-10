@@ -1,7 +1,4 @@
-import "./global.css";
-
 import { Toaster } from "@/components/ui/toaster";
-import { createRoot } from "react-dom/client";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -10,9 +7,6 @@ import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { PageLoading } from "@/components/LoadingStates";
-// Sentry monitoring removed
-import { initSessionRecording } from "@/lib/sessionRecording";
-import { initializeSampleArticles } from "@/lib/sampleArticles";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 // Performance monitoring disabled for production builds
@@ -85,12 +79,6 @@ const DebrisWeightCalculator = lazy(
 import AdminRoute from "./components/admin/AdminRoute";
 
 const queryClient = new QueryClient();
-
-// Monitoring services removed for cleaner builds
-// initSessionRecording();
-
-// Initialize sample articles for demonstration
-initializeSampleArticles();
 
 // Monitoring provider component - disabled to prevent conflicts
 const MonitoringProvider = ({ children }: { children: React.ReactNode }) => {
@@ -398,31 +386,5 @@ const App = () => {
     </ErrorBoundary>
   );
 };
-
-// Improved HMR setup to prevent client errors
-const container = document.getElementById("root");
-if (!container) {
-  throw new Error("Root container not found");
-}
-
-// Create root instance with better HMR handling
-let root = (window as any).__react_root;
-
-if (!root) {
-  root = createRoot(container);
-  (window as any).__react_root = root;
-}
-
-// Minimal HMR handling to prevent client errors
-if (import.meta.hot) {
-  import.meta.hot.accept();
-}
-
-// Render with error boundary
-try {
-  root.render(<App />);
-} catch (error) {
-  console.error("App render error:", error);
-}
 
 export default App;
