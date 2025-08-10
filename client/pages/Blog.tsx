@@ -216,7 +216,7 @@ export default function Blog() {
                     <BookOpen className="w-8 h-8 text-primary" />
                     Latest Blog Posts
                   </h2>
-                  
+
                   {filteredPosts.length === 0 ? (
                     <div className="text-center py-12">
                       <BookOpen className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
@@ -262,7 +262,7 @@ export default function Blog() {
                     <Globe className="w-8 h-8 text-primary" />
                     Industry News
                   </h2>
-                  
+
                   {newsArticles.length === 0 ? (
                     <div className="text-center py-8">
                       <Globe className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
@@ -276,7 +276,7 @@ export default function Blog() {
                       ))}
                     </div>
                   )}
-                  
+
                   <div className="text-center mt-6">
                     <Button asChild variant="outline">
                       <Link to="/news">
@@ -293,7 +293,7 @@ export default function Blog() {
                     <Calculator className="w-8 h-8 text-primary" />
                     Helpful Resources
                   </h2>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <Card className="hover:shadow-lg transition-shadow">
                       <CardHeader>
@@ -753,3 +753,5 @@ function useBlogData() {
 
   return { posts, categories, isLoading, error };
 }
+
+export default Blog;
