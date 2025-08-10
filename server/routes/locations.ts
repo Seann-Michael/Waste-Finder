@@ -22,6 +22,15 @@
  */
 
 import { Request, Response } from "express";
+import {
+  getAllLocations,
+  getFilteredLocations,
+  getLocationById,
+  addLocation,
+  updateLocation,
+  deleteLocation,
+  toggleLocationStatus
+} from "../lib/supabaseService.js";
 
 /**
  * Calculates distance between two coordinates using Haversine formula
