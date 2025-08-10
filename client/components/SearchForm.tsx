@@ -45,6 +45,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Search, MapPin, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { searchLocations } from "@/lib/supabaseQueries";
 
 interface SearchFormProps {
   onSearch?: (params: SearchParams) => void;
