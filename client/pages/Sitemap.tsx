@@ -2,15 +2,15 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { 
-  Home, 
-  MapPin, 
-  BookOpen, 
-  Globe, 
-  Calculator, 
-  Scale, 
-  MessageSquare, 
-  Edit, 
+import {
+  Home,
+  MapPin,
+  BookOpen,
+  Globe,
+  Calculator,
+  Scale,
+  MessageSquare,
+  Edit,
   Users,
   FileText,
   ChevronRight
@@ -30,10 +30,9 @@ export default function Sitemap() {
       ]
     },
     {
-      category: "Blog & News",
+      category: "News",
       icon: <BookOpen className="w-5 h-5" />,
       links: [
-        { name: "Blog & News", url: "/blog", description: "Latest blog posts and industry news" },
         { name: "Industry News", url: "/news", description: "Current waste management news" },
         { name: "Guest Post", url: "/guest-post", description: "Submit a guest post" },
       ]
@@ -85,7 +84,7 @@ export default function Sitemap() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
-      
+
       <main className="flex-1">
         <div className="max-w-7xl mx-auto px-4 py-8">
           {/* Header */}
@@ -110,7 +109,7 @@ export default function Sitemap() {
                   <div className="space-y-3">
                     {section.links.map((link, linkIndex) => (
                       <div key={linkIndex} className="border-b border-border last:border-0 pb-3 last:pb-0">
-                        <Link 
+                        <Link
                           to={link.url}
                           className="flex items-center justify-between group hover:text-primary transition-colors"
                         >
@@ -139,15 +138,15 @@ export default function Sitemap() {
                 <h2 className="text-2xl font-bold mb-4">About This Sitemap</h2>
                 <div className="text-muted-foreground space-y-2 max-w-4xl mx-auto">
                   <p>
-                    This sitemap provides a comprehensive overview of all pages and resources available on WasteFinder. 
-                    Our platform helps users find waste disposal locations, access helpful tools, and provides marketing 
+                    This sitemap provides a comprehensive overview of all pages and resources available on WasteFinder.
+                    Our platform helps users find waste disposal locations, access helpful tools, and provides marketing
                     services for waste management businesses.
                   </p>
                   <p className="mt-4">
-                    <strong>Last Updated:</strong> {new Date().toLocaleDateString('en-US', { 
-                      year: 'numeric', 
-                      month: 'long', 
-                      day: 'numeric' 
+                    <strong>Last Updated:</strong> {new Date().toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
                     })}
                   </p>
                   <p className="mt-2 text-sm">
