@@ -360,7 +360,7 @@ export default function LocationCard({ location, searchedDebrisTypes = [], showC
                         ) ? 'bg-blue-50 border-blue-300 text-blue-800' : ''
                       }`}
                     >
-                      {debris.name}
+                      {debris?.name || 'Unknown Type'}
                     </Badge>
                   ))}
                   {sortedDebrisTypes.length > 2 && (
