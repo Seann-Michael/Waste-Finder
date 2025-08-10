@@ -22,14 +22,14 @@
  */
 
 import { Request, Response } from "express";
-import {
-  getAllLocations,
-  getFilteredLocations,
-  getLocationById,
-  addLocation,
-  updateLocation,
-  deleteLocation,
-  toggleLocationStatus
+import { 
+  getAllLocations, 
+  getFilteredLocations, 
+  getLocationById, 
+  addLocation, 
+  updateLocation, 
+  deleteLocation, 
+  toggleLocationStatus 
 } from "../lib/supabaseService.js";
 
 /**
@@ -60,72 +60,71 @@ function calculateDistance(
 }
 
 /**
- * Validates location data for creation/update
+ * Sanitizes input data to prevent XSS and other security issues
+ */
+function sanitize(input: string): string {
+  return input.toString().trim().replace(/[<>]/g, "");
+}
+
+/**
+ * Validates location data structure and required fields
  */
 function validateLocationData(data: any): { isValid: boolean; errors: string[] } {
   const errors: string[] = [];
 
-  // Required fields validation
-  if (!data.name || data.name.trim().length < 3) {
-    errors.push("Name must be at least 3 characters long");
+  if (!data.name || typeof data.name !== "string" || data.name.trim().length < 2) {
+    errors.push("Name is required and must be at least 2 characters long");
   }
 
-  if (!data.address || data.address.trim().length < 5) {
-    errors.push("Address must be at least 5 characters long");
+  if (!data.address || typeof data.address !== "string" || data.address.trim().length < 5) {
+    errors.push("Address is required and must be at least 5 characters long");
   }
 
-  if (!data.city || data.city.trim().length < 2) {
-    errors.push("City is required");
+  if (!data.city || typeof data.city !== "string" || data.city.trim().length < 2) {
+    errors.push("City is required and must be at least 2 characters long");
   }
 
-  if (!data.state || !/^[A-Z]{2}$/.test(data.state)) {
-    errors.push("State must be a valid 2-letter code");
+  if (!data.state || typeof data.state !== "string" || data.state.length !== 2) {
+    errors.push("State is required and must be a 2-letter state code");
   }
 
-  if (!data.zipCode || !/^\d{5}(-\d{4})?$/.test(data.zipCode)) {
+  if (data.zipCode && (typeof data.zipCode !== "string" || !/^\d{5}(-\d{4})?$/.test(data.zipCode))) {
     errors.push("ZIP code must be in format 12345 or 12345-6789");
   }
 
-  if (!data.phone || !/^\(\d{3}\) \d{3}-\d{4}$/.test(data.phone)) {
-    errors.push("Phone must be in format (555) 123-4567");
+  if (data.phone && (typeof data.phone !== "string" || !/^\(\d{3}\) \d{3}-\d{4}$/.test(data.phone))) {
+    errors.push("Phone number must be in format (555) 123-4567");
   }
 
-  // Email validation (optional)
-  if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-    errors.push("Invalid email format");
+  if (data.email && (typeof data.email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email))) {
+    errors.push("Email must be a valid email address");
   }
 
-  // Website validation (optional)
-  if (data.website && !/^https?:\/\/.+/.test(data.website)) {
-    errors.push("Website must start with http:// or https://");
+  if (data.website && (typeof data.website !== "string" || !data.website.startsWith("http"))) {
+    errors.push("Website must be a valid URL starting with http or https");
   }
 
-  // Coordinates validation
-  const lat = parseFloat(data.latitude);
-  const lng = parseFloat(data.longitude);
-
-  if (isNaN(lat) || lat < -90 || lat > 90) {
-    errors.push("Latitude must be between -90 and 90");
+  if (data.latitude !== undefined) {
+    const lat = parseFloat(data.latitude);
+    if (isNaN(lat) || lat < -90 || lat > 90) {
+      errors.push("Latitude must be a number between -90 and 90");
+    }
   }
 
-  if (isNaN(lng) || lng < -180 || lng > 180) {
-    errors.push("Longitude must be between -180 and 180");
+  if (data.longitude !== undefined) {
+    const lng = parseFloat(data.longitude);
+    if (isNaN(lng) || lng < -180 || lng > 180) {
+      errors.push("Longitude must be a number between -180 and 180");
+    }
   }
 
-  // Location type validation
-  const validTypes = ["landfill", "transfer_station", "construction_landfill"];
-  if (!data.locationType || !validTypes.includes(data.locationType)) {
-    errors.push("Invalid location type");
-  }
-
-  // Payment types validation
-  if (!data.paymentTypes || !Array.isArray(data.paymentTypes) || data.paymentTypes.length === 0) {
-    errors.push("At least one payment type is required");
-  }
-
-  // Debris types validation
-  if (!data.debrisTypes || !Array.isArray(data.debrisTypes) || data.debrisTypes.length === 0) {
-    errors.push("At least one debris type is required");
+  if (!data.locationType || typeof data.locationType !== "string") {
+    errors.push("Location type is required");
+  } else {
+    const validTypes = ["landfill", "transfer_station", "construction_landfill"];
+    if (!validTypes.includes(data.locationType)) {
+      errors.push(`Location type must be one of: ${validTypes.join(", ")}`);
+    }
   }
 
   return {
@@ -135,17 +134,9 @@ function validateLocationData(data: any): { isValid: boolean; errors: string[] }
 }
 
 /**
- * Sanitizes location data to prevent XSS and injection attacks
+ * Sanitizes location data for database storage
  */
-function sanitizeLocationData(data: any): any {
-  const sanitize = (str: string): string => {
-    if (typeof str !== "string") return str;
-    return str
-      .trim()
-      .replace(/[<>]/g, "") // Remove potential HTML tags
-      .substring(0, 500); // Limit length
-  };
-
+function sanitizeLocationData(data: any) {
   return {
     ...data,
     name: sanitize(data.name),
@@ -158,7 +149,7 @@ function sanitizeLocationData(data: any): any {
   };
 }
 
-// Mock location database
+// Location data now comes from Supabase database
 
 // GET /api/locations - Get all locations or search by ZIP code
 export async function handleLocationsSearch(req: Request, res: Response) {
@@ -176,81 +167,64 @@ export async function handleLocationsSearch(req: Request, res: Response) {
     if (locationType && typeof locationType === 'string') {
       filters.locationType = locationType;
     }
-
+    
     let locations = await getFilteredLocations(filters);
 
-    // Note: In production, ZIP code searches would use a geocoding service
-    // For now, return all locations when ZIP code is provided
-    if (zipCode && typeof zipCode === "string" && /^\d{5}$/.test(zipCode)) {
-      // TODO: Integrate with geocoding service (Google Maps API, etc.)
-      // For now, show a message that ZIP code search requires integration
-      console.log(
-        `ZIP code search requested: ${zipCode} (requires geocoding service integration)`,
-      );
+    // Apply distance filtering if zipCode is provided
+    if (zipCode && typeof zipCode === "string") {
+      // This would require a geocoding service to convert ZIP to coordinates
+      // For now, we'll return all locations
     }
 
-    // Apply location type filter
-    if (locationType && locationType !== "all") {
-      locations = locations.filter(
-        (location) => location.locationType === locationType,
-      );
-    }
-
-    // Apply debris types filter
+    // Apply debris type filtering
     if (debrisTypes && typeof debrisTypes === "string") {
-      const debrisTypesArray = debrisTypes.split(",");
-      locations = locations.filter((location) =>
-        debrisTypesArray.some((selectedType) =>
-          location.debrisTypes.some((debris) =>
-            debris.name.toLowerCase().includes(selectedType.toLowerCase()),
-          ),
-        ),
+      const requestedTypes = debrisTypes.split(",");
+      locations = locations.filter((location: any) =>
+        location.debrisTypes?.some((debrisType: any) =>
+          requestedTypes.some((requestedType: string) =>
+            debrisType.name.toLowerCase().includes(requestedType.toLowerCase())
+          )
+        )
       );
     }
 
-    // Apply sorting (if not already sorted by distance)
-    if (!zipCode || zipCode === "") {
-      locations.sort((a, b) => {
-        switch (sortBy) {
-          case "name":
-            return a.name.localeCompare(b.name);
-          case "rating":
-            return b.rating - a.rating;
-          case "city":
-            return a.city.localeCompare(b.city);
-          default:
-            return 0;
-        }
-      });
-    }
-
-    // Prepare search location info for response
-    let searchLocation = null;
-    let message = `Found ${locations.length} locations`;
-
-    if (zipCode && typeof zipCode === "string" && /^\d{5}$/.test(zipCode)) {
-      message = `Found ${locations.length} locations (ZIP code search requires geocoding service integration)`;
-    }
+    // Sort locations
+    locations.sort((a: any, b: any) => {
+      switch (sortBy) {
+        case "distance":
+          return 0; // Would implement with coordinates
+        case "rating":
+          return (b.rating || 0) - (a.rating || 0);
+        case "name":
+        default:
+          return a.name.localeCompare(b.name);
+      }
+    });
 
     res.json({
       success: true,
       data: locations,
-      total: locations.length,
-      searchLocation,
-      message,
+      count: locations.length,
+      query: {
+        zipCode,
+        radius,
+        locationType,
+        debrisTypes,
+        sortBy,
+      },
     });
   } catch (error) {
-    console.error("Error in locations search:", error);
+    console.error("Error searching locations:", error);
     res.status(500).json({
       success: false,
       error: "Internal server error",
+      details: process.env.NODE_ENV === "development" ? error : undefined,
     });
   }
 }
 
 /**
- * GET /api/locations/all - Get all locations with pagination and search
- * Public endpoint with rate limiting
+ * GET /api/locations/all - Get all locations with optional filtering and pagination
  */
 export async function handleAllLocations(req: Request, res: Response) {
   try {
@@ -268,80 +242,60 @@ export async function handleAllLocations(req: Request, res: Response) {
     if (search && typeof search === 'string') {
       filters.search = search;
     }
-
+    
     let filteredLocations = await getFilteredLocations(filters);
 
     // Filter by status
     if (status === "active") {
-      filteredLocations = filteredLocations.filter((loc) => loc.isActive);
+      filteredLocations = filteredLocations.filter((loc: any) => loc.isActive !== false);
     } else if (status === "inactive") {
-      filteredLocations = filteredLocations.filter((loc) => !loc.isActive);
+      filteredLocations = filteredLocations.filter((loc: any) => loc.isActive === false);
     }
 
-    // Apply search filter
-    if (search && typeof search === "string") {
-      const searchTerm = search.toLowerCase().trim();
-      if (searchTerm.length > 0) {
-        filteredLocations = filteredLocations.filter(
-          (location) =>
-            location.name.toLowerCase().includes(searchTerm) ||
-            location.city.toLowerCase().includes(searchTerm) ||
-            location.state.toLowerCase().includes(searchTerm) ||
-            location.zipCode.includes(searchTerm) ||
-            location.locationType.toLowerCase().includes(searchTerm),
-        );
-      }
-    }
+    // Sort locations
+    filteredLocations.sort((a: any, b: any) => {
+      let aValue = a[sortBy as string];
+      let bValue = b[sortBy as string];
 
-    // Apply sorting
-    filteredLocations.sort((a, b) => {
-      const aValue = (a as any)[sortBy as string];
-      const bValue = (b as any)[sortBy as string];
-
-      if (typeof aValue === "string" && typeof bValue === "string") {
-        const result = aValue.localeCompare(bValue);
-        return sortOrder === "desc" ? -result : result;
+      if (typeof aValue === "string") {
+        aValue = aValue.toLowerCase();
+        bValue = bValue.toLowerCase();
       }
 
-      if (typeof aValue === "number" && typeof bValue === "number") {
-        const result = aValue - bValue;
-        return sortOrder === "desc" ? -result : result;
+      if (sortOrder === "desc") {
+        return bValue > aValue ? 1 : bValue < aValue ? -1 : 0;
       }
-
-      return 0;
+      return aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
     });
 
-    // Apply pagination
+    // Pagination
     const pageNum = Math.max(1, parseInt(page as string) || 1);
     const limitNum = Math.min(100, Math.max(1, parseInt(limit as string) || 50));
     const startIndex = (pageNum - 1) * limitNum;
     const endIndex = startIndex + limitNum;
-
     const paginatedLocations = filteredLocations.slice(startIndex, endIndex);
 
     res.json({
       success: true,
       data: paginatedLocations,
       pagination: {
-        currentPage: pageNum,
-        totalPages: Math.ceil(filteredLocations.length / limitNum),
-        totalItems: filteredLocations.length,
-        itemsPerPage: limitNum,
-        hasNextPage: endIndex < filteredLocations.length,
-        hasPreviousPage: pageNum > 1,
+        page: pageNum,
+        limit: limitNum,
+        total: filteredLocations.length,
+        pages: Math.ceil(filteredLocations.length / limitNum),
       },
-      meta: {
-        searchTerm: search || null,
+      filters: {
+        search,
+        status,
         sortBy,
         sortOrder,
-        status,
       },
     });
   } catch (error) {
     console.error("Error fetching all locations:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to fetch locations",
+      error: "Internal server error",
       details: process.env.NODE_ENV === "development" ? error : undefined,
     });
   }
@@ -365,24 +319,18 @@ export async function handleCreateLocation(req: Request, res: Response) {
 
     const sanitizedData = sanitizeLocationData(req.body);
 
-    // Generate new ID
-    const newId = `location_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-
     const newLocation = {
-      id: newId,
       ...sanitizedData,
-      latitude: parseFloat(sanitizedData.latitude),
-      longitude: parseFloat(sanitizedData.longitude),
+      latitude: sanitizedData.latitude ? parseFloat(sanitizedData.latitude) : undefined,
+      longitude: sanitizedData.longitude ? parseFloat(sanitizedData.longitude) : undefined,
       rating: 0,
       reviewCount: 0,
       isActive: sanitizedData.isActive !== false,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
     };
 
     // Add to Supabase database
     const createdLocation = await addLocation(newLocation);
-
+    
     if (!createdLocation) {
       return res.status(500).json({
         success: false,
@@ -399,7 +347,7 @@ export async function handleCreateLocation(req: Request, res: Response) {
     console.error("Error creating location:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to create location",
+      error: "Internal server error",
       details: process.env.NODE_ENV === "development" ? error : undefined,
     });
   }
@@ -409,17 +357,9 @@ export async function handleCreateLocation(req: Request, res: Response) {
  * PUT /api/locations/:id - Update existing location
  * Requires authentication and locations.write permission
  */
-export function handleUpdateLocation(req: Request, res: Response) {
+export async function handleUpdateLocation(req: Request, res: Response) {
   try {
     const { id } = req.params;
-    const locationIndex = mockLocations.findIndex((loc) => loc.id === id);
-
-    if (locationIndex === -1) {
-      return res.status(404).json({
-        success: false,
-        error: "Location not found",
-      });
-    }
 
     const validation = validateLocationData(req.body);
 
@@ -432,17 +372,22 @@ export function handleUpdateLocation(req: Request, res: Response) {
     }
 
     const sanitizedData = sanitizeLocationData(req.body);
-    const existingLocation = mockLocations[locationIndex];
-
-    const updatedLocation = {
-      ...existingLocation,
+    
+    const updates = {
       ...sanitizedData,
-      latitude: parseFloat(sanitizedData.latitude),
-      longitude: parseFloat(sanitizedData.longitude),
-      updatedAt: new Date().toISOString(),
+      latitude: sanitizedData.latitude ? parseFloat(sanitizedData.latitude) : undefined,
+      longitude: sanitizedData.longitude ? parseFloat(sanitizedData.longitude) : undefined,
     };
-
-    mockLocations[locationIndex] = updatedLocation;
+    
+    // Update in Supabase database
+    const updatedLocation = await updateLocation(id, updates);
+    
+    if (!updatedLocation) {
+      return res.status(404).json({
+        success: false,
+        error: "Location not found or update failed",
+      });
+    }
 
     res.json({
       success: true,
@@ -453,44 +398,40 @@ export function handleUpdateLocation(req: Request, res: Response) {
     console.error("Error updating location:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to update location",
+      error: "Internal server error",
       details: process.env.NODE_ENV === "development" ? error : undefined,
     });
   }
 }
 
 /**
- * DELETE /api/locations/:id - Delete location
- * Requires authentication and locations.delete permission (super admin only)
+ * DELETE /api/locations/:id - Delete location (soft delete)
+ * Requires authentication and locations.delete permission
  */
-export function handleDeleteLocation(req: Request, res: Response) {
+export async function handleDeleteLocation(req: Request, res: Response) {
   try {
     const { id } = req.params;
-    const locationIndex = mockLocations.findIndex((loc) => loc.id === id);
-
-    if (locationIndex === -1) {
+    
+    // Soft delete in Supabase database
+    const success = await deleteLocation(id);
+    
+    if (!success) {
       return res.status(404).json({
         success: false,
-        error: "Location not found",
+        error: "Location not found or delete failed",
       });
     }
-
-    const deletedLocation = mockLocations[locationIndex];
-    mockLocations.splice(locationIndex, 1);
 
     res.json({
       success: true,
       message: "Location deleted successfully",
-      deletedLocation: {
-        id: deletedLocation.id,
-        name: deletedLocation.name,
-      },
+      data: { id },
     });
   } catch (error) {
     console.error("Error deleting location:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to delete location",
+      error: "Internal server error",
       details: process.env.NODE_ENV === "development" ? error : undefined,
     });
   }
@@ -500,46 +441,53 @@ export function handleDeleteLocation(req: Request, res: Response) {
  * PATCH /api/locations/:id/status - Toggle location active status
  * Requires authentication and locations.write permission
  */
-export function handleToggleLocationStatus(req: Request, res: Response) {
+export async function handleToggleLocationStatus(req: Request, res: Response) {
   try {
     const { id } = req.params;
     const { isActive } = req.body;
 
-    const locationIndex = mockLocations.findIndex((loc) => loc.id === id);
-
-    if (locationIndex === -1) {
-      return res.status(404).json({
+    if (typeof isActive !== "boolean") {
+      return res.status(400).json({
         success: false,
-        error: "Location not found",
+        error: "isActive must be a boolean value",
       });
     }
 
-    mockLocations[locationIndex].isActive = Boolean(isActive);
-    mockLocations[locationIndex].updatedAt = new Date().toISOString();
+    // Update status in Supabase database
+    const updatedLocation = await toggleLocationStatus(id, isActive);
+    
+    if (!updatedLocation) {
+      return res.status(404).json({
+        success: false,
+        error: "Location not found or status update failed",
+      });
+    }
 
     res.json({
       success: true,
-      data: {
-        id: mockLocations[locationIndex].id,
-        isActive: mockLocations[locationIndex].isActive,
-      },
       message: `Location ${isActive ? "activated" : "deactivated"} successfully`,
+      data: {
+        id: updatedLocation.id,
+        isActive: updatedLocation.isActive,
+      },
     });
   } catch (error) {
     console.error("Error toggling location status:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to update location status",
+      error: "Internal server error",
       details: process.env.NODE_ENV === "development" ? error : undefined,
     });
   }
 }
 
-// GET /api/locations/:id - Get specific location
-export function handleLocationById(req: Request, res: Response) {
+/**
+ * GET /api/locations/:id - Get location by ID
+ */
+export async function handleLocationById(req: Request, res: Response) {
   try {
     const { id } = req.params;
-    const location = mockLocations.find((loc) => loc.id === id);
+    const location = await getLocationById(id);
 
     if (!location) {
       return res.status(404).json({
@@ -553,10 +501,11 @@ export function handleLocationById(req: Request, res: Response) {
       data: location,
     });
   } catch (error) {
-    console.error("Error getting location by ID:", error);
+    console.error("Error fetching location by ID:", error);
     res.status(500).json({
       success: false,
       error: "Internal server error",
+      details: process.env.NODE_ENV === "development" ? error : undefined,
     });
   }
 }
