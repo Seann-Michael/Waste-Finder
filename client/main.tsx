@@ -1,21 +1,10 @@
 import "./global.css";
 import { createRoot } from "react-dom/client";
-import React from "react";
+import App from "./App";
+import { initializeSampleArticles } from "@/lib/sampleArticles";
 
-const TestApp = () => {
-  try {
-    // Try to import App component
-    const App = React.lazy(() => import("./App"));
-    return (
-      <React.Suspense fallback={<div>Loading app components...</div>}>
-        <App />
-      </React.Suspense>
-    );
-  } catch (error) {
-    console.error("Error loading App:", error);
-    return <div>Error loading app: {String(error)}</div>;
-  }
-};
+// Initialize sample articles for demonstration
+initializeSampleArticles();
 
 const container = document.getElementById("root");
 if (!container) {
@@ -23,10 +12,4 @@ if (!container) {
 }
 
 const root = createRoot(container);
-
-try {
-  root.render(<TestApp />);
-} catch (error) {
-  console.error("Render error:", error);
-  root.render(<div>Render error: {String(error)}</div>);
-}
+root.render(<App />);
