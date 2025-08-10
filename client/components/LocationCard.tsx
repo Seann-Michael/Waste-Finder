@@ -131,6 +131,11 @@ export default function LocationCard({ location, searchedDebrisTypes = [], showC
   };
 
   const sortDebrisTypesByPriority = (debrisTypes: typeof location.debrisTypes) => {
+    // Return empty array if debrisTypes is null/undefined
+    if (!debrisTypes || !Array.isArray(debrisTypes)) {
+      return [];
+    }
+
     // Priority order:
     // 1. User searched/filtered debris types
     // 2. Municipal waste
@@ -146,6 +151,11 @@ export default function LocationCard({ location, searchedDebrisTypes = [], showC
     };
 
     const getDebrisTypePriority = (debrisType: any) => {
+      // Safety check for debrisType
+      if (!debrisType || !debrisType.name) {
+        return 5; // Lowest priority for invalid entries
+      }
+
       const name = debrisType.name.toLowerCase();
 
       // Check if it matches user search/filter (highest priority)
@@ -183,7 +193,10 @@ export default function LocationCard({ location, searchedDebrisTypes = [], showC
       }
 
       // If same priority, sort alphabetically
-      return a.name.localeCompare(b.name);
+      // Add safety check for name property
+      const nameA = a?.name || '';
+      const nameB = b?.name || '';
+      return nameA.localeCompare(nameB);
     });
   };
 
