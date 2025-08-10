@@ -375,7 +375,7 @@ export default function LocationCard({ location, searchedDebrisTypes = [], showC
 
           {/* Pricing Information */}
           <div className="mb-3">
-            {location.debrisTypes.some((debris) => debris.price) ? (
+            {(location.debrisTypes || []).some((debris) => debris?.price) ? (
               <div className="space-y-2">
                 <span className="text-sm font-semibold text-gray-800">
                   Pricing:
@@ -384,7 +384,7 @@ export default function LocationCard({ location, searchedDebrisTypes = [], showC
                   // Priority order for pricing display
                   const priorityOrder = ['Municipal Waste', 'General Waste', 'Household Waste', 'Construction Debris', 'Construction Waste', 'C&D Debris', 'Yard Waste', 'Green Waste', 'Organic Waste'];
 
-                  const pricedDebris = location.debrisTypes.filter((debris) => debris.price);
+                  const pricedDebris = (location.debrisTypes || []).filter((debris) => debris?.price);
                   const prioritized: typeof pricedDebris = [];
                   const remaining: typeof pricedDebris = [];
 
