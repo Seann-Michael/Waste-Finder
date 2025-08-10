@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, Database, CheckCircle, AlertCircle } from 'lucide-react';
-import { seedTestData, testDataRetrieval } from '@/lib/seedData';
-import { getLocationStats } from '@/lib/supabaseQueries';
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader2, Database, CheckCircle, AlertCircle } from "lucide-react";
+import { seedTestData, testDataRetrieval } from "@/lib/seedData";
+import { getLocationStats } from "@/lib/supabaseQueries";
 
 export default function DataSeeding() {
   const [isSeeding, setIsSeeding] = useState(false);
@@ -16,11 +16,11 @@ export default function DataSeeding() {
   const handleSeedData = async () => {
     setIsSeeding(true);
     setSeedResult(null);
-    
+
     try {
       const result = await seedTestData();
       setSeedResult(result);
-      
+
       if (result.success) {
         // Also get updated stats
         const newStats = await getLocationStats();
@@ -36,11 +36,11 @@ export default function DataSeeding() {
   const handleTestData = async () => {
     setIsTesting(true);
     setTestResult(null);
-    
+
     try {
       const result = await testDataRetrieval();
       setTestResult(result);
-      
+
       // Also get stats
       const newStats = await getLocationStats();
       setStats(newStats);
@@ -54,9 +54,12 @@ export default function DataSeeding() {
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Database Setup</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          Database Setup
+        </h1>
         <p className="text-gray-600">
-          Set up test data in your Supabase database to get started with real location data.
+          Set up test data in your Supabase database to get started with real
+          location data.
         </p>
       </div>
 
@@ -72,24 +75,36 @@ export default function DataSeeding() {
           {stats ? (
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">{stats.totalLocations}</div>
+                <div className="text-2xl font-bold text-blue-600">
+                  {stats.totalLocations}
+                </div>
                 <div className="text-sm text-gray-600">Total Locations</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">{stats.typeCount.landfill || 0}</div>
+                <div className="text-2xl font-bold text-green-600">
+                  {stats.typeCount.landfill || 0}
+                </div>
                 <div className="text-sm text-gray-600">Landfills</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-orange-600">{stats.typeCount.transfer_station || 0}</div>
+                <div className="text-2xl font-bold text-orange-600">
+                  {stats.typeCount.transfer_station || 0}
+                </div>
                 <div className="text-sm text-gray-600">Transfer Stations</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-purple-600">{stats.typeCount.construction_landfill || 0}</div>
-                <div className="text-sm text-gray-600">Construction Landfills</div>
+                <div className="text-2xl font-bold text-purple-600">
+                  {stats.typeCount.construction_landfill || 0}
+                </div>
+                <div className="text-sm text-gray-600">
+                  Construction Landfills
+                </div>
               </div>
             </div>
           ) : (
-            <p className="text-gray-500">Click "Test Data Connection" to see current stats</p>
+            <p className="text-gray-500">
+              Click "Test Data Connection" to see current stats
+            </p>
           )}
         </CardContent>
       </Card>
@@ -103,9 +118,10 @@ export default function DataSeeding() {
           </CardHeader>
           <CardContent>
             <p className="text-gray-600 mb-4">
-              Add 5 sample locations to your database for testing the application.
+              Add 5 sample locations to your database for testing the
+              application.
             </p>
-            <Button 
+            <Button
               onClick={handleSeedData}
               disabled={isSeeding}
               className="w-full"
@@ -116,7 +132,7 @@ export default function DataSeeding() {
                   Seeding Data...
                 </>
               ) : (
-                'Seed Test Data'
+                "Seed Test Data"
               )}
             </Button>
           </CardContent>
@@ -129,9 +145,10 @@ export default function DataSeeding() {
           </CardHeader>
           <CardContent>
             <p className="text-gray-600 mb-4">
-              Verify that your Supabase connection is working and data can be retrieved.
+              Verify that your Supabase connection is working and data can be
+              retrieved.
             </p>
-            <Button 
+            <Button
               onClick={handleTestData}
               disabled={isTesting}
               variant="outline"
@@ -143,7 +160,7 @@ export default function DataSeeding() {
                   Testing Connection...
                 </>
               ) : (
-                'Test Data Connection'
+                "Test Data Connection"
               )}
             </Button>
           </CardContent>
@@ -152,7 +169,9 @@ export default function DataSeeding() {
 
       {/* Results */}
       {seedResult && (
-        <Alert className={`mb-4 ${seedResult.success ? 'border-green-500' : 'border-red-500'}`}>
+        <Alert
+          className={`mb-4 ${seedResult.success ? "border-green-500" : "border-red-500"}`}
+        >
           <div className="flex items-center gap-2">
             {seedResult.success ? (
               <CheckCircle className="w-4 h-4 text-green-600" />
@@ -162,15 +181,19 @@ export default function DataSeeding() {
             <AlertDescription>
               {seedResult.success ? (
                 <>
-                  ✅ Successfully seeded {seedResult.locations?.length || 0} locations!
+                  ✅ Successfully seeded {seedResult.locations?.length || 0}{" "}
+                  locations!
                   <br />
-                  <strong>Next steps:</strong> Go to the homepage to see the updated location counts, or test the search functionality.
+                  <strong>Next steps:</strong> Go to the homepage to see the
+                  updated location counts, or test the search functionality.
                 </>
               ) : (
                 <>
-                  ❌ Failed to seed data: {seedResult.error?.message || 'Unknown error'}
+                  ❌ Failed to seed data:{" "}
+                  {seedResult.error?.message || "Unknown error"}
                   <br />
-                  <strong>Solution:</strong> Check your Supabase connection and table permissions.
+                  <strong>Solution:</strong> Check your Supabase connection and
+                  table permissions.
                 </>
               )}
             </AlertDescription>
@@ -179,7 +202,9 @@ export default function DataSeeding() {
       )}
 
       {testResult && (
-        <Alert className={`mb-4 ${testResult.success ? 'border-green-500' : 'border-red-500'}`}>
+        <Alert
+          className={`mb-4 ${testResult.success ? "border-green-500" : "border-red-500"}`}
+        >
           <div className="flex items-center gap-2">
             {testResult.success ? (
               <CheckCircle className="w-4 h-4 text-green-600" />
@@ -189,18 +214,22 @@ export default function DataSeeding() {
             <AlertDescription>
               {testResult.success ? (
                 <>
-                  ✅ Database connection working! Found {testResult.locations?.length || 0} locations.
+                  ✅ Database connection working! Found{" "}
+                  {testResult.locations?.length || 0} locations.
                   {testResult.locations?.length > 0 && (
                     <div className="mt-2">
                       <strong>Locations found:</strong>
                       <ul className="list-disc list-inside mt-1">
                         {testResult.locations.slice(0, 3).map((loc: any) => (
                           <li key={loc.id} className="text-sm">
-                            {loc.name} ({loc.location_type}) in {loc.city}, {loc.state}
+                            {loc.name} ({loc.location_type}) in {loc.city},{" "}
+                            {loc.state}
                           </li>
                         ))}
                         {testResult.locations.length > 3 && (
-                          <li className="text-sm">...and {testResult.locations.length - 3} more</li>
+                          <li className="text-sm">
+                            ...and {testResult.locations.length - 3} more
+                          </li>
                         )}
                       </ul>
                     </div>
@@ -208,9 +237,11 @@ export default function DataSeeding() {
                 </>
               ) : (
                 <>
-                  ❌ Database connection failed: {testResult.error?.message || 'Unknown error'}
+                  ❌ Database connection failed:{" "}
+                  {testResult.error?.message || "Unknown error"}
                   <br />
-                  <strong>Check:</strong> Supabase URL, API keys, and table permissions.
+                  <strong>Check:</strong> Supabase URL, API keys, and table
+                  permissions.
                 </>
               )}
             </AlertDescription>
@@ -225,12 +256,15 @@ export default function DataSeeding() {
         </CardHeader>
         <CardContent>
           <p className="text-gray-600 mb-4">
-            If the automatic seeding doesn't work, you can manually run SQL in your Supabase dashboard:
+            If the automatic seeding doesn't work, you can manually run SQL in
+            your Supabase dashboard:
           </p>
           <ol className="list-decimal list-inside space-y-2 text-sm">
             <li>Go to your Supabase dashboard</li>
             <li>Navigate to SQL Editor</li>
-            <li>Copy and paste the SQL from <code>supabase-seed-data.sql</code></li>
+            <li>
+              Copy and paste the SQL from <code>supabase-seed-data.sql</code>
+            </li>
             <li>Execute the script</li>
             <li>Come back here and click "Test Data Connection"</li>
           </ol>

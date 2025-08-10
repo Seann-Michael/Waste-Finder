@@ -163,7 +163,7 @@ export async function updateLocation(
       .from("locations")
       .update({
         ...updates,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       })
       .eq("id", id)
       .select()
@@ -188,7 +188,7 @@ export async function deleteLocation(id: string): Promise<boolean> {
       .from("locations")
       .update({
         is_active: false,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       })
       .eq("id", id);
 
@@ -214,7 +214,7 @@ export async function toggleLocationStatus(
       .from("locations")
       .update({
         is_active: isActive,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       })
       .eq("id", id)
       .select()

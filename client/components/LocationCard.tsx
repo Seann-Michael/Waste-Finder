@@ -48,7 +48,11 @@ const getLocationLabel = (type: Location["locationType"]) => {
   }
 };
 
-export default function LocationCard({ location, searchedDebrisTypes = [], showContactDetails = false }: LocationCardProps) {
+export default function LocationCard({
+  location,
+  searchedDebrisTypes = [],
+  showContactDetails = false,
+}: LocationCardProps) {
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
@@ -130,7 +134,9 @@ export default function LocationCard({ location, searchedDebrisTypes = [], showC
     return "Local";
   };
 
-  const sortDebrisTypesByPriority = (debrisTypes: typeof location.debrisTypes) => {
+  const sortDebrisTypesByPriority = (
+    debrisTypes: typeof location.debrisTypes,
+  ) => {
     // Return empty array if debrisTypes is null/undefined
     if (!debrisTypes || !Array.isArray(debrisTypes)) {
       return [];
@@ -144,10 +150,33 @@ export default function LocationCard({ location, searchedDebrisTypes = [], showC
     // 5. All others
 
     const priorityKeywords = {
-      searched: searchedDebrisTypes.map(type => type.toLowerCase()),
-      municipal: ['municipal', 'general', 'household', 'residential', 'domestic'],
-      construction: ['construction', 'c&d', 'demolition', 'building', 'concrete', 'drywall', 'lumber'],
-      yard: ['yard', 'green', 'organic', 'garden', 'landscaping', 'tree', 'grass', 'leaves']
+      searched: searchedDebrisTypes.map((type) => type.toLowerCase()),
+      municipal: [
+        "municipal",
+        "general",
+        "household",
+        "residential",
+        "domestic",
+      ],
+      construction: [
+        "construction",
+        "c&d",
+        "demolition",
+        "building",
+        "concrete",
+        "drywall",
+        "lumber",
+      ],
+      yard: [
+        "yard",
+        "green",
+        "organic",
+        "garden",
+        "landscaping",
+        "tree",
+        "grass",
+        "leaves",
+      ],
     };
 
     const getDebrisTypePriority = (debrisType: any) => {
@@ -159,24 +188,30 @@ export default function LocationCard({ location, searchedDebrisTypes = [], showC
       const name = debrisType.name.toLowerCase();
 
       // Check if it matches user search/filter (highest priority)
-      if (priorityKeywords.searched.some(searched =>
-        name.includes(searched) || searched.includes(name)
-      )) {
+      if (
+        priorityKeywords.searched.some(
+          (searched) => name.includes(searched) || searched.includes(name),
+        )
+      ) {
         return 1;
       }
 
       // Check municipal waste
-      if (priorityKeywords.municipal.some(keyword => name.includes(keyword))) {
+      if (
+        priorityKeywords.municipal.some((keyword) => name.includes(keyword))
+      ) {
         return 2;
       }
 
       // Check construction debris
-      if (priorityKeywords.construction.some(keyword => name.includes(keyword))) {
+      if (
+        priorityKeywords.construction.some((keyword) => name.includes(keyword))
+      ) {
         return 3;
       }
 
       // Check yard waste
-      if (priorityKeywords.yard.some(keyword => name.includes(keyword))) {
+      if (priorityKeywords.yard.some((keyword) => name.includes(keyword))) {
         return 4;
       }
 
@@ -194,8 +229,8 @@ export default function LocationCard({ location, searchedDebrisTypes = [], showC
 
       // If same priority, sort alphabetically
       // Add safety check for name property
-      const nameA = a?.name || '';
-      const nameB = b?.name || '';
+      const nameA = a?.name || "";
+      const nameB = b?.name || "";
       return nameA.localeCompare(nameB);
     });
   };
@@ -242,7 +277,9 @@ export default function LocationCard({ location, searchedDebrisTypes = [], showC
                 className="text-sm text-primary hover:underline leading-relaxed"
               >
                 <div>{location.address}</div>
-                <div>{location.city}, {location.state} {location.zipCode}</div>
+                <div>
+                  {location.city}, {location.state} {location.zipCode}
+                </div>
               </a>
             </div>
           </div>
@@ -261,82 +298,114 @@ export default function LocationCard({ location, searchedDebrisTypes = [], showC
             <div className="flex items-start gap-2">
               <Clock className="w-4 h-4 text-muted-foreground mt-0.5" />
               <div className="text-sm text-muted-foreground leading-relaxed">
-              {location.operatingHours.length > 0
-                ? (() => {
-                    // Group consecutive days with same hours
-                    const hourGroups: { [key: string]: number[] } = {};
-                    const closedDays: number[] = [];
+                {location.operatingHours.length > 0
+                  ? (() => {
+                      // Group consecutive days with same hours
+                      const hourGroups: { [key: string]: number[] } = {};
+                      const closedDays: number[] = [];
 
-                    location.operatingHours.forEach((h) => {
-                      if (h.isClosed) {
-                        closedDays.push(h.dayOfWeek);
-                        return;
-                      }
-                      const timeKey = `${formatTo12Hour(h.openTime)}-${formatTo12Hour(h.closeTime)}`;
-                      if (!hourGroups[timeKey]) hourGroups[timeKey] = [];
-                      hourGroups[timeKey].push(h.dayOfWeek);
-                    });
-
-                    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-                    const results: string[] = [];
-
-                    // Process hour groups
-                    Object.entries(hourGroups).forEach(([timeRange, days]) => {
-                      days.sort((a, b) => a - b);
-
-                      // Check for consecutive weekdays (Mon-Fri)
-                      if (days.length >= 5 && days.includes(1) && days.includes(2) && days.includes(3) && days.includes(4) && days.includes(5)) {
-                        results.push(`Mon-Fri: ${timeRange.replace(/\s?(AM|PM)/g, '$1')}`);
-                        // Remove weekdays from the days array for other processing
-                        days = days.filter(d => ![1,2,3,4,5].includes(d));
-                      }
-
-                      // Group remaining consecutive days
-                      let i = 0;
-                      while (i < days.length) {
-                        let endIndex = i;
-                        // Find consecutive days
-                        while (endIndex + 1 < days.length && days[endIndex + 1] === days[endIndex] + 1) {
-                          endIndex++;
+                      location.operatingHours.forEach((h) => {
+                        if (h.isClosed) {
+                          closedDays.push(h.dayOfWeek);
+                          return;
                         }
+                        const timeKey = `${formatTo12Hour(h.openTime)}-${formatTo12Hour(h.closeTime)}`;
+                        if (!hourGroups[timeKey]) hourGroups[timeKey] = [];
+                        hourGroups[timeKey].push(h.dayOfWeek);
+                      });
 
-                        if (i === endIndex) {
-                          // Single day
-                          results.push(`${dayNames[days[i]]}: ${timeRange.replace(/\s?(AM|PM)/g, '$1')}`);
-                        } else {
-                          // Range of days
-                          results.push(`${dayNames[days[i]]}-${dayNames[days[endIndex]]}: ${timeRange.replace(/\s?(AM|PM)/g, '$1')}`);
-                        }
-                        i = endIndex + 1;
-                      }
-                    });
+                      const dayNames = [
+                        "Sun",
+                        "Mon",
+                        "Tue",
+                        "Wed",
+                        "Thu",
+                        "Fri",
+                        "Sat",
+                      ];
+                      const results: string[] = [];
 
-                    // Handle closed days if any
-                    if (closedDays.length > 0 && closedDays.length < 7) {
-                      const closedDayNames = closedDays.sort().map(d => dayNames[d]);
-                      if (closedDays.length === 1) {
-                        results.push(`${closedDayNames[0]}: Closed`);
-                      } else {
-                        results.push(`${closedDayNames.join(', ')}: Closed`);
-                      }
-                    }
+                      // Process hour groups
+                      Object.entries(hourGroups).forEach(
+                        ([timeRange, days]) => {
+                          days.sort((a, b) => a - b);
 
-                    // If we have more than 2 different time groups, show condensed version
-                    if (results.length > 2) {
-                      const primaryHours = results[0]; // Usually Mon-Fri
-                      return (
-                        <div>
-                          <div>{primaryHours}</div>
-                          <div className="text-xs text-muted-foreground/70 mt-0.5">
-                            +{results.length - 1} more schedules
-                          </div>
-                        </div>
+                          // Check for consecutive weekdays (Mon-Fri)
+                          if (
+                            days.length >= 5 &&
+                            days.includes(1) &&
+                            days.includes(2) &&
+                            days.includes(3) &&
+                            days.includes(4) &&
+                            days.includes(5)
+                          ) {
+                            results.push(
+                              `Mon-Fri: ${timeRange.replace(/\s?(AM|PM)/g, "$1")}`,
+                            );
+                            // Remove weekdays from the days array for other processing
+                            days = days.filter(
+                              (d) => ![1, 2, 3, 4, 5].includes(d),
+                            );
+                          }
+
+                          // Group remaining consecutive days
+                          let i = 0;
+                          while (i < days.length) {
+                            let endIndex = i;
+                            // Find consecutive days
+                            while (
+                              endIndex + 1 < days.length &&
+                              days[endIndex + 1] === days[endIndex] + 1
+                            ) {
+                              endIndex++;
+                            }
+
+                            if (i === endIndex) {
+                              // Single day
+                              results.push(
+                                `${dayNames[days[i]]}: ${timeRange.replace(/\s?(AM|PM)/g, "$1")}`,
+                              );
+                            } else {
+                              // Range of days
+                              results.push(
+                                `${dayNames[days[i]]}-${dayNames[days[endIndex]]}: ${timeRange.replace(/\s?(AM|PM)/g, "$1")}`,
+                              );
+                            }
+                            i = endIndex + 1;
+                          }
+                        },
                       );
-                    }
 
-                    return results.length > 0 ? results.join(' • ') : 'Hours vary';
-                  })()
-                : "Call for hours"}
+                      // Handle closed days if any
+                      if (closedDays.length > 0 && closedDays.length < 7) {
+                        const closedDayNames = closedDays
+                          .sort()
+                          .map((d) => dayNames[d]);
+                        if (closedDays.length === 1) {
+                          results.push(`${closedDayNames[0]}: Closed`);
+                        } else {
+                          results.push(`${closedDayNames.join(", ")}: Closed`);
+                        }
+                      }
+
+                      // If we have more than 2 different time groups, show condensed version
+                      if (results.length > 2) {
+                        const primaryHours = results[0]; // Usually Mon-Fri
+                        return (
+                          <div>
+                            <div>{primaryHours}</div>
+                            <div className="text-xs text-muted-foreground/70 mt-0.5">
+                              +{results.length - 1} more schedules
+                            </div>
+                          </div>
+                        );
+                      }
+
+                      return results.length > 0
+                        ? results.join(" • ")
+                        : "Hours vary";
+                    })()
+                  : "Call for hours"}
               </div>
             </div>
           )}
@@ -346,7 +415,9 @@ export default function LocationCard({ location, searchedDebrisTypes = [], showC
         <div className="lg:col-span-4">
           <div className="flex flex-wrap gap-1 mb-3">
             {(() => {
-              const sortedDebrisTypes = sortDebrisTypesByPriority(location.debrisTypes || []);
+              const sortedDebrisTypes = sortDebrisTypesByPriority(
+                location.debrisTypes || [],
+              );
               return (
                 <>
                   {sortedDebrisTypes.slice(0, 2).map((debris) => (
@@ -354,13 +425,20 @@ export default function LocationCard({ location, searchedDebrisTypes = [], showC
                       key={debris.id || Math.random()}
                       variant="outline"
                       className={`text-sm px-2 py-1 ${
-                        searchedDebrisTypes.some(searched =>
-                          debris?.name?.toLowerCase().includes(searched.toLowerCase()) ||
-                          searched.toLowerCase().includes(debris?.name?.toLowerCase() || '')
-                        ) ? 'bg-blue-50 border-blue-300 text-blue-800' : ''
+                        searchedDebrisTypes.some(
+                          (searched) =>
+                            debris?.name
+                              ?.toLowerCase()
+                              .includes(searched.toLowerCase()) ||
+                            searched
+                              .toLowerCase()
+                              .includes(debris?.name?.toLowerCase() || ""),
+                        )
+                          ? "bg-blue-50 border-blue-300 text-blue-800"
+                          : ""
                       }`}
                     >
-                      {debris?.name || 'Unknown Type'}
+                      {debris?.name || "Unknown Type"}
                     </Badge>
                   ))}
                   {sortedDebrisTypes.length > 2 && (
@@ -382,17 +460,34 @@ export default function LocationCard({ location, searchedDebrisTypes = [], showC
                 </span>
                 {(() => {
                   // Priority order for pricing display
-                  const priorityOrder = ['Municipal Waste', 'General Waste', 'Household Waste', 'Construction Debris', 'Construction Waste', 'C&D Debris', 'Yard Waste', 'Green Waste', 'Organic Waste'];
+                  const priorityOrder = [
+                    "Municipal Waste",
+                    "General Waste",
+                    "Household Waste",
+                    "Construction Debris",
+                    "Construction Waste",
+                    "C&D Debris",
+                    "Yard Waste",
+                    "Green Waste",
+                    "Organic Waste",
+                  ];
 
-                  const pricedDebris = (location.debrisTypes || []).filter((debris) => debris?.price);
+                  const pricedDebris = (location.debrisTypes || []).filter(
+                    (debris) => debris?.price,
+                  );
                   const prioritized: typeof pricedDebris = [];
                   const remaining: typeof pricedDebris = [];
 
                   // Sort by priority
-                  priorityOrder.forEach(priority => {
-                    const found = pricedDebris.find(debris =>
-                      debris?.name?.toLowerCase().includes(priority.toLowerCase()) ||
-                      priority.toLowerCase().includes(debris?.name?.toLowerCase() || '')
+                  priorityOrder.forEach((priority) => {
+                    const found = pricedDebris.find(
+                      (debris) =>
+                        debris?.name
+                          ?.toLowerCase()
+                          .includes(priority.toLowerCase()) ||
+                        priority
+                          .toLowerCase()
+                          .includes(debris?.name?.toLowerCase() || ""),
                     );
                     if (found && !prioritized.includes(found)) {
                       prioritized.push(found);
@@ -400,7 +495,7 @@ export default function LocationCard({ location, searchedDebrisTypes = [], showC
                   });
 
                   // Add remaining items
-                  pricedDebris.forEach(debris => {
+                  pricedDebris.forEach((debris) => {
                     if (!prioritized.includes(debris)) {
                       remaining.push(debris);
                     }
@@ -411,10 +506,18 @@ export default function LocationCard({ location, searchedDebrisTypes = [], showC
                   return (
                     <>
                       {sortedDebris.slice(0, 3).map((debris) => (
-                        <div key={debris?.id || Math.random()} className="flex justify-between items-center">
-                          <span className="text-sm text-gray-700">{debris?.name || 'Unknown'}:</span>
+                        <div
+                          key={debris?.id || Math.random()}
+                          className="flex justify-between items-center"
+                        >
+                          <span className="text-sm text-gray-700">
+                            {debris?.name || "Unknown"}:
+                          </span>
                           <span className="text-sm font-bold text-green-700 bg-green-50 px-2 py-1 rounded">
-                            ${debris?.price || 0}{debris?.priceDetails ? `/${debris.priceDetails}` : '/ton'}
+                            ${debris?.price || 0}
+                            {debris?.priceDetails
+                              ? `/${debris.priceDetails}`
+                              : "/ton"}
                           </span>
                         </div>
                       ))}

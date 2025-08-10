@@ -348,9 +348,7 @@ const AppRoutes = () => (
     <Route
       path="/admin/data-seeding"
       element={
-        <Suspense
-          fallback={<PageLoading message="Loading data seeding..." />}
-        >
+        <Suspense fallback={<PageLoading message="Loading data seeding..." />}>
           <AdminRoute>
             <DataSeeding />
           </AdminRoute>
