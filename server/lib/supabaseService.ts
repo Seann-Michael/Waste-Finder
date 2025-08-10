@@ -25,9 +25,9 @@ export interface Location {
   latitude?: number;
   longitude?: number;
   locationType: string;
-  isActive?: boolean;
-  createdAt?: string;
-  updatedAt?: string;
+  is_active?: boolean;
+  created_at?: string;
+  updated_at?: string;
   paymentTypes?: any[];
   debrisTypes?: any[];
   hours?: string;
@@ -163,7 +163,7 @@ export async function updateLocation(
       .from("locations")
       .update({
         ...updates,
-        updatedAt: new Date().toISOString(),
+        updated_at: new Date().toISOString()
       })
       .eq("id", id)
       .select()
@@ -187,8 +187,8 @@ export async function deleteLocation(id: string): Promise<boolean> {
     const { error } = await supabaseAdmin
       .from("locations")
       .update({
-        isActive: false,
-        updatedAt: new Date().toISOString(),
+        is_active: false,
+        updated_at: new Date().toISOString()
       })
       .eq("id", id);
 
@@ -213,8 +213,8 @@ export async function toggleLocationStatus(
     const { data, error } = await supabaseAdmin
       .from("locations")
       .update({
-        isActive,
-        updatedAt: new Date().toISOString(),
+        is_active: isActive,
+        updated_at: new Date().toISOString()
       })
       .eq("id", id)
       .select()
