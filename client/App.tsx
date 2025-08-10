@@ -24,8 +24,7 @@ const LocationDetail = lazy(() => import("./pages/LocationDetail"));
 const SuggestLocation = lazy(() => import("./pages/SuggestLocation"));
 const Resources = lazy(() => import("./pages/Resources"));
 const NotFound = lazy(() => import("./pages/NotFound"));
-const Blog = lazy(() => import("./pages/Blog"));
-const BlogPost = lazy(() => import("./pages/BlogPost"));
+
 const News = lazy(() => import("./pages/News"));
 const NewsArticle = lazy(() => import("./pages/NewsArticle"));
 const Contact = lazy(() => import("./pages/Contact"));
@@ -60,7 +59,7 @@ const ReviewsTable = lazy(() => import("./pages/admin/ReviewsTable"));
 const SuggestionsTable = lazy(() => import("./pages/admin/SuggestionsTable"));
 const PreviewLocation = lazy(() => import("./pages/admin/PreviewLocation"));
 const Marketing = lazy(() => import("./pages/admin/Marketing"));
-const BlogAdmin = lazy(() => import("./pages/admin/BlogAdmin"));
+
 const BulkUploadFacilities = lazy(
   () => import("./pages/admin/BulkUploadFacilities"),
 );
@@ -128,17 +127,13 @@ const AppRoutes = () => (
       element={<Navigate to="/debris-weight-calculator" replace />}
     />
     <Route path="/Contact" element={<Navigate to="/contact" replace />} />
-    <Route path="/Blog" element={<Navigate to="/blog" replace />} />
-    <Route path="/BlogPost" element={<Navigate to="/blog" replace />} />
-    <Route path="/blogpost" element={<Navigate to="/blog" replace />} />
     <Route path="/News" element={<Navigate to="/news" replace />} />
     <Route path="/location/:id" element={<LocationDetail />} />
     <Route
       path="/location/:state/:city/:locationName"
       element={<LocationDetail />}
     />
-    <Route path="/blog" element={<Blog />} />
-    <Route path="/blog/:slug" element={<BlogPost />} />
+
     <Route path="/news" element={<News />} />
     <Route path="/news/article/:id" element={<NewsArticle />} />
     <Route path="/contact" element={<Contact />} />
@@ -248,16 +243,7 @@ const AppRoutes = () => (
       }
     />
 
-    <Route
-      path="/admin/blog"
-      element={
-        <Suspense fallback={<PageLoading message="Loading blog admin..." />}>
-          <AdminRoute>
-            <BlogAdmin />
-          </AdminRoute>
-        </Suspense>
-      }
-    />
+
 
     <Route
       path="/admin/settings"
