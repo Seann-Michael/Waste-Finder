@@ -346,17 +346,17 @@ export default function LocationCard({ location, searchedDebrisTypes = [], showC
         <div className="lg:col-span-4">
           <div className="flex flex-wrap gap-1 mb-3">
             {(() => {
-              const sortedDebrisTypes = sortDebrisTypesByPriority(location.debrisTypes);
+              const sortedDebrisTypes = sortDebrisTypesByPriority(location.debrisTypes || []);
               return (
                 <>
                   {sortedDebrisTypes.slice(0, 2).map((debris) => (
                     <Badge
-                      key={debris.id}
+                      key={debris.id || Math.random()}
                       variant="outline"
                       className={`text-sm px-2 py-1 ${
                         searchedDebrisTypes.some(searched =>
-                          debris.name.toLowerCase().includes(searched.toLowerCase()) ||
-                          searched.toLowerCase().includes(debris.name.toLowerCase())
+                          debris?.name?.toLowerCase().includes(searched.toLowerCase()) ||
+                          searched.toLowerCase().includes(debris?.name?.toLowerCase() || '')
                         ) ? 'bg-blue-50 border-blue-300 text-blue-800' : ''
                       }`}
                     >
