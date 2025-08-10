@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { getLocationStats } from "@/lib/supabaseQueries";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FacebookCTA from "@/components/FacebookCTA";
