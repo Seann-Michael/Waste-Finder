@@ -351,7 +351,7 @@ export async function handleAllLocations(req: Request, res: Response) {
  * POST /api/locations - Create new location
  * Requires authentication and locations.write permission
  */
-export function handleCreateLocation(req: Request, res: Response) {
+export async function handleCreateLocation(req: Request, res: Response) {
   try {
     const validation = validateLocationData(req.body);
 
@@ -380,12 +380,19 @@ export function handleCreateLocation(req: Request, res: Response) {
       updatedAt: new Date().toISOString(),
     };
 
-    // Add to mock database
-    mockLocations.push(newLocation);
+    // Add to Supabase database
+    const createdLocation = await addLocation(newLocation);
+
+    if (!createdLocation) {
+      return res.status(500).json({
+        success: false,
+        error: "Failed to create location in database",
+      });
+    }
 
     res.status(201).json({
       success: true,
-      data: newLocation,
+      data: createdLocation,
       message: "Location created successfully",
     });
   } catch (error) {
