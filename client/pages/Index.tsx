@@ -38,32 +38,48 @@ export default function Index() {
   });
 
   useEffect(() => {
-    // Load real location counts from localStorage
-    const savedLocations = localStorage.getItem("locations");
-    if (savedLocations) {
+    // Load real location counts from Supabase
+    const loadLocationStats = async () => {
       try {
-        const locations = JSON.parse(savedLocations);
-        const total = locations.length;
-        const landfills = locations.filter(
-          (loc: any) => loc.facilityType === "landfill",
-        ).length;
-        const transferStations = locations.filter(
-          (loc: any) => loc.facilityType === "transfer_station",
-        ).length;
-        const constructionLandfills = locations.filter(
-          (loc: any) => loc.facilityType === "construction_landfill",
-        ).length;
-
+        const stats = await getLocationStats();
         setLocationCounts({
-          total,
-          landfills,
-          transferStations,
-          constructionLandfills,
+          total: stats.totalLocations,
+          landfills: stats.typeCount.landfill || 0,
+          transferStations: stats.typeCount.transfer_station || 0,
+          constructionLandfills: stats.typeCount.construction_landfill || 0,
         });
       } catch (error) {
-        console.error("Error loading location counts:", error);
+        console.error("Error loading location stats:", error);
+        // Fallback to localStorage for now
+        const savedLocations = localStorage.getItem("locations");
+        if (savedLocations) {
+          try {
+            const locations = JSON.parse(savedLocations);
+            const total = locations.length;
+            const landfills = locations.filter(
+              (loc: any) => loc.facilityType === "landfill",
+            ).length;
+            const transferStations = locations.filter(
+              (loc: any) => loc.facilityType === "transfer_station",
+            ).length;
+            const constructionLandfills = locations.filter(
+              (loc: any) => loc.facilityType === "construction_landfill",
+            ).length;
+
+            setLocationCounts({
+              total,
+              landfills,
+              transferStations,
+              constructionLandfills,
+            });
+          } catch (parseError) {
+            console.error("Error parsing locations:", parseError);
+          }
+        }
       }
-    }
+    };
+
+    loadLocationStats();
 
     // Load content settings
     const savedContentSettings = localStorage.getItem("contentSettings");
