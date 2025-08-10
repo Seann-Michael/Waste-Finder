@@ -751,7 +751,5 @@ function useBlogData() {
     fetchData();
   }, []);
 
-  return { posts, categories, isLoading, error };
+return { posts, categories, isLoading, error };
 }
-
-export default Blog;
