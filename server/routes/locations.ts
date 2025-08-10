@@ -252,7 +252,7 @@ export async function handleLocationsSearch(req: Request, res: Response) {
  * GET /api/locations/all - Get all locations with pagination and search
  * Public endpoint with rate limiting
  */
-export function handleAllLocations(req: Request, res: Response) {
+export async function handleAllLocations(req: Request, res: Response) {
   try {
     const {
       search,
@@ -263,7 +263,13 @@ export function handleAllLocations(req: Request, res: Response) {
       sortOrder = "asc",
     } = req.query;
 
-    let filteredLocations = [...mockLocations];
+    // Get locations from Supabase with filters
+    const filters: any = {};
+    if (search && typeof search === 'string') {
+      filters.search = search;
+    }
+
+    let filteredLocations = await getFilteredLocations(filters);
 
     // Filter by status
     if (status === "active") {
