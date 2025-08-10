@@ -391,8 +391,8 @@ export default function LocationCard({ location, searchedDebrisTypes = [], showC
                   // Sort by priority
                   priorityOrder.forEach(priority => {
                     const found = pricedDebris.find(debris =>
-                      debris.name.toLowerCase().includes(priority.toLowerCase()) ||
-                      priority.toLowerCase().includes(debris.name.toLowerCase())
+                      debris?.name?.toLowerCase().includes(priority.toLowerCase()) ||
+                      priority.toLowerCase().includes(debris?.name?.toLowerCase() || '')
                     );
                     if (found && !prioritized.includes(found)) {
                       prioritized.push(found);
