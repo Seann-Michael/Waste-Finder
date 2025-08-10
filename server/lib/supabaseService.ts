@@ -133,7 +133,7 @@ export async function addLocation(
       .insert([
         {
           ...location,
-          isActive: true,
+          is_active: true,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         },
