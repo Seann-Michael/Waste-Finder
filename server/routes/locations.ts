@@ -161,7 +161,7 @@ function sanitizeLocationData(data: any): any {
 // Mock location database
 
 // GET /api/locations - Get all locations or search by ZIP code
-export function handleLocationsSearch(req: Request, res: Response) {
+export async function handleLocationsSearch(req: Request, res: Response) {
   try {
     const {
       zipCode,
@@ -171,7 +171,13 @@ export function handleLocationsSearch(req: Request, res: Response) {
       sortBy = "name",
     } = req.query;
 
-    let locations = [...mockLocations];
+    // Get locations from Supabase with filters
+    const filters: any = {};
+    if (locationType && typeof locationType === 'string') {
+      filters.locationType = locationType;
+    }
+
+    let locations = await getFilteredLocations(filters);
 
     // Note: In production, ZIP code searches would use a geocoding service
     // For now, return all locations when ZIP code is provided
