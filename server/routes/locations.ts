@@ -30,7 +30,7 @@ import {
   updateLocation,
   deleteLocation,
   toggleLocationStatus,
-} from "../lib/supabaseService.js";
+} from "../lib/supabaseService";
 
 /**
  * Calculates distance between two coordinates using Haversine formula
