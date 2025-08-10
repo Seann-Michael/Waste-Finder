@@ -41,7 +41,7 @@ export async function getAllLocations(): Promise<Location[]> {
     const { data, error } = await supabaseAdmin
       .from("locations")
       .select("*")
-      .eq("isActive", true)
+      .eq("is_active", true)
       .order("name");
 
     if (error) {
@@ -67,7 +67,7 @@ export async function getFilteredLocations(filters: {
     let query = supabaseAdmin
       .from("locations")
       .select("*")
-      .eq("isActive", true);
+      .eq("is_active", true);
 
     if (filters.state) {
       query = query.eq("state", filters.state);
@@ -108,7 +108,7 @@ export async function getLocationById(id: string): Promise<Location | null> {
       .from("locations")
       .select("*")
       .eq("id", id)
-      .eq("isActive", true)
+      .eq("is_active", true)
       .single();
 
     if (error) {
