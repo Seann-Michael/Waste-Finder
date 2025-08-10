@@ -411,10 +411,10 @@ export default function LocationCard({ location, searchedDebrisTypes = [], showC
                   return (
                     <>
                       {sortedDebris.slice(0, 3).map((debris) => (
-                        <div key={debris.id} className="flex justify-between items-center">
-                          <span className="text-sm text-gray-700">{debris.name}:</span>
+                        <div key={debris?.id || Math.random()} className="flex justify-between items-center">
+                          <span className="text-sm text-gray-700">{debris?.name || 'Unknown'}:</span>
                           <span className="text-sm font-bold text-green-700 bg-green-50 px-2 py-1 rounded">
-                            ${debris.price}{debris.priceDetails ? `/${debris.priceDetails}` : '/ton'}
+                            ${debris?.price || 0}{debris?.priceDetails ? `/${debris.priceDetails}` : '/ton'}
                           </span>
                         </div>
                       ))}
