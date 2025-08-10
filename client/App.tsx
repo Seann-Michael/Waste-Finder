@@ -72,6 +72,7 @@ const ItemManagement = lazy(() => import("./pages/admin/ItemManagement"));
 const DebrisTypeManagement = lazy(
   () => import("./pages/admin/DebrisTypeManagement"),
 );
+const DataSeeding = lazy(() => import("./pages/admin/DataSeeding"));
 const PricingCalculator = lazy(() => import("./pages/PricingCalculator"));
 const DebrisWeightCalculator = lazy(
   () => import("./pages/DebrisWeightCalculator"),
@@ -339,6 +340,19 @@ const AppRoutes = () => (
         >
           <AdminRoute>
             <DebrisTypeManagement />
+          </AdminRoute>
+        </Suspense>
+      }
+    />
+
+    <Route
+      path="/admin/data-seeding"
+      element={
+        <Suspense
+          fallback={<PageLoading message="Loading data seeding..." />}
+        >
+          <AdminRoute>
+            <DataSeeding />
           </AdminRoute>
         </Suspense>
       }
