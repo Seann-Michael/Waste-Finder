@@ -10,17 +10,18 @@ export interface BlogPost {
   category: string;
   tags: string[];
   featuredImage?: string;
-  status: 'draft' | 'published';
+  status: "draft" | "published";
   readTime: number;
 }
 
 // Sample blog posts
 const samplePosts: BlogPost[] = [
   {
-    id: '1',
-    title: 'The Ultimate Guide to Dumpster Rental for Home Projects',
-    slug: 'ultimate-guide-dumpster-rental-home-projects',
-    excerpt: 'Planning a home renovation or cleanup? Learn everything you need to know about choosing the right dumpster size and rental service for your project.',
+    id: "1",
+    title: "The Ultimate Guide to Dumpster Rental for Home Projects",
+    slug: "ultimate-guide-dumpster-rental-home-projects",
+    excerpt:
+      "Planning a home renovation or cleanup? Learn everything you need to know about choosing the right dumpster size and rental service for your project.",
     content: `# The Ultimate Guide to Dumpster Rental for Home Projects
 
 When tackling a major home project, whether it's a renovation, spring cleaning, or landscaping overhaul, one of the biggest challenges is dealing with the waste. A dumpster rental can be a game-changer, providing a convenient and efficient way to manage debris and keep your project on track.
@@ -85,20 +86,22 @@ Best for the biggest jobs:
 ## Conclusion
 
 A well-planned dumpster rental can save you time, money, and hassle on your next project. Take time to assess your needs, choose the right size, and follow best practices for loading to get the most value from your rental.`,
-    author: 'DumpNearMe Team',
-    publishedAt: '2024-01-15T10:00:00Z',
-    updatedAt: '2024-01-15T10:00:00Z',
-    category: 'Guides',
-    tags: ['dumpster rental', 'home improvement', 'waste management'],
-    featuredImage: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=400&fit=crop',
-    status: 'published',
-    readTime: 5
+    author: "DumpNearMe Team",
+    publishedAt: "2024-01-15T10:00:00Z",
+    updatedAt: "2024-01-15T10:00:00Z",
+    category: "Guides",
+    tags: ["dumpster rental", "home improvement", "waste management"],
+    featuredImage:
+      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=400&fit=crop",
+    status: "published",
+    readTime: 5,
   },
   {
-    id: '2',
-    title: 'Sustainable Waste Management: Reducing Your Environmental Impact',
-    slug: 'sustainable-waste-management-environmental-impact',
-    excerpt: 'Discover practical strategies to minimize waste, increase recycling, and make environmentally conscious choices in your waste disposal practices.',
+    id: "2",
+    title: "Sustainable Waste Management: Reducing Your Environmental Impact",
+    slug: "sustainable-waste-management-environmental-impact",
+    excerpt:
+      "Discover practical strategies to minimize waste, increase recycling, and make environmentally conscious choices in your waste disposal practices.",
     content: `# Sustainable Waste Management: Reducing Your Environmental Impact
 
 In today's world, sustainable waste management isn't just an environmental necessity—it's a responsibility we all share. Whether you're managing household waste or overseeing a construction project, the choices you make can significantly impact the environment.
@@ -167,20 +170,22 @@ Modern technology is revolutionizing waste management:
 Every small action contributes to a larger impact. By making conscious choices about waste management, we can preserve our environment for future generations while often saving money in the process.
 
 Start with small changes and gradually adopt more sustainable practices. Remember, the goal isn't perfection—it's progress toward a more sustainable future.`,
-    author: 'Environmental Team',
-    publishedAt: '2024-01-10T14:30:00Z',
-    updatedAt: '2024-01-10T14:30:00Z',
-    category: 'Sustainability',
-    tags: ['sustainability', 'environment', 'recycling', 'green living'],
-    featuredImage: 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=800&h=400&fit=crop',
-    status: 'published',
-    readTime: 7
+    author: "Environmental Team",
+    publishedAt: "2024-01-10T14:30:00Z",
+    updatedAt: "2024-01-10T14:30:00Z",
+    category: "Sustainability",
+    tags: ["sustainability", "environment", "recycling", "green living"],
+    featuredImage:
+      "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=800&h=400&fit=crop",
+    status: "published",
+    readTime: 7,
   },
   {
-    id: '3',
-    title: 'Construction Debris Recycling: What Contractors Need to Know',
-    slug: 'construction-debris-recycling-contractors-guide',
-    excerpt: 'Learn about the latest regulations, best practices, and cost-saving opportunities in construction debris recycling for contractors and builders.',
+    id: "3",
+    title: "Construction Debris Recycling: What Contractors Need to Know",
+    slug: "construction-debris-recycling-contractors-guide",
+    excerpt:
+      "Learn about the latest regulations, best practices, and cost-saving opportunities in construction debris recycling for contractors and builders.",
     content: `# Construction Debris Recycling: What Contractors Need to Know
 
 The construction industry generates millions of tons of waste annually, but much of this material can be recycled or reused. For contractors, understanding debris recycling isn't just about environmental responsibility—it's about regulatory compliance and cost savings.
@@ -282,62 +287,65 @@ The construction recycling industry continues to evolve:
 Construction debris recycling is becoming increasingly important for contractors. By developing effective recycling programs, contractors can reduce costs, comply with regulations, and demonstrate environmental leadership to clients.
 
 Start by identifying local recycling options and gradually implement recycling practices on your projects. The investment in sustainable practices often pays for itself through cost savings and competitive advantages.`,
-    author: 'Construction Industry Expert',
-    publishedAt: '2024-01-05T09:15:00Z',
-    updatedAt: '2024-01-05T09:15:00Z',
-    category: 'Industry',
-    tags: ['construction', 'recycling', 'contractors', 'regulations'],
-    featuredImage: 'https://images.unsplash.com/photo-1541976844346-f18aeac57b06?w=800&h=400&fit=crop',
-    status: 'published',
-    readTime: 8
-  }
+    author: "Construction Industry Expert",
+    publishedAt: "2024-01-05T09:15:00Z",
+    updatedAt: "2024-01-05T09:15:00Z",
+    category: "Industry",
+    tags: ["construction", "recycling", "contractors", "regulations"],
+    featuredImage:
+      "https://images.unsplash.com/photo-1541976844346-f18aeac57b06?w=800&h=400&fit=crop",
+    status: "published",
+    readTime: 8,
+  },
 ];
 
 export const getBlogPosts = (): BlogPost[] => {
-  const stored = localStorage.getItem('blogPosts');
+  const stored = localStorage.getItem("blogPosts");
   if (stored) {
     try {
       return JSON.parse(stored);
     } catch (error) {
-      console.error('Error parsing stored blog posts:', error);
+      console.error("Error parsing stored blog posts:", error);
     }
   }
-  
+
   // Initialize with sample posts
-  localStorage.setItem('blogPosts', JSON.stringify(samplePosts));
+  localStorage.setItem("blogPosts", JSON.stringify(samplePosts));
   return samplePosts;
 };
 
 export const getBlogPost = (slug: string): BlogPost | undefined => {
   const posts = getBlogPosts();
-  return posts.find(post => post.slug === slug && post.status === 'published');
+  return posts.find(
+    (post) => post.slug === slug && post.status === "published",
+  );
 };
 
 export const getPublishedPosts = (): BlogPost[] => {
-  return getBlogPosts().filter(post => post.status === 'published');
+  return getBlogPosts().filter((post) => post.status === "published");
 };
 
 export const getBlogCategories = (): string[] => {
   const posts = getPublishedPosts();
-  const categories = new Set(posts.map(post => post.category));
+  const categories = new Set(posts.map((post) => post.category));
   return Array.from(categories).sort();
 };
 
 export const saveBlogPost = (post: BlogPost): void => {
   const posts = getBlogPosts();
-  const existingIndex = posts.findIndex(p => p.id === post.id);
-  
+  const existingIndex = posts.findIndex((p) => p.id === post.id);
+
   if (existingIndex >= 0) {
     posts[existingIndex] = { ...post, updatedAt: new Date().toISOString() };
   } else {
     posts.push(post);
   }
-  
-  localStorage.setItem('blogPosts', JSON.stringify(posts));
+
+  localStorage.setItem("blogPosts", JSON.stringify(posts));
 };
 
 export const deleteBlogPost = (id: string): void => {
   const posts = getBlogPosts();
-  const filtered = posts.filter(post => post.id !== id);
-  localStorage.setItem('blogPosts', JSON.stringify(filtered));
+  const filtered = posts.filter((post) => post.id !== id);
+  localStorage.setItem("blogPosts", JSON.stringify(filtered));
 };

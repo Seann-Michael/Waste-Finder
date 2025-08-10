@@ -1,8 +1,12 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
 // For server-side, we use the service role key for admin operations
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://omnuzylsdxpcqumbhhim.supabase.co';
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tbnV6eWxzZHhwY3F1bWJoaGltIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0ODMwNjg4MiwiZXhwIjoyMDYzODgyODgyfQ.Eb4O4NFEc4dQCdXFe5Xg4WnsIRptMJbn2TK8H1Z2XZM';
+const supabaseUrl =
+  process.env.NEXT_PUBLIC_SUPABASE_URL ||
+  "https://omnuzylsdxpcqumbhhim.supabase.co";
+const supabaseServiceKey =
+  process.env.SUPABASE_SERVICE_ROLE_KEY ||
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tbnV6eWxzZHhwY3F1bWJoaGltIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0ODMwNjg4MiwiZXhwIjoyMDYzODgyODgyfQ.Eb4O4NFEc4dQCdXFe5Xg4WnsIRptMJbn2TK8H1Z2XZM";
 
 // Server-side Supabase client with admin privileges
 export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
@@ -35,19 +39,19 @@ export interface Location {
 export async function getAllLocations(): Promise<Location[]> {
   try {
     const { data, error } = await supabaseAdmin
-      .from('locations')
-      .select('*')
-      .eq('isActive', true)
-      .order('name');
+      .from("locations")
+      .select("*")
+      .eq("isActive", true)
+      .order("name");
 
     if (error) {
-      console.error('Error fetching locations:', error);
+      console.error("Error fetching locations:", error);
       return [];
     }
 
     return data || [];
   } catch (error) {
-    console.error('Supabase connection error:', error);
+    console.error("Supabase connection error:", error);
     return [];
   }
 }
@@ -61,36 +65,38 @@ export async function getFilteredLocations(filters: {
 }): Promise<Location[]> {
   try {
     let query = supabaseAdmin
-      .from('locations')
-      .select('*')
-      .eq('isActive', true);
+      .from("locations")
+      .select("*")
+      .eq("isActive", true);
 
     if (filters.state) {
-      query = query.eq('state', filters.state);
+      query = query.eq("state", filters.state);
     }
 
     if (filters.locationType) {
-      query = query.eq('locationType', filters.locationType);
+      query = query.eq("locationType", filters.locationType);
     }
 
     if (filters.city) {
-      query = query.eq('city', filters.city);
+      query = query.eq("city", filters.city);
     }
 
     if (filters.search) {
-      query = query.or(`name.ilike.%${filters.search}%,address.ilike.%${filters.search}%,city.ilike.%${filters.search}%`);
+      query = query.or(
+        `name.ilike.%${filters.search}%,address.ilike.%${filters.search}%,city.ilike.%${filters.search}%`,
+      );
     }
 
-    const { data, error } = await query.order('name');
+    const { data, error } = await query.order("name");
 
     if (error) {
-      console.error('Error fetching filtered locations:', error);
+      console.error("Error fetching filtered locations:", error);
       return [];
     }
 
     return data || [];
   } catch (error) {
-    console.error('Supabase connection error:', error);
+    console.error("Supabase connection error:", error);
     return [];
   }
 }
@@ -99,71 +105,78 @@ export async function getFilteredLocations(filters: {
 export async function getLocationById(id: string): Promise<Location | null> {
   try {
     const { data, error } = await supabaseAdmin
-      .from('locations')
-      .select('*')
-      .eq('id', id)
-      .eq('isActive', true)
+      .from("locations")
+      .select("*")
+      .eq("id", id)
+      .eq("isActive", true)
       .single();
 
     if (error) {
-      console.error('Error fetching location by ID:', error);
+      console.error("Error fetching location by ID:", error);
       return null;
     }
 
     return data;
   } catch (error) {
-    console.error('Supabase connection error:', error);
+    console.error("Supabase connection error:", error);
     return null;
   }
 }
 
 // Add new location
-export async function addLocation(location: Omit<Location, 'id' | 'createdAt' | 'updatedAt'>): Promise<Location | null> {
+export async function addLocation(
+  location: Omit<Location, "id" | "createdAt" | "updatedAt">,
+): Promise<Location | null> {
   try {
     const { data, error } = await supabaseAdmin
-      .from('locations')
-      .insert([{
-        ...location,
-        isActive: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      }])
+      .from("locations")
+      .insert([
+        {
+          ...location,
+          isActive: true,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        },
+      ])
       .select()
       .single();
 
     if (error) {
-      console.error('Error adding location:', error);
+      console.error("Error adding location:", error);
       return null;
     }
 
     return data;
   } catch (error) {
-    console.error('Supabase connection error:', error);
+    console.error("Supabase connection error:", error);
     return null;
   }
 }
 
 // Update location
-export async function updateLocation(id: string, updates: Partial<Location>): Promise<Location | null> {
+export async function updateLocation(
+  id: string,
+  updates: Partial<Location>,
+): Promise<Location | null> {
   try {
     const { data, error } = await supabaseAdmin
-      .from('locations')
+      .from("locations")
       .update({
         ...updates,
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
       })
-      .eq('id', id)
+      .eq("id", id)
       .select()
       .single();
 
     if (error) {
-      console.error('Error updating location:', error);
+      console.error("Error updating location:", error);
       return null;
     }
 
     return data;
   } catch (error) {
-    console.error('Supabase connection error:', error);
+    console.error("Supabase connection error:", error);
     return null;
   }
 }
@@ -172,46 +185,49 @@ export async function updateLocation(id: string, updates: Partial<Location>): Pr
 export async function deleteLocation(id: string): Promise<boolean> {
   try {
     const { error } = await supabaseAdmin
-      .from('locations')
-      .update({ 
+      .from("locations")
+      .update({
         isActive: false,
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
       })
-      .eq('id', id);
+      .eq("id", id);
 
     if (error) {
-      console.error('Error deleting location:', error);
+      console.error("Error deleting location:", error);
       return false;
     }
 
     return true;
   } catch (error) {
-    console.error('Supabase connection error:', error);
+    console.error("Supabase connection error:", error);
     return false;
   }
 }
 
 // Toggle location active status
-export async function toggleLocationStatus(id: string, isActive: boolean): Promise<Location | null> {
+export async function toggleLocationStatus(
+  id: string,
+  isActive: boolean,
+): Promise<Location | null> {
   try {
     const { data, error } = await supabaseAdmin
-      .from('locations')
-      .update({ 
+      .from("locations")
+      .update({
         isActive,
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
       })
-      .eq('id', id)
+      .eq("id", id)
       .select()
       .single();
 
     if (error) {
-      console.error('Error toggling location status:', error);
+      console.error("Error toggling location status:", error);
       return null;
     }
 
     return data;
   } catch (error) {
-    console.error('Supabase connection error:', error);
+    console.error("Supabase connection error:", error);
     return null;
   }
 }

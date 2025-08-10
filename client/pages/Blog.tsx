@@ -2,19 +2,34 @@ import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../components/ui/select";
 import { Search, Calendar, User, Clock, BookOpen, Tag } from "lucide-react";
-import { getPublishedPosts, getBlogCategories, BlogPost } from "../lib/blogStore";
+import {
+  getPublishedPosts,
+  getBlogCategories,
+  BlogPost,
+} from "../lib/blogStore";
 
 const BlogPostCard: React.FC<{ post: BlogPost }> = ({ post }) => {
-  const formattedDate = new Date(post.publishedAt).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
+  const formattedDate = new Date(post.publishedAt).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
 
   return (
@@ -45,9 +60,7 @@ const BlogPostCard: React.FC<{ post: BlogPost }> = ({ post }) => {
           </div>
         </div>
         <CardTitle className="text-xl leading-tight hover:text-primary transition-colors">
-          <Link to={`/blog/${post.slug}`}>
-            {post.title}
-          </Link>
+          <Link to={`/blog/${post.slug}`}>{post.title}</Link>
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -69,9 +82,7 @@ const BlogPostCard: React.FC<{ post: BlogPost }> = ({ post }) => {
         </div>
         <div className="mt-4">
           <Button asChild variant="outline" className="w-full">
-            <Link to={`/blog/${post.slug}`}>
-              Read More
-            </Link>
+            <Link to={`/blog/${post.slug}`}>Read More</Link>
           </Button>
         </div>
       </CardContent>
@@ -82,19 +93,22 @@ const BlogPostCard: React.FC<{ post: BlogPost }> = ({ post }) => {
 export default function Blog() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  
+
   const posts = getPublishedPosts();
   const categories = getBlogCategories();
 
   const filteredPosts = useMemo(() => {
     return posts.filter((post) => {
-      const matchesSearch = 
+      const matchesSearch =
         post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        post.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-      
-      const matchesCategory = selectedCategory === "all" || post.category === selectedCategory;
-      
+        post.tags.some((tag) =>
+          tag.toLowerCase().includes(searchQuery.toLowerCase()),
+        );
+
+      const matchesCategory =
+        selectedCategory === "all" || post.category === selectedCategory;
+
       return matchesSearch && matchesCategory;
     });
   }, [posts, searchQuery, selectedCategory]);
@@ -102,7 +116,7 @@ export default function Blog() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       <main className="max-w-7xl mx-auto px-4 py-8">
         {/* Header Section */}
         <div className="text-center mb-12">
@@ -113,7 +127,8 @@ export default function Blog() {
             </h1>
           </div>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Expert insights, guides, and industry news about waste management, recycling, and sustainable practices.
+            Expert insights, guides, and industry news about waste management,
+            recycling, and sustainable practices.
           </p>
         </div>
 
@@ -130,7 +145,10 @@ export default function Blog() {
             />
           </div>
           <div className="md:w-48">
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <Select
+              value={selectedCategory}
+              onValueChange={setSelectedCategory}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="All Categories" />
               </SelectTrigger>
@@ -190,12 +208,16 @@ export default function Blog() {
         {/* Categories Section */}
         {categories.length > 0 && (
           <div className="mt-16 text-center">
-            <h2 className="text-2xl font-bold text-foreground mb-6">Browse by Category</h2>
+            <h2 className="text-2xl font-bold text-foreground mb-6">
+              Browse by Category
+            </h2>
             <div className="flex flex-wrap justify-center gap-3">
               {categories.map((category) => (
                 <Button
                   key={category}
-                  variant={selectedCategory === category ? "default" : "outline"}
+                  variant={
+                    selectedCategory === category ? "default" : "outline"
+                  }
                   onClick={() => setSelectedCategory(category)}
                   className="flex items-center gap-2"
                 >

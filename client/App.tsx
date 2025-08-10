@@ -250,8 +250,6 @@ const AppRoutes = () => (
       }
     />
 
-
-
     <Route
       path="/admin/settings"
       element={

@@ -112,11 +112,11 @@
       window._fs_debug = false;
 
       // Handle direct URL access for HashRouter
-      (function() {
+      (function () {
         const path = window.location.pathname;
-        if (path !== '/' && !window.location.hash) {
+        if (path !== "/" && !window.location.hash) {
           // Redirect paths like /pricing-calculator to #/pricing-calculator
-          window.location.replace('/#' + path);
+          window.location.replace("/#" + path);
         }
       })();
     </script>

@@ -5,27 +5,27 @@ import Footer from "../components/Footer";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
 import { Card, CardContent } from "../components/ui/card";
-import { 
-  Calendar, 
-  User, 
-  Clock, 
-  ArrowLeft, 
-  Share2, 
+import {
+  Calendar,
+  User,
+  Clock,
+  ArrowLeft,
+  Share2,
   Tag,
-  BookOpen
+  BookOpen,
 } from "lucide-react";
 import { getBlogPost, getPublishedPosts } from "../lib/blogStore";
 
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
-  
+
   if (!slug) {
     return <Navigate to="/blog" replace />;
   }
 
   const post = getBlogPost(slug);
   const allPosts = getPublishedPosts();
-  
+
   if (!post) {
     return (
       <div className="min-h-screen bg-background">
@@ -54,13 +54,13 @@ export default function BlogPost() {
 
   // Get related posts (same category, excluding current post)
   const relatedPosts = allPosts
-    .filter(p => p.category === post.category && p.id !== post.id)
+    .filter((p) => p.category === post.category && p.id !== post.id)
     .slice(0, 3);
 
-  const formattedDate = new Date(post.publishedAt).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
+  const formattedDate = new Date(post.publishedAt).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
 
   const handleShare = async () => {
@@ -84,7 +84,7 @@ export default function BlogPost() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       <main className="max-w-4xl mx-auto px-4 py-8">
         {/* Back to Blog Button */}
         <div className="mb-6">
@@ -117,7 +117,7 @@ export default function BlogPost() {
             <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4 leading-tight">
               {post.title}
             </h1>
-            
+
             <div className="flex flex-wrap items-center gap-4 text-muted-foreground mb-4">
               <div className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
@@ -135,7 +135,11 @@ export default function BlogPost() {
 
             <div className="flex flex-wrap gap-2 mb-6">
               {post.tags.map((tag) => (
-                <Badge key={tag} variant="outline" className="flex items-center gap-1">
+                <Badge
+                  key={tag}
+                  variant="outline"
+                  className="flex items-center gap-1"
+                >
                   <Tag className="w-3 h-3" />
                   {tag}
                 </Badge>
@@ -155,28 +159,35 @@ export default function BlogPost() {
 
         {/* Article Content */}
         <div className="prose prose-gray max-w-none mb-12">
-          <div 
+          <div
             className="text-foreground leading-relaxed"
             style={{
-              fontSize: '1.125rem',
-              lineHeight: '1.75',
+              fontSize: "1.125rem",
+              lineHeight: "1.75",
             }}
-            dangerouslySetInnerHTML={{ 
-              __html: post.content.replace(/\n/g, '<br>').replace(/#{1,6}\s+([^\n]*)/g, (match, title) => {
-                const level = match.match(/^#{1,6}/)?.[0].length || 1;
-                return `<h${level} style="font-size: ${2.5 - level * 0.25}rem; font-weight: bold; margin: 2rem 0 1rem 0; color: hsl(var(--foreground));">${title}</h${level}>`;
-              })
-            }} 
+            dangerouslySetInnerHTML={{
+              __html: post.content
+                .replace(/\n/g, "<br>")
+                .replace(/#{1,6}\s+([^\n]*)/g, (match, title) => {
+                  const level = match.match(/^#{1,6}/)?.[0].length || 1;
+                  return `<h${level} style="font-size: ${2.5 - level * 0.25}rem; font-weight: bold; margin: 2rem 0 1rem 0; color: hsl(var(--foreground));">${title}</h${level}>`;
+                }),
+            }}
           />
         </div>
 
         {/* Related Posts */}
         {relatedPosts.length > 0 && (
           <section className="border-t pt-12">
-            <h2 className="text-2xl font-bold text-foreground mb-8">Related Articles</h2>
+            <h2 className="text-2xl font-bold text-foreground mb-8">
+              Related Articles
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {relatedPosts.map((relatedPost) => (
-                <Card key={relatedPost.id} className="hover:shadow-lg transition-shadow">
+                <Card
+                  key={relatedPost.id}
+                  className="hover:shadow-lg transition-shadow"
+                >
                   {relatedPost.featuredImage && (
                     <div className="relative overflow-hidden rounded-t-lg">
                       <img
@@ -188,7 +199,7 @@ export default function BlogPost() {
                   )}
                   <CardContent className="p-4">
                     <h3 className="font-semibold text-sm mb-2 line-clamp-2">
-                      <Link 
+                      <Link
                         to={`/blog/${relatedPost.slug}`}
                         className="hover:text-primary transition-colors"
                       >
@@ -199,7 +210,8 @@ export default function BlogPost() {
                       {relatedPost.excerpt}
                     </p>
                     <div className="text-xs text-muted-foreground">
-                      {new Date(relatedPost.publishedAt).toLocaleDateString()} • {relatedPost.readTime} min read
+                      {new Date(relatedPost.publishedAt).toLocaleDateString()} •{" "}
+                      {relatedPost.readTime} min read
                     </div>
                   </CardContent>
                 </Card>

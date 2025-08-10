@@ -22,14 +22,14 @@
  */
 
 import { Request, Response } from "express";
-import { 
-  getAllLocations, 
-  getFilteredLocations, 
-  getLocationById, 
-  addLocation, 
-  updateLocation, 
-  deleteLocation, 
-  toggleLocationStatus 
+import {
+  getAllLocations,
+  getFilteredLocations,
+  getLocationById,
+  addLocation,
+  updateLocation,
+  deleteLocation,
+  toggleLocationStatus,
 } from "../lib/supabaseService.js";
 
 /**
@@ -69,38 +69,71 @@ function sanitize(input: string): string {
 /**
  * Validates location data structure and required fields
  */
-function validateLocationData(data: any): { isValid: boolean; errors: string[] } {
+function validateLocationData(data: any): {
+  isValid: boolean;
+  errors: string[];
+} {
   const errors: string[] = [];
 
-  if (!data.name || typeof data.name !== "string" || data.name.trim().length < 2) {
+  if (
+    !data.name ||
+    typeof data.name !== "string" ||
+    data.name.trim().length < 2
+  ) {
     errors.push("Name is required and must be at least 2 characters long");
   }
 
-  if (!data.address || typeof data.address !== "string" || data.address.trim().length < 5) {
+  if (
+    !data.address ||
+    typeof data.address !== "string" ||
+    data.address.trim().length < 5
+  ) {
     errors.push("Address is required and must be at least 5 characters long");
   }
 
-  if (!data.city || typeof data.city !== "string" || data.city.trim().length < 2) {
+  if (
+    !data.city ||
+    typeof data.city !== "string" ||
+    data.city.trim().length < 2
+  ) {
     errors.push("City is required and must be at least 2 characters long");
   }
 
-  if (!data.state || typeof data.state !== "string" || data.state.length !== 2) {
+  if (
+    !data.state ||
+    typeof data.state !== "string" ||
+    data.state.length !== 2
+  ) {
     errors.push("State is required and must be a 2-letter state code");
   }
 
-  if (data.zipCode && (typeof data.zipCode !== "string" || !/^\d{5}(-\d{4})?$/.test(data.zipCode))) {
+  if (
+    data.zipCode &&
+    (typeof data.zipCode !== "string" || !/^\d{5}(-\d{4})?$/.test(data.zipCode))
+  ) {
     errors.push("ZIP code must be in format 12345 or 12345-6789");
   }
 
-  if (data.phone && (typeof data.phone !== "string" || !/^\(\d{3}\) \d{3}-\d{4}$/.test(data.phone))) {
+  if (
+    data.phone &&
+    (typeof data.phone !== "string" ||
+      !/^\(\d{3}\) \d{3}-\d{4}$/.test(data.phone))
+  ) {
     errors.push("Phone number must be in format (555) 123-4567");
   }
 
-  if (data.email && (typeof data.email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email))) {
+  if (
+    data.email &&
+    (typeof data.email !== "string" ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email))
+  ) {
     errors.push("Email must be a valid email address");
   }
 
-  if (data.website && (typeof data.website !== "string" || !data.website.startsWith("http"))) {
+  if (
+    data.website &&
+    (typeof data.website !== "string" || !data.website.startsWith("http"))
+  ) {
     errors.push("Website must be a valid URL starting with http or https");
   }
 
@@ -121,7 +154,11 @@ function validateLocationData(data: any): { isValid: boolean; errors: string[] }
   if (!data.locationType || typeof data.locationType !== "string") {
     errors.push("Location type is required");
   } else {
-    const validTypes = ["landfill", "transfer_station", "construction_landfill"];
+    const validTypes = [
+      "landfill",
+      "transfer_station",
+      "construction_landfill",
+    ];
     if (!validTypes.includes(data.locationType)) {
       errors.push(`Location type must be one of: ${validTypes.join(", ")}`);
     }
@@ -164,10 +201,10 @@ export async function handleLocationsSearch(req: Request, res: Response) {
 
     // Get locations from Supabase with filters
     const filters: any = {};
-    if (locationType && typeof locationType === 'string') {
+    if (locationType && typeof locationType === "string") {
       filters.locationType = locationType;
     }
-    
+
     let locations = await getFilteredLocations(filters);
 
     // Apply distance filtering if zipCode is provided
@@ -182,9 +219,9 @@ export async function handleLocationsSearch(req: Request, res: Response) {
       locations = locations.filter((location: any) =>
         location.debrisTypes?.some((debrisType: any) =>
           requestedTypes.some((requestedType: string) =>
-            debrisType.name.toLowerCase().includes(requestedType.toLowerCase())
-          )
-        )
+            debrisType.name.toLowerCase().includes(requestedType.toLowerCase()),
+          ),
+        ),
       );
     }
 
@@ -239,17 +276,21 @@ export async function handleAllLocations(req: Request, res: Response) {
 
     // Get locations from Supabase with filters
     const filters: any = {};
-    if (search && typeof search === 'string') {
+    if (search && typeof search === "string") {
       filters.search = search;
     }
-    
+
     let filteredLocations = await getFilteredLocations(filters);
 
     // Filter by status
     if (status === "active") {
-      filteredLocations = filteredLocations.filter((loc: any) => loc.isActive !== false);
+      filteredLocations = filteredLocations.filter(
+        (loc: any) => loc.isActive !== false,
+      );
     } else if (status === "inactive") {
-      filteredLocations = filteredLocations.filter((loc: any) => loc.isActive === false);
+      filteredLocations = filteredLocations.filter(
+        (loc: any) => loc.isActive === false,
+      );
     }
 
     // Sort locations
@@ -270,7 +311,10 @@ export async function handleAllLocations(req: Request, res: Response) {
 
     // Pagination
     const pageNum = Math.max(1, parseInt(page as string) || 1);
-    const limitNum = Math.min(100, Math.max(1, parseInt(limit as string) || 50));
+    const limitNum = Math.min(
+      100,
+      Math.max(1, parseInt(limit as string) || 50),
+    );
     const startIndex = (pageNum - 1) * limitNum;
     const endIndex = startIndex + limitNum;
     const paginatedLocations = filteredLocations.slice(startIndex, endIndex);
@@ -321,8 +365,12 @@ export async function handleCreateLocation(req: Request, res: Response) {
 
     const newLocation = {
       ...sanitizedData,
-      latitude: sanitizedData.latitude ? parseFloat(sanitizedData.latitude) : undefined,
-      longitude: sanitizedData.longitude ? parseFloat(sanitizedData.longitude) : undefined,
+      latitude: sanitizedData.latitude
+        ? parseFloat(sanitizedData.latitude)
+        : undefined,
+      longitude: sanitizedData.longitude
+        ? parseFloat(sanitizedData.longitude)
+        : undefined,
       rating: 0,
       reviewCount: 0,
       isActive: sanitizedData.isActive !== false,
@@ -330,7 +378,7 @@ export async function handleCreateLocation(req: Request, res: Response) {
 
     // Add to Supabase database
     const createdLocation = await addLocation(newLocation);
-    
+
     if (!createdLocation) {
       return res.status(500).json({
         success: false,
@@ -372,16 +420,20 @@ export async function handleUpdateLocation(req: Request, res: Response) {
     }
 
     const sanitizedData = sanitizeLocationData(req.body);
-    
+
     const updates = {
       ...sanitizedData,
-      latitude: sanitizedData.latitude ? parseFloat(sanitizedData.latitude) : undefined,
-      longitude: sanitizedData.longitude ? parseFloat(sanitizedData.longitude) : undefined,
+      latitude: sanitizedData.latitude
+        ? parseFloat(sanitizedData.latitude)
+        : undefined,
+      longitude: sanitizedData.longitude
+        ? parseFloat(sanitizedData.longitude)
+        : undefined,
     };
-    
+
     // Update in Supabase database
     const updatedLocation = await updateLocation(id, updates);
-    
+
     if (!updatedLocation) {
       return res.status(404).json({
         success: false,
@@ -411,10 +463,10 @@ export async function handleUpdateLocation(req: Request, res: Response) {
 export async function handleDeleteLocation(req: Request, res: Response) {
   try {
     const { id } = req.params;
-    
+
     // Soft delete in Supabase database
     const success = await deleteLocation(id);
-    
+
     if (!success) {
       return res.status(404).json({
         success: false,
@@ -455,7 +507,7 @@ export async function handleToggleLocationStatus(req: Request, res: Response) {
 
     // Update status in Supabase database
     const updatedLocation = await toggleLocationStatus(id, isActive);
-    
+
     if (!updatedLocation) {
       return res.status(404).json({
         success: false,

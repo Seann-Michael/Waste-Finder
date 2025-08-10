@@ -13,7 +13,7 @@ import {
   Edit,
   Users,
   FileText,
-  ChevronRight
+  ChevronRight,
 } from "lucide-react";
 
 export default function Sitemap() {
@@ -22,63 +22,139 @@ export default function Sitemap() {
       category: "Main Pages",
       icon: <Home className="w-5 h-5" />,
       links: [
-        { name: "Home", url: "/", description: "Main homepage with location search" },
-        { name: "All Locations", url: "/all-locations", description: "Browse all waste disposal locations" },
-        { name: "Suggest Location", url: "/suggest-location", description: "Suggest a new disposal location" },
-        { name: "Resources", url: "/resources", description: "Helpful waste management resources" },
-        { name: "Contact Us", url: "/contact", description: "Get in touch with us" },
-      ]
+        {
+          name: "Home",
+          url: "/",
+          description: "Main homepage with location search",
+        },
+        {
+          name: "All Locations",
+          url: "/all-locations",
+          description: "Browse all waste disposal locations",
+        },
+        {
+          name: "Suggest Location",
+          url: "/suggest-location",
+          description: "Suggest a new disposal location",
+        },
+        {
+          name: "Resources",
+          url: "/resources",
+          description: "Helpful waste management resources",
+        },
+        {
+          name: "Contact Us",
+          url: "/contact",
+          description: "Get in touch with us",
+        },
+      ],
     },
     {
       category: "News",
       icon: <BookOpen className="w-5 h-5" />,
       links: [
-        { name: "Industry News", url: "/news", description: "Current waste management news" },
-        { name: "Guest Post", url: "/guest-post", description: "Submit a guest post" },
-      ]
+        {
+          name: "Industry News",
+          url: "/news",
+          description: "Current waste management news",
+        },
+        {
+          name: "Guest Post",
+          url: "/guest-post",
+          description: "Submit a guest post",
+        },
+      ],
     },
     {
       category: "Tools & Calculators",
       icon: <Calculator className="w-5 h-5" />,
       links: [
-        { name: "Pricing Calculator", url: "/pricing-calculator", description: "Calculate waste disposal costs" },
-        { name: "Debris Weight Calculator", url: "/debris-weight-calculator", description: "Estimate debris weight" },
-      ]
+        {
+          name: "Pricing Calculator",
+          url: "/pricing-calculator",
+          description: "Calculate waste disposal costs",
+        },
+        {
+          name: "Debris Weight Calculator",
+          url: "/debris-weight-calculator",
+          description: "Estimate debris weight",
+        },
+      ],
     },
     {
       category: "Marketing Services - Junk Removal",
       icon: <Users className="w-5 h-5" />,
       links: [
-        { name: "Digital Marketing for Junk Removal", url: "/digital-marketing-junk-removal", description: "Grow your junk removal business online" },
-        { name: "Local SEO for Junk Removal", url: "/local-seo-junk-removal", description: "Rank higher in local search results" },
-        { name: "Local Junk Removal Companies", url: "/local-junk-removal", description: "Find local junk removal services" },
-      ]
+        {
+          name: "Digital Marketing for Junk Removal",
+          url: "/digital-marketing-junk-removal",
+          description: "Grow your junk removal business online",
+        },
+        {
+          name: "Local SEO for Junk Removal",
+          url: "/local-seo-junk-removal",
+          description: "Rank higher in local search results",
+        },
+        {
+          name: "Local Junk Removal Companies",
+          url: "/local-junk-removal",
+          description: "Find local junk removal services",
+        },
+      ],
     },
     {
       category: "Marketing Services - Dumpster Rental",
       icon: <Globe className="w-5 h-5" />,
       links: [
-        { name: "Digital Marketing for Dumpster Rental", url: "/digital-marketing-dumpster-rental", description: "Grow your dumpster rental business" },
-        { name: "Local SEO for Dumpster Rental", url: "/local-seo-dumpster-rental", description: "Dominate local dumpster rental searches" },
-        { name: "Local Dumpster Rental Companies", url: "/local-dumpster-rental", description: "Find local dumpster rental services" },
-      ]
+        {
+          name: "Digital Marketing for Dumpster Rental",
+          url: "/digital-marketing-dumpster-rental",
+          description: "Grow your dumpster rental business",
+        },
+        {
+          name: "Local SEO for Dumpster Rental",
+          url: "/local-seo-dumpster-rental",
+          description: "Dominate local dumpster rental searches",
+        },
+        {
+          name: "Local Dumpster Rental Companies",
+          url: "/local-dumpster-rental",
+          description: "Find local dumpster rental services",
+        },
+      ],
     },
     {
       category: "General Marketing Services",
       icon: <Edit className="w-5 h-5" />,
       links: [
-        { name: "Digital Marketing", url: "/digital-marketing", description: "Complete digital marketing solutions" },
-        { name: "Local SEO Services", url: "/local-seo", description: "Local search engine optimization" },
-        { name: "Lead Generation", url: "/lead-generation", description: "Generate qualified leads for your business" },
-      ]
+        {
+          name: "Digital Marketing",
+          url: "/digital-marketing",
+          description: "Complete digital marketing solutions",
+        },
+        {
+          name: "Local SEO Services",
+          url: "/local-seo",
+          description: "Local search engine optimization",
+        },
+        {
+          name: "Lead Generation",
+          url: "/lead-generation",
+          description: "Generate qualified leads for your business",
+        },
+      ],
     },
     {
       category: "Admin",
       icon: <FileText className="w-5 h-5" />,
       links: [
-        { name: "Admin Login", url: "/admin-login", description: "Administrator access" },
-      ]
-    }
+        {
+          name: "Admin Login",
+          url: "/admin-login",
+          description: "Administrator access",
+        },
+      ],
+    },
   ];
 
   return (
@@ -108,7 +184,10 @@ export default function Sitemap() {
                 <CardContent>
                   <div className="space-y-3">
                     {section.links.map((link, linkIndex) => (
-                      <div key={linkIndex} className="border-b border-border last:border-0 pb-3 last:pb-0">
+                      <div
+                        key={linkIndex}
+                        className="border-b border-border last:border-0 pb-3 last:pb-0"
+                      >
                         <Link
                           to={link.url}
                           className="flex items-center justify-between group hover:text-primary transition-colors"
@@ -138,19 +217,23 @@ export default function Sitemap() {
                 <h2 className="text-2xl font-bold mb-4">About This Sitemap</h2>
                 <div className="text-muted-foreground space-y-2 max-w-4xl mx-auto">
                   <p>
-                    This sitemap provides a comprehensive overview of all pages and resources available on WasteFinder.
-                    Our platform helps users find waste disposal locations, access helpful tools, and provides marketing
-                    services for waste management businesses.
+                    This sitemap provides a comprehensive overview of all pages
+                    and resources available on WasteFinder. Our platform helps
+                    users find waste disposal locations, access helpful tools,
+                    and provides marketing services for waste management
+                    businesses.
                   </p>
                   <p className="mt-4">
-                    <strong>Last Updated:</strong> {new Date().toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
+                    <strong>Last Updated:</strong>{" "}
+                    {new Date().toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
                     })}
                   </p>
                   <p className="mt-2 text-sm">
-                    For technical SEO purposes, an XML sitemap is automatically generated and submitted to search engines.
+                    For technical SEO purposes, an XML sitemap is automatically
+                    generated and submitted to search engines.
                   </p>
                 </div>
               </CardContent>
