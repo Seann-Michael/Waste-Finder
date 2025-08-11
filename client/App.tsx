@@ -150,7 +150,7 @@ const AppRoutes = () => (
     <Route path="/contact" element={<Contact />} />
     <Route path="/guest-post" element={<GuestPost />} />
     <Route path="/local-junk-removal" element={<LocalJunkRemoval />} />
-    <Route path="/local-dumpster-rental" element={<LocalDumpsterRental />} />
+
     <Route path="/digital-marketing" element={<DigitalMarketing />} />
     <Route path="/local-seo" element={<LocalSEO />} />
     <Route path="/lead-generation" element={<LeadGeneration />} />
