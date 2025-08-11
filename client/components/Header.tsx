@@ -55,11 +55,7 @@ export default function Header() {
       href: "/debris-weight-calculator",
       active: location.pathname === "/debris-weight-calculator",
     },
-    {
-      name: "Blog",
-      href: "/blog",
-      active: location.pathname.startsWith("/blog"),
-    },
+
     {
       name: "News",
       href: "/news",

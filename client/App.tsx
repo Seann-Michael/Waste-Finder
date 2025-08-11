@@ -27,8 +27,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 
 const News = lazy(() => import("./pages/News"));
 const NewsArticle = lazy(() => import("./pages/NewsArticle"));
-const Blog = lazy(() => import("./pages/Blog"));
-const BlogPost = lazy(() => import("./pages/BlogPost"));
+
 const Contact = lazy(() => import("./pages/Contact"));
 const GuestPost = lazy(() => import("./pages/GuestPost"));
 const LocalJunkRemoval = lazy(() => import("./pages/LocalJunkRemoval"));
@@ -130,9 +129,7 @@ const AppRoutes = () => (
       element={<Navigate to="/debris-weight-calculator" replace />}
     />
     <Route path="/Contact" element={<Navigate to="/contact" replace />} />
-    <Route path="/Blog" element={<Navigate to="/blog" replace />} />
-    <Route path="/BlogPost" element={<Navigate to="/blog" replace />} />
-    <Route path="/blogpost" element={<Navigate to="/blog" replace />} />
+
     <Route path="/News" element={<Navigate to="/news" replace />} />
     <Route path="/location/:id" element={<LocationDetail />} />
     <Route
@@ -140,8 +137,7 @@ const AppRoutes = () => (
       element={<LocationDetail />}
     />
 
-    <Route path="/blog" element={<Blog />} />
-    <Route path="/blog/:slug" element={<BlogPost />} />
+
     <Route path="/news" element={<News />} />
     <Route path="/news/article/:id" element={<NewsArticle />} />
     <Route path="/contact" element={<Contact />} />
