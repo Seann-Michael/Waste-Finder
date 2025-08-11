@@ -94,7 +94,7 @@ export default function LocationCard({
 
   const getDirectionsUrl = () => {
     return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
-      `${location.address}, ${location.city}, ${location.state} ${location.zipCode}`,
+      `${location.address}, ${location.city}, ${location.state} ${location.zip_code || ''}`,
     )}`;
   };
 
@@ -271,8 +271,8 @@ export default function LocationCard({
               variant="secondary"
               className="flex items-center gap-1 text-sm"
             >
-              {getLocationIcon(location.locationType)}
-              {getLocationLabel(location.locationType)}
+              {getLocationIcon(location.location_type)}
+              {getLocationLabel(location.location_type)}
             </Badge>
             {location.distance && (
               <span className="text-sm text-muted-foreground">
