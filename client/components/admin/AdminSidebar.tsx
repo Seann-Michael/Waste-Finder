@@ -48,7 +48,7 @@ const adminNavItems = [
     icon: DollarSign,
   },
   {
-    title: "Blog Posts",
+
     href: "/admin/blog",
     icon: PenTool,
   },
