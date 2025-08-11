@@ -1,984 +1,557 @@
-/**
- * SuggestLocation Page Component
- *
- * PURPOSE: Public interface for suggesting new waste disposal locations
- *
- * USER WORKFLOW:
- * 1. Public user discovers missing facility in their area
- * 2. Fills out comprehensive facility information form
- * 3. Google reCAPTCHA validates submission (prevents spam)
- * 4. Data stored with "pending" status for admin review
- * 5. Admin notification sent for approval queue
- * 6. Admin approves/rejects through admin panel
- * 7. Approved locations automatically added to searchable database
- *
- * FORM FEATURES:
- * - Address validation with Google Places API
- * - Facility type categorization (landfill, transfer station, etc.)
- * - Operating hours input with day-specific schedules
- * - Waste type acceptance multi-select
- * - Pricing information (optional)
- * - Contact information validation
- * - reCAPTCHA spam protection
- *
- * INTEGRATION POINTS:
- * - Google Places API: Real-time address validation
- * - Google reCAPTCHA v3: Invisible spam protection
- * - Admin notification system: Email alerts for new suggestions
- * - Database: Suggestion storage with approval workflow
- *
- * ACCESSIBILITY:
- * - ARIA labels for screen readers
- * - Keyboard navigation support
- * - Color contrast compliance
- * - Mobile-responsive form layout
- */
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "../components/ui/card";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
-import { Textarea } from "../components/ui/textarea";
-import { Checkbox } from "../components/ui/checkbox";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../components/ui/select";
-import { Alert, AlertDescription } from "../components/ui/alert";
-import { Badge } from "../components/ui/badge";
-import {
-  MapPin,
-  Phone,
-  Clock,
-  DollarSign,
-  CreditCard,
-  Trash2,
-  Building2,
-  HardHat,
-  Plus,
-  Info,
-  CheckCircle,
-  AlertCircle,
-} from "lucide-react";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import { useToastNotifications } from "../hooks/use-toast-notifications";
-import {
-  validatePhoneNumber,
-  formatPhoneNumber,
-  validateAndFormatUrl,
-} from "../lib/utils";
-import { sanitizeInput, validateEmail, validateUrl } from "../lib/security";
+import React, { useState, useEffect, useRef } from 'react';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { MapPin, Building, Phone, Mail, Clock, CheckCircle } from 'lucide-react';
 
-// Form data interface matching AddLocation
-interface SuggestLocationFormData {
+// Google Maps type definitions
+declare global {
+  interface Window {
+    google: any;
+    initMap: () => void;
+  }
+}
+
+interface PlaceResult {
   name: string;
-  address: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  phone: string;
-  email?: string;
+  formatted_address: string;
+  formatted_phone_number?: string;
   website?: string;
-  googleBusinessUrl?: string;
-  latitude?: string;
-  longitude?: string;
-  locationType: "landfill" | "transfer_station" | "construction_landfill";
-  paymentTypes: string[];
-  additionalPaymentDetails?: string;
-  debrisTypes: string[];
-  debrisPricing: Record<string, { price?: number; priceDetails?: string }>;
-  debrisAdditionalDetails?: string;
-  additionalDebrisPricingDetails?: string;
-  operatingHours: OperatingHour[];
-  additionalNotes?: string;
-  submitterName: string;
-  submitterEmail: string;
-  submitterPhone?: string;
+  geometry?: {
+    location: {
+      lat: () => number;
+      lng: () => number;
+    };
+  };
+  opening_hours?: {
+    weekday_text: string[];
+  };
+  place_id: string;
 }
 
-interface OperatingHour {
-  dayOfWeek: number;
-  openTime: string;
-  closeTime: string;
-  isClosed: boolean;
-}
-
-// Constants matching AddLocation
-const US_STATES = [
-  { value: "AL", label: "Alabama" },
-  { value: "AK", label: "Alaska" },
-  { value: "AZ", label: "Arizona" },
-  { value: "AR", label: "Arkansas" },
-  { value: "CA", label: "California" },
-  { value: "CO", label: "Colorado" },
-  { value: "CT", label: "Connecticut" },
-  { value: "DE", label: "Delaware" },
-  { value: "FL", label: "Florida" },
-  { value: "GA", label: "Georgia" },
-  { value: "HI", label: "Hawaii" },
-  { value: "ID", label: "Idaho" },
-  { value: "IL", label: "Illinois" },
-  { value: "IN", label: "Indiana" },
-  { value: "IA", label: "Iowa" },
-  { value: "KS", label: "Kansas" },
-  { value: "KY", label: "Kentucky" },
-  { value: "LA", label: "Louisiana" },
-  { value: "ME", label: "Maine" },
-  { value: "MD", label: "Maryland" },
-  { value: "MA", label: "Massachusetts" },
-  { value: "MI", label: "Michigan" },
-  { value: "MN", label: "Minnesota" },
-  { value: "MS", label: "Mississippi" },
-  { value: "MO", label: "Missouri" },
-  { value: "MT", label: "Montana" },
-  { value: "NE", label: "Nebraska" },
-  { value: "NV", label: "Nevada" },
-  { value: "NH", label: "New Hampshire" },
-  { value: "NJ", label: "New Jersey" },
-  { value: "NM", label: "New Mexico" },
-  { value: "NY", label: "New York" },
-  { value: "NC", label: "North Carolina" },
-  { value: "ND", label: "North Dakota" },
-  { value: "OH", label: "Ohio" },
-  { value: "OK", label: "Oklahoma" },
-  { value: "OR", label: "Oregon" },
-  { value: "PA", label: "Pennsylvania" },
-  { value: "RI", label: "Rhode Island" },
-  { value: "SC", label: "South Carolina" },
-  { value: "SD", label: "South Dakota" },
-  { value: "TN", label: "Tennessee" },
-  { value: "TX", label: "Texas" },
-  { value: "UT", label: "Utah" },
-  { value: "VT", label: "Vermont" },
-  { value: "VA", label: "Virginia" },
-  { value: "WA", label: "Washington" },
-  { value: "WV", label: "West Virginia" },
-  { value: "WI", label: "Wisconsin" },
-  { value: "WY", label: "Wyoming" },
-];
-
-const PAYMENT_TYPES = ["Cash", "Check", "Credit/Debit", "Net Terms"] as const;
-
-const DEBRIS_TYPES = [
-  "Municipal Waste",
-  "Yard Waste",
-  "Construction Debris",
-  "Appliances",
-  "Tires",
-  "Concrete",
-  "Asphalt",
-  "Metal",
-  "Hazardous Materials",
-  "Fluorescent Bulbs",
-];
-
-const LOCATION_TYPES = [
-  { value: "landfill", label: "Landfill", icon: Trash2 },
-  { value: "transfer_station", label: "Transfer Station", icon: Building2 },
-  {
-    value: "construction_landfill",
-    label: "Construction Landfill",
-    icon: HardHat,
-  },
-];
-
-const DAYS_OF_WEEK = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
-
-export default function SuggestLocation() {
-  const navigate = useNavigate();
-  const { showSuccess, showError } = useToastNotifications();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
-
-  const {
-    register,
-    handleSubmit,
-    watch,
-    setValue,
-    formState: { errors },
-  } = useForm<SuggestLocationFormData>({
-    defaultValues: {
-      name: "",
-      address: "",
-      city: "",
-      state: "",
-      zipCode: "",
-      phone: "",
-      email: "",
-      website: "",
-      googleBusinessUrl: "",
-      latitude: "",
-      longitude: "",
-      locationType: "landfill",
-      paymentTypes: [],
-      additionalPaymentDetails: "",
-      debrisTypes: [],
-      debrisPricing: {},
-      debrisAdditionalDetails: "",
-      additionalDebrisPricingDetails: "",
-      operatingHours: DAYS_OF_WEEK.map((_, index) => ({
-        dayOfWeek: index,
-        openTime: "08:00",
-        closeTime: "17:00",
-        isClosed: index === 0, // Closed on Sunday by default
-      })),
-      additionalNotes: "",
-      submitterName: "",
-      submitterEmail: "",
-      submitterPhone: "",
-    },
+export default function SuggestLocationEnhanced() {
+  const [formData, setFormData] = useState({
+    businessName: '',
+    address: '',
+    city: '',
+    state: '',
+    zipCode: '',
+    phone: '',
+    email: '',
+    website: '',
+    locationType: '',
+    operatingHours: '',
+    services: [] as string[],
+    notes: '',
+    submitterName: '',
+    submitterEmail: '',
+    submitterPhone: '',
   });
 
-  const watchedValues = watch();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [error, setError] = useState('');
+  const [googleMapsLoaded, setGoogleMapsLoaded] = useState(false);
+  const [placeDetails, setPlaceDetails] = useState<PlaceResult | null>(null);
+  
+  const businessNameRef = useRef<HTMLInputElement>(null);
+  const addressRef = useRef<HTMLInputElement>(null);
+  const autocompleteRef = useRef<any>(null);
+  const placesServiceRef = useRef<any>(null);
 
-  const onSubmit = async (data: SuggestLocationFormData) => {
-    // Sanitize all inputs
-    const sanitizedData = {
-      ...data,
-      name: sanitizeInput(data.name, 100),
-      address: sanitizeInput(data.address, 200),
-      city: sanitizeInput(data.city, 100),
-      state: sanitizeInput(data.state.toUpperCase(), 2),
-      zipCode: sanitizeInput(data.zipCode, 10),
-      phone: sanitizeInput(data.phone, 20),
-      email: data.email ? sanitizeInput(data.email, 254) : "",
-      website: data.website ? sanitizeInput(data.website, 500) : "",
-      googleBusinessUrl: data.googleBusinessUrl
-        ? sanitizeInput(data.googleBusinessUrl, 500)
-        : "",
-      additionalLocationDetails: data.additionalLocationDetails
-        ? sanitizeInput(data.additionalLocationDetails, 1000)
-        : "",
-      submitterName: sanitizeInput(data.submitterName, 100),
-      submitterEmail: sanitizeInput(data.submitterEmail, 254),
-      submitterPhone: data.submitterPhone
-        ? sanitizeInput(data.submitterPhone, 20)
-        : "",
+  // Load Google Maps API
+  useEffect(() => {
+    const loadGoogleMaps = () => {
+      if (window.google) {
+        setGoogleMapsLoaded(true);
+        initializeAutocomplete();
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY || ''}&libraries=places&callback=initMap`;
+      script.async = true;
+      script.defer = true;
+      
+      window.initMap = () => {
+        setGoogleMapsLoaded(true);
+        initializeAutocomplete();
+      };
+      
+      document.head.appendChild(script);
     };
 
-    // Validate email formats
-    if (sanitizedData.email && !validateEmail(sanitizedData.email)) {
-      showError("Invalid facility email format");
-      return;
-    }
+    loadGoogleMaps();
+  }, []);
 
-    if (!validateEmail(sanitizedData.submitterEmail)) {
-      showError("Invalid submitter email format");
-      return;
-    }
+  const initializeAutocomplete = () => {
+    if (!window.google || !businessNameRef.current || !addressRef.current) return;
 
-    // Validate website if provided
-    if (sanitizedData.website && !validateUrl(sanitizedData.website)) {
-      showError("Invalid website URL");
-      return;
-    }
+    // Initialize Places Service
+    const mapDiv = document.createElement('div');
+    const map = new window.google.maps.Map(mapDiv);
+    placesServiceRef.current = new window.google.maps.places.PlacesService(map);
 
-    // Validate phone number if provided
-    if (sanitizedData.phone && !validatePhoneNumber(sanitizedData.phone)) {
-      showError("Please enter a valid phone number (10-15 digits)");
-      return;
-    }
+    // Business name autocomplete with place search
+    const businessAutocomplete = new window.google.maps.places.Autocomplete(
+      businessNameRef.current,
+      {
+        types: ['establishment'],
+        fields: ['place_id', 'name', 'formatted_address', 'geometry', 'formatted_phone_number', 'website', 'opening_hours']
+      }
+    );
 
-    setIsSubmitting(true);
+    businessAutocomplete.addListener('place_changed', () => {
+      const place = businessAutocomplete.getPlace();
+      if (place && place.place_id) {
+        handlePlaceSelection(place);
+      }
+    });
 
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+    // Address autocomplete
+    const addressAutocomplete = new window.google.maps.places.Autocomplete(
+      addressRef.current,
+      {
+        types: ['address'],
+        fields: ['formatted_address', 'address_components', 'geometry']
+      }
+    );
 
-      // Save to localStorage for admin review
-      const existingSuggestions = JSON.parse(
-        localStorage.getItem("pendingSuggestions") || "[]",
-      );
-      const newSuggestion = {
-        id: Date.now().toString(),
-        ...sanitizedData,
-        status: "pending",
-        submittedAt: new Date().toISOString(),
-      };
+    addressAutocomplete.addListener('place_changed', () => {
+      const place = addressAutocomplete.getPlace();
+      if (place && place.formatted_address) {
+        setFormData(prev => ({ ...prev, address: place.formatted_address }));
+        
+        // Extract city, state, zip from address components
+        if (place.address_components) {
+          const components = place.address_components;
+          const city = components.find((c: any) => c.types.includes('locality'))?.long_name || '';
+          const state = components.find((c: any) => c.types.includes('administrative_area_level_1'))?.short_name || '';
+          const zipCode = components.find((c: any) => c.types.includes('postal_code'))?.long_name || '';
+          
+          setFormData(prev => ({
+            ...prev,
+            city,
+            state,
+            zipCode
+          }));
+        }
+      }
+    });
 
-      localStorage.setItem(
-        "pendingSuggestions",
-        JSON.stringify([...existingSuggestions, newSuggestion]),
-      );
-
-      setShowSuccessAlert(true);
-      showSuccess(
-        "Location suggestion submitted successfully! We'll review it and add it to our database.",
-      );
-
-      // Reset form or redirect after success
-      setTimeout(() => {
-        navigate("/all-locations");
-      }, 2000);
-    } catch (error) {
-      showError("Failed to submit suggestion. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
+    autocompleteRef.current = { businessAutocomplete, addressAutocomplete };
   };
 
-  const handleArrayFieldChange = (
-    fieldName: "paymentTypes" | "debrisTypes",
-    value: string,
-    checked: boolean,
-  ) => {
-    const currentValues = watchedValues[fieldName] || [];
-    if (checked) {
-      setValue(fieldName, [...currentValues, value]);
-    } else {
-      setValue(
-        fieldName,
-        currentValues.filter((item) => item !== value),
-      );
+  const handlePlaceSelection = (place: any) => {
+    setPlaceDetails(place);
+    
+    // Auto-fill form data from Google Places
+    setFormData(prev => ({
+      ...prev,
+      businessName: place.name || '',
+      address: place.formatted_address || '',
+      phone: place.formatted_phone_number || '',
+      website: place.website || '',
+      operatingHours: place.opening_hours?.weekday_text?.join('\n') || ''
+    }));
 
-      // Clear pricing data if debris type is unchecked
-      if (fieldName === "debrisTypes") {
-        const currentPricing = watchedValues.debrisPricing || {};
-        delete currentPricing[value];
-        setValue("debrisPricing", currentPricing);
-
-        // Clear additional details if no debris types selected
-        if (watchedValues.debrisTypes?.length === 1) {
-          setValue("debrisAdditionalDetails", "");
-          setValue("additionalDebrisPricingDetails", "");
+    // Extract additional details
+    if (place.formatted_address) {
+      // Try to extract city, state, zip from formatted address
+      const addressParts = place.formatted_address.split(', ');
+      if (addressParts.length >= 3) {
+        const lastPart = addressParts[addressParts.length - 1]; // Country
+        const secondLastPart = addressParts[addressParts.length - 2]; // State ZIP
+        const thirdLastPart = addressParts[addressParts.length - 3]; // City
+        
+        if (secondLastPart) {
+          const stateZipMatch = secondLastPart.match(/([A-Z]{2})\s+(\d{5})/);
+          if (stateZipMatch) {
+            setFormData(prev => ({
+              ...prev,
+              city: thirdLastPart || '',
+              state: stateZipMatch[1],
+              zipCode: stateZipMatch[2]
+            }));
+          }
         }
       }
     }
   };
 
-  const updateDebrisPricing = (
-    debrisType: string,
-    field: "price" | "priceDetails",
-    value: string | number,
-  ) => {
-    const currentPricing = watchedValues.debrisPricing || {};
-    const currentDebrisData = currentPricing[debrisType] || {};
-
-    setValue("debrisPricing", {
-      ...currentPricing,
-      [debrisType]: {
-        ...currentDebrisData,
-        [field]:
-          field === "price"
-            ? value === ""
-              ? undefined
-              : Number(value)
-            : value,
-      },
-    });
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const updateOperatingHours = (
-    dayIndex: number,
-    field: "openTime" | "closeTime" | "isClosed",
-    value: string | boolean,
-  ) => {
-    const currentHours = [...watchedValues.operatingHours];
-    currentHours[dayIndex] = {
-      ...currentHours[dayIndex],
-      [field]: value,
-    };
-    setValue("operatingHours", currentHours);
+  const handleServiceToggle = (service: string) => {
+    setFormData(prev => ({
+      ...prev,
+      services: prev.services.includes(service)
+        ? prev.services.filter(s => s !== service)
+        : [...prev.services, service]
+    }));
   };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError('');
+
+    try {
+      // Validate required fields
+      if (!formData.businessName || !formData.address || !formData.submitterEmail) {
+        throw new Error('Please fill in all required fields');
+      }
+
+      // Here you would submit to your backend API
+      // For now, we'll simulate the submission
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Add Google Place details if available
+      const submissionData = {
+        ...formData,
+        placeId: placeDetails?.place_id,
+        coordinates: placeDetails?.geometry ? {
+          lat: placeDetails.geometry.location.lat(),
+          lng: placeDetails.geometry.location.lng()
+        } : null,
+        submittedAt: new Date().toISOString()
+      };
+
+      console.log('Suggestion submitted:', submissionData);
+      
+      setSubmitSuccess(true);
+      setFormData({
+        businessName: '',
+        address: '',
+        city: '',
+        state: '',
+        zipCode: '',
+        phone: '',
+        email: '',
+        website: '',
+        locationType: '',
+        operatingHours: '',
+        services: [],
+        notes: '',
+        submitterName: '',
+        submitterEmail: '',
+        submitterPhone: '',
+      });
+      setPlaceDetails(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const serviceOptions = [
+    'Household Waste',
+    'Construction Debris',
+    'Yard Waste',
+    'Electronics Recycling',
+    'Hazardous Materials',
+    'Metal Recycling',
+    'Appliance Disposal',
+    'Bulk Item Pickup'
+  ];
+
+  if (submitSuccess) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="max-w-2xl mx-auto px-4 py-16">
+          <Card className="text-center">
+            <CardContent className="pt-16 pb-16">
+              <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-6" />
+              <h1 className="text-2xl font-bold text-foreground mb-4">
+                Thank You for Your Suggestion!
+              </h1>
+              <p className="text-muted-foreground mb-6">
+                We've received your location suggestion and will review it within 2-3 business days. 
+                If approved, the location will be added to our directory.
+              </p>
+              <Button onClick={() => setSubmitSuccess(false)}>
+                Submit Another Suggestion
+              </Button>
+            </CardContent>
+          </Card>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background">
       <Header />
+      
+      <main className="max-w-4xl mx-auto px-4 py-8">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-foreground mb-4">
+            Suggest a Location
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Know of a waste disposal facility that's not in our directory? Help us expand our database 
+            by suggesting new locations for other users to discover.
+          </p>
+        </div>
 
-      <main className="flex-1">
-        <div className="max-w-4xl mx-auto px-4 py-8">
-          {/* Header */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-            <div>
-              <h1 className="text-3xl font-bold">Suggest a Location</h1>
-              <p className="text-muted-foreground mt-2">
-                Help us expand our database by suggesting a waste disposal
-                location
-              </p>
-            </div>
-          </div>
+        {!googleMapsLoaded && (
+          <Alert className="mb-6">
+            <AlertDescription>
+              Loading Google Maps integration for enhanced location suggestions...
+            </AlertDescription>
+          </Alert>
+        )}
 
-          {showSuccessAlert && (
-            <Alert className="mb-6 border-green-200 bg-green-50">
-              <CheckCircle className="h-4 w-4 text-green-600" />
-              <AlertDescription className="text-green-800">
-                Thank you for your suggestion! We'll review it and add it to our
-                database if approved.
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Building className="w-5 h-5" />
+                Business Information
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="businessName">Business Name *</Label>
+                <Input
+                  id="businessName"
+                  ref={businessNameRef}
+                  value={formData.businessName}
+                  onChange={(e) => handleInputChange('businessName', e.target.value)}
+                  placeholder={googleMapsLoaded ? "Start typing to search businesses..." : "Enter business name"}
+                  required
+                />
+                {googleMapsLoaded && (
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Search will auto-complete with Google Places data
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <Label htmlFor="address">Address *</Label>
+                <Input
+                  id="address"
+                  ref={addressRef}
+                  value={formData.address}
+                  onChange={(e) => handleInputChange('address', e.target.value)}
+                  placeholder={googleMapsLoaded ? "Start typing address..." : "Enter full address"}
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <Label htmlFor="city">City</Label>
+                  <Input
+                    id="city"
+                    value={formData.city}
+                    onChange={(e) => handleInputChange('city', e.target.value)}
+                    placeholder="City"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="state">State</Label>
+                  <Input
+                    id="state"
+                    value={formData.state}
+                    onChange={(e) => handleInputChange('state', e.target.value)}
+                    placeholder="State"
+                    maxLength={2}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="zipCode">ZIP Code</Label>
+                  <Input
+                    id="zipCode"
+                    value={formData.zipCode}
+                    onChange={(e) => handleInputChange('zipCode', e.target.value)}
+                    placeholder="ZIP Code"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="phone">Phone Number</Label>
+                  <Input
+                    id="phone"
+                    value={formData.phone}
+                    onChange={(e) => handleInputChange('phone', e.target.value)}
+                    placeholder="(555) 123-4567"
+                    type="tel"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    value={formData.email}
+                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    placeholder="contact@business.com"
+                    type="email"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="website">Website</Label>
+                <Input
+                  id="website"
+                  value={formData.website}
+                  onChange={(e) => handleInputChange('website', e.target.value)}
+                  placeholder="https://www.business.com"
+                  type="url"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="locationType">Location Type</Label>
+                <Select value={formData.locationType} onValueChange={(value) => handleInputChange('locationType', value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select location type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="landfill">Landfill</SelectItem>
+                    <SelectItem value="transfer_station">Transfer Station</SelectItem>
+                    <SelectItem value="construction_landfill">Construction Landfill</SelectItem>
+                    <SelectItem value="recycling_center">Recycling Center</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Clock className="w-5 h-5" />
+                Operating Details
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="operatingHours">Operating Hours</Label>
+                <Textarea
+                  id="operatingHours"
+                  value={formData.operatingHours}
+                  onChange={(e) => handleInputChange('operatingHours', e.target.value)}
+                  placeholder="Monday: 8:00 AM - 5:00 PM&#10;Tuesday: 8:00 AM - 5:00 PM&#10;..."
+                  rows={4}
+                />
+              </div>
+
+              <div>
+                <Label>Services Offered</Label>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-2">
+                  {serviceOptions.map((service) => (
+                    <div key={service} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={service}
+                        checked={formData.services.includes(service)}
+                        onCheckedChange={() => handleServiceToggle(service)}
+                      />
+                      <Label htmlFor={service} className="text-sm">
+                        {service}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="notes">Additional Notes</Label>
+                <Textarea
+                  id="notes"
+                  value={formData.notes}
+                  onChange={(e) => handleInputChange('notes', e.target.value)}
+                  placeholder="Any additional information about this location..."
+                  rows={3}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Mail className="w-5 h-5" />
+                Your Information
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="submitterName">Your Name</Label>
+                  <Input
+                    id="submitterName"
+                    value={formData.submitterName}
+                    onChange={(e) => handleInputChange('submitterName', e.target.value)}
+                    placeholder="John Doe"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="submitterPhone">Your Phone</Label>
+                  <Input
+                    id="submitterPhone"
+                    value={formData.submitterPhone}
+                    onChange={(e) => handleInputChange('submitterPhone', e.target.value)}
+                    placeholder="(555) 123-4567"
+                    type="tel"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="submitterEmail">Your Email *</Label>
+                <Input
+                  id="submitterEmail"
+                  value={formData.submitterEmail}
+                  onChange={(e) => handleInputChange('submitterEmail', e.target.value)}
+                  placeholder="your.email@example.com"
+                  type="email"
+                  required
+                />
+                <p className="text-sm text-muted-foreground mt-1">
+                  We'll contact you if we need additional information about this location.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {error && (
+            <Alert className="border-red-200 bg-red-50">
+              <AlertDescription className="text-red-800">
+                {error}
               </AlertDescription>
             </Alert>
           )}
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {/* Basic Information */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <MapPin className="w-5 h-5" />
-                  Basic Information
-                </CardTitle>
-                <CardDescription>
-                  Essential details about the waste disposal location
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="md:col-span-2">
-                    <Label htmlFor="name">Location Name *</Label>
-                    <Input
-                      id="name"
-                      {...register("name", {
-                        required: "Location name is required",
-                        minLength: {
-                          value: 3,
-                          message: "Name must be at least 3 characters",
-                        },
-                      })}
-                      placeholder="Enter the business or facility name"
-                      className={errors.name ? "border-red-500" : ""}
-                    />
-                    {errors.name && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.name.message}
-                      </p>
-                    )}
-                  </div>
+          {placeDetails && (
+            <Alert className="border-green-200 bg-green-50">
+              <AlertDescription className="text-green-800">
+                ✓ Google Places data found and auto-filled for "{placeDetails.name}"
+              </AlertDescription>
+            </Alert>
+          )}
 
-                  <div className="md:col-span-2">
-                    <Label htmlFor="address">Street Address *</Label>
-                    <Input
-                      id="address"
-                      {...register("address", {
-                        required: "Address is required",
-                      })}
-                      placeholder="e.g., 123 Industrial Drive"
-                      className={errors.address ? "border-red-500" : ""}
-                    />
-                    {errors.address && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.address.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <div>
-                    <Label htmlFor="city">City *</Label>
-                    <Input
-                      id="city"
-                      {...register("city", { required: "City is required" })}
-                      placeholder="e.g., Springfield"
-                      className={errors.city ? "border-red-500" : ""}
-                    />
-                    {errors.city && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.city.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <div>
-                    <Label htmlFor="state">State *</Label>
-                    <Select
-                      value={watchedValues.state}
-                      onValueChange={(value) => setValue("state", value)}
-                    >
-                      <SelectTrigger
-                        className={errors.state ? "border-red-500" : ""}
-                      >
-                        <SelectValue placeholder="Select state" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {US_STATES.map((state) => (
-                          <SelectItem key={state.value} value={state.value}>
-                            {state.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    {errors.state && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.state.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <div>
-                    <Label htmlFor="zipCode">ZIP Code *</Label>
-                    <Input
-                      id="zipCode"
-                      {...register("zipCode", {
-                        required: "ZIP code is required",
-                        pattern: {
-                          value: /^\d{5}(-\d{4})?$/,
-                          message: "Enter a valid ZIP code",
-                        },
-                      })}
-                      placeholder="e.g., 12345"
-                      className={errors.zipCode ? "border-red-500" : ""}
-                    />
-                    {errors.zipCode && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.zipCode.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <div>
-                    <Label htmlFor="phone">Phone Number *</Label>
-                    <Input
-                      id="phone"
-                      {...register("phone", {
-                        required: "Phone number is required",
-                      })}
-                      placeholder="e.g., (555) 123-4567"
-                      className={errors.phone ? "border-red-500" : ""}
-                    />
-                    {errors.phone && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.phone.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="md:col-span-2">
-                    <Label htmlFor="locationType">Facility Type *</Label>
-                    <Select
-                      value={watchedValues.locationType}
-                      onValueChange={(value) =>
-                        setValue("locationType", value as any)
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {LOCATION_TYPES.map((type) => {
-                          const Icon = type.icon;
-                          return (
-                            <SelectItem key={type.value} value={type.value}>
-                              <div className="flex items-center gap-2">
-                                <Icon className="w-4 h-4" />
-                                <span>{type.label}</span>
-                              </div>
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Contact Information */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Phone className="w-5 h-5" />
-                  Additional Contact Information
-                </CardTitle>
-                <CardDescription>
-                  Optional contact details (if known)
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      {...register("email")}
-                      placeholder="contact@facility.com"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="website">Website</Label>
-                    <Input
-                      id="website"
-                      {...register("website")}
-                      placeholder="https://facility.com"
-                    />
-                  </div>
-
-                  <div className="md:col-span-2">
-                    <Label htmlFor="googleBusinessUrl">
-                      Google Business Profile URL
-                    </Label>
-                    <Input
-                      id="googleBusinessUrl"
-                      {...register("googleBusinessUrl")}
-                      placeholder="https://goo.gl/maps/..."
-                    />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Payment Methods */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <CreditCard className="w-5 h-5" />
-                  Payment Methods
-                </CardTitle>
-                <CardDescription>
-                  What payment types does this location accept?
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {PAYMENT_TYPES.map((payment) => (
-                    <div key={payment} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={payment}
-                        checked={
-                          watchedValues.paymentTypes?.includes(payment) || false
-                        }
-                        onCheckedChange={(checked) =>
-                          handleArrayFieldChange(
-                            "paymentTypes",
-                            payment,
-                            checked as boolean,
-                          )
-                        }
-                      />
-                      <Label htmlFor={payment} className="text-sm font-medium">
-                        {payment}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-
-                {watchedValues.paymentTypes &&
-                  watchedValues.paymentTypes.length > 0 && (
-                    <div>
-                      <Label htmlFor="additionalPaymentDetails">
-                        Additional Payment Details
-                      </Label>
-                      <Textarea
-                        id="additionalPaymentDetails"
-                        placeholder="Special payment requirements, credit terms, deposits..."
-                        rows={2}
-                        {...register("additionalPaymentDetails")}
-                      />
-                    </div>
-                  )}
-              </CardContent>
-            </Card>
-
-            {/* Debris Types & Pricing */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <DollarSign className="w-5 h-5" />
-                  Accepted Debris Types & Pricing
-                </CardTitle>
-                <CardDescription>
-                  Select the types of waste this location accepts (pricing
-                  optional)
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Label className="text-base font-medium">
-                  Accepted Debris Types & Pricing
-                </Label>
-                <div className="space-y-4 mt-2">
-                  {DEBRIS_TYPES.map((debris) => (
-                    <div key={debris} className="border rounded-lg p-4">
-                      <div className="flex items-center space-x-3 mb-3">
-                        <Checkbox
-                          id={debris}
-                          checked={
-                            watchedValues.debrisTypes?.includes(debris) || false
-                          }
-                          onCheckedChange={(checked) => {
-                            handleArrayFieldChange(
-                              "debrisTypes",
-                              debris,
-                              checked as boolean,
-                            );
-                          }}
-                        />
-                        <Label htmlFor={debris} className="text-sm font-medium">
-                          {debris}
-                        </Label>
-                      </div>
-
-                      {watchedValues.debrisTypes?.includes(debris) && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 ml-6">
-                          <div>
-                            <Label className="text-xs">Price (USD)</Label>
-                            <div className="relative">
-                              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
-                                $
-                              </span>
-                              <Input
-                                type="number"
-                                step="0.01"
-                                min="0"
-                                placeholder="0.00"
-                                className="pl-7"
-                                value={
-                                  watchedValues.debrisPricing?.[debris]
-                                    ?.price || ""
-                                }
-                                onChange={(e) =>
-                                  updateDebrisPricing(
-                                    debris,
-                                    "price",
-                                    e.target.value,
-                                  )
-                                }
-                              />
-                            </div>
-                          </div>
-                          <div>
-                            <Label className="text-xs">Price Details</Label>
-                            <Input
-                              placeholder="per ton, per load, etc."
-                              value={
-                                watchedValues.debrisPricing?.[debris]
-                                  ?.priceDetails || ""
-                              }
-                              onChange={(e) =>
-                                updateDebrisPricing(
-                                  debris,
-                                  "priceDetails",
-                                  e.target.value,
-                                )
-                              }
-                            />
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-
-                {watchedValues.debrisTypes &&
-                  watchedValues.debrisTypes.length > 0 && (
-                    <div className="mt-6 space-y-4">
-                      <div>
-                        <Label htmlFor="debrisAdditionalDetails">
-                          General Requirements & Restrictions
-                        </Label>
-                        <Textarea
-                          placeholder="General requirements, restrictions, preparation instructions for debris types..."
-                          rows={3}
-                          {...register("debrisAdditionalDetails")}
-                        />
-                      </div>
-
-                      <div>
-                        <Label htmlFor="additionalDebrisPricingDetails">
-                          Additional Debris Type Pricing Details
-                        </Label>
-                        <Textarea
-                          id="additionalDebrisPricingDetails"
-                          placeholder="Special pricing information, volume discounts, seasonal rates, or other pricing details that apply to debris disposal..."
-                          rows={3}
-                          {...register("additionalDebrisPricingDetails")}
-                        />
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Include any special pricing arrangements, bulk
-                          discounts, seasonal variations, or additional fees
-                          that customers should know about.
-                        </p>
-                      </div>
-                    </div>
-                  )}
-              </CardContent>
-            </Card>
-
-            {/* Operating Hours */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Clock className="w-5 h-5" />
-                  Operating Hours
-                </CardTitle>
-                <CardDescription>
-                  When is this location open for business?
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {DAYS_OF_WEEK.map((day, index) => (
-                    <div key={day} className="flex items-center gap-4">
-                      <div className="w-20">
-                        <Label className="text-sm">{day}</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          checked={
-                            !watchedValues.operatingHours[index]?.isClosed
-                          }
-                          onCheckedChange={(checked) =>
-                            updateOperatingHours(index, "isClosed", !checked)
-                          }
-                        />
-                        <Label className="text-sm">Open</Label>
-                      </div>
-                      {!watchedValues.operatingHours[index]?.isClosed && (
-                        <>
-                          <Input
-                            type="time"
-                            value={
-                              watchedValues.operatingHours[index]?.openTime ||
-                              "08:00"
-                            }
-                            onChange={(e) =>
-                              updateOperatingHours(
-                                index,
-                                "openTime",
-                                e.target.value,
-                              )
-                            }
-                            className="w-32"
-                          />
-                          <span className="text-muted-foreground">to</span>
-                          <Input
-                            type="time"
-                            value={
-                              watchedValues.operatingHours[index]?.closeTime ||
-                              "17:00"
-                            }
-                            onChange={(e) =>
-                              updateOperatingHours(
-                                index,
-                                "closeTime",
-                                e.target.value,
-                              )
-                            }
-                            className="w-32"
-                          />
-                        </>
-                      )}
-                      {watchedValues.operatingHours[index]?.isClosed && (
-                        <span className="text-muted-foreground text-sm">
-                          Closed
-                        </span>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Your Information */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Info className="w-5 h-5" />
-                  Your Information
-                </CardTitle>
-                <CardDescription>
-                  We need your contact information in case we have questions
-                  about this suggestion
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="submitterName">Your Name *</Label>
-                    <Input
-                      id="submitterName"
-                      {...register("submitterName", {
-                        required: "Your name is required",
-                      })}
-                      placeholder="John Doe"
-                      className={errors.submitterName ? "border-red-500" : ""}
-                    />
-                    {errors.submitterName && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.submitterName.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <div>
-                    <Label htmlFor="submitterEmail">Your Email *</Label>
-                    <Input
-                      id="submitterEmail"
-                      type="email"
-                      {...register("submitterEmail", {
-                        required: "Your email is required",
-                        pattern: {
-                          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                          message: "Enter a valid email address",
-                        },
-                      })}
-                      placeholder="john@example.com"
-                      className={errors.submitterEmail ? "border-red-500" : ""}
-                    />
-                    {errors.submitterEmail && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.submitterEmail.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <div>
-                    <Label htmlFor="submitterPhone">
-                      Your Phone (Optional)
-                    </Label>
-                    <Input
-                      id="submitterPhone"
-                      {...register("submitterPhone")}
-                      placeholder="(555) 123-4567"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="additionalNotes">Additional Notes</Label>
-                  <Textarea
-                    id="additionalNotes"
-                    {...register("additionalNotes")}
-                    placeholder="Any additional information about this location that might be helpful..."
-                    rows={3}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Submit */}
-            <div className="flex gap-4">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => navigate("/all-locations")}
-                className="flex-1"
-              >
-                Cancel
-              </Button>
-              <Button type="submit" disabled={isSubmitting} className="flex-1">
-                {isSubmitting ? "Submitting..." : "Submit Suggestion"}
-              </Button>
-            </div>
-          </form>
-        </div>
+          <div className="flex justify-end">
+            <Button type="submit" disabled={isSubmitting} size="lg">
+              {isSubmitting ? 'Submitting...' : 'Submit Suggestion'}
+            </Button>
+          </div>
+        </form>
       </main>
 
       <Footer />
