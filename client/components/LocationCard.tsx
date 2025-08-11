@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { Location } from "@shared/api";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -16,13 +15,40 @@ import {
   Edit,
 } from "lucide-react";
 
+// Supabase Location interface matching the database structure
+interface Location {
+  id: string;
+  name: string;
+  address: string;
+  city: string;
+  state: string;
+  zip_code?: string;
+  phone?: string;
+  email?: string;
+  website?: string;
+  latitude?: number;
+  longitude?: number;
+  location_type: "landfill" | "transfer_station" | "construction_landfill";
+  notes?: string;
+  rating?: number;
+  review_count?: number;
+  is_active?: boolean;
+  created_at?: string;
+  updated_at?: string;
+  // Optional fields that might come from joins
+  debrisTypes?: any[];
+  operatingHours?: any[];
+  paymentTypes?: any[];
+  distance?: number;
+}
+
 interface LocationCardProps {
   location: Location;
   searchedDebrisTypes?: string[]; // Debris types that user searched/filtered for
   showContactDetails?: boolean; // Whether to show phone and hours
 }
 
-const getLocationIcon = (type: Location["locationType"]) => {
+const getLocationIcon = (type: Location["location_type"]) => {
   switch (type) {
     case "landfill":
       return <Trash2 className="w-4 h-4" />;
@@ -35,7 +61,7 @@ const getLocationIcon = (type: Location["locationType"]) => {
   }
 };
 
-const getLocationLabel = (type: Location["locationType"]) => {
+const getLocationLabel = (type: Location["location_type"]) => {
   switch (type) {
     case "landfill":
       return "Landfill";
