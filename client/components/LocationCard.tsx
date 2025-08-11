@@ -335,9 +335,9 @@ export default function LocationCard({
                           closedDays.push(h?.dayOfWeek || h?.day_of_week || 0);
                           return;
                         }
-                        const timeKey = `${formatTo12Hour(h.openTime)}-${formatTo12Hour(h.closeTime)}`;
+                        const timeKey = `${formatTo12Hour(h?.openTime || h?.open_time || '')}-${formatTo12Hour(h?.closeTime || h?.close_time || '')}`;
                         if (!hourGroups[timeKey]) hourGroups[timeKey] = [];
-                        hourGroups[timeKey].push(h.dayOfWeek);
+                        hourGroups[timeKey].push(h?.dayOfWeek || h?.day_of_week || 0);
                       });
 
                       const dayNames = [
