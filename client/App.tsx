@@ -27,7 +27,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 
 const News = lazy(() => import("./pages/News"));
 const NewsArticle = lazy(() => import("./pages/NewsArticle"));
-const Blog = lazy(() => import("./pages/Blog"));
+const Learn = lazy(() => import("./pages/Learn"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 
 const Contact = lazy(() => import("./pages/Contact"));
@@ -143,7 +143,7 @@ const AppRoutes = () => (
     />
 
 
-    <Route path="/blog" element={<Blog />} />
+    <Route path="/blog" element={<Learn />} />
     <Route path="/blog/:slug" element={<BlogPost />} />
     <Route path="/news" element={<News />} />
     <Route path="/news/article/:id" element={<NewsArticle />} />
