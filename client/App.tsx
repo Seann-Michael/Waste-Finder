@@ -51,6 +51,7 @@ const LeadGenerationJunkRemoval = lazy(
   () => import("./pages/LeadGenerationJunkRemoval"),
 );
 const Sitemap = lazy(() => import("./pages/Sitemap"));
+const XMLSitemap = lazy(() => import("./pages/XMLSitemap"));
 
 // Admin pages - separate chunk
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
@@ -172,6 +173,7 @@ const AppRoutes = () => (
       element={<LeadGenerationJunkRemoval />}
     />
     <Route path="/sitemap" element={<Sitemap />} />
+    <Route path="/sitemap.xml" element={<XMLSitemap />} />
     <Route path="/pricing-calculator" element={<PricingCalculator />} />
     <Route
       path="/debris-weight-calculator"
