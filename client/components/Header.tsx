@@ -57,7 +57,7 @@ export default function Header() {
     },
 
     {
-      name: "Blog",
+      name: "Learn",
       href: "/blog",
       active: location.pathname.startsWith("/blog"),
     },
@@ -117,9 +117,9 @@ export default function Header() {
                 <div className="w-7 h-7 sm:w-8 sm:h-8 bg-primary rounded-lg flex items-center justify-center">
                   <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-primary-foreground" />
                 </div>
-                <span className="text-lg sm:text-xl font-bold text-foreground">
-                  DumpNearMe
-                </span>
+              <span className="text-lg sm:text-xl font-bold text-foreground">
+                Dump Near Me
+              </span>
               </Link>
 
               {/* Desktop Navigation */}

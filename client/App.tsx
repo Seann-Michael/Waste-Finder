@@ -33,7 +33,7 @@ const BlogPost = lazy(() => import("./pages/BlogPost"));
 const Contact = lazy(() => import("./pages/Contact"));
 const GuestPost = lazy(() => import("./pages/GuestPost"));
 const LocalJunkRemoval = lazy(() => import("./pages/LocalJunkRemoval"));
-const LocalDumpsterRental = lazy(() => import("./pages/LocalDumpsterRental"));
+
 const DigitalMarketing = lazy(() => import("./pages/DigitalMarketing"));
 const LocalSEO = lazy(() => import("./pages/LocalSEO"));
 const LeadGeneration = lazy(() => import("./pages/LeadGeneration"));
