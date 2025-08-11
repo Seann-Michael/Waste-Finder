@@ -284,9 +284,9 @@ export default function LocationCard({
             {location.name}
           </h3>
           <div className="flex items-center gap-1 mb-3">
-            <div className="flex">{renderStars(location.rating)}</div>
+            <div className="flex">{renderStars(location.rating || 0)}</div>
             <span className="text-sm text-muted-foreground">
-              ({location.reviewCount})
+              ({location.review_count || 0})
             </span>
           </div>
         </div>
