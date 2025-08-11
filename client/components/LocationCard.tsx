@@ -324,15 +324,15 @@ export default function LocationCard({
             <div className="flex items-start gap-2">
               <Clock className="w-4 h-4 text-muted-foreground mt-0.5" />
               <div className="text-sm text-muted-foreground leading-relaxed">
-                {location.operatingHours.length > 0
+                {(location.operatingHours || []).length > 0
                   ? (() => {
                       // Group consecutive days with same hours
                       const hourGroups: { [key: string]: number[] } = {};
                       const closedDays: number[] = [];
 
-                      location.operatingHours.forEach((h) => {
-                        if (h.isClosed) {
-                          closedDays.push(h.dayOfWeek);
+                      (location.operatingHours || []).forEach((h) => {
+                        if (h?.isClosed || h?.is_closed) {
+                          closedDays.push(h?.dayOfWeek || h?.day_of_week || 0);
                           return;
                         }
                         const timeKey = `${formatTo12Hour(h.openTime)}-${formatTo12Hour(h.closeTime)}`;
