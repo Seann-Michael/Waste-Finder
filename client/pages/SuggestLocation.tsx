@@ -60,7 +60,7 @@ export default function SuggestLocationEnhanced() {
   const [error, setError] = useState('');
   const [googleMapsLoaded, setGoogleMapsLoaded] = useState(false);
   const [placeDetails, setPlaceDetails] = useState<PlaceResult | null>(null);
-  
+
   const businessNameRef = useRef<HTMLInputElement>(null);
   const addressRef = useRef<HTMLInputElement>(null);
   const autocompleteRef = useRef<any>(null);
@@ -76,15 +76,15 @@ export default function SuggestLocationEnhanced() {
       }
 
       const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY || ''}&libraries=places&callback=initMap`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ''}&libraries=places&callback=initMap`;
       script.async = true;
       script.defer = true;
-      
+
       window.initMap = () => {
         setGoogleMapsLoaded(true);
         initializeAutocomplete();
       };
-      
+
       document.head.appendChild(script);
     };
 
@@ -128,14 +128,14 @@ export default function SuggestLocationEnhanced() {
       const place = addressAutocomplete.getPlace();
       if (place && place.formatted_address) {
         setFormData(prev => ({ ...prev, address: place.formatted_address }));
-        
+
         // Extract city, state, zip from address components
         if (place.address_components) {
           const components = place.address_components;
           const city = components.find((c: any) => c.types.includes('locality'))?.long_name || '';
           const state = components.find((c: any) => c.types.includes('administrative_area_level_1'))?.short_name || '';
           const zipCode = components.find((c: any) => c.types.includes('postal_code'))?.long_name || '';
-          
+
           setFormData(prev => ({
             ...prev,
             city,
@@ -151,7 +151,7 @@ export default function SuggestLocationEnhanced() {
 
   const handlePlaceSelection = (place: any) => {
     setPlaceDetails(place);
-    
+
     // Auto-fill form data from Google Places
     setFormData(prev => ({
       ...prev,
@@ -170,7 +170,7 @@ export default function SuggestLocationEnhanced() {
         const lastPart = addressParts[addressParts.length - 1]; // Country
         const secondLastPart = addressParts[addressParts.length - 2]; // State ZIP
         const thirdLastPart = addressParts[addressParts.length - 3]; // City
-        
+
         if (secondLastPart) {
           const stateZipMatch = secondLastPart.match(/([A-Z]{2})\s+(\d{5})/);
           if (stateZipMatch) {
@@ -226,7 +226,7 @@ export default function SuggestLocationEnhanced() {
       };
 
       console.log('Suggestion submitted:', submissionData);
-      
+
       setSubmitSuccess(true);
       setFormData({
         businessName: '',
@@ -276,7 +276,7 @@ export default function SuggestLocationEnhanced() {
                 Thank You for Your Suggestion!
               </h1>
               <p className="text-muted-foreground mb-6">
-                We've received your location suggestion and will review it within 2-3 business days. 
+                We've received your location suggestion and will review it within 2-3 business days.
                 If approved, the location will be added to our directory.
               </p>
               <Button onClick={() => setSubmitSuccess(false)}>
@@ -293,14 +293,14 @@ export default function SuggestLocationEnhanced() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       <main className="max-w-4xl mx-auto px-4 py-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-4">
             Suggest a Location
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Know of a waste disposal facility that's not in our directory? Help us expand our database 
+            Know of a waste disposal facility that's not in our directory? Help us expand our database
             by suggesting new locations for other users to discover.
           </p>
         </div>
