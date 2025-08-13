@@ -132,6 +132,9 @@ const AppRoutes = () => (
       element={<Navigate to="/debris-weight-calculator" replace />}
     />
     <Route path="/Contact" element={<Navigate to="/contact" replace />} />
+    <Route path="/Blog" element={<Navigate to="/blog" replace />} />
+    <Route path="/BlogPost" element={<Navigate to="/blog" replace />} />
+    <Route path="/blogpost" element={<Navigate to="/blog" replace />} />
     <Route path="/admin/RSSManager" element={<Navigate to="/admin/rss-manager" replace />} />
     <Route path="/admin/ArticleManagement" element={<Navigate to="/admin/articles" replace />} />
     <Route path="/admin/AIContentSettings" element={<Navigate to="/admin/ai-content-settings" replace />} />
