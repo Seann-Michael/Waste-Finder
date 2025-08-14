@@ -77,25 +77,35 @@ export async function getAllLocations(): Promise<Location[]> {
   }
 }
 
-// Get locations with filters
+// Get locations with filters and related data
 export async function getFilteredLocations(filters: {
   state?: string;
-  locationType?: string;
+  location_type?: string;
   city?: string;
   search?: string;
 }): Promise<Location[]> {
   try {
     let query = supabaseAdmin
       .from("locations")
-      .select("*")
+      .select(`
+        *,
+        debrisTypes:location_debris_types(
+          debris_type:debris_types(*)
+        ),
+        paymentTypes:location_payment_types(
+          payment_type:payment_types(*)
+        ),
+        operatingHours:operating_hours(*),
+        reviews(*)
+      `)
       .eq("is_active", true);
 
     if (filters.state) {
       query = query.eq("state", filters.state);
     }
 
-    if (filters.locationType) {
-      query = query.eq("locationType", filters.locationType);
+    if (filters.location_type) {
+      query = query.eq("location_type", filters.location_type);
     }
 
     if (filters.city) {
@@ -115,7 +125,14 @@ export async function getFilteredLocations(filters: {
       return [];
     }
 
-    return data || [];
+    // Transform the data to flatten the relationships
+    const locations = (data || []).map(location => ({
+      ...location,
+      debrisTypes: location.debrisTypes?.map((dt: any) => dt.debris_type) || [],
+      paymentTypes: location.paymentTypes?.map((pt: any) => pt.payment_type) || [],
+    }));
+
+    return locations;
   } catch (error) {
     console.error("Supabase connection error:", error);
     return [];
