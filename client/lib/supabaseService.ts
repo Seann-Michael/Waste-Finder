@@ -1,31 +1,68 @@
 import { supabase } from "./supabase";
 
-// Location interface matching your existing data structure
+// Location interface matching the actual database schema
 export interface Location {
   id: string;
   name: string;
   address: string;
   city: string;
   state: string;
-  zip: string;
+  zip_code?: string;
   phone?: string;
+  email?: string;
   website?: string;
-  hours?: string;
-  type:
-    | "transfer_station"
-    | "landfill"
-    | "recycling_center"
-    | "dumpster_rental";
   latitude?: number;
   longitude?: number;
+  location_type: "landfill" | "transfer_station" | "construction_landfill";
+  notes?: string;
+  rating?: number;
+  review_count?: number;
   is_active?: boolean;
-  services?: string[];
-  accepts?: string[];
-  pricing?: any;
-  description?: string;
-  image_url?: string;
   created_at?: string;
   updated_at?: string;
+  // Related data from joins
+  debrisTypes?: DebrisType[];
+  operatingHours?: OperatingHour[];
+  paymentTypes?: PaymentType[];
+  reviews?: Review[];
+  distance?: number;
+}
+
+export interface DebrisType {
+  id: string;
+  name: string;
+  description?: string;
+  category?: string;
+  price_per_ton?: number;
+  price_note?: string;
+}
+
+export interface PaymentType {
+  id: string;
+  name: string;
+  description?: string;
+}
+
+export interface OperatingHour {
+  id: string;
+  location_id: string;
+  day_of_week: number; // 0-6, Sunday=0
+  open_time?: string;
+  close_time?: string;
+  is_closed: boolean;
+}
+
+export interface Review {
+  id: string;
+  location_id: string;
+  rating: number;
+  title?: string;
+  content?: string;
+  author_name?: string;
+  author_email?: string;
+  is_approved: boolean;
+  is_moderated: boolean;
+  created_at: string;
 }
 
 // Get all active locations
