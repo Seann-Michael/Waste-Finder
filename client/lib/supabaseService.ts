@@ -356,7 +356,7 @@ export async function getLocationStats() {
   try {
     const { data, error } = await supabase
       .from("locations")
-      .select("state, type")
+      .select("state, location_type")
       .eq("is_active", true);
 
     if (error) {
@@ -373,7 +373,7 @@ export async function getLocationStats() {
 
     const typeCount =
       data?.reduce((acc: any, location) => {
-        acc[location.type] = (acc[location.type] || 0) + 1;
+        acc[location.location_type] = (acc[location.location_type] || 0) + 1;
         return acc;
       }, {}) || {};
 
@@ -381,5 +381,83 @@ export async function getLocationStats() {
   } catch (error) {
     console.error("Supabase connection error:", error);
     return { totalLocations: 0, stateCount: {}, typeCount: {} };
+  }
+}
+
+// Add a review for a location
+export async function addLocationReview(
+  locationId: string,
+  review: {
+    rating: number;
+    title?: string;
+    content?: string;
+    author_name?: string;
+    author_email?: string;
+  }
+): Promise<Review | null> {
+  try {
+    const { data, error } = await supabase
+      .from("reviews")
+      .insert([
+        {
+          location_id: locationId,
+          ...review,
+          is_approved: false, // Reviews need approval
+          is_moderated: false,
+          created_at: new Date().toISOString(),
+        },
+      ])
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error adding review:", error);
+      return null;
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Supabase connection error:", error);
+    return null;
+  }
+}
+
+// Get all debris types
+export async function getDebrisTypes(): Promise<DebrisType[]> {
+  try {
+    const { data, error } = await supabase
+      .from("debris_types")
+      .select("*")
+      .order("name");
+
+    if (error) {
+      console.error("Error fetching debris types:", error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error("Supabase connection error:", error);
+    return [];
+  }
+}
+
+// Get all payment types
+export async function getPaymentTypes(): Promise<PaymentType[]> {
+  try {
+    const { data, error } = await supabase
+      .from("payment_types")
+      .select("*")
+      .order("name");
+
+    if (error) {
+      console.error("Error fetching payment types:", error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error("Supabase connection error:", error);
+    return [];
   }
 }
