@@ -80,56 +80,74 @@ export async function geocodeZipCode(zipCode: string): Promise<GeocodingResult |
  * Geocode using zippopotam.us API
  */
 async function geocodeWithZippopotamus(zipCode: string): Promise<GeocodingResult | null> {
-  const response = await fetch(`https://api.zippopotam.us/us/${zipCode}`, {
-    timeout: 5000,
-  });
-  
-  if (!response.ok) return null;
-  
-  const data = await response.json();
-  
-  if (data && data.places && data.places.length > 0) {
-    const place = data.places[0];
-    return {
-      lat: parseFloat(place.latitude),
-      lng: parseFloat(place.longitude),
-      city: place["place name"],
-      state: place["state abbreviation"],
-      formattedAddress: `${place["place name"]}, ${place["state abbreviation"]} ${zipCode}`,
-    };
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+  try {
+    const response = await fetch(`https://api.zippopotam.us/us/${zipCode}`, {
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
+
+    if (!response.ok) return null;
+
+    const data = await response.json();
+
+    if (data && data.places && data.places.length > 0) {
+      const place = data.places[0];
+      return {
+        lat: parseFloat(place.latitude),
+        lng: parseFloat(place.longitude),
+        city: place["place name"],
+        state: place["state abbreviation"],
+        formattedAddress: `${place["place name"]}, ${place["state abbreviation"]} ${zipCode}`,
+      };
+    }
+
+    return null;
+  } catch (error) {
+    clearTimeout(timeoutId);
+    return null;
   }
-  
-  return null;
 }
 
 /**
  * Geocode using Nominatim (OpenStreetMap)
  */
 async function geocodeWithNominatim(zipCode: string): Promise<GeocodingResult | null> {
-  const response = await fetch(
-    `https://nominatim.openstreetmap.org/search?format=json&countrycodes=us&postalcode=${zipCode}&limit=1`,
-    {
-      headers: {
-        'User-Agent': 'WasteFinder/1.0 (https://wastefinderapp.com)',
-      },
-      timeout: 5000,
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&countrycodes=us&postalcode=${zipCode}&limit=1`,
+      {
+        headers: {
+          'User-Agent': 'WasteFinder/1.0 (https://wastefinderapp.com)',
+        },
+        signal: controller.signal,
+      }
+    );
+    clearTimeout(timeoutId);
+
+    if (!response.ok) return null;
+
+    const data = await response.json();
+
+    if (data && data.length > 0) {
+      const place = data[0];
+      return {
+        lat: parseFloat(place.lat),
+        lng: parseFloat(place.lon),
+        formattedAddress: place.display_name,
+      };
     }
-  );
-  
-  if (!response.ok) return null;
-  
-  const data = await response.json();
-  
-  if (data && data.length > 0) {
-    const place = data[0];
-    return {
-      lat: parseFloat(place.lat),
-      lng: parseFloat(place.lon),
-      formattedAddress: place.display_name,
-    };
+
+    return null;
+  } catch (error) {
+    clearTimeout(timeoutId);
+    return null;
   }
-  
-  return null;
 }
 
 /**
