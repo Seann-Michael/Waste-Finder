@@ -63,6 +63,7 @@ export function getManagedArticles(): NewsArticle[] {
     return stored ? JSON.parse(stored) : [];
   } catch (error) {
     console.error('Error loading articles:', error);
+    localStorage.removeItem(ARTICLES_STORAGE_KEY);
     return [];
   }
 }
@@ -188,6 +189,7 @@ export function getAIContentSettings(): AIContentSettings {
     return stored ? { ...DEFAULT_AI_SETTINGS, ...JSON.parse(stored) } : DEFAULT_AI_SETTINGS;
   } catch (error) {
     console.error('Error loading AI settings:', error);
+    localStorage.removeItem(AI_SETTINGS_STORAGE_KEY);
     return DEFAULT_AI_SETTINGS;
   }
 }
