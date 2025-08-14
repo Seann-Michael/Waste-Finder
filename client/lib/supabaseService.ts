@@ -228,12 +228,22 @@ export async function getLocationById(id: string): Promise<Location | null> {
   }
 }
 
-// Search locations by name or address
+// Search locations by name or address with related data
 export async function searchLocations(query: string): Promise<Location[]> {
   try {
     const { data, error } = await supabase
       .from("locations")
-      .select("*")
+      .select(`
+        *,
+        debrisTypes:location_debris_types(
+          debris_type:debris_types(*)
+        ),
+        paymentTypes:location_payment_types(
+          payment_type:payment_types(*)
+        ),
+        operatingHours:operating_hours(*),
+        reviews(*)
+      `)
       .or(
         `name.ilike.%${query}%,address.ilike.%${query}%,city.ilike.%${query}%`,
       )
@@ -246,7 +256,14 @@ export async function searchLocations(query: string): Promise<Location[]> {
       return [];
     }
 
-    return data || [];
+    // Transform the data to flatten the relationships
+    const locations = (data || []).map(location => ({
+      ...location,
+      debrisTypes: location.debrisTypes?.map((dt: any) => dt.debris_type) || [],
+      paymentTypes: location.paymentTypes?.map((pt: any) => pt.payment_type) || [],
+    }));
+
+    return locations;
   } catch (error) {
     console.error("Supabase connection error:", error);
     return [];
