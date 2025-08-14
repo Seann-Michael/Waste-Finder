@@ -201,7 +201,7 @@ const NewsCarousel: React.FC = () => {
   );
 };
 
-const ResourceCard: React.FC<{ resource: any }> = ({ resource }) => {
+const ResourceCard: React.FC<{ resource: Resource }> = ({ resource }) => {
   const getFileIcon = (fileType: string) => {
     switch (fileType.toLowerCase()) {
       case 'pdf':
@@ -218,6 +218,8 @@ const ResourceCard: React.FC<{ resource: any }> = ({ resource }) => {
     trackPageView('Resource Download', resource.title);
     // In real implementation, this would track the download
     console.log(`Analytics: Resource downloaded - ${resource.title}`);
+    // Open the download URL
+    window.open(resource.download_url, '_blank');
   };
 
   return (
@@ -230,13 +232,13 @@ const ResourceCard: React.FC<{ resource: any }> = ({ resource }) => {
       <CardHeader>
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
-            {getFileIcon(resource.fileType)}
+            {getFileIcon(resource.file_type)}
             <div>
               <CardTitle className="text-lg">{resource.title}</CardTitle>
               <div className="flex items-center gap-2 mt-1">
                 <Badge variant="outline">{resource.category}</Badge>
                 <span className="text-sm text-muted-foreground">
-                  {resource.fileType} • {resource.fileSize}
+                  {resource.file_type} • {resource.file_size}
                 </span>
               </div>
             </div>
