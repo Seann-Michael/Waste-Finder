@@ -120,7 +120,8 @@ export default function AllLocations() {
           debrisTypes
         );
 
-        setLocations(data);
+        // Ensure data is an array before setting
+        setLocations(Array.isArray(data) ? data : []);
 
         if (zipFromParams) {
           setSearchLocation({
