@@ -309,7 +309,7 @@ export default function LocationCard({
               </a>
             </div>
           </div>
-          {showContactDetails && (
+          {showContactDetails && location.phone && (
             <div className="flex items-start gap-2">
               <Phone className="w-4 h-4 text-muted-foreground mt-0.5" />
               <a
