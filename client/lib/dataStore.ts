@@ -55,6 +55,7 @@ class DataStore {
       return data;
     } catch (error) {
       console.error(`Error reading ${key} from localStorage:`, error);
+      localStorage.removeItem(key);
       return [] as T[];
     }
   }
