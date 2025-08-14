@@ -34,6 +34,7 @@ export default function Header() {
         setContentSettings((prev) => ({ ...prev, ...parsed }));
       } catch (error) {
         console.error("Error loading content settings:", error);
+        localStorage.removeItem("contentSettings");
       }
     }
   }, []);
