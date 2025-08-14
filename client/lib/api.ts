@@ -182,7 +182,7 @@ export class APIClient {
         const duration = performance.now() - startTime;
 
         // Track API call performance
-        trackAPICall(endpoint, duration, response.status);
+        trackApiCall(endpoint, 'GET', duration, response.status);
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
