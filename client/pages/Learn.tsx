@@ -364,15 +364,17 @@ export default function Learn() {
   const loadData = async () => {
     setIsLoading(true);
     try {
-      const [blogResponse, categoriesData, featuredData] = await Promise.all([
+      const [blogResponse, categoriesData, featuredData, resourcesData] = await Promise.all([
         getBlogPosts(searchParams),
         getBlogCategories(),
-        getFeaturedPosts()
+        getFeaturedPosts(),
+        fetchResources()
       ]);
 
       setPosts(blogResponse.posts);
       setCategories(categoriesData);
       setFeaturedPosts(featuredData);
+      setResources(resourcesData);
     } catch (error) {
       console.error('Error loading blog data:', error);
     } finally {
