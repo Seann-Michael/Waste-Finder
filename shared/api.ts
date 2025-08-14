@@ -86,12 +86,12 @@ export interface LocationSuggestion {
 
 // API Request/Response types
 export interface LocationSearchRequest {
-  zipCode?: string;
+  zip_code?: string;
   latitude?: number;
   longitude?: number;
   radius?: number; // Miles
-  locationTypes?: Location["locationType"][];
-  debrisTypes?: string[];
+  location_types?: Location["location_type"][];
+  debris_types?: string[];
 }
 
 export interface LocationSearchResponse {
