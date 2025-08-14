@@ -79,6 +79,7 @@ export default function LocationCard({
   location,
   searchedDebrisTypes = [],
   showContactDetails = false,
+  onClick,
 }: LocationCardProps) {
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
