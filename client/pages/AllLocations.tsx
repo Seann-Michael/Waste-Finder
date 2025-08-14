@@ -393,17 +393,24 @@ export default function AllLocations() {
                       </div>
 
                       <div className="space-y-2">
-                        {filteredAndSortedLocations.map((location) => (
-                          <LocationCard
-                            key={location.id}
-                            location={location}
-                            onClick={() => handleLocationClick(location)}
-                            searchedDebrisTypes={(() => {
-                              const debrisFromParams = searchParams.get('debrisTypes');
-                              return debrisFromParams ? debrisFromParams.split(',') : [];
-                            })()}
-                          />
-                        ))}
+                        {(filteredAndSortedLocations || []).map((location) => {
+                          if (!location || !location.id) {
+                            console.warn('Invalid location in map:', location);
+                            return null;
+                          }
+
+                          return (
+                            <LocationCard
+                              key={location.id}
+                              location={location}
+                              onClick={() => handleLocationClick(location)}
+                              searchedDebrisTypes={(() => {
+                                const debrisFromParams = searchParams.get('debrisTypes');
+                                return debrisFromParams ? debrisFromParams.split(',') : [];
+                              })()}
+                            />
+                          );
+                        })}
                       </div>
 
                       {/* Bottom Ad - Full Width */}
