@@ -47,10 +47,12 @@ export interface DebrisType {
   id: string;
   name: string;
   description?: string;
-  category: "general" | "construction" | "hazardous" | "recyclable";
+  category?: string;
+  price_per_ton?: number;
+  price_note?: string; // e.g., "per ton", "per load", "per cubic yard"
+  // For compatibility with LocationCard component
   price?: number;
-  priceDetails?: string; // e.g., "per ton", "per load", "per cubic yard"
-  additionalDetails?: string; // Special requirements, restrictions, etc.
+  priceDetails?: string;
 }
 
 export interface Review {
