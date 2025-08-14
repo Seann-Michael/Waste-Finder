@@ -180,7 +180,7 @@ export async function getLocationById(id: string): Promise<Location | null> {
 
 // Add new location
 export async function addLocation(
-  location: Omit<Location, "id" | "createdAt" | "updatedAt">,
+  location: Omit<Location, "id" | "created_at" | "updated_at">,
 ): Promise<Location | null> {
   try {
     const { data, error } = await supabaseAdmin
@@ -189,8 +189,8 @@ export async function addLocation(
         {
           ...location,
           is_active: true,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
         },
       ])
       .select()
