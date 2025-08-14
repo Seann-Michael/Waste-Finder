@@ -46,6 +46,7 @@ interface LocationCardProps {
   location: Location;
   searchedDebrisTypes?: string[]; // Debris types that user searched/filtered for
   showContactDetails?: boolean; // Whether to show phone and hours
+  onClick?: () => void; // Click handler for the card
 }
 
 const getLocationIcon = (type: Location["location_type"]) => {
