@@ -1,5 +1,5 @@
 import { getSecureHeaders } from "./security";
-import { trackAPICall } from "./monitoring";
+import { trackApiCall } from "./monitoring";
 
 /**
  * API Client for WasteFinder Application
