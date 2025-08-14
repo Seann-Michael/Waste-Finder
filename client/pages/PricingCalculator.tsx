@@ -700,6 +700,8 @@ export default function PricingCalculator() {
         }
       } catch (error) {
         console.error("Error loading config:", error);
+        // Clear corrupted cookie to prevent repeated errors
+        setCookie("debris-calculator-config", "", -1);
       }
     }
   }, []);
@@ -931,7 +933,7 @@ Walking Distance: ${estimate.walkingDistance} feet
 ${estimate.hasSteps ? `Steps: ${estimate.numberOfSteps} steps (${estimate.percentageRequiringSteps}% of items)` : "No steps involved"}
 
 DEBRIS ITEMS
-─────────────────────────────────────────────────────────────
+────────────────────────────��────────────────────────────────
 Total Items: ${jobItems.length} types, ${totalItems} pieces
 Total Weight: ${totals.totalWeight.toFixed(2)} tons
 Total Volume: ${totals.totalVolume.toFixed(1)} cubic yards
@@ -1770,7 +1772,7 @@ Company Signature: _____________________  Date: ____________`;
                     <div className="p-2 bg-white/20 rounded-lg">
                       <Calculator className="w-5 h-5" />
                     </div>
-                    🛠️ Job Items ({jobItems.length} types,{" "}
+                    🛠��� Job Items ({jobItems.length} types,{" "}
                     {jobItems.reduce((sum, item) => sum + item.quantity, 0)}{" "}
                     total)
                   </CardTitle>
@@ -1992,7 +1994,7 @@ Company Signature: _____________________  Date: ____________`;
                           {/* Summary Header */}
                           <div className="flex justify-between items-center bg-blue-100 p-4 rounded-lg border border-blue-300">
                             <span className="text-sm text-blue-700 font-medium">
-                              📊 Total Weight: {totals.totalWeight.toFixed(2)}{" "}
+                              �� Total Weight: {totals.totalWeight.toFixed(2)}{" "}
                               tons | Volume: {totals.totalVolume.toFixed(1)} yd³
                               | Items:{" "}
                               {jobItems.reduce(
