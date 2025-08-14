@@ -189,12 +189,22 @@ export async function getLocationsByCity(
   }
 }
 
-// Get single location by ID
+// Get single location by ID with related data
 export async function getLocationById(id: string): Promise<Location | null> {
   try {
     const { data, error } = await supabase
       .from("locations")
-      .select("*")
+      .select(`
+        *,
+        debrisTypes:location_debris_types(
+          debris_type:debris_types(*)
+        ),
+        paymentTypes:location_payment_types(
+          payment_type:payment_types(*)
+        ),
+        operatingHours:operating_hours(*),
+        reviews!reviews_location_id_fkey(*)
+      `)
       .eq("id", id)
       .eq("is_active", true)
       .single();
@@ -204,7 +214,14 @@ export async function getLocationById(id: string): Promise<Location | null> {
       return null;
     }
 
-    return data;
+    // Transform the data to flatten the relationships
+    const location = {
+      ...data,
+      debrisTypes: data.debrisTypes?.map((dt: any) => dt.debris_type) || [],
+      paymentTypes: data.paymentTypes?.map((pt: any) => pt.payment_type) || [],
+    };
+
+    return location;
   } catch (error) {
     console.error("Supabase connection error:", error);
     return null;
