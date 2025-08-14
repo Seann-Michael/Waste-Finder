@@ -74,6 +74,7 @@ export default function Index() {
             });
           } catch (parseError) {
             console.error("Error parsing locations:", parseError);
+            localStorage.removeItem("locations");
           }
         }
       }
@@ -89,6 +90,7 @@ export default function Index() {
         setContentSettings((prev) => ({ ...prev, ...parsed }));
       } catch (error) {
         console.error("Error loading content settings:", error);
+        localStorage.removeItem("contentSettings");
       }
     }
   }, []);
