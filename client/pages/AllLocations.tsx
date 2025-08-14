@@ -156,7 +156,7 @@ export default function AllLocations() {
 
     setIsLoading(true);
     try {
-      const data = await fetchLocations(searchQuery);
+      const data = await fetchLocations(searchQuery.trim());
       setLocations(data);
       setSearchMessage(
         `Found ${data.length} locations matching "${searchQuery}"`,
