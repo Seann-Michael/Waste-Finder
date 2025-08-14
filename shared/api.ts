@@ -9,25 +9,23 @@ export interface Location {
   address: string;
   city: string;
   state: string;
-  zipCode: string;
-  phone: string;
+  zip_code?: string;
+  phone?: string;
   email?: string;
   website?: string;
-  googleBusinessUrl?: string; // Google My Business profile URL
-  latitude: number;
-  longitude: number;
-  locationType: "landfill" | "transfer_station" | "construction_landfill";
-  paymentTypes: PaymentType[];
-  additionalPaymentDetails?: string;
-  debrisTypes: DebrisType[];
-  operatingHours: OperatingHours[];
+  latitude?: number;
+  longitude?: number;
+  location_type: "landfill" | "transfer_station" | "construction_landfill";
+  paymentTypes?: PaymentType[];
+  debrisTypes?: DebrisType[];
+  operatingHours?: OperatingHours[];
   notes?: string;
-  rating: number;
-  reviewCount: number;
+  rating?: number;
+  review_count?: number;
   distance?: number; // Distance from search location in miles
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
+  is_active?: boolean;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface OperatingHours {
