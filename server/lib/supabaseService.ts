@@ -2,6 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 
 // For server-side, we use the service role key for admin operations
 const supabaseUrl =
+  process.env.VITE_SUPABASE_URL ||
   process.env.NEXT_PUBLIC_SUPABASE_URL ||
   "https://omnuzylsdxpcqumbhhim.supabase.co";
 const supabaseServiceKey =
@@ -11,28 +12,31 @@ const supabaseServiceKey =
 // Server-side Supabase client with admin privileges
 export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
 
-// Location interface matching the database structure
+// Location interface matching the actual database schema
 export interface Location {
   id: string;
   name: string;
   address: string;
   city: string;
   state: string;
-  zipCode?: string;
+  zip_code?: string;
   phone?: string;
   email?: string;
   website?: string;
   latitude?: number;
   longitude?: number;
-  locationType: string;
+  location_type: "landfill" | "transfer_station" | "construction_landfill";
+  notes?: string;
+  rating?: number;
+  review_count?: number;
   is_active?: boolean;
   created_at?: string;
   updated_at?: string;
-  paymentTypes?: any[];
+  // Related data from joins
   debrisTypes?: any[];
-  hours?: string;
-  description?: string;
-  imageUrl?: string;
+  operatingHours?: any[];
+  paymentTypes?: any[];
+  reviews?: any[];
 }
 
 // Get all locations
