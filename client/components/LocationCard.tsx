@@ -562,7 +562,7 @@ export default function LocationCard({
           </div>
 
           <div className="flex flex-wrap gap-1 mb-3">
-            {location.paymentTypes.slice(0, 2).map((payment) => (
+            {(location.paymentTypes || []).slice(0, 2).map((payment) => (
               <Badge
                 key={payment.id}
                 variant="secondary"
