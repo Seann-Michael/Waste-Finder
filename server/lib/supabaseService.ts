@@ -39,12 +39,22 @@ export interface Location {
   reviews?: any[];
 }
 
-// Get all locations
+// Get all locations with related data
 export async function getAllLocations(): Promise<Location[]> {
   try {
     const { data, error } = await supabaseAdmin
       .from("locations")
-      .select("*")
+      .select(`
+        *,
+        debrisTypes:location_debris_types(
+          debris_type:debris_types(*)
+        ),
+        paymentTypes:location_payment_types(
+          payment_type:payment_types(*)
+        ),
+        operatingHours:operating_hours(*),
+        reviews(*)
+      `)
       .eq("is_active", true)
       .order("name");
 
@@ -53,7 +63,14 @@ export async function getAllLocations(): Promise<Location[]> {
       return [];
     }
 
-    return data || [];
+    // Transform the data to flatten the relationships
+    const locations = (data || []).map(location => ({
+      ...location,
+      debrisTypes: location.debrisTypes?.map((dt: any) => dt.debris_type) || [],
+      paymentTypes: location.paymentTypes?.map((pt: any) => pt.payment_type) || [],
+    }));
+
+    return locations;
   } catch (error) {
     console.error("Supabase connection error:", error);
     return [];
