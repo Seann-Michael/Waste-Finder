@@ -7,15 +7,15 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
-  Search, 
-  Calendar, 
-  User, 
-  Clock, 
-  BookOpen, 
-  Tag, 
-  Eye, 
-  TrendingUp, 
+import {
+  Search,
+  Calendar,
+  User,
+  Clock,
+  BookOpen,
+  Tag,
+  Eye,
+  TrendingUp,
   Filter,
   Download,
   FileText,
@@ -33,7 +33,7 @@ import type { BlogPost, BlogCategory, BlogSearchParams } from '@/lib/blog.types'
 const trackPageView = (page: string, section?: string) => {
   // In a real implementation, this would send to analytics service
   console.log(`Analytics: Page view - ${page}${section ? ` - ${section}` : ''}`);
-  
+
   // Example: Google Analytics
   if (typeof gtag !== 'undefined') {
     gtag('event', 'page_view', {
@@ -43,39 +43,76 @@ const trackPageView = (page: string, section?: string) => {
   }
 };
 
-// Sample resources data (would come from admin panel)
-const sampleResources = [
-  {
-    id: '1',
-    title: 'Dumpster Rental Contract Template',
-    description: 'Professional contract template for dumpster rental agreements with legal protections.',
-    fileType: 'PDF',
-    fileSize: '2.1 MB',
-    downloadUrl: '#',
-    category: 'Contracts',
-    featured: true
-  },
-  {
-    id: '2',
-    title: 'Waste Management Cost Calculator',
-    description: 'Excel spreadsheet to calculate and compare waste management costs across different vendors.',
-    fileType: 'XLSX',
-    fileSize: '1.5 MB',
-    downloadUrl: '#',
-    category: 'Tools',
-    featured: false
-  },
-  {
-    id: '3',
-    title: 'Debris Classification Guide',
-    description: 'Comprehensive guide to properly classify different types of construction and household debris.',
-    fileType: 'PDF',
-    fileSize: '5.2 MB',
-    downloadUrl: '#',
-    category: 'Guides',
-    featured: true
+// Resources interface matching database schema
+interface Resource {
+  id: string;
+  title: string;
+  description: string;
+  file_type: string;
+  file_size: string;
+  download_url: string;
+  category: string;
+  featured: boolean;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+// Function to fetch resources from database
+const fetchResources = async (): Promise<Resource[]> => {
+  try {
+    const response = await fetch('/api/resources');
+    if (response.ok) {
+      const data = await response.json();
+      return data.resources || [];
+    }
+  } catch (error) {
+    console.error('Error fetching resources:', error);
   }
-];
+
+  // Fallback to sample data if API fails
+  return [
+    {
+      id: '1',
+      title: 'Dumpster Rental Contract Template',
+      description: 'Professional contract template for dumpster rental agreements with legal protections.',
+      file_type: 'PDF',
+      file_size: '2.1 MB',
+      download_url: '#',
+      category: 'Contracts',
+      featured: true,
+      is_active: true,
+      created_at: '2024-01-01T00:00:00Z',
+      updated_at: '2024-01-01T00:00:00Z'
+    },
+    {
+      id: '2',
+      title: 'Waste Management Cost Calculator',
+      description: 'Excel spreadsheet to calculate and compare waste management costs across different vendors.',
+      file_type: 'XLSX',
+      file_size: '1.5 MB',
+      download_url: '#',
+      category: 'Tools',
+      featured: false,
+      is_active: true,
+      created_at: '2024-01-01T00:00:00Z',
+      updated_at: '2024-01-01T00:00:00Z'
+    },
+    {
+      id: '3',
+      title: 'Debris Classification Guide',
+      description: 'Comprehensive guide to properly classify different types of construction and household debris.',
+      file_type: 'PDF',
+      file_size: '5.2 MB',
+      download_url: '#',
+      category: 'Guides',
+      featured: true,
+      is_active: true,
+      created_at: '2024-01-01T00:00:00Z',
+      updated_at: '2024-01-01T00:00:00Z'
+    }
+  ];
+};
 
 const NewsCarousel: React.FC = () => {
   const [newsArticles, setNewsArticles] = useState<any[]>([]);
@@ -132,7 +169,7 @@ const NewsCarousel: React.FC = () => {
           </Button>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {visibleArticles.map((article, index) => (
           <Card key={article.id || index} className="hover:shadow-lg transition-shadow">
@@ -318,7 +355,7 @@ export default function Learn() {
   useEffect(() => {
     // Track page view
     trackPageView('Learn Page');
-    
+
     initializeBlogData();
     loadData();
   }, [searchParams]);
@@ -366,7 +403,7 @@ export default function Learn() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       <main className="max-w-7xl mx-auto px-4 py-8">
         {/* Header Section */}
         <div className="text-center mb-12">
@@ -418,7 +455,7 @@ export default function Learn() {
             <BookOpen className="w-6 h-6 text-primary" />
             Expert Articles & Guides
           </h2>
-          
+
           <div className="flex flex-col md:flex-row gap-4 mb-6">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
