@@ -57,16 +57,17 @@ export interface DebrisType {
 
 export interface Review {
   id: string;
-  locationId: string;
+  location_id: string;
   rating: number; // 1-5 stars
-  title: string;
-  content: string;
-  authorName: string;
-  isApproved: boolean;
-  isModerated: boolean;
-  createdAt: string;
-  moderatedAt?: string;
-  moderatorNote?: string;
+  title?: string;
+  content?: string;
+  author_name?: string;
+  author_email?: string;
+  is_approved: boolean;
+  is_moderated: boolean;
+  created_at: string;
+  moderated_at?: string;
+  moderator_note?: string;
 }
 
 export interface LocationSuggestion {
