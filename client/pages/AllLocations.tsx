@@ -158,9 +158,10 @@ export default function AllLocations() {
     setIsLoading(true);
     try {
       const data = await fetchLocations(searchQuery.trim());
-      setLocations(data);
+      const locationsArray = Array.isArray(data) ? data : [];
+      setLocations(locationsArray);
       setSearchMessage(
-        `Found ${data.length} locations matching "${searchQuery}"`,
+        `Found ${locationsArray.length} locations matching "${searchQuery}"`,
       );
     } catch (err) {
       console.error("Error searching locations:", err);
