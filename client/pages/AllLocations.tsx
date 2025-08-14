@@ -176,33 +176,36 @@ export default function AllLocations() {
     navigate(generateLocationUrl(location));
   };
 
-  const filteredAndSortedLocations = locations
+  const filteredAndSortedLocations = (locations || [])
     .filter((location) => {
+      // Ensure location is valid
+      if (!location || typeof location !== 'object') return false;
+
       // Apply search filter first
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase().trim();
         const matchesSearch =
-          location.name.toLowerCase().includes(query) ||
-          location.city.toLowerCase().includes(query) ||
-          location.zipCode.toLowerCase().includes(query) ||
-          location.address.toLowerCase().includes(query) ||
-          location.state.toLowerCase().includes(query);
+          (location.name || '').toLowerCase().includes(query) ||
+          (location.city || '').toLowerCase().includes(query) ||
+          (location.zip_code || location.zipCode || '').toLowerCase().includes(query) ||
+          (location.address || '').toLowerCase().includes(query) ||
+          (location.state || '').toLowerCase().includes(query);
 
         if (!matchesSearch) return false;
       }
 
       // Then apply type filter
       if (filterBy === "all") return true;
-      return location.locationType === filterBy;
+      return (location.location_type || location.locationType) === filterBy;
     })
     .sort((a, b) => {
       switch (sortBy) {
         case "name":
-          return a.name.localeCompare(b.name);
+          return (a.name || '').localeCompare(b.name || '');
         case "rating":
-          return b.rating - a.rating;
+          return (b.rating || 0) - (a.rating || 0);
         case "city":
-          return a.city.localeCompare(b.city);
+          return (a.city || '').localeCompare(b.city || '');
         default:
           return 0;
       }
