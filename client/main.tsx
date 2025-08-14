@@ -1,10 +1,11 @@
 import "./global.css";
 import { createRoot } from "react-dom/client";
 import App from "./App";
-import { initializeSampleArticles } from "@/lib/sampleArticles";
+// Sample articles removed - using Supabase instead
+// import { initializeSampleArticles } from "@/lib/sampleArticles";
 
 // Initialize sample articles for demonstration
-initializeSampleArticles();
+// initializeSampleArticles();
 
 const container = document.getElementById("root");
 if (!container) {
