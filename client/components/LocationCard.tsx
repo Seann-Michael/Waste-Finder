@@ -304,7 +304,7 @@ export default function LocationCard({
               >
                 <div>{location.address}</div>
                 <div>
-                  {location.city}, {location.state} {location.zipCode}
+                  {location.city}, {location.state} {location.zip_code || ''}
                 </div>
               </a>
             </div>
