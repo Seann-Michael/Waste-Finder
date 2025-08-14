@@ -1,12 +1,16 @@
 /**
- * Sample Articles - Initial demonstration data
- * 
- * PURPOSE: Provide sample news articles for initial demonstration
+ * Sample Articles - REMOVED - Data moved to Supabase
+ *
+ * PURPOSE: All articles are now stored in Supabase database
+ * This file is kept for reference but articles array is commented out
  */
 
 import { type NewsArticle } from './articleStore';
 
+// REMOVED: Sample articles moved to Supabase database
+// Use Supabase queries to fetch articles instead
 export const sampleArticles: NewsArticle[] = [
+  // All sample articles removed - fetch from Supabase instead
   {
     id: 'sample-1',
     title: 'Revolutionary Waste-to-Energy Technology Transforms Municipal Recycling',
