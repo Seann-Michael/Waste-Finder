@@ -94,23 +94,45 @@ export default function AllLocations() {
       setError({ hasError: false, message: "" });
 
       try {
-        const zipFromParams = searchParams.get("zip");
+        // Extract parameters from URL
+        const zipFromParams = searchParams.get("zipCode");
+        const latFromParams = searchParams.get("latitude");
+        const lngFromParams = searchParams.get("longitude");
         const radiusFromParams = searchParams.get("radius");
+        const locationTypesParam = searchParams.get("locationTypes");
+        const debrisTypesParam = searchParams.get("debrisTypes");
 
-        const data = await fetchLocations(zipFromParams || undefined);
+        // Parse coordinates and radius
+        const latitude = latFromParams ? parseFloat(latFromParams) : undefined;
+        const longitude = lngFromParams ? parseFloat(lngFromParams) : undefined;
+        const radius = parseInt(radiusFromParams || "50", 10);
+        const locationTypes = locationTypesParam ? locationTypesParam.split(",") : undefined;
+        const debrisTypes = debrisTypesParam ? debrisTypesParam.split(",") : undefined;
+
+        // Search with all parameters
+        const data = await fetchLocations(
+          undefined, // searchQuery
+          zipFromParams || undefined,
+          latitude,
+          longitude,
+          radius,
+          locationTypes,
+          debrisTypes
+        );
+
         setLocations(data);
 
         if (zipFromParams) {
           setSearchLocation({
             zipCode: zipFromParams,
-            lat: 0,
-            lng: 0,
-            city: "Unknown",
-            state: "Unknown",
-            radius: parseInt(radiusFromParams || "50", 10),
+            lat: latitude || 0,
+            lng: longitude || 0,
+            city: "Search Area",
+            state: "",
+            radius,
           });
           setSearchMessage(
-            `Found ${data.length} locations within ${radiusFromParams || "50"} miles of ${zipFromParams}`,
+            `Found ${data.length} locations within ${radius} miles of ${zipFromParams}`,
           );
         } else {
           setSearchMessage(`Found ${data.length} locations`);
