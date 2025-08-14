@@ -98,22 +98,34 @@ export default function Index() {
   const handleSearch = async (searchParams: SearchParams) => {
     setIsSearching(true);
 
-    // Build URL parameters
-    const params = new URLSearchParams();
-    params.set("zipCode", searchParams.zipCode);
-    params.set("radius", searchParams.radius.toString());
-    if (searchParams.facilityTypes.length > 0) {
-      params.set("facilityTypes", searchParams.facilityTypes.join(","));
-    }
-    if (searchParams.debrisTypes.length > 0) {
-      params.set("debrisTypes", searchParams.debrisTypes.join(","));
-    }
+    try {
+      // Convert ZIP code to coordinates for proximity search
+      const { geocodeZipCode } = await import('@/lib/geocoding');
+      const coordinates = await geocodeZipCode(searchParams.zipCode);
 
-    // Simulate brief loading time for better UX
-    setTimeout(() => {
+      // Build URL parameters with coordinates
+      const params = new URLSearchParams();
+      params.set("zipCode", searchParams.zipCode);
+      params.set("latitude", coordinates.lat.toString());
+      params.set("longitude", coordinates.lng.toString());
+      params.set("radius", searchParams.radius.toString());
+
+      if (searchParams.locationTypes?.length > 0) {
+        params.set("locationTypes", searchParams.locationTypes.join(","));
+      }
+      if (searchParams.debrisTypes?.length > 0) {
+        params.set("debrisTypes", searchParams.debrisTypes.join(","));
+      }
+
+      // Navigate to results page with proper parameters
       navigate(`/all-locations?${params.toString()}`);
+    } catch (error) {
+      console.error("Search error:", error);
+      // Show error to user
+      alert(error instanceof Error ? error.message : "Failed to search locations. Please try again.");
+    } finally {
       setIsSearching(false);
-    }, 500);
+    }
   };
 
   const features = [
