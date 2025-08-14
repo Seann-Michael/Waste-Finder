@@ -19,6 +19,8 @@ import AdSense from "../components/AdSense";
 import GoogleMapsEmbed from "../components/GoogleMapsEmbed";
 import { Location } from "../shared/api";
 import { generateLocationUrl } from "../lib/utils";
+import { searchLocations } from "../lib/supabaseQueries";
+import { geocodeZipCode } from "../lib/geocoding";
 
 interface SearchLocation {
   zipCode: string;
