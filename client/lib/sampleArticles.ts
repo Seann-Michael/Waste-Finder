@@ -10,7 +10,8 @@ import { type NewsArticle } from './articleStore';
 // REMOVED: Sample articles moved to Supabase database
 // Use Supabase queries to fetch articles instead
 export const sampleArticles: NewsArticle[] = [
-  // All sample articles removed - fetch from Supabase instead
+  // REMOVED: All sample articles moved to Supabase database
+  // Use Supabase client to fetch articles instead of hardcoded data
   {
     id: 'sample-1',
     title: 'Revolutionary Waste-to-Energy Technology Transforms Municipal Recycling',
