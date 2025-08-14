@@ -264,7 +264,10 @@ export default function LocationCard({
   };
 
   return (
-    <div className="border rounded-lg p-4 hover:shadow-md transition-shadow bg-white">
+    <div
+      className={`border rounded-lg p-4 hover:shadow-md transition-shadow bg-white ${onClick ? 'cursor-pointer hover:bg-gray-50' : ''}`}
+      onClick={onClick}
+    >
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
         {/* Left Column - Basic Info */}
         <div className="lg:col-span-4">
