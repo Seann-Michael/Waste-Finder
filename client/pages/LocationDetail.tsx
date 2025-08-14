@@ -250,45 +250,11 @@ export default function LocationDetail() {
 
       console.log('Successfully loaded location:', fetchedLocation);
 
-      // Mock reviews data (this would typically come from a separate API endpoint)
-      const mockReviews: Review[] = [
-        {
-          id: "1",
-          locationId: fetchedLocation.id,
-          rating: 5,
-          content:
-            "Excellent location with friendly staff. Very organized and clean. Pricing is fair and competitive.",
-          authorName: "Mike T.",
-          isApproved: true,
-          isModerated: true,
-          createdAt: "2024-01-15T00:00:00Z",
-        },
-        {
-          id: "2",
-          locationId: fetchedLocation.id,
-          rating: 4,
-          content:
-            "Good location for construction debris disposal. Quick service, though parking can be limited during peak hours.",
-          authorName: "Sarah L.",
-          isApproved: true,
-          isModerated: true,
-          createdAt: "2024-01-08T00:00:00Z",
-        },
-        {
-          id: "3",
-          locationId: fetchedLocation.id,
-          rating: 5,
-          content:
-            "Love that they have a comprehensive recycling center. Staff helped me properly dispose of old electronics and appliances.",
-          authorName: "Jennifer R.",
-          isApproved: true,
-          isModerated: true,
-          createdAt: "2023-12-28T00:00:00Z",
-        },
-      ];
+      // Use reviews from the database that were loaded with the location
+      const locationReviews = fetchedLocation.reviews || [];
 
       setLocation(fetchedLocation);
-      setReviews(mockReviews);
+      setReviews(locationReviews);
     } catch (error) {
       console.error("Error loading location:", error);
       setError(error instanceof Error ? error.message : 'Failed to load location data');
