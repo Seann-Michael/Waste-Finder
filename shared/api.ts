@@ -29,10 +29,12 @@ export interface Location {
 }
 
 export interface OperatingHours {
-  dayOfWeek: 0 | 1 | 2 | 3 | 4 | 5 | 6; // 0 = Sunday
-  openTime: string; // HH:MM format
-  closeTime: string; // HH:MM format
-  isClosed: boolean;
+  id: string;
+  location_id: string;
+  day_of_week: 0 | 1 | 2 | 3 | 4 | 5 | 6; // 0 = Sunday
+  open_time?: string; // HH:MM format
+  close_time?: string; // HH:MM format
+  is_closed: boolean;
 }
 
 export interface PaymentType {
