@@ -178,40 +178,66 @@ export default function AllLocations() {
     navigate(generateLocationUrl(location));
   };
 
-  const filteredAndSortedLocations = (locations || [])
-    .filter((location) => {
-      // Ensure location is valid
-      if (!location || typeof location !== 'object') return false;
-
-      // Apply search filter first
-      if (searchQuery.trim()) {
-        const query = searchQuery.toLowerCase().trim();
-        const matchesSearch =
-          (location.name || '').toLowerCase().includes(query) ||
-          (location.city || '').toLowerCase().includes(query) ||
-          (location.zip_code || location.zipCode || '').toLowerCase().includes(query) ||
-          (location.address || '').toLowerCase().includes(query) ||
-          (location.state || '').toLowerCase().includes(query);
-
-        if (!matchesSearch) return false;
+  // Safe filtering with error handling
+  const filteredAndSortedLocations = React.useMemo(() => {
+    try {
+      if (!Array.isArray(locations)) {
+        console.warn('Locations is not an array:', locations);
+        return [];
       }
 
-      // Then apply type filter
-      if (filterBy === "all") return true;
-      return (location.location_type || location.locationType) === filterBy;
-    })
-    .sort((a, b) => {
-      switch (sortBy) {
-        case "name":
-          return (a.name || '').localeCompare(b.name || '');
-        case "rating":
-          return (b.rating || 0) - (a.rating || 0);
-        case "city":
-          return (a.city || '').localeCompare(b.city || '');
-        default:
-          return 0;
-      }
-    });
+      return locations
+        .filter((location) => {
+          try {
+            // Ensure location is valid
+            if (!location || typeof location !== 'object') {
+              console.warn('Invalid location object:', location);
+              return false;
+            }
+
+            // Apply search filter first
+            if (searchQuery.trim()) {
+              const query = searchQuery.toLowerCase().trim();
+              const matchesSearch =
+                (location.name || '').toLowerCase().includes(query) ||
+                (location.city || '').toLowerCase().includes(query) ||
+                (location.zip_code || location.zipCode || '').toLowerCase().includes(query) ||
+                (location.address || '').toLowerCase().includes(query) ||
+                (location.state || '').toLowerCase().includes(query);
+
+              if (!matchesSearch) return false;
+            }
+
+            // Then apply type filter
+            if (filterBy === "all") return true;
+            return (location.location_type || location.locationType) === filterBy;
+          } catch (filterError) {
+            console.error('Error filtering location:', location, filterError);
+            return false;
+          }
+        })
+        .sort((a, b) => {
+          try {
+            switch (sortBy) {
+              case "name":
+                return (a.name || '').localeCompare(b.name || '');
+              case "rating":
+                return (b.rating || 0) - (a.rating || 0);
+              case "city":
+                return (a.city || '').localeCompare(b.city || '');
+              default:
+                return 0;
+            }
+          } catch (sortError) {
+            console.error('Error sorting locations:', a, b, sortError);
+            return 0;
+          }
+        });
+    } catch (error) {
+      console.error('Error in filteredAndSortedLocations:', error);
+      return [];
+    }
+  }, [locations, searchQuery, filterBy, sortBy]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
