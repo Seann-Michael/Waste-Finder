@@ -4,7 +4,6 @@ import type {
   LocationSearchParams,
   LocationSearchResponse,
 } from "./database.types";
-import { mockLocations } from "../../server/lib/mockData";
 
 /**
  * Calculate distance between two coordinates using Haversine formula
