@@ -50,6 +50,7 @@ const LocalSEODumpsterRental = lazy(
 const LeadGenerationJunkRemoval = lazy(
   () => import("./pages/LeadGenerationJunkRemoval"),
 );
+const DebrisWeightCalculator = lazy(() => import("./pages/DebrisWeightCalculator"));
 const Sitemap = lazy(() => import("./pages/Sitemap"));
 const XMLSitemap = lazy(() => import("./pages/XMLSitemap"));
 
