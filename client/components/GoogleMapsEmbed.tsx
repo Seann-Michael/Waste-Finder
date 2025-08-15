@@ -72,7 +72,7 @@ export default function GoogleMapsEmbed({
     // Only use environment variable for production builds
     const envApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
-    if (envApiKey && envApiKey !== "your_google_maps_api_key_here") {
+    if (envApiKey && envApiKey.length > 10 && envApiKey.startsWith("AIza")) {
       setApiKey(envApiKey);
     } else {
       console.warn(
