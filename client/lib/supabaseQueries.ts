@@ -142,17 +142,6 @@ export async function searchLocations(
  */
 export async function getLocationDetails(id: string): Promise<Location | null> {
   try {
-    // Use mock data if Supabase is not configured
-    if (isMockMode()) {
-      console.log(
-        `Using mock data for location ${id} - Supabase not configured`,
-      );
-      const location = mockLocations.find(
-        (loc) => loc.id === id && loc.is_active !== false,
-      );
-      return location || null;
-    }
-
     const { data: location, error } = await supabase
       .from("locations")
       .select(
