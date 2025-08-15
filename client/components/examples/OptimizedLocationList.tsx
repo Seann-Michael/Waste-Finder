@@ -151,15 +151,17 @@ export const OptimizedLocationList: React.FC<OptimizedLocationListProps> = ({
             )}
           </div>
           
-          {/* State Filter */}
+          {/* Location Type Filter */}
           {referenceData && (
             <select
-              value={filters.state || ''}
-              onChange={(e) => setFilters({ ...filters, state: e.target.value || undefined })}
+              value={filters.location_type || ''}
+              onChange={(e) => setFilters({ ...filters, location_type: e.target.value || undefined })}
               className="px-3 py-2 border rounded-md"
             >
-              <option value="">All States</option>
-              {/* This would be populated from geography data */}
+              <option value="">All Types</option>
+              <option value="landfill">Landfill</option>
+              <option value="transfer_station">Transfer Station</option>
+              <option value="construction_landfill">Construction Landfill</option>
             </select>
           )}
         </div>
