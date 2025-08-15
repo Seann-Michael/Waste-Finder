@@ -171,8 +171,8 @@ export default function Header() {
                 )}
               </nav>
 
-              {/* Business Owner CTA - Fixed visibility */}
-              <div className="hidden sm:flex items-center space-x-2 md:space-x-4">
+              {/* Business Owner CTA - Right aligned */}
+              <div className="hidden sm:flex items-center space-x-2 md:space-x-4 ml-auto">
                 <Button
                   variant="default"
                   size="sm"
