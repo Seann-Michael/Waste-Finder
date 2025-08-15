@@ -152,184 +152,141 @@ const AppRoutes = () => (
     <Route path="/sitemap" element={<Sitemap />} />
     <Route path="/sitemap.xml" element={<XMLSitemap />} />
 
-    {/* Admin routes with separate loading */}
-    <Route
-      path="/admin-login"
-      element={
-        <Suspense fallback={<PageLoading message="Loading admin login..." />}>
-          <AdminLogin />
-        </Suspense>
-      }
-    />
+    {/* Admin routes */}
+    <Route path="/admin-login" element={<AdminLogin />} />
 
     <Route
       path="/admin"
       element={
-        <Suspense fallback={<PageLoading message="Loading admin panel..." />}>
-          <AdminRoute>
-            <Admin />
-          </AdminRoute>
-        </Suspense>
+        <AdminRoute>
+          <Admin />
+        </AdminRoute>
       }
     />
 
     <Route
       path="/admin/add-location"
       element={
-        <Suspense fallback={<PageLoading message="Loading form..." />}>
-          <AdminRoute>
-            <AddLocation />
-          </AdminRoute>
-        </Suspense>
+        <AdminRoute>
+          <AddLocation />
+        </AdminRoute>
       }
     />
 
     <Route
       path="/admin/locations"
       element={
-        <Suspense fallback={<PageLoading message="Loading locations..." />}>
-          <AdminRoute>
-            <LocationDataTable />
-          </AdminRoute>
-        </Suspense>
+        <AdminRoute>
+          <LocationDataTable />
+        </AdminRoute>
       }
     />
 
     <Route
       path="/admin/reviews"
       element={
-        <Suspense fallback={<PageLoading message="Loading reviews..." />}>
-          <AdminRoute>
-            <ReviewsTable />
-          </AdminRoute>
-        </Suspense>
+        <AdminRoute>
+          <ReviewsTable />
+        </AdminRoute>
       }
     />
 
     <Route
       path="/admin/suggestions"
       element={
-        <Suspense fallback={<PageLoading message="Loading suggestions..." />}>
-          <AdminRoute>
-            <SuggestionsTable />
-          </AdminRoute>
-        </Suspense>
+        <AdminRoute>
+          <SuggestionsTable />
+        </AdminRoute>
       }
     />
 
     <Route
       path="/admin/marketing"
       element={
-        <Suspense fallback={<PageLoading message="Loading marketing..." />}>
-          <AdminRoute>
-            <Marketing />
-          </AdminRoute>
-        </Suspense>
+        <AdminRoute>
+          <Marketing />
+        </AdminRoute>
       }
     />
 
     <Route
       path="/admin/settings"
       element={
-        <Suspense fallback={<PageLoading message="Loading settings..." />}>
-          <AdminRoute>
-            <AdminSettings />
-          </AdminRoute>
-        </Suspense>
+        <AdminRoute>
+          <AdminSettings />
+        </AdminRoute>
       }
     />
 
     <Route
       path="/admin/preview-location/:id"
       element={
-        <Suspense fallback={<PageLoading message="Loading preview..." />}>
-          <AdminRoute>
-            <PreviewLocation />
-          </AdminRoute>
-        </Suspense>
+        <AdminRoute>
+          <PreviewLocation />
+        </AdminRoute>
       }
     />
 
     <Route
       path="/admin/bulk-upload"
       element={
-        <Suspense fallback={<PageLoading message="Loading bulk upload..." />}>
-          <AdminRoute>
-            <BulkUploadFacilities />
-          </AdminRoute>
-        </Suspense>
+        <AdminRoute>
+          <BulkUploadFacilities />
+        </AdminRoute>
       }
     />
 
     <Route
       path="/admin/rss-manager"
       element={
-        <Suspense fallback={<PageLoading message="Loading RSS manager..." />}>
-          <AdminRoute>
-            <RSSManager />
-          </AdminRoute>
-        </Suspense>
+        <AdminRoute>
+          <RSSManager />
+        </AdminRoute>
       }
     />
 
     <Route
       path="/admin/articles"
       element={
-        <Suspense
-          fallback={<PageLoading message="Loading article management..." />}
-        >
-          <AdminRoute>
-            <ArticleManagement />
-          </AdminRoute>
-        </Suspense>
+        <AdminRoute>
+          <ArticleManagement />
+        </AdminRoute>
       }
     />
 
     <Route
       path="/admin/ai-content-settings"
       element={
-        <Suspense fallback={<PageLoading message="Loading AI settings..." />}>
-          <AdminRoute>
-            <AIContentSettings />
-          </AdminRoute>
-        </Suspense>
+        <AdminRoute>
+          <AIContentSettings />
+        </AdminRoute>
       }
     />
 
     <Route
       path="/admin/items"
       element={
-        <Suspense
-          fallback={<PageLoading message="Loading item management..." />}
-        >
-          <AdminRoute>
-            <ItemManagement />
-          </AdminRoute>
-        </Suspense>
+        <AdminRoute>
+          <ItemManagement />
+        </AdminRoute>
       }
     />
 
     <Route
       path="/admin/debris-types"
       element={
-        <Suspense
-          fallback={<PageLoading message="Loading debris type management..." />}
-        >
-          <AdminRoute>
-            <DebrisTypeManagement />
-          </AdminRoute>
-        </Suspense>
+        <AdminRoute>
+          <DebrisTypeManagement />
+        </AdminRoute>
       }
     />
 
     <Route
       path="/admin/data-seeding"
       element={
-        <Suspense fallback={<PageLoading message="Loading data seeding..." />}>
-          <AdminRoute>
-            <DataSeeding />
-          </AdminRoute>
-        </Suspense>
+        <AdminRoute>
+          <DataSeeding />
+        </AdminRoute>
       }
     />
 
