@@ -44,28 +44,23 @@ import LeadGenerationJunkRemoval from "./pages/LeadGenerationJunkRemoval";
 import Sitemap from "./pages/Sitemap";
 import XMLSitemap from "./pages/XMLSitemap";
 
-// Admin pages - separate chunk
-const AdminLogin = lazy(() => import("./pages/AdminLogin"));
-const Admin = lazy(() => import("./pages/Admin"));
-const AddLocation = lazy(() => import("./pages/admin/AddLocation"));
-const LocationDataTable = lazy(() => import("./pages/admin/LocationDataTable"));
-const AdminSettings = lazy(() => import("./pages/admin/AdminSettings"));
-const ReviewsTable = lazy(() => import("./pages/admin/ReviewsTable"));
-const SuggestionsTable = lazy(() => import("./pages/admin/SuggestionsTable"));
-const PreviewLocation = lazy(() => import("./pages/admin/PreviewLocation"));
-const Marketing = lazy(() => import("./pages/admin/Marketing"));
-
-const BulkUploadFacilities = lazy(
-  () => import("./pages/admin/BulkUploadFacilities"),
-);
-const RSSManager = lazy(() => import("./pages/admin/RSSManager"));
-const ArticleManagement = lazy(() => import("./pages/admin/ArticleManagement"));
-const AIContentSettings = lazy(() => import("./pages/admin/AIContentSettings"));
-const ItemManagement = lazy(() => import("./pages/admin/ItemManagement"));
-const DebrisTypeManagement = lazy(
-  () => import("./pages/admin/DebrisTypeManagement"),
-);
-const DataSeeding = lazy(() => import("./pages/admin/DataSeeding"));
+// Admin pages - using direct imports for debugging
+import AdminLogin from "./pages/AdminLogin";
+import Admin from "./pages/Admin";
+import AddLocation from "./pages/admin/AddLocation";
+import LocationDataTable from "./pages/admin/LocationDataTable";
+import AdminSettings from "./pages/admin/AdminSettings";
+import ReviewsTable from "./pages/admin/ReviewsTable";
+import SuggestionsTable from "./pages/admin/SuggestionsTable";
+import PreviewLocation from "./pages/admin/PreviewLocation";
+import Marketing from "./pages/admin/Marketing";
+import BulkUploadFacilities from "./pages/admin/BulkUploadFacilities";
+import RSSManager from "./pages/admin/RSSManager";
+import ArticleManagement from "./pages/admin/ArticleManagement";
+import AIContentSettings from "./pages/admin/AIContentSettings";
+import ItemManagement from "./pages/admin/ItemManagement";
+import DebrisTypeManagement from "./pages/admin/DebrisTypeManagement";
+import DataSeeding from "./pages/admin/DataSeeding";
 
 import AdminRoute from "./components/admin/AdminRoute";
 
