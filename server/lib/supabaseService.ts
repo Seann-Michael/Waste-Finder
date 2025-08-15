@@ -11,21 +11,35 @@ const isPlaceholder = (value: string | undefined) =>
 
 // Create mock supabase admin client for development without credentials
 const createMockSupabaseAdmin = () => {
-  const mockResult = {
-    data: null,
-    error: { message: "Supabase server not configured - using mock data" }
+  const mockQueryBuilder = {
+    select: function(columns?: string) { return this; },
+    insert: function(data: any) { return this; },
+    update: function(data: any) { return this; },
+    delete: function() { return this; },
+    eq: function(column: string, value: any) { return this; },
+    neq: function(column: string, value: any) { return this; },
+    or: function(query: string) { return this; },
+    and: function(query: string) { return this; },
+    order: function(column: string) { return this; },
+    limit: function(count: number) { return this; },
+    single: function() {
+      return Promise.resolve({
+        data: null,
+        error: { message: "Supabase server not configured - using mock data" }
+      });
+    },
+    // Make the query builder thenable (Promise-like) for async/await
+    then: function(onFulfilled: any, onRejected?: any) {
+      const mockResponse = {
+        data: [],
+        error: null
+      };
+      return Promise.resolve(mockResponse).then(onFulfilled, onRejected);
+    }
   };
 
   return {
-    from: () => ({
-      select: () => Promise.resolve({ data: [], error: null }),
-      insert: () => Promise.resolve(mockResult),
-      update: () => Promise.resolve(mockResult),
-      delete: () => Promise.resolve(mockResult),
-      eq: function() { return this; },
-      order: function() { return this; },
-      single: function() { return Promise.resolve(mockResult); },
-    })
+    from: () => mockQueryBuilder
   };
 };
 
