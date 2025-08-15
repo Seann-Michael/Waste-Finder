@@ -80,9 +80,28 @@ interface PendingLocation {
 // Use Supabase auth and user management instead
 const mockAdminUsers: AdminUser[] = [];
 
-// REMOVED: Pending locations moved to Supabase database
-// Use Supabase location_suggestions table instead
-const mockPendingLocations: PendingLocation[] = [];
+// Get pending locations from centralized mock data when Supabase is not configured
+const getMockPendingLocations = (): PendingLocation[] => {
+  if (isMockMode()) {
+    console.log("Using centralized mock pending locations - Supabase not configured");
+    return mockLocationSuggestions
+      .filter(suggestion => suggestion.status === "pending")
+      .map(suggestion => ({
+        id: suggestion.id,
+        locationName: suggestion.locationName,
+        submitter: suggestion.submitter,
+        email: suggestion.email,
+        submittedAt: suggestion.submittedAt,
+        status: suggestion.status,
+        facilityType: suggestion.details.facilityType,
+        address: suggestion.details.address,
+        city: suggestion.details.city,
+        state: suggestion.details.state,
+        zipCode: suggestion.details.zipCode,
+      }));
+  }
+  return [];
+};
 
 export default function AdminSettings() {
   const [activeTab, setActiveTab] = useState("profile");
