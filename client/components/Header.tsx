@@ -53,16 +53,6 @@ export default function Header() {
       active: location.pathname === "/all-locations",
     },
     {
-      name: "Pricing Calculator",
-      href: "/pricing-calculator",
-      active: location.pathname === "/pricing-calculator",
-    },
-    {
-      name: "Debris Calculator",
-      href: "/debris-weight-calculator",
-      active: location.pathname === "/debris-weight-calculator",
-    },
-    {
       name: "Learn",
       href: "/blog",
       active:
@@ -79,11 +69,6 @@ export default function Header() {
       name: "Suggest Location",
       href: "/suggest-location",
       active: location.pathname === "/suggest-location",
-    },
-    {
-      name: "Contact",
-      href: "/contact",
-      active: location.pathname === "/contact",
     },
   ];
 
