@@ -12,17 +12,17 @@ const NotFound = () => {
 
   // Common route mappings for typos and variations
   const routeMap: Record<string, string> = {
-    '/SuggestLocation': '/suggest-location',
-    '/suggestlocation': '/suggest-location',
-    '/AllLocations': '/all-locations',
-    '/alllocations': '/all-locations',
-    '/Blog': '/blog',
-    '/BlogPost': '/blog',
-    '/blogpost': '/blog',
-    '/News': '/news',
-    '/Resources': '/resources',
-    '/Locations': '/all-locations',
-    '/locations': '/all-locations',
+    "/SuggestLocation": "/suggest-location",
+    "/suggestlocation": "/suggest-location",
+    "/AllLocations": "/all-locations",
+    "/alllocations": "/all-locations",
+    "/Blog": "/blog",
+    "/BlogPost": "/blog",
+    "/blogpost": "/blog",
+    "/News": "/news",
+    "/Resources": "/resources",
+    "/Locations": "/all-locations",
+    "/locations": "/all-locations",
   };
 
   useEffect(() => {
@@ -39,9 +39,21 @@ const NotFound = () => {
   }, [location.pathname]);
 
   const popularPages = [
-    { name: "Find Locations", path: "/all-locations", icon: <MapPin className="w-4 h-4" /> },
-    { name: "Blog & News", path: "/blog", icon: <BookOpen className="w-4 h-4" /> },
-    { name: "Suggest Location", path: "/suggest-location", icon: <MapPin className="w-4 h-4" /> },
+    {
+      name: "Find Locations",
+      path: "/all-locations",
+      icon: <MapPin className="w-4 h-4" />,
+    },
+    {
+      name: "Blog & News",
+      path: "/blog",
+      icon: <BookOpen className="w-4 h-4" />,
+    },
+    {
+      name: "Suggest Location",
+      path: "/suggest-location",
+      icon: <MapPin className="w-4 h-4" />,
+    },
   ];
 
   return (
@@ -53,7 +65,9 @@ const NotFound = () => {
           <div className="mb-8">
             <AlertCircle className="w-24 h-24 text-orange-500 mx-auto mb-6" />
             <h1 className="text-6xl font-bold text-gray-900 mb-4">404</h1>
-            <h2 className="text-2xl font-semibold text-gray-700 mb-4">Page Not Found</h2>
+            <h2 className="text-2xl font-semibold text-gray-700 mb-4">
+              Page Not Found
+            </h2>
             <p className="text-lg text-gray-600 mb-6">
               The page you're looking for doesn't exist or has been moved.
             </p>
@@ -66,9 +80,7 @@ const NotFound = () => {
                     Did you mean to visit this page instead?
                   </p>
                   <Button asChild className="bg-blue-600 hover:bg-blue-700">
-                    <Link to={suggestedRoute}>
-                      Go to {suggestedRoute}
-                    </Link>
+                    <Link to={suggestedRoute}>Go to {suggestedRoute}</Link>
                   </Button>
                 </CardContent>
               </Card>

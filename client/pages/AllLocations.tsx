@@ -205,9 +205,7 @@ export default function AllLocations() {
               const matchesSearch =
                 (location.name || "").toLowerCase().includes(query) ||
                 (location.city || "").toLowerCase().includes(query) ||
-                (location.zip_code || "")
-                  .toLowerCase()
-                  .includes(query) ||
+                (location.zip_code || "").toLowerCase().includes(query) ||
                 (location.address || "").toLowerCase().includes(query) ||
                 (location.state || "").toLowerCase().includes(query);
 

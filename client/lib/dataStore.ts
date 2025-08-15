@@ -205,7 +205,10 @@ class DataStore {
       const existing = await this.get(key as keyof StoredData);
       if (Array.isArray(existing) && existing.length === 0) {
         await this.set(key as keyof StoredData, defaultValue as any);
-      } else if (!Array.isArray(existing) && (!existing || Object.keys(existing).length === 0)) {
+      } else if (
+        !Array.isArray(existing) &&
+        (!existing || Object.keys(existing).length === 0)
+      ) {
         await this.set(key as keyof StoredData, defaultValue as any);
       }
     }
