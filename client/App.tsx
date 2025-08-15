@@ -10,6 +10,14 @@ import { PageLoading } from "@/components/LoadingStates";
 import { initializeOptimizedApi } from "@/lib/optimizedApi";
 import { queryUtils } from "@/lib/optimizedSupabaseQueries";
 import { useBackgroundSync } from "@/hooks/useOptimizedData";
+// Performance optimizations
+import { initializePerformanceOptimizations } from "@/lib/performanceOptimizations";
+import { initializeCoreWebVitals, measureCoreWebVitals } from "@/lib/coreWebVitals";
+import { initializeCSSOptimizations } from "@/lib/cssOptimizations";
+import { initializeServiceWorker } from "@/lib/serviceWorker";
+import { initializeResourcePreloading } from "@/lib/resourcePreloader";
+import { getPerformanceMonitor } from "@/lib/performanceMonitor";
+import { initializeBundleOptimizations } from "@/lib/bundleOptimizations";
 // Performance monitoring disabled for production builds
 // import {
 //   usePerformanceMonitoring,
