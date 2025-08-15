@@ -236,7 +236,7 @@ npm run build
 ```env
 VITE_ENVIRONMENT=production
 VITE_API_URL=https://your-api-domain.com/api
-VITE_GOOGLE_MAPS_API_KEY=production_maps_key
+VITE_GOOGLE_MAPS_API_KEY=your_production_maps_api_key
 VITE_SENTRY_DSN=production_sentry_dsn
 ```
 
