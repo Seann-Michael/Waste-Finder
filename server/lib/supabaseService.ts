@@ -3,7 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 // For server-side, we use the service role key for admin operations
 const supabaseUrl =
   process.env.VITE_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseServiceKey = process.env.VITE_SUPABASE_SERVICE_KEY;
+const supabaseServiceKey = process.env.VITE_SUPABASE_ADMIN_KEY;
 
 // Validate required environment variables
 if (!supabaseUrl || !supabaseServiceKey) {
