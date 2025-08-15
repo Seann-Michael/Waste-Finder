@@ -1,13 +1,13 @@
 import { createClient } from "@supabase/supabase-js";
 
 // For server-side, we use the service role key for admin operations
-const supabaseUrl =
-  process.env.VITE_SUPABASE_URL ||
-  process.env.NEXT_PUBLIC_SUPABASE_URL ||
-  "https://omnuzylsdxpcqumbhhim.supabase.co";
-const supabaseServiceKey =
-  process.env.SUPABASE_SERVICE_ROLE_KEY ||
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tbnV6eWxzZHhwY3F1bWJoaGltIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0ODMwNjg4MiwiZXhwIjoyMDYzODgyODgyfQ.Eb4O4NFEc4dQCdXFe5Xg4WnsIRptMJbn2TK8H1Z2XZM";
+const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+// Validate required environment variables
+if (!supabaseUrl || !supabaseServiceKey) {
+  throw new Error("Supabase URL and service role key are required for server operations");
+}
 
 // Server-side Supabase client with admin privileges
 export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
