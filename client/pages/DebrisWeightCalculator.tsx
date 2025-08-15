@@ -32,18 +32,11 @@ interface DebrisType {
   icon: string;
 }
 
+// REMOVED: All debris types moved to Supabase database
+// Use Supabase client to fetch debris types instead of hardcoded data
 const DEBRIS_TYPES: DebrisType[] = [
-  // Construction Materials
-  {
-    id: "concrete",
-    name: "Concrete",
-    category: "Construction",
-    weightPerUnit: 4000,
-    volumePerUnit: 1.0,
-    unit: "cubic yard",
-    description: "Broken concrete, sidewalks, driveways",
-    icon: "🧱",
-  },
+  // All debris types removed - fetch from Supabase instead
+  // This component should use Supabase queries to load debris types
   {
     id: "asphalt",
     name: "Asphalt",
