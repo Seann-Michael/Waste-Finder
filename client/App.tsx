@@ -30,27 +30,19 @@ import NewsArticle from "./pages/NewsArticle";
 import Learn from "./pages/Learn";
 import BlogPost from "./pages/BlogPost";
 
-const GuestPost = lazy(() => import("./pages/GuestPost"));
-const LocalJunkRemoval = lazy(() => import("./pages/LocalJunkRemoval"));
+import GuestPost from "./pages/GuestPost";
+import LocalJunkRemoval from "./pages/LocalJunkRemoval";
 
-const DigitalMarketing = lazy(() => import("./pages/DigitalMarketing"));
-const LocalSEO = lazy(() => import("./pages/LocalSEO"));
-const LeadGeneration = lazy(() => import("./pages/LeadGeneration"));
-const DigitalMarketingJunkRemoval = lazy(
-  () => import("./pages/DigitalMarketingJunkRemoval"),
-);
-const DigitalMarketingDumpsterRental = lazy(
-  () => import("./pages/DigitalMarketingDumpsterRental"),
-);
-const LocalSEOJunkRemoval = lazy(() => import("./pages/LocalSEOJunkRemoval"));
-const LocalSEODumpsterRental = lazy(
-  () => import("./pages/LocalSEODumpsterRental"),
-);
-const LeadGenerationJunkRemoval = lazy(
-  () => import("./pages/LeadGenerationJunkRemoval"),
-);
-const Sitemap = lazy(() => import("./pages/Sitemap"));
-const XMLSitemap = lazy(() => import("./pages/XMLSitemap"));
+import DigitalMarketing from "./pages/DigitalMarketing";
+import LocalSEO from "./pages/LocalSEO";
+import LeadGeneration from "./pages/LeadGeneration";
+import DigitalMarketingJunkRemoval from "./pages/DigitalMarketingJunkRemoval";
+import DigitalMarketingDumpsterRental from "./pages/DigitalMarketingDumpsterRental";
+import LocalSEOJunkRemoval from "./pages/LocalSEOJunkRemoval";
+import LocalSEODumpsterRental from "./pages/LocalSEODumpsterRental";
+import LeadGenerationJunkRemoval from "./pages/LeadGenerationJunkRemoval";
+import Sitemap from "./pages/Sitemap";
+import XMLSitemap from "./pages/XMLSitemap";
 
 // Admin pages - separate chunk
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
