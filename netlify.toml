@@ -8,8 +8,8 @@
   NODE_OPTIONS = "--max-old-space-size=4096"
   VITE_APP_ENV = "production"
   DISABLE_SENTRY = "true"
-  # Disable smart detection for environment variable names that trigger false positives
-  SECRETS_SCAN_SMART_DETECTION_ENABLED = "false"
+  # Omit environment variable names that trigger false positives in secrets scanning
+  SECRETS_SCAN_SMART_DETECTION_OMIT_VALUES = "SUPABASE_ANON_KEY,SUPABASE_DATABASE_URL,SUPABASE_JWT_SECRET"
 
 
 [functions]
