@@ -17,8 +17,17 @@ import {
   ArrowRight,
 } from "lucide-react";
 
+interface FreeResource {
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  downloadUrl: string;
+  format: string;
+  isInternalLink?: boolean;
+}
+
 export default function Resources() {
-  const freeResources = [
+  const freeResources: FreeResource[] = [
     {
       title: "Free Dumpster Rental Contract Template",
       description:
