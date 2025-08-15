@@ -16,7 +16,7 @@ export const dynamicImports = {
   
   // Lazy load admin-specific heavy components
   richTextEditor: () => import('@/components/ui/rich-text-editor'),
-  dataTable: () => import('@/components/ui/data-table'),
+  // dataTable: () => import('@/components/ui/table'), // Using table component instead
 };
 
 // Code splitting hints for Vite
