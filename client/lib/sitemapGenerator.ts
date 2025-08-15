@@ -32,18 +32,6 @@ export const generateSitemap = async (): Promise<string> => {
       priority: 0.8
     },
     {
-      loc: `${baseUrl}/#/pricing-calculator`,
-      lastmod: now,
-      changefreq: 'monthly',
-      priority: 0.8
-    },
-    {
-      loc: `${baseUrl}/#/debris-weight-calculator`,
-      lastmod: now,
-      changefreq: 'monthly',
-      priority: 0.8
-    },
-    {
       loc: `${baseUrl}/#/blog`,
       lastmod: now,
       changefreq: 'daily',
@@ -54,12 +42,6 @@ export const generateSitemap = async (): Promise<string> => {
       lastmod: now,
       changefreq: 'daily',
       priority: 0.7
-    },
-    {
-      loc: `${baseUrl}/#/contact`,
-      lastmod: now,
-      changefreq: 'monthly',
-      priority: 0.6
     },
     {
       loc: `${baseUrl}/#/sitemap`,
