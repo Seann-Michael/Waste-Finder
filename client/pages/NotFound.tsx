@@ -16,11 +16,6 @@ const NotFound = () => {
     '/suggestlocation': '/suggest-location',
     '/AllLocations': '/all-locations',
     '/alllocations': '/all-locations',
-    '/PricingCalculator': '/pricing-calculator',
-    '/pricingcalculator': '/pricing-calculator',
-    '/DebrisWeightCalculator': '/debris-weight-calculator',
-    '/debrisweightcalculator': '/debris-weight-calculator',
-    '/Contact': '/contact',
     '/Blog': '/blog',
     '/BlogPost': '/blog',
     '/blogpost': '/blog',
@@ -45,7 +40,6 @@ const NotFound = () => {
 
   const popularPages = [
     { name: "Find Locations", path: "/all-locations", icon: <MapPin className="w-4 h-4" /> },
-    { name: "Pricing Calculator", path: "/pricing-calculator", icon: <Search className="w-4 h-4" /> },
     { name: "Blog & News", path: "/blog", icon: <BookOpen className="w-4 h-4" /> },
     { name: "Suggest Location", path: "/suggest-location", icon: <MapPin className="w-4 h-4" /> },
   ];
