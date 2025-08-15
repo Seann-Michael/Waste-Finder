@@ -1821,11 +1821,6 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                     Contact your system administrator for API key management.
                   </p>
                 </div>
-
-                <Button onClick={handleSaveApiSettings}>
-                  <Save className="w-4 h-4 mr-2" />
-                  Save API Settings
-                </Button>
               </CardContent>
             </Card>
           )}
