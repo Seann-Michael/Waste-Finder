@@ -160,44 +160,6 @@ export async function getFilteredLocations(filters: {
   city?: string;
   search?: string;
 }): Promise<Location[]> {
-  // Return filtered mock data if Supabase is not configured
-  if (isMockMode()) {
-    console.log("Using filtered mock location data - Supabase not configured");
-    let filteredLocations = mockLocations.filter(
-      (loc) => loc.is_active !== false,
-    );
-
-    if (filters.state) {
-      filteredLocations = filteredLocations.filter(
-        (loc) => loc.state.toLowerCase() === filters.state?.toLowerCase(),
-      );
-    }
-
-    if (filters.location_type) {
-      filteredLocations = filteredLocations.filter(
-        (loc) => loc.location_type === filters.location_type,
-      );
-    }
-
-    if (filters.city) {
-      filteredLocations = filteredLocations.filter(
-        (loc) => loc.city.toLowerCase() === filters.city?.toLowerCase(),
-      );
-    }
-
-    if (filters.search) {
-      const searchTerm = filters.search.toLowerCase();
-      filteredLocations = filteredLocations.filter(
-        (loc) =>
-          loc.name.toLowerCase().includes(searchTerm) ||
-          loc.address.toLowerCase().includes(searchTerm) ||
-          loc.city.toLowerCase().includes(searchTerm),
-      );
-    }
-
-    return filteredLocations.sort((a, b) => a.name.localeCompare(b.name));
-  }
-
   try {
     let query = supabaseAdmin
       .from("locations")
