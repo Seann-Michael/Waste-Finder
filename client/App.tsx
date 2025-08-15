@@ -115,23 +115,7 @@ const AppRoutes = () => (
       path="/alllocations"
       element={<Navigate to="/all-locations" replace />}
     />
-    <Route
-      path="/PricingCalculator"
-      element={<Navigate to="/pricing-calculator" replace />}
-    />
-    <Route
-      path="/pricingcalculator"
-      element={<Navigate to="/pricing-calculator" replace />}
-    />
-    <Route
-      path="/DebrisWeightCalculator"
-      element={<Navigate to="/debris-weight-calculator" replace />}
-    />
-    <Route
-      path="/debrisweightcalculator"
-      element={<Navigate to="/debris-weight-calculator" replace />}
-    />
-    <Route path="/Contact" element={<Navigate to="/contact" replace />} />
+    {/* Removed routes - pricing calculator, debris calculator, contact */}
     <Route path="/Blog" element={<Navigate to="/blog" replace />} />
     <Route path="/BlogPost" element={<Navigate to="/blog" replace />} />
     <Route path="/blogpost" element={<Navigate to="/blog" replace />} />
@@ -160,7 +144,6 @@ const AppRoutes = () => (
     <Route path="/blog/:slug" element={<BlogPost />} />
     <Route path="/news" element={<News />} />
     <Route path="/news/article/:id" element={<NewsArticle />} />
-    <Route path="/contact" element={<Contact />} />
     <Route path="/guest-post" element={<GuestPost />} />
     <Route path="/local-junk-removal" element={<LocalJunkRemoval />} />
 
@@ -186,11 +169,6 @@ const AppRoutes = () => (
     />
     <Route path="/sitemap" element={<Sitemap />} />
     <Route path="/sitemap.xml" element={<XMLSitemap />} />
-    <Route path="/pricing-calculator" element={<PricingCalculator />} />
-    <Route
-      path="/debris-weight-calculator"
-      element={<DebrisWeightCalculator />}
-    />
 
     {/* Admin routes with separate loading */}
     <Route
