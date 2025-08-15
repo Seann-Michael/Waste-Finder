@@ -271,6 +271,7 @@ const DEBRIS_TYPES: DebrisType[] = [
 export default function DebrisWeightCalculator() {
   const [pounds, setPounds] = useState<string>("");
   const [yards, setYards] = useState<string>("");
+  const [conversionFactor, setConversionFactor] = useState<string>("");
   const [debrisTypes, setDebrisTypes] = useState<DebrisType[]>([]);
   const [isLoadingTypes, setIsLoadingTypes] = useState(true);
   const [selectedDebris, setSelectedDebris] = useState<DebrisType | null>(null);
