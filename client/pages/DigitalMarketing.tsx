@@ -34,7 +34,7 @@ export default function DigitalMarketing() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="text-lg px-8 py-3" asChild>
                 <a
-                  href="/contact" // TODO: Replace with configurable marketing URL from Supabase
+                  href="/guest-post" // Redirect to guest post page instead
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -49,7 +49,7 @@ export default function DigitalMarketing() {
                 asChild
               >
                 <a
-                  href="/contact" // TODO: Replace with configurable audit URL from Supabase
+                  href="/guest-post" // Redirect to guest post page instead
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -240,7 +240,7 @@ export default function DigitalMarketing() {
                 asChild
               >
                 <a
-                  href="/contact" // TODO: Replace with configurable get-started URL from Supabase
+                  href="/guest-post" // Redirect to guest post page instead
                   target="_blank"
                   rel="noopener noreferrer"
                 >
