@@ -232,22 +232,7 @@ class DataStore {
   private getDefaultBlogPosts() {
     return [
       // All default blog posts removed - fetch from Supabase instead
-      {
-        id: "2",
-        title: "How to Choose the Right Disposal Facility",
-        slug: "choose-right-disposal-facility",
-        excerpt:
-          "A comprehensive guide to selecting the best waste disposal facility for your needs.",
-        content: "Content here...",
-        author: "Waste Management Pro",
-        status: "published",
-        featured: false,
-        tags: ["disposal", "facilities", "guide"],
-        categories: ["Guides"],
-        publishedAt: new Date(Date.now() - 86400000).toISOString(), // Yesterday
-        createdAt: new Date(Date.now() - 86400000).toISOString(),
-        updatedAt: new Date(Date.now() - 86400000).toISOString(),
-      },
+      // Blog post removed - fetch from Supabase instead
     ];
   }
 
