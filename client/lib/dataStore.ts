@@ -228,24 +228,10 @@ class DataStore {
   /**
    * Default blog posts
    */
+  // REMOVED: Default blog posts moved to Supabase database
   private getDefaultBlogPosts() {
     return [
-      {
-        id: "1",
-        title: "Best Practices for Waste Management in 2024",
-        slug: "best-practices-waste-management-2024",
-        excerpt:
-          "Learn about the latest trends and best practices in waste management for the new year.",
-        content: "Content here...",
-        author: "Environmental Expert",
-        status: "published",
-        featured: true,
-        tags: ["waste management", "best practices", "2024"],
-        categories: ["Tips"],
-        publishedAt: new Date().toISOString(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      },
+      // All default blog posts removed - fetch from Supabase instead
       {
         id: "2",
         title: "How to Choose the Right Disposal Facility",
