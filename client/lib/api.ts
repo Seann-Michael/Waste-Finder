@@ -182,7 +182,7 @@ export class APIClient {
         const duration = performance.now() - startTime;
 
         // Track API call performance
-        trackApiCall(endpoint, 'GET', duration, response.status);
+        trackApiCall(endpoint, "GET", duration, response.status);
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
@@ -213,7 +213,7 @@ export class APIClient {
 
         // Track failed API calls
         const statusCode = lastError instanceof APIError ? lastError.status : 0;
-        trackApiCall(endpoint, 'GET', duration, statusCode);
+        trackApiCall(endpoint, "GET", duration, statusCode);
 
         // Don't retry on the last attempt or if error is not retryable
         if (

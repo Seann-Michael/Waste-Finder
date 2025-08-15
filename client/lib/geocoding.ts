@@ -26,23 +26,27 @@ const fallbackZipData: ZipCodeData = {
   "90210": { lat: 34.0901, lng: -118.4065, city: "Beverly Hills", state: "CA" },
   "60601": { lat: 41.8825, lng: -87.6441, city: "Chicago", state: "IL" },
   "77001": { lat: 29.7749, lng: -95.3632, city: "Houston", state: "TX" },
-  "85001": { lat: 33.4484, lng: -112.0740, city: "Phoenix", state: "AZ" },
+  "85001": { lat: 33.4484, lng: -112.074, city: "Phoenix", state: "AZ" },
   "19101": { lat: 39.9526, lng: -75.1652, city: "Philadelphia", state: "PA" },
   "78701": { lat: 30.2672, lng: -97.7431, city: "Austin", state: "TX" },
   "20001": { lat: 38.9072, lng: -77.0369, city: "Washington", state: "DC" },
   "02101": { lat: 42.3601, lng: -71.0589, city: "Boston", state: "MA" },
-  "30301": { lat: 33.7490, lng: -84.3880, city: "Atlanta", state: "GA" },
+  "30301": { lat: 33.749, lng: -84.388, city: "Atlanta", state: "GA" },
 };
 
 /**
  * Geocode ZIP code to coordinates using multiple methods
  */
-export async function geocodeZipCode(zipCode: string): Promise<GeocodingResult | null> {
-  const cleanZip = zipCode.trim().padStart(5, '0');
-  
+export async function geocodeZipCode(
+  zipCode: string,
+): Promise<GeocodingResult | null> {
+  const cleanZip = zipCode.trim().padStart(5, "0");
+
   // Validate ZIP code format
   if (!/^\d{5}$/.test(cleanZip)) {
-    throw new Error("Invalid ZIP code format. Please enter a 5-digit ZIP code.");
+    throw new Error(
+      "Invalid ZIP code format. Please enter a 5-digit ZIP code.",
+    );
   }
 
   try {
@@ -73,13 +77,17 @@ export async function geocodeZipCode(zipCode: string): Promise<GeocodingResult |
     };
   }
 
-  throw new Error(`Unable to find coordinates for ZIP code ${cleanZip}. Please try a different ZIP code.`);
+  throw new Error(
+    `Unable to find coordinates for ZIP code ${cleanZip}. Please try a different ZIP code.`,
+  );
 }
 
 /**
  * Geocode using zippopotam.us API
  */
-async function geocodeWithZippopotamus(zipCode: string): Promise<GeocodingResult | null> {
+async function geocodeWithZippopotamus(
+  zipCode: string,
+): Promise<GeocodingResult | null> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 5000);
 
@@ -114,7 +122,9 @@ async function geocodeWithZippopotamus(zipCode: string): Promise<GeocodingResult
 /**
  * Geocode using Nominatim (OpenStreetMap)
  */
-async function geocodeWithNominatim(zipCode: string): Promise<GeocodingResult | null> {
+async function geocodeWithNominatim(
+  zipCode: string,
+): Promise<GeocodingResult | null> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 5000);
 
@@ -123,10 +133,10 @@ async function geocodeWithNominatim(zipCode: string): Promise<GeocodingResult | 
       `https://nominatim.openstreetmap.org/search?format=json&countrycodes=us&postalcode=${zipCode}&limit=1`,
       {
         headers: {
-          'User-Agent': 'WasteFinder/1.0 (https://wastefinderapp.com)',
+          "User-Agent": "WasteFinder/1.0 (https://wastefinderapp.com)",
         },
         signal: controller.signal,
-      }
+      },
     );
     clearTimeout(timeoutId);
 
@@ -161,5 +171,5 @@ export function isValidZipCode(zipCode: string): boolean {
  * Format ZIP code to 5 digits with leading zeros
  */
 export function formatZipCode(zipCode: string): string {
-  return zipCode.trim().padStart(5, '0');
+  return zipCode.trim().padStart(5, "0");
 }

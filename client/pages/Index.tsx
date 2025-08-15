@@ -100,7 +100,7 @@ export default function Index() {
 
     try {
       // Convert ZIP code to coordinates for proximity search
-      const { geocodeZipCode } = await import('@/lib/geocoding');
+      const { geocodeZipCode } = await import("@/lib/geocoding");
       const coordinates = await geocodeZipCode(searchParams.zipCode);
 
       // Build URL parameters with coordinates
@@ -122,7 +122,11 @@ export default function Index() {
     } catch (error) {
       console.error("Search error:", error);
       // Show error to user
-      alert(error instanceof Error ? error.message : "Failed to search locations. Please try again.");
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Failed to search locations. Please try again.",
+      );
     } finally {
       setIsSearching(false);
     }

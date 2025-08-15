@@ -43,7 +43,7 @@ const fetchLocations = async (
   longitude?: number,
   radius?: number,
   locationTypes?: string[],
-  debrisTypes?: string[]
+  debrisTypes?: string[],
 ): Promise<Location[]> => {
   try {
     // Use Supabase search with all parameters
@@ -106,8 +106,12 @@ export default function AllLocations() {
         const latitude = latFromParams ? parseFloat(latFromParams) : undefined;
         const longitude = lngFromParams ? parseFloat(lngFromParams) : undefined;
         const radius = parseInt(radiusFromParams || "50", 10);
-        const locationTypes = locationTypesParam ? locationTypesParam.split(",") : undefined;
-        const debrisTypes = debrisTypesParam ? debrisTypesParam.split(",") : undefined;
+        const locationTypes = locationTypesParam
+          ? locationTypesParam.split(",")
+          : undefined;
+        const debrisTypes = debrisTypesParam
+          ? debrisTypesParam.split(",")
+          : undefined;
 
         // Search with all parameters
         const data = await fetchLocations(
@@ -117,7 +121,7 @@ export default function AllLocations() {
           longitude,
           radius,
           locationTypes,
-          debrisTypes
+          debrisTypes,
         );
 
         // Ensure data is an array before setting
@@ -182,7 +186,7 @@ export default function AllLocations() {
   const filteredAndSortedLocations = React.useMemo(() => {
     try {
       if (!Array.isArray(locations)) {
-        console.warn('Locations is not an array:', locations);
+        console.warn("Locations is not an array:", locations);
         return [];
       }
 
@@ -190,8 +194,8 @@ export default function AllLocations() {
         .filter((location) => {
           try {
             // Ensure location is valid
-            if (!location || typeof location !== 'object') {
-              console.warn('Invalid location object:', location);
+            if (!location || typeof location !== "object") {
+              console.warn("Invalid location object:", location);
               return false;
             }
 
@@ -199,20 +203,24 @@ export default function AllLocations() {
             if (searchQuery.trim()) {
               const query = searchQuery.toLowerCase().trim();
               const matchesSearch =
-                (location.name || '').toLowerCase().includes(query) ||
-                (location.city || '').toLowerCase().includes(query) ||
-                (location.zip_code || location.zipCode || '').toLowerCase().includes(query) ||
-                (location.address || '').toLowerCase().includes(query) ||
-                (location.state || '').toLowerCase().includes(query);
+                (location.name || "").toLowerCase().includes(query) ||
+                (location.city || "").toLowerCase().includes(query) ||
+                (location.zip_code || location.zipCode || "")
+                  .toLowerCase()
+                  .includes(query) ||
+                (location.address || "").toLowerCase().includes(query) ||
+                (location.state || "").toLowerCase().includes(query);
 
               if (!matchesSearch) return false;
             }
 
             // Then apply type filter
             if (filterBy === "all") return true;
-            return (location.location_type || location.locationType) === filterBy;
+            return (
+              (location.location_type || location.locationType) === filterBy
+            );
           } catch (filterError) {
-            console.error('Error filtering location:', location, filterError);
+            console.error("Error filtering location:", location, filterError);
             return false;
           }
         })
@@ -220,21 +228,21 @@ export default function AllLocations() {
           try {
             switch (sortBy) {
               case "name":
-                return (a.name || '').localeCompare(b.name || '');
+                return (a.name || "").localeCompare(b.name || "");
               case "rating":
                 return (b.rating || 0) - (a.rating || 0);
               case "city":
-                return (a.city || '').localeCompare(b.city || '');
+                return (a.city || "").localeCompare(b.city || "");
               default:
                 return 0;
             }
           } catch (sortError) {
-            console.error('Error sorting locations:', a, b, sortError);
+            console.error("Error sorting locations:", a, b, sortError);
             return 0;
           }
         });
     } catch (error) {
-      console.error('Error in filteredAndSortedLocations:', error);
+      console.error("Error in filteredAndSortedLocations:", error);
       return [];
     }
   }, [locations, searchQuery, filterBy, sortBy]);
@@ -395,7 +403,7 @@ export default function AllLocations() {
                       <div className="space-y-2">
                         {(filteredAndSortedLocations || []).map((location) => {
                           if (!location || !location.id) {
-                            console.warn('Invalid location in map:', location);
+                            console.warn("Invalid location in map:", location);
                             return null;
                           }
 
@@ -405,8 +413,11 @@ export default function AllLocations() {
                               location={location}
                               onClick={() => handleLocationClick(location)}
                               searchedDebrisTypes={(() => {
-                                const debrisFromParams = searchParams.get('debrisTypes');
-                                return debrisFromParams ? debrisFromParams.split(',') : [];
+                                const debrisFromParams =
+                                  searchParams.get("debrisTypes");
+                                return debrisFromParams
+                                  ? debrisFromParams.split(",")
+                                  : [];
                               })()}
                             />
                           );

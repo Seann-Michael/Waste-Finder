@@ -135,9 +135,18 @@ const AppRoutes = () => (
     <Route path="/Blog" element={<Navigate to="/blog" replace />} />
     <Route path="/BlogPost" element={<Navigate to="/blog" replace />} />
     <Route path="/blogpost" element={<Navigate to="/blog" replace />} />
-    <Route path="/admin/RSSManager" element={<Navigate to="/admin/rss-manager" replace />} />
-    <Route path="/admin/ArticleManagement" element={<Navigate to="/admin/articles" replace />} />
-    <Route path="/admin/AIContentSettings" element={<Navigate to="/admin/ai-content-settings" replace />} />
+    <Route
+      path="/admin/RSSManager"
+      element={<Navigate to="/admin/rss-manager" replace />}
+    />
+    <Route
+      path="/admin/ArticleManagement"
+      element={<Navigate to="/admin/articles" replace />}
+    />
+    <Route
+      path="/admin/AIContentSettings"
+      element={<Navigate to="/admin/ai-content-settings" replace />}
+    />
 
     <Route path="/News" element={<Navigate to="/news" replace />} />
     <Route path="/location/:id" element={<LocationDetail />} />
@@ -145,7 +154,6 @@ const AppRoutes = () => (
       path="/location/:state/:city/:locationName"
       element={<LocationDetail />}
     />
-
 
     <Route path="/blog" element={<Learn />} />
     <Route path="/learn" element={<Learn />} />

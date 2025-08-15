@@ -65,12 +65,15 @@ export default function Header() {
     {
       name: "Learn",
       href: "/blog",
-      active: location.pathname.startsWith("/blog") || location.pathname.startsWith("/learn") || location.pathname === "/news",
+      active:
+        location.pathname.startsWith("/blog") ||
+        location.pathname.startsWith("/learn") ||
+        location.pathname === "/news",
       dropdown: [
         { name: "Blog", href: "/blog" },
         { name: "News", href: "/news" },
-        { name: "Resources", href: "/learn" }
-      ]
+        { name: "Resources", href: "/learn" },
+      ],
     },
     {
       name: "Suggest Location",
@@ -123,14 +126,14 @@ export default function Header() {
                 <div className="w-7 h-7 sm:w-8 sm:h-8 bg-primary rounded-lg flex items-center justify-center">
                   <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-primary-foreground" />
                 </div>
-              <span className="text-lg sm:text-xl font-bold text-foreground">
-                Dump Near Me
-              </span>
+                <span className="text-lg sm:text-xl font-bold text-foreground">
+                  Dump Near Me
+                </span>
               </Link>
 
               {/* Desktop Navigation */}
               <nav className="hidden md:flex space-x-8">
-                {navigation.map((item) => (
+                {navigation.map((item) =>
                   item.dropdown ? (
                     <DropdownMenu key={item.name}>
                       <DropdownMenuTrigger asChild>
@@ -179,8 +182,8 @@ export default function Header() {
                         </p>
                       </TooltipContent>
                     </Tooltip>
-                  )
-                ))}
+                  ),
+                )}
               </nav>
 
               {/* Business Owner CTA - Fixed visibility */}
@@ -225,7 +228,7 @@ export default function Header() {
             {isMobileMenuOpen && (
               <div className="sm:hidden py-4 border-t border-border max-h-96 overflow-y-auto">
                 <nav className="flex flex-col space-y-4">
-                  {navigation.map((item) => (
+                  {navigation.map((item) =>
                     item.dropdown ? (
                       <div key={item.name} className="space-y-2">
                         <span className="text-base font-medium text-primary py-2 px-1">
@@ -250,14 +253,16 @@ export default function Header() {
                         to={item.href}
                         className={cn(
                           "text-base font-medium transition-colors py-2 px-1",
-                          item.active ? "text-primary" : "text-muted-foreground",
+                          item.active
+                            ? "text-primary"
+                            : "text-muted-foreground",
                         )}
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         {item.name}
                       </Link>
-                    )
-                  ))}
+                    ),
+                  )}
                   <Button
                     asChild
                     className="w-full mt-2 bg-green-600 text-white hover:bg-green-700"

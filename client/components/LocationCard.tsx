@@ -96,7 +96,7 @@ export default function LocationCard({
 
   const getDirectionsUrl = () => {
     return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
-      `${location.address}, ${location.city}, ${location.state} ${location.zip_code || ''}`,
+      `${location.address}, ${location.city}, ${location.state} ${location.zip_code || ""}`,
     )}`;
   };
 
@@ -265,7 +265,7 @@ export default function LocationCard({
 
   return (
     <div
-      className={`border rounded-lg p-4 hover:shadow-md transition-shadow bg-white ${onClick ? 'cursor-pointer hover:bg-gray-50' : ''}`}
+      className={`border rounded-lg p-4 hover:shadow-md transition-shadow bg-white ${onClick ? "cursor-pointer hover:bg-gray-50" : ""}`}
       onClick={onClick}
     >
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
@@ -309,7 +309,7 @@ export default function LocationCard({
               >
                 <div>{location.address}</div>
                 <div>
-                  {location.city}, {location.state} {location.zip_code || ''}
+                  {location.city}, {location.state} {location.zip_code || ""}
                 </div>
               </a>
             </div>
@@ -340,9 +340,11 @@ export default function LocationCard({
                           closedDays.push(h?.dayOfWeek || h?.day_of_week || 0);
                           return;
                         }
-                        const timeKey = `${formatTo12Hour(h?.openTime || h?.open_time || '')}-${formatTo12Hour(h?.closeTime || h?.close_time || '')}`;
+                        const timeKey = `${formatTo12Hour(h?.openTime || h?.open_time || "")}-${formatTo12Hour(h?.closeTime || h?.close_time || "")}`;
                         if (!hourGroups[timeKey]) hourGroups[timeKey] = [];
-                        hourGroups[timeKey].push(h?.dayOfWeek || h?.day_of_week || 0);
+                        hourGroups[timeKey].push(
+                          h?.dayOfWeek || h?.day_of_week || 0,
+                        );
                       });
 
                       const dayNames = [

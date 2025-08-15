@@ -3,13 +3,22 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Search, Globe, BarChart3, Target, Users, Smartphone, DollarSign } from "lucide-react";
+import {
+  ArrowRight,
+  Search,
+  Globe,
+  BarChart3,
+  Target,
+  Users,
+  Smartphone,
+  DollarSign,
+} from "lucide-react";
 
 export default function DigitalMarketing() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
-      
+
       <main className="flex-1">
         {/* Hero Section */}
         <section className="py-12 md:py-20 px-4 bg-gradient-to-br from-purple-50 to-blue-100">
@@ -18,24 +27,30 @@ export default function DigitalMarketing() {
               Digital Marketing for Dumpster Rental & Junk Removal Companies
             </h1>
             <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              Grow your waste management business with proven digital marketing strategies. 
-              We specialize in helping dumpster rental and junk removal companies dominate their local markets.
+              Grow your waste management business with proven digital marketing
+              strategies. We specialize in helping dumpster rental and junk
+              removal companies dominate their local markets.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="text-lg px-8 py-3" asChild>
-                <a 
-                  href="/contact" // TODO: Replace with configurable marketing URL from Supabase 
-                  target="_blank" 
+                <a
+                  href="/contact" // TODO: Replace with configurable marketing URL from Supabase
+                  target="_blank"
                   rel="noopener noreferrer"
                 >
                   Get More Customers
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </a>
               </Button>
-              <Button size="lg" variant="outline" className="text-lg px-8 py-3" asChild>
-                <a 
-                  href="/contact" // TODO: Replace with configurable audit URL from Supabase 
-                  target="_blank" 
+              <Button
+                size="lg"
+                variant="outline"
+                className="text-lg px-8 py-3"
+                asChild
+              >
+                <a
+                  href="/contact" // TODO: Replace with configurable audit URL from Supabase
+                  target="_blank"
                   rel="noopener noreferrer"
                 >
                   Free Marketing Audit
@@ -53,7 +68,8 @@ export default function DigitalMarketing() {
                 Complete Digital Marketing Solutions
               </h2>
               <p className="text-lg text-muted-foreground">
-                Everything you need to grow your dumpster rental or junk removal business online
+                Everything you need to grow your dumpster rental or junk removal
+                business online
               </p>
             </div>
 
@@ -175,19 +191,31 @@ export default function DigitalMarketing() {
             <h2 className="text-3xl md:text-4xl font-bold mb-12">
               Proven Results for Waste Management Companies
             </h2>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
               <div className="text-center">
-                <div className="text-4xl font-bold text-blue-600 mb-2">300%</div>
-                <p className="text-sm text-muted-foreground">Average increase in website traffic</p>
+                <div className="text-4xl font-bold text-blue-600 mb-2">
+                  300%
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Average increase in website traffic
+                </p>
               </div>
               <div className="text-center">
-                <div className="text-4xl font-bold text-green-600 mb-2">150%</div>
-                <p className="text-sm text-muted-foreground">Boost in qualified leads</p>
+                <div className="text-4xl font-bold text-green-600 mb-2">
+                  150%
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Boost in qualified leads
+                </p>
               </div>
               <div className="text-center">
-                <div className="text-4xl font-bold text-purple-600 mb-2">200%</div>
-                <p className="text-sm text-muted-foreground">Return on marketing investment</p>
+                <div className="text-4xl font-bold text-purple-600 mb-2">
+                  200%
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Return on marketing investment
+                </p>
               </div>
             </div>
           </div>
@@ -200,27 +228,39 @@ export default function DigitalMarketing() {
               Ready to Dominate Your Local Market?
             </h2>
             <p className="text-lg md:text-xl mb-8 opacity-90">
-              Get a free marketing audit and discover how we can help you get more customers, 
-              increase revenue, and grow your waste management business.
+              Get a free marketing audit and discover how we can help you get
+              more customers, increase revenue, and grow your waste management
+              business.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" variant="secondary" className="text-lg px-8 py-3" asChild>
-                <a 
-                  href="/contact" // TODO: Replace with configurable get-started URL from Supabase 
-                  target="_blank" 
+              <Button
+                size="lg"
+                variant="secondary"
+                className="text-lg px-8 py-3"
+                asChild
+              >
+                <a
+                  href="/contact" // TODO: Replace with configurable get-started URL from Supabase
+                  target="_blank"
                   rel="noopener noreferrer"
                 >
                   Get Free Marketing Audit
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </a>
               </Button>
-              <Button size="lg" variant="outline" className="text-lg px-8 py-3 border-white text-white hover:bg-white hover:text-purple-600" asChild>
-                <a 
-                  href="tel:+15551234567" // TODO: Replace with configurable phone URL from Supabase 
-                  target="_blank" 
+              <Button
+                size="lg"
+                variant="outline"
+                className="text-lg px-8 py-3 border-white text-white hover:bg-white hover:text-purple-600"
+                asChild
+              >
+                <a
+                  href="tel:+15551234567" // TODO: Replace with configurable phone URL from Supabase
+                  target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Call: (555) 123-4567 {/* TODO: Replace with configurable phone from Supabase */}
+                  Call: (555) 123-4567{" "}
+                  {/* TODO: Replace with configurable phone from Supabase */}
                 </a>
               </Button>
             </div>
