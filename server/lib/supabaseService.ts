@@ -1,5 +1,4 @@
 import { createClient } from "@supabase/supabase-js";
-import { mockLocations, isMockMode, type MockLocation } from "./mockData";
 
 // For server-side, we use the service role key for admin operations
 const supabaseUrl =
