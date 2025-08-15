@@ -88,8 +88,8 @@ const queryClient = new QueryClient({
     },
     mutations: {
       retry: 1,
-    }
-  }
+    },
+  },
 });
 
 // Monitoring provider component - disabled to prevent conflicts
@@ -110,9 +110,12 @@ const OptimizedApiProvider = ({ children }: { children: React.ReactNode }) => {
     queryUtils.warmCache().catch(console.warn);
 
     // Clean up cache periodically
-    const cleanup = setInterval(() => {
-      queryUtils.clearCache();
-    }, 10 * 60 * 1000); // Every 10 minutes
+    const cleanup = setInterval(
+      () => {
+        queryUtils.clearCache();
+      },
+      10 * 60 * 1000,
+    ); // Every 10 minutes
 
     return () => clearInterval(cleanup);
   }, []);
@@ -356,15 +359,15 @@ const App = () => {
           <MonitoringProvider>
             <OptimizedApiProvider>
               <TooltipProvider>
-              <Toaster />
-              <Sonner />
-              <RouterWrapper>
-                <div className="min-h-screen bg-background">
-                  <Suspense fallback={<PageLoading message="Loading..." />}>
-                    <AppRoutes />
-                  </Suspense>
-                </div>
-              </RouterWrapper>
+                <Toaster />
+                <Sonner />
+                <RouterWrapper>
+                  <div className="min-h-screen bg-background">
+                    <Suspense fallback={<PageLoading message="Loading..." />}>
+                      <AppRoutes />
+                    </Suspense>
+                  </div>
+                </RouterWrapper>
               </TooltipProvider>
             </OptimizedApiProvider>
           </MonitoringProvider>
