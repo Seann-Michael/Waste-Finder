@@ -30,19 +30,19 @@ const NewsArticle = lazy(() => import("./pages/NewsArticle"));
 const Learn = lazy(() => import("./pages/Learn"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 
-import GuestPost from "./pages/GuestPost";
-import LocalJunkRemoval from "./pages/LocalJunkRemoval";
+const GuestPost = lazy(() => import("./pages/GuestPost"));
+const LocalJunkRemoval = lazy(() => import("./pages/LocalJunkRemoval"));
 
-import DigitalMarketing from "./pages/DigitalMarketing";
-import LocalSEO from "./pages/LocalSEO";
-import LeadGeneration from "./pages/LeadGeneration";
-import DigitalMarketingJunkRemoval from "./pages/DigitalMarketingJunkRemoval";
-import DigitalMarketingDumpsterRental from "./pages/DigitalMarketingDumpsterRental";
-import LocalSEOJunkRemoval from "./pages/LocalSEOJunkRemoval";
-import LocalSEODumpsterRental from "./pages/LocalSEODumpsterRental";
-import LeadGenerationJunkRemoval from "./pages/LeadGenerationJunkRemoval";
-import Sitemap from "./pages/Sitemap";
-import XMLSitemap from "./pages/XMLSitemap";
+const DigitalMarketing = lazy(() => import("./pages/DigitalMarketing"));
+const LocalSEO = lazy(() => import("./pages/LocalSEO"));
+const LeadGeneration = lazy(() => import("./pages/LeadGeneration"));
+const DigitalMarketingJunkRemoval = lazy(() => import("./pages/DigitalMarketingJunkRemoval"));
+const DigitalMarketingDumpsterRental = lazy(() => import("./pages/DigitalMarketingDumpsterRental"));
+const LocalSEOJunkRemoval = lazy(() => import("./pages/LocalSEOJunkRemoval"));
+const LocalSEODumpsterRental = lazy(() => import("./pages/LocalSEODumpsterRental"));
+const LeadGenerationJunkRemoval = lazy(() => import("./pages/LeadGenerationJunkRemoval"));
+const Sitemap = lazy(() => import("./pages/Sitemap"));
+const XMLSitemap = lazy(() => import("./pages/XMLSitemap"));
 
 // Admin pages - using direct imports for debugging
 import AdminLogin from "./pages/AdminLogin";
