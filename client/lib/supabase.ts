@@ -10,24 +10,53 @@ const isPlaceholder = (value: string | undefined) =>
   !value || value.startsWith('YOUR_') || value === 'your_supabase_' || value.length < 10;
 
 // Create mock supabase client for development without credentials
-const createMockSupabaseClient = () => ({
-  from: () => ({
-    select: () => ({ data: [], error: null }),
-    insert: () => ({ data: null, error: { message: "Supabase not configured" } }),
-    update: () => ({ data: null, error: { message: "Supabase not configured" } }),
-    delete: () => ({ data: null, error: { message: "Supabase not configured" } }),
-    eq: function() { return this; },
-    order: function() { return this; },
-    single: function() { return this; },
-  }),
-  auth: {
-    signUp: () => ({ data: null, error: { message: "Supabase not configured" } }),
-    signIn: () => ({ data: null, error: { message: "Supabase not configured" } }),
-    signOut: () => ({ error: null }),
-    getSession: () => ({ data: { session: null }, error: null }),
-    onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
-  }
-});
+const createMockSupabaseClient = () => {
+  const mockQueryBuilder = {
+    select: function(columns?: string) { return this; },
+    insert: function(data: any) { return this; },
+    update: function(data: any) { return this; },
+    delete: function() { return this; },
+    eq: function(column: string, value: any) { return this; },
+    neq: function(column: string, value: any) { return this; },
+    gt: function(column: string, value: any) { return this; },
+    gte: function(column: string, value: any) { return this; },
+    lt: function(column: string, value: any) { return this; },
+    lte: function(column: string, value: any) { return this; },
+    like: function(column: string, value: any) { return this; },
+    ilike: function(column: string, value: any) { return this; },
+    is: function(column: string, value: any) { return this; },
+    in: function(column: string, values: any[]) { return this; },
+    or: function(query: string) { return this; },
+    and: function(query: string) { return this; },
+    order: function(column: string, options?: any) { return this; },
+    limit: function(count: number) { return this; },
+    range: function(from: number, to: number) { return this; },
+    single: function() {
+      return Promise.resolve({
+        data: null,
+        error: { message: "Supabase not configured - using mock data" }
+      });
+    },
+    // Return empty data for queries that expect arrays
+    then: function(onFulfilled: any, onRejected?: any) {
+      return Promise.resolve({
+        data: [],
+        error: null
+      }).then(onFulfilled, onRejected);
+    }
+  };
+
+  return {
+    from: () => mockQueryBuilder,
+    auth: {
+      signUp: () => Promise.resolve({ data: null, error: { message: "Supabase not configured" } }),
+      signIn: () => Promise.resolve({ data: null, error: { message: "Supabase not configured" } }),
+      signOut: () => Promise.resolve({ error: null }),
+      getSession: () => Promise.resolve({ data: { session: null }, error: null }),
+      onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
+    }
+  };
+};
 
 // Validate that we have real (non-placeholder) values
 let supabase: any;
