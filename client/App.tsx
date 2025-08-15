@@ -309,9 +309,13 @@ const App = () => {
               <Toaster />
               <Sonner />
               <RouterWrapper>
-                <Header />
-                <AppRoutes />
-                <Footer />
+                <div className="min-h-screen bg-background">
+                  <Header />
+                  <main>
+                    <AppRoutes />
+                  </main>
+                  <Footer />
+                </div>
               </RouterWrapper>
             </TooltipProvider>
           </MonitoringProvider>
