@@ -34,7 +34,7 @@ export default function DigitalMarketing() {
               </Button>
               <Button size="lg" variant="outline" className="text-lg px-8 py-3" asChild>
                 <a 
-                  href="https://yourmarketingagency.com/free-audit" 
+                  href="/contact" // TODO: Replace with configurable audit URL from Supabase 
                   target="_blank" 
                   rel="noopener noreferrer"
                 >
