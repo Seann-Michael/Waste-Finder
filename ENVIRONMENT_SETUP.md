@@ -14,7 +14,7 @@ VITE_SUPABASE_URL=your_supabase_project_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 
 # Server-side Supabase (for API functions)
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+VITE_SUPABASE_SERVICE_KEY=your_supabase_service_role_key
 
 # Google Maps API (optional)
 VITE_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
@@ -29,7 +29,7 @@ Add these environment variables in your Netlify site settings:
 
 - `VITE_SUPABASE_URL`: Your Supabase project URL
 - `VITE_SUPABASE_ANON_KEY`: Your Supabase anonymous/public key
-- `SUPABASE_SERVICE_ROLE_KEY`: Your Supabase service role key (for server functions)
+- `VITE_SUPABASE_SERVICE_KEY`: Your Supabase service role key (for server functions)
 - `VITE_GOOGLE_MAPS_API_KEY`: Your Google Maps API key (optional)
 
 ## Security Notes
