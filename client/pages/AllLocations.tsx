@@ -19,7 +19,6 @@ import AdSense from "../components/AdSense";
 import GoogleMapsEmbed from "../components/GoogleMapsEmbed";
 import { Location } from "../lib/database.types";
 import { generateLocationUrl } from "../lib/utils";
-import { searchLocations } from "../lib/supabaseQueries";
 import { geocodeZipCode } from "../lib/geocoding";
 
 interface SearchLocation {
