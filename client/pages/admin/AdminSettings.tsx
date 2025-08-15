@@ -75,17 +75,9 @@ interface PendingLocation {
   submittedAt: string;
 }
 
-const mockAdminUsers: AdminUser[] = [
-  {
-    id: "1",
-    name: "Sean Webb",
-    email: "sean@wastefinder.com",
-    role: "super_admin",
-    status: "active",
-    lastLogin: "2024-01-20T15:30:00Z",
-    createdAt: "2024-01-01T00:00:00Z",
-  },
-];
+// REMOVED: Admin users moved to Supabase database
+// Use Supabase auth and user management instead
+const mockAdminUsers: AdminUser[] = [];
 
 const mockPendingLocations: PendingLocation[] = [
   {
