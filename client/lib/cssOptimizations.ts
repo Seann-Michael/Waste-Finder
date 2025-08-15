@@ -180,9 +180,9 @@ export const inlineCriticalCSS = () => {
       .lg\\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     }
   `;
-  
-  const style = document.createElement('style');
-  style.id = 'critical-css';
+
+  const style = document.createElement("style");
+  style.id = "critical-css";
   style.textContent = criticalCSS;
   document.head.insertBefore(style, document.head.firstChild);
 };
@@ -191,18 +191,18 @@ export const inlineCriticalCSS = () => {
 export const loadNonCriticalCSS = () => {
   const nonCriticalStylesheets = [
     // These would be extracted during build
-    '/assets/components.css',
-    '/assets/animations.css',
-    '/assets/print.css'
+    "/assets/components.css",
+    "/assets/animations.css",
+    "/assets/print.css",
   ];
-  
-  nonCriticalStylesheets.forEach(href => {
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.as = 'style';
+
+  nonCriticalStylesheets.forEach((href) => {
+    const link = document.createElement("link");
+    link.rel = "preload";
+    link.as = "style";
     link.href = href;
     link.onload = () => {
-      link.rel = 'stylesheet';
+      link.rel = "stylesheet";
     };
     document.head.appendChild(link);
   });
@@ -213,25 +213,25 @@ export const optimizeFontLoading = () => {
   // Preload critical fonts
   const criticalFonts = [
     {
-      href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap',
-      crossorigin: ''
-    }
+      href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap",
+      crossorigin: "",
+    },
   ];
-  
-  criticalFonts.forEach(font => {
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.as = 'style';
+
+  criticalFonts.forEach((font) => {
+    const link = document.createElement("link");
+    link.rel = "preload";
+    link.as = "style";
     link.href = font.href;
     if (font.crossorigin) link.crossOrigin = font.crossorigin;
     link.onload = () => {
-      link.rel = 'stylesheet';
+      link.rel = "stylesheet";
     };
     document.head.appendChild(link);
   });
-  
+
   // Add font-display: swap for better performance
-  const fontDisplayStyle = document.createElement('style');
+  const fontDisplayStyle = document.createElement("style");
   fontDisplayStyle.textContent = `
     /* Optimize font loading */
     @font-face {
@@ -249,27 +249,30 @@ export const optimizeFontLoading = () => {
 
 // Remove unused CSS (runtime cleanup)
 export const removeUnusedCSS = () => {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('🧹 CSS Cleanup: Remove unused styles in production build');
-    
+  if (process.env.NODE_ENV === "development") {
+    console.log("🧹 CSS Cleanup: Remove unused styles in production build");
+
     // Log potentially unused CSS classes
     const unusedClasses = [
       // Classes that might not be used
-      'animate-bounce',
-      'animate-pulse',
-      'animate-ping',
-      'animate-spin',
-      'backdrop-blur-xl',
-      'backdrop-brightness-',
-      'backdrop-contrast-',
-      'backdrop-hue-rotate-',
-      'backdrop-invert',
-      'backdrop-opacity-',
-      'backdrop-saturate-',
-      'backdrop-sepia'
+      "animate-bounce",
+      "animate-pulse",
+      "animate-ping",
+      "animate-spin",
+      "backdrop-blur-xl",
+      "backdrop-brightness-",
+      "backdrop-contrast-",
+      "backdrop-hue-rotate-",
+      "backdrop-invert",
+      "backdrop-opacity-",
+      "backdrop-saturate-",
+      "backdrop-sepia",
     ];
-    
-    console.log('Consider removing these unused animation/backdrop classes:', unusedClasses);
+
+    console.log(
+      "Consider removing these unused animation/backdrop classes:",
+      unusedClasses,
+    );
   }
 };
 
@@ -277,57 +280,57 @@ export const removeUnusedCSS = () => {
 export const optimizeCSSDelivery = () => {
   // Defer non-critical CSS loading
   const deferCSS = (href: string) => {
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.as = 'style';
+    const link = document.createElement("link");
+    link.rel = "preload";
+    link.as = "style";
     link.href = href;
-    
+
     link.onload = () => {
-      link.rel = 'stylesheet';
-      link.media = 'all';
+      link.rel = "stylesheet";
+      link.media = "all";
     };
-    
+
     document.head.appendChild(link);
-    
+
     // Fallback for browsers that don't support preload
-    const noscript = document.createElement('noscript');
-    const fallbackLink = document.createElement('link');
-    fallbackLink.rel = 'stylesheet';
+    const noscript = document.createElement("noscript");
+    const fallbackLink = document.createElement("link");
+    fallbackLink.rel = "stylesheet";
     fallbackLink.href = href;
     noscript.appendChild(fallbackLink);
     document.head.appendChild(noscript);
   };
-  
+
   // Load print styles only when needed
-  deferCSS('/assets/print.css');
-  
+  deferCSS("/assets/print.css");
+
   // Load animation styles after initial render
-  if ('requestIdleCallback' in window) {
+  if ("requestIdleCallback" in window) {
     requestIdleCallback(() => {
-      deferCSS('/assets/animations.css');
+      deferCSS("/assets/animations.css");
     });
   } else {
     setTimeout(() => {
-      deferCSS('/assets/animations.css');
+      deferCSS("/assets/animations.css");
     }, 1000);
   }
 };
 
 // Minify inline styles
 export const minifyInlineStyles = () => {
-  const styleElements = document.querySelectorAll('style:not(#critical-css)');
-  
-  styleElements.forEach(style => {
+  const styleElements = document.querySelectorAll("style:not(#critical-css)");
+
+  styleElements.forEach((style) => {
     if (style.textContent) {
       // Basic CSS minification
       style.textContent = style.textContent
-        .replace(/\/\*[\s\S]*?\*\//g, '') // Remove comments
-        .replace(/\s+/g, ' ') // Collapse whitespace
-        .replace(/;\s*}/g, '}') // Remove last semicolon before }
-        .replace(/\s*{\s*/g, '{') // Remove spaces around {
-        .replace(/\s*}\s*/g, '}') // Remove spaces around }
-        .replace(/\s*:\s*/g, ':') // Remove spaces around :
-        .replace(/\s*;\s*/g, ';') // Remove spaces around ;
+        .replace(/\/\*[\s\S]*?\*\//g, "") // Remove comments
+        .replace(/\s+/g, " ") // Collapse whitespace
+        .replace(/;\s*}/g, "}") // Remove last semicolon before }
+        .replace(/\s*{\s*/g, "{") // Remove spaces around {
+        .replace(/\s*}\s*/g, "}") // Remove spaces around }
+        .replace(/\s*:\s*/g, ":") // Remove spaces around :
+        .replace(/\s*;\s*/g, ";") // Remove spaces around ;
         .trim();
     }
   });
@@ -335,7 +338,7 @@ export const minifyInlineStyles = () => {
 
 // CSS containment for better rendering performance
 export const applyCSSContainment = () => {
-  const containmentStyle = document.createElement('style');
+  const containmentStyle = document.createElement("style");
   containmentStyle.textContent = `
     /* CSS Containment for better rendering performance */
     .location-card {
@@ -377,16 +380,16 @@ export const applyCSSContainment = () => {
 export const initializeCSSOptimizations = () => {
   // Inline critical CSS immediately
   inlineCriticalCSS();
-  
+
   // Optimize font loading
   optimizeFontLoading();
-  
+
   // Apply CSS containment
   applyCSSContainment();
-  
+
   // Defer non-critical CSS
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
       loadNonCriticalCSS();
       optimizeCSSDelivery();
       minifyInlineStyles();
@@ -396,7 +399,7 @@ export const initializeCSSOptimizations = () => {
     optimizeCSSDelivery();
     minifyInlineStyles();
   }
-  
+
   // Remove unused CSS in development
   removeUnusedCSS();
 };
@@ -405,43 +408,43 @@ export const initializeCSSOptimizations = () => {
 export const optimizeRuntimeCSS = () => {
   // Remove unused CSS classes from DOM
   const removeUnusedClasses = () => {
-    const allElements = document.querySelectorAll('*[class]');
+    const allElements = document.querySelectorAll("*[class]");
     const usedClasses = new Set<string>();
-    
-    allElements.forEach(element => {
-      element.className.split(' ').forEach(className => {
+
+    allElements.forEach((element) => {
+      element.className.split(" ").forEach((className) => {
         if (className.trim()) {
           usedClasses.add(className.trim());
         }
       });
     });
-    
-    if (process.env.NODE_ENV === 'development') {
+
+    if (process.env.NODE_ENV === "development") {
       console.log(`📊 CSS Stats: ${usedClasses.size} unique classes in use`);
     }
   };
-  
+
   // Optimize CSS animations
   const optimizeAnimations = () => {
     const animatedElements = document.querySelectorAll('[class*="animate-"]');
-    
-    animatedElements.forEach(element => {
+
+    animatedElements.forEach((element) => {
       const htmlElement = element as HTMLElement;
-      
+
       // Pause animations when not visible
       const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
+        entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            htmlElement.style.animationPlayState = 'running';
+            htmlElement.style.animationPlayState = "running";
           } else {
-            htmlElement.style.animationPlayState = 'paused';
+            htmlElement.style.animationPlayState = "paused";
           }
         });
       });
-      
+
       observer.observe(htmlElement);
     });
   };
-  
+
   return { removeUnusedClasses, optimizeAnimations };
 };

@@ -8,20 +8,20 @@ export interface ServiceWorkerConfig {
   scope: string;
   updateInterval: number;
   cacheStrategies: {
-    [key: string]: 'cache-first' | 'network-first' | 'stale-while-revalidate';
+    [key: string]: "cache-first" | "network-first" | "stale-while-revalidate";
   };
 }
 
 const defaultConfig: ServiceWorkerConfig = {
-  enabled: process.env.NODE_ENV === 'production',
-  scope: '/',
+  enabled: process.env.NODE_ENV === "production",
+  scope: "/",
   updateInterval: 24 * 60 * 60 * 1000, // 24 hours
   cacheStrategies: {
-    '/api/': 'network-first',
-    '/assets/': 'cache-first',
-    '/images/': 'cache-first',
-    '/': 'stale-while-revalidate'
-  }
+    "/api/": "network-first",
+    "/assets/": "cache-first",
+    "/images/": "cache-first",
+    "/": "stale-while-revalidate",
+  },
 };
 
 class ServiceWorkerManager {
@@ -34,33 +34,36 @@ class ServiceWorkerManager {
   }
 
   public async register(): Promise<boolean> {
-    if (!this.config.enabled || !('serviceWorker' in navigator)) {
-      console.log('Service Worker not available or disabled');
+    if (!this.config.enabled || !("serviceWorker" in navigator)) {
+      console.log("Service Worker not available or disabled");
       return false;
     }
 
     try {
-      console.log('Registering Service Worker...');
-      
-      this.registration = await navigator.serviceWorker.register('/sw.js', {
+      console.log("Registering Service Worker...");
+
+      this.registration = await navigator.serviceWorker.register("/sw.js", {
         scope: this.config.scope,
-        updateViaCache: 'none' // Always check for updates
+        updateViaCache: "none", // Always check for updates
       });
 
-      console.log('Service Worker registered successfully:', this.registration.scope);
+      console.log(
+        "Service Worker registered successfully:",
+        this.registration.scope,
+      );
 
       // Set up event listeners
       this.setupEventListeners();
-      
+
       // Check for updates periodically
       this.scheduleUpdateChecks();
-      
+
       // Send configuration to service worker
       this.sendConfigToSW();
 
       return true;
     } catch (error) {
-      console.error('Service Worker registration failed:', error);
+      console.error("Service Worker registration failed:", error);
       return false;
     }
   }
@@ -69,13 +72,16 @@ class ServiceWorkerManager {
     if (!this.registration) return;
 
     // Handle service worker updates
-    this.registration.addEventListener('updatefound', () => {
+    this.registration.addEventListener("updatefound", () => {
       const newWorker = this.registration!.installing;
       if (newWorker) {
-        console.log('New Service Worker found, installing...');
-        
-        newWorker.addEventListener('statechange', () => {
-          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+        console.log("New Service Worker found, installing...");
+
+        newWorker.addEventListener("statechange", () => {
+          if (
+            newWorker.state === "installed" &&
+            navigator.serviceWorker.controller
+          ) {
             // New service worker available
             this.showUpdateNotification();
           }
@@ -84,13 +90,13 @@ class ServiceWorkerManager {
     });
 
     // Handle service worker messages
-    navigator.serviceWorker.addEventListener('message', (event) => {
+    navigator.serviceWorker.addEventListener("message", (event) => {
       this.handleServiceWorkerMessage(event);
     });
 
     // Handle service worker state changes
-    navigator.serviceWorker.addEventListener('controllerchange', () => {
-      console.log('Service Worker controller changed');
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      console.log("Service Worker controller changed");
       // Optionally reload the page
       if (this.shouldReloadOnUpdate()) {
         window.location.reload();
@@ -102,33 +108,33 @@ class ServiceWorkerManager {
     const { type, payload } = event.data || {};
 
     switch (type) {
-      case 'CACHE_UPDATED':
-        console.log('Cache updated for:', payload.url);
+      case "CACHE_UPDATED":
+        console.log("Cache updated for:", payload.url);
         break;
-      
-      case 'OFFLINE_READY':
-        console.log('App is ready to work offline');
+
+      case "OFFLINE_READY":
+        console.log("App is ready to work offline");
         this.showOfflineReadyNotification();
         break;
-      
-      case 'UPDATE_AVAILABLE':
+
+      case "UPDATE_AVAILABLE":
         this.showUpdateNotification();
         break;
-      
-      case 'SKIP_WAITING':
+
+      case "SKIP_WAITING":
         this.activateUpdate();
         break;
-      
+
       default:
-        console.log('Unknown service worker message:', type, payload);
+        console.log("Unknown service worker message:", type, payload);
     }
   }
 
   private sendConfigToSW() {
     if (this.registration?.active) {
       this.registration.active.postMessage({
-        type: 'CONFIG_UPDATE',
-        payload: this.config
+        type: "CONFIG_UPDATE",
+        payload: this.config,
       });
     }
   }
@@ -147,25 +153,25 @@ class ServiceWorkerManager {
     if (!this.registration) return false;
 
     try {
-      console.log('Checking for Service Worker updates...');
+      console.log("Checking for Service Worker updates...");
       await this.registration.update();
       return true;
     } catch (error) {
-      console.error('Failed to check for updates:', error);
+      console.error("Failed to check for updates:", error);
       return false;
     }
   }
 
   public activateUpdate() {
     if (this.registration?.waiting) {
-      this.registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+      this.registration.waiting.postMessage({ type: "SKIP_WAITING" });
     }
   }
 
   private showUpdateNotification() {
     // Show user-friendly update notification
-    const updateNotification = document.createElement('div');
-    updateNotification.id = 'sw-update-notification';
+    const updateNotification = document.createElement("div");
+    updateNotification.id = "sw-update-notification";
     updateNotification.innerHTML = `
       <div style="
         position: fixed;
@@ -214,7 +220,7 @@ class ServiceWorkerManager {
         </div>
       </div>
     `;
-    
+
     document.body.appendChild(updateNotification);
 
     // Auto-hide after 10 seconds
@@ -224,11 +230,11 @@ class ServiceWorkerManager {
   }
 
   private showOfflineReadyNotification() {
-    console.log('📱 App is ready to work offline!');
-    
+    console.log("📱 App is ready to work offline!");
+
     // Optional: Show offline ready notification
-    if (process.env.NODE_ENV === 'development') {
-      const notification = document.createElement('div');
+    if (process.env.NODE_ENV === "development") {
+      const notification = document.createElement("div");
       notification.innerHTML = `
         <div style="
           position: fixed;
@@ -245,9 +251,9 @@ class ServiceWorkerManager {
           📱 App ready for offline use
         </div>
       `;
-      
+
       document.body.appendChild(notification);
-      
+
       setTimeout(() => {
         notification.remove();
       }, 3000);
@@ -256,26 +262,26 @@ class ServiceWorkerManager {
 
   private shouldReloadOnUpdate(): boolean {
     // Don't auto-reload during user interaction
-    return !document.hasFocus() && document.visibilityState === 'hidden';
+    return !document.hasFocus() && document.visibilityState === "hidden";
   }
 
   public async preloadCriticalAssets(urls: string[]): Promise<void> {
     if (this.registration?.active) {
       this.registration.active.postMessage({
-        type: 'CACHE_URLS',
-        payload: urls
+        type: "CACHE_URLS",
+        payload: urls,
       });
     }
   }
 
   public async getCacheStats(): Promise<any> {
-    if (!('caches' in window)) return null;
+    if (!("caches" in window)) return null;
 
     try {
       const cacheNames = await caches.keys();
       const stats = {
         totalCaches: cacheNames.length,
-        caches: []
+        caches: [],
       };
 
       for (const cacheName of cacheNames) {
@@ -283,29 +289,29 @@ class ServiceWorkerManager {
         const keys = await cache.keys();
         (stats.caches as any).push({
           name: cacheName,
-          entries: keys.length
+          entries: keys.length,
         });
       }
 
       return stats;
     } catch (error) {
-      console.error('Failed to get cache stats:', error);
+      console.error("Failed to get cache stats:", error);
       return null;
     }
   }
 
   public async clearCaches(): Promise<boolean> {
-    if (!('caches' in window)) return false;
+    if (!("caches" in window)) return false;
 
     try {
       const cacheNames = await caches.keys();
       await Promise.all(
-        cacheNames.map(cacheName => caches.delete(cacheName))
+        cacheNames.map((cacheName) => caches.delete(cacheName)),
       );
-      console.log('All caches cleared');
+      console.log("All caches cleared");
       return true;
     } catch (error) {
-      console.error('Failed to clear caches:', error);
+      console.error("Failed to clear caches:", error);
       return false;
     }
   }
@@ -327,10 +333,12 @@ class ServiceWorkerManager {
 // Global instance
 let serviceWorkerManager: ServiceWorkerManager | null = null;
 
-export const initializeServiceWorker = async (config?: Partial<ServiceWorkerConfig>): Promise<boolean> => {
+export const initializeServiceWorker = async (
+  config?: Partial<ServiceWorkerConfig>,
+): Promise<boolean> => {
   if (!serviceWorkerManager) {
     serviceWorkerManager = new ServiceWorkerManager(config);
-    
+
     // Make available globally for update notifications
     (window as any).serviceWorkerManager = serviceWorkerManager;
   }

@@ -5,12 +5,12 @@
 
 export interface PreloadResource {
   href: string;
-  as: 'script' | 'style' | 'image' | 'font' | 'fetch' | 'document';
+  as: "script" | "style" | "image" | "font" | "fetch" | "document";
   type?: string;
-  crossorigin?: '' | 'anonymous' | 'use-credentials';
+  crossorigin?: "" | "anonymous" | "use-credentials";
   media?: string;
-  priority?: 'high' | 'low' | 'auto';
-  fetchpriority?: 'high' | 'low' | 'auto';
+  priority?: "high" | "low" | "auto";
+  fetchpriority?: "high" | "low" | "auto";
 }
 
 export interface PreloadStrategy {
@@ -36,78 +36,82 @@ class ResourcePreloader {
       immediate: [
         // Critical fonts
         {
-          href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap',
-          as: 'style',
-          crossorigin: ''
+          href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap",
+          as: "style",
+          crossorigin: "",
         },
         // Hero images and critical resources
         {
-          href: '/placeholder.svg',
-          as: 'image',
-          priority: 'high'
-        }
+          href: "/placeholder.svg",
+          as: "image",
+          priority: "high",
+        },
       ],
       onIdle: [
         // Non-critical CSS
         {
-          href: '/assets/animations.css',
-          as: 'style',
-          media: 'print',
-          priority: 'low'
+          href: "/assets/animations.css",
+          as: "style",
+          media: "print",
+          priority: "low",
         },
         // API prefetch for common data
         {
-          href: '/api/locations?limit=10',
-          as: 'fetch',
-          priority: 'low'
-        }
+          href: "/api/locations?limit=10",
+          as: "fetch",
+          priority: "low",
+        },
       ],
       onInteraction: [
         // Scripts that are loaded on first user interaction
         {
-          href: '/assets/search-worker.js',
-          as: 'script',
-          priority: 'low'
-        }
+          href: "/assets/search-worker.js",
+          as: "script",
+          priority: "low",
+        },
       ],
       onRouteChange: {
-        '/locations': [
+        "/locations": [
           {
-            href: '/api/locations/all',
-            as: 'fetch',
-            priority: 'high'
-          }
+            href: "/api/locations/all",
+            as: "fetch",
+            priority: "high",
+          },
         ],
-        '/admin': [
+        "/admin": [
           {
-            href: '/assets/admin-bundle.js',
-            as: 'script',
-            priority: 'high'
-          }
+            href: "/assets/admin-bundle.js",
+            as: "script",
+            priority: "high",
+          },
         ],
-        '/suggest': [
+        "/suggest": [
           {
-            href: 'https://maps.googleapis.com/maps/api/js',
-            as: 'script',
-            priority: 'high'
-          }
-        ]
-      }
+            href: "https://maps.googleapis.com/maps/api/js",
+            as: "script",
+            priority: "high",
+          },
+        ],
+      },
     };
   }
 
   private setupEventListeners() {
     // Preload on first user interaction
-    const interactionEvents = ['mousedown', 'touchstart', 'keydown'];
+    const interactionEvents = ["mousedown", "touchstart", "keydown"];
     const handleFirstInteraction = () => {
       this.preloadOnInteraction();
-      interactionEvents.forEach(event => {
-        document.removeEventListener(event, handleFirstInteraction, { passive: true });
+      interactionEvents.forEach((event) => {
+        document.removeEventListener(event, handleFirstInteraction, {
+          passive: true,
+        });
       });
     };
 
-    interactionEvents.forEach(event => {
-      document.addEventListener(event, handleFirstInteraction, { passive: true });
+    interactionEvents.forEach((event) => {
+      document.addEventListener(event, handleFirstInteraction, {
+        passive: true,
+      });
     });
 
     // Preload on route changes
@@ -129,18 +133,18 @@ class ResourcePreloader {
     };
 
     // Listen for history changes
-    window.addEventListener('popstate', handleRouteChange);
+    window.addEventListener("popstate", handleRouteChange);
 
     // Override pushState and replaceState
     const originalPushState = history.pushState;
     const originalReplaceState = history.replaceState;
 
-    history.pushState = function(...args) {
+    history.pushState = function (...args) {
       originalPushState.apply(history, args);
       handleRouteChange();
     };
 
-    history.replaceState = function(...args) {
+    history.replaceState = function (...args) {
       originalReplaceState.apply(history, args);
       handleRouteChange();
     };
@@ -152,7 +156,7 @@ class ResourcePreloader {
 
     const handleLinkHover = (event: Event) => {
       const target = event.target as HTMLAnchorElement;
-      if (target.tagName === 'A' && target.href) {
+      if (target.tagName === "A" && target.href) {
         clearTimeout(hoverTimeout);
         hoverTimeout = window.setTimeout(() => {
           this.preloadLink(target.href);
@@ -160,11 +164,11 @@ class ResourcePreloader {
       }
     };
 
-    document.addEventListener('mouseover', handleLinkHover, { passive: true });
+    document.addEventListener("mouseover", handleLinkHover, { passive: true });
   }
 
   public preloadImmediate() {
-    this.strategy.immediate.forEach(resource => {
+    this.strategy.immediate.forEach((resource) => {
       this.preloadResource(resource);
     });
   }
@@ -172,17 +176,20 @@ class ResourcePreloader {
   public preloadOnIdle() {
     if (this.idleCallbackId) return; // Already scheduled
 
-    if ('requestIdleCallback' in window) {
-      this.idleCallbackId = requestIdleCallback(() => {
-        this.strategy.onIdle.forEach(resource => {
-          this.preloadResource(resource);
-        });
-        this.idleCallbackId = null;
-      }, { timeout: 5000 });
+    if ("requestIdleCallback" in window) {
+      this.idleCallbackId = requestIdleCallback(
+        () => {
+          this.strategy.onIdle.forEach((resource) => {
+            this.preloadResource(resource);
+          });
+          this.idleCallbackId = null;
+        },
+        { timeout: 5000 },
+      );
     } else {
       // Fallback for browsers without requestIdleCallback
       setTimeout(() => {
-        this.strategy.onIdle.forEach(resource => {
+        this.strategy.onIdle.forEach((resource) => {
           this.preloadResource(resource);
         });
       }, 2000);
@@ -190,7 +197,7 @@ class ResourcePreloader {
   }
 
   private preloadOnInteraction() {
-    this.strategy.onInteraction.forEach(resource => {
+    this.strategy.onInteraction.forEach((resource) => {
       this.preloadResource(resource);
     });
   }
@@ -198,7 +205,7 @@ class ResourcePreloader {
   private preloadForRoute(route: string) {
     const resources = this.strategy.onRouteChange[route];
     if (resources) {
-      resources.forEach(resource => {
+      resources.forEach((resource) => {
         this.preloadResource(resource);
       });
     }
@@ -212,15 +219,15 @@ class ResourcePreloader {
     // Check if we have specific resources for this route
     const resources = this.strategy.onRouteChange[pathname];
     if (resources) {
-      resources.forEach(resource => {
+      resources.forEach((resource) => {
         this.preloadResource(resource);
       });
     } else {
       // Generic page preload
       this.preloadResource({
         href: href,
-        as: 'document',
-        priority: 'low'
+        as: "document",
+        priority: "low",
       });
     }
   }
@@ -232,15 +239,17 @@ class ResourcePreloader {
 
     this.preloaded.add(resource.href);
 
-    const link = document.createElement('link');
-    link.rel = 'preload';
+    const link = document.createElement("link");
+    link.rel = "preload";
     link.href = resource.href;
     link.as = resource.as;
 
     if (resource.type) link.type = resource.type;
-    if (resource.crossorigin !== undefined) link.crossOrigin = resource.crossorigin;
+    if (resource.crossorigin !== undefined)
+      link.crossOrigin = resource.crossorigin;
     if (resource.media) link.media = resource.media;
-    if (resource.fetchpriority) (link as any).fetchPriority = resource.fetchpriority;
+    if (resource.fetchpriority)
+      (link as any).fetchPriority = resource.fetchpriority;
 
     // Handle load success/error
     link.onload = () => {
@@ -255,45 +264,50 @@ class ResourcePreloader {
     document.head.appendChild(link);
   }
 
-  public preloadImages(selector: string = 'img[data-preload]') {
+  public preloadImages(selector: string = "img[data-preload]") {
     const images = document.querySelectorAll(selector);
-    
-    images.forEach(img => {
+
+    images.forEach((img) => {
       const element = img as HTMLImageElement;
       const src = element.dataset.src || element.src;
-      
+
       if (src && !this.preloaded.has(src)) {
         this.preloadResource({
           href: src,
-          as: 'image',
-          priority: element.dataset.priority as any || 'auto'
+          as: "image",
+          priority: (element.dataset.priority as any) || "auto",
         });
       }
     });
   }
 
-  public preloadWithIntersectionObserver(selector: string = '[data-preload-on-visible]') {
+  public preloadWithIntersectionObserver(
+    selector: string = "[data-preload-on-visible]",
+  ) {
     if (!this.intersectionObserver) {
-      this.intersectionObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const element = entry.target as HTMLElement;
-            const href = element.dataset.preloadSrc;
-            const as = element.dataset.preloadAs as any || 'image';
-            
-            if (href) {
-              this.preloadResource({ href, as });
-              this.intersectionObserver!.unobserve(element);
+      this.intersectionObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const element = entry.target as HTMLElement;
+              const href = element.dataset.preloadSrc;
+              const as = (element.dataset.preloadAs as any) || "image";
+
+              if (href) {
+                this.preloadResource({ href, as });
+                this.intersectionObserver!.unobserve(element);
+              }
             }
-          }
-        });
-      }, {
-        rootMargin: '100px' // Start preloading 100px before element comes into view
-      });
+          });
+        },
+        {
+          rootMargin: "100px", // Start preloading 100px before element comes into view
+        },
+      );
     }
 
     const elements = document.querySelectorAll(selector);
-    elements.forEach(element => {
+    elements.forEach((element) => {
       this.intersectionObserver!.observe(element);
     });
   }
@@ -301,16 +315,16 @@ class ResourcePreloader {
   public preloadCriticalData() {
     // Preload critical API data
     const criticalEndpoints = [
-      '/api/locations?limit=10&featured=true',
-      '/api/news?limit=5',
-      '/api/health'
+      "/api/locations?limit=10&featured=true",
+      "/api/news?limit=5",
+      "/api/health",
     ];
 
-    criticalEndpoints.forEach(endpoint => {
+    criticalEndpoints.forEach((endpoint) => {
       this.preloadResource({
         href: endpoint,
-        as: 'fetch',
-        priority: 'high'
+        as: "fetch",
+        priority: "high",
       });
     });
   }
@@ -319,18 +333,18 @@ class ResourcePreloader {
     // Preload resources needed for search functionality
     const searchResources = [
       {
-        href: '/api/locations/all',
-        as: 'fetch' as const,
-        priority: 'high' as const
+        href: "/api/locations/all",
+        as: "fetch" as const,
+        priority: "high" as const,
       },
       {
-        href: '/assets/search-worker.js',
-        as: 'script' as const,
-        priority: 'low' as const
-      }
+        href: "/assets/search-worker.js",
+        as: "script" as const,
+        priority: "low" as const,
+      },
     ];
 
-    searchResources.forEach(resource => {
+    searchResources.forEach((resource) => {
       this.preloadResource(resource);
     });
   }
@@ -340,11 +354,14 @@ class ResourcePreloader {
     this.strategy = {
       immediate: [...this.strategy.immediate, ...(strategy.immediate || [])],
       onIdle: [...this.strategy.onIdle, ...(strategy.onIdle || [])],
-      onInteraction: [...this.strategy.onInteraction, ...(strategy.onInteraction || [])],
+      onInteraction: [
+        ...this.strategy.onInteraction,
+        ...(strategy.onInteraction || []),
+      ],
       onRouteChange: {
         ...this.strategy.onRouteChange,
-        ...strategy.onRouteChange
-      }
+        ...strategy.onRouteChange,
+      },
     };
   }
 
@@ -382,22 +399,24 @@ export const getResourcePreloader = (): ResourcePreloader => {
 };
 
 // Convenience functions
-export const initializeResourcePreloading = (customStrategy?: Partial<PreloadStrategy>) => {
+export const initializeResourcePreloading = (
+  customStrategy?: Partial<PreloadStrategy>,
+) => {
   const preloader = getResourcePreloader();
-  
+
   if (customStrategy) {
     preloader.addCustomStrategy(customStrategy);
   }
 
   // Start immediate preloading
   preloader.preloadImmediate();
-  
+
   // Schedule idle preloading
   preloader.preloadOnIdle();
-  
+
   // Preload critical data
   preloader.preloadCriticalData();
-  
+
   return preloader;
 };
 
@@ -424,7 +443,7 @@ export const addPreloadStrategy = (strategy: Partial<PreloadStrategy>) => {
 export const getPreloadStats = () => {
   return {
     preloadedResources: getResourcePreloader().getPreloadedResources(),
-    count: getResourcePreloader().getPreloadedResources().length
+    count: getResourcePreloader().getPreloadedResources().length,
   };
 };
 

@@ -12,7 +12,10 @@ import { queryUtils } from "@/lib/optimizedSupabaseQueries";
 import { useBackgroundSync } from "@/hooks/useOptimizedData";
 // Performance optimizations
 import { initializePerformanceOptimizations } from "@/lib/performanceOptimizations";
-import { initializeCoreWebVitals, measureCoreWebVitals } from "@/lib/coreWebVitals";
+import {
+  initializeCoreWebVitals,
+  measureCoreWebVitals,
+} from "@/lib/coreWebVitals";
 import { initializeCSSOptimizations } from "@/lib/cssOptimizations";
 import { initializeServiceWorker } from "@/lib/serviceWorker";
 import { initializeResourcePreloading } from "@/lib/resourcePreloader";
@@ -125,7 +128,7 @@ const OptimizedApiProvider = ({ children }: { children: React.ReactNode }) => {
 
       // Initialize service worker
       await initializeServiceWorker({
-        enabled: process.env.NODE_ENV === 'production'
+        enabled: process.env.NODE_ENV === "production",
       });
 
       // Resource preloading
@@ -133,7 +136,7 @@ const OptimizedApiProvider = ({ children }: { children: React.ReactNode }) => {
 
       // Performance monitoring
       const monitor = getPerformanceMonitor();
-      monitor.startTimer('appInitialization');
+      monitor.startTimer("appInitialization");
 
       // Core Web Vitals measurement
       measureCoreWebVitals();
@@ -144,7 +147,7 @@ const OptimizedApiProvider = ({ children }: { children: React.ReactNode }) => {
       // Warm cache with popular data
       queryUtils.warmCache().catch(console.warn);
 
-      monitor.endTimer('appInitialization');
+      monitor.endTimer("appInitialization");
 
       // Clean up cache periodically
       const cleanup = setInterval(

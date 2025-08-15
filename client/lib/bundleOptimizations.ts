@@ -6,16 +6,16 @@
 // Dynamic imports for heavy libraries
 export const dynamicImports = {
   // Lazy load heavy date libraries
-  dateFns: () => import('date-fns'),
-  
+  dateFns: () => import("date-fns"),
+
   // Lazy load chart libraries if needed
-  recharts: () => import('recharts'),
-  
+  recharts: () => import("recharts"),
+
   // React Query dev tools (not installed in this project)
   // reactQueryDevtools: () => Promise.resolve({ ReactQueryDevtools: null }),
-  
+
   // Lazy load admin-specific heavy components
-  richTextEditor: () => import('@/components/ui/rich-text-editor'),
+  richTextEditor: () => import("@/components/ui/rich-text-editor"),
   // dataTable: () => import('@/components/ui/table'), // Using table component instead
 };
 
@@ -23,23 +23,27 @@ export const dynamicImports = {
 export const optimizeChunks = () => {
   return {
     // Vendor chunk for stable dependencies
-    vendor: ['react', 'react-dom', 'react-router-dom'],
-    
+    vendor: ["react", "react-dom", "react-router-dom"],
+
     // UI components chunk
-    ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-select'],
-    
+    ui: [
+      "@radix-ui/react-dialog",
+      "@radix-ui/react-dropdown-menu",
+      "@radix-ui/react-select",
+    ],
+
     // Query and state management
-    query: ['@tanstack/react-query', '@supabase/supabase-js'],
-    
+    query: ["@tanstack/react-query", "@supabase/supabase-js"],
+
     // Admin-specific chunk
-    admin: ['@/pages/Admin', '@/pages/admin/'],
-    
-    // Marketing pages chunk  
+    admin: ["@/pages/Admin", "@/pages/admin/"],
+
+    // Marketing pages chunk
     marketing: [
-      '@/pages/DigitalMarketing',
-      '@/pages/LocalSEO', 
-      '@/pages/LeadGeneration'
-    ]
+      "@/pages/DigitalMarketing",
+      "@/pages/LocalSEO",
+      "@/pages/LeadGeneration",
+    ],
   };
 };
 
@@ -47,47 +51,55 @@ export const optimizeChunks = () => {
 export const treeShakingConfig = {
   // Mark side-effect free packages
   sideEffects: false,
-  
+
   // Packages that can be tree-shaken
   treeShakablePackages: [
-    'lodash-es',
-    'date-fns',
-    'lucide-react',
-    '@radix-ui/*'
+    "lodash-es",
+    "date-fns",
+    "lucide-react",
+    "@radix-ui/*",
   ],
-  
+
   // Unused CSS elimination
   purgeCSS: {
-    content: ['./client/**/*.{js,jsx,ts,tsx}'],
-    defaultExtractor: (content: string) => content.match(/[\w-/:]+(?<!:)/g) || [],
+    content: ["./client/**/*.{js,jsx,ts,tsx}"],
+    defaultExtractor: (content: string) =>
+      content.match(/[\w-/:]+(?<!:)/g) || [],
     safelist: [
       // Always keep these classes
-      'html', 'body', 
-      /^bg-/, /^text-/, /^border-/, 
-      /^hover:/, /^focus:/, /^active:/,
+      "html",
+      "body",
+      /^bg-/,
+      /^text-/,
+      /^border-/,
+      /^hover:/,
+      /^focus:/,
+      /^active:/,
       // Animation classes
-      /^animate-/, /^transition-/, /^duration-/
-    ]
-  }
+      /^animate-/,
+      /^transition-/,
+      /^duration-/,
+    ],
+  },
 };
 
 // Remove unused dependencies
 export const analyzeUnusedDependencies = () => {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('📦 Bundle Analysis:');
-    console.log('Consider removing these potentially unused dependencies:');
-    
+  if (process.env.NODE_ENV === "development") {
+    console.log("📦 Bundle Analysis:");
+    console.log("Consider removing these potentially unused dependencies:");
+
     const potentiallyUnused = [
       // Check if these are actually used
-      'three', // 3D graphics library
-      'vaul', // Drawer component
-      'input-otp', // OTP input
-      'next-themes', // Theme switching
-      'embla-carousel-react', // Carousel
-      'react-resizable-panels', // Resizable panels
+      "three", // 3D graphics library
+      "vaul", // Drawer component
+      "input-otp", // OTP input
+      "next-themes", // Theme switching
+      "embla-carousel-react", // Carousel
+      "react-resizable-panels", // Resizable panels
     ];
-    
-    potentiallyUnused.forEach(dep => {
+
+    potentiallyUnused.forEach((dep) => {
       console.log(`- ${dep}: Check if actually used in codebase`);
     });
   }
@@ -95,15 +107,15 @@ export const analyzeUnusedDependencies = () => {
 
 // Bundle size monitoring
 export const monitorBundleSize = () => {
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === "production") {
     // Log bundle metrics
     const bundleMetrics = {
       timestamp: new Date().toISOString(),
       userAgent: navigator.userAgent,
-      connectionType: (navigator as any).connection?.effectiveType || 'unknown'
+      connectionType: (navigator as any).connection?.effectiveType || "unknown",
     };
-    
-    console.log('📊 Bundle loaded:', bundleMetrics);
+
+    console.log("📊 Bundle loaded:", bundleMetrics);
   }
 };
 
@@ -112,26 +124,26 @@ export const optimizeMemory = () => {
   // Clean up intervals and timeouts
   const intervals: number[] = [];
   const timeouts: number[] = [];
-  
+
   const addInterval = (callback: () => void, delay: number) => {
     const id = window.setInterval(callback, delay);
     intervals.push(id);
     return id;
   };
-  
+
   const addTimeout = (callback: () => void, delay: number) => {
     const id = window.setTimeout(callback, delay);
     timeouts.push(id);
     return id;
   };
-  
+
   const cleanup = () => {
-    intervals.forEach(id => clearInterval(id));
-    timeouts.forEach(id => clearTimeout(id));
+    intervals.forEach((id) => clearInterval(id));
+    timeouts.forEach((id) => clearTimeout(id));
     intervals.length = 0;
     timeouts.length = 0;
   };
-  
+
   return { addInterval, addTimeout, cleanup };
 };
 
@@ -139,7 +151,7 @@ export const optimizeMemory = () => {
 export const initializeBundleOptimizations = () => {
   analyzeUnusedDependencies();
   monitorBundleSize();
-  
+
   // Return cleanup function
   return optimizeMemory();
 };
