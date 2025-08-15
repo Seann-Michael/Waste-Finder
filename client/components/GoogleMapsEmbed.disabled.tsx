@@ -18,10 +18,10 @@ interface Location {
   address: string;
   city: string;
   state: string;
-  zipCode: string;
+  zip_code: string;
   latitude?: number;
   longitude?: number;
-  locationType: string;
+  location_type: string;
 }
 
 interface GoogleMapsEmbedProps {
