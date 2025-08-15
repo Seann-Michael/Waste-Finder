@@ -5,6 +5,7 @@ This document outlines the required environment variables for the application.
 ## Required Environment Variables
 
 ### For Local Development
+
 Set these in your local development environment:
 
 ```bash
@@ -20,6 +21,7 @@ VITE_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
 ```
 
 ### For Netlify Deployment
+
 Add these environment variables in your Netlify site settings:
 
 1. Go to Netlify Dashboard → Your Site → Site settings → Environment variables
@@ -41,6 +43,7 @@ Add these environment variables in your Netlify site settings:
 ## Getting API Keys
 
 ### Supabase
+
 1. Go to your [Supabase Dashboard](https://app.supabase.com/)
 2. Select your project
 3. Go to Settings → API
@@ -48,6 +51,7 @@ Add these environment variables in your Netlify site settings:
 5. Copy the service_role key (for server-side operations)
 
 ### Google Maps
+
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
 2. Enable the Maps Embed API
 3. Create an API key

@@ -1,12 +1,15 @@
 import { createClient } from "@supabase/supabase-js";
 
 // For server-side, we use the service role key for admin operations
-const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseUrl =
+  process.env.VITE_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 // Validate required environment variables
 if (!supabaseUrl || !supabaseServiceKey) {
-  throw new Error("Supabase URL and service role key are required for server operations");
+  throw new Error(
+    "Supabase URL and service role key are required for server operations",
+  );
 }
 
 // Server-side Supabase client with admin privileges
@@ -44,7 +47,8 @@ export async function getAllLocations(): Promise<Location[]> {
   try {
     const { data, error } = await supabaseAdmin
       .from("locations")
-      .select(`
+      .select(
+        `
         *,
         debrisTypes:location_debris_types(
           debris_type:debris_types(*)
@@ -54,7 +58,8 @@ export async function getAllLocations(): Promise<Location[]> {
         ),
         operatingHours:operating_hours(*),
         reviews(*)
-      `)
+      `,
+      )
       .eq("is_active", true)
       .order("name");
 
@@ -64,10 +69,11 @@ export async function getAllLocations(): Promise<Location[]> {
     }
 
     // Transform the data to flatten the relationships
-    const locations = (data || []).map(location => ({
+    const locations = (data || []).map((location) => ({
       ...location,
       debrisTypes: location.debrisTypes?.map((dt: any) => dt.debris_type) || [],
-      paymentTypes: location.paymentTypes?.map((pt: any) => pt.payment_type) || [],
+      paymentTypes:
+        location.paymentTypes?.map((pt: any) => pt.payment_type) || [],
     }));
 
     return locations;
@@ -87,7 +93,8 @@ export async function getFilteredLocations(filters: {
   try {
     let query = supabaseAdmin
       .from("locations")
-      .select(`
+      .select(
+        `
         *,
         debrisTypes:location_debris_types(
           debris_type:debris_types(*)
@@ -97,7 +104,8 @@ export async function getFilteredLocations(filters: {
         ),
         operatingHours:operating_hours(*),
         reviews(*)
-      `)
+      `,
+      )
       .eq("is_active", true);
 
     if (filters.state) {
@@ -126,10 +134,11 @@ export async function getFilteredLocations(filters: {
     }
 
     // Transform the data to flatten the relationships
-    const locations = (data || []).map(location => ({
+    const locations = (data || []).map((location) => ({
       ...location,
       debrisTypes: location.debrisTypes?.map((dt: any) => dt.debris_type) || [],
-      paymentTypes: location.paymentTypes?.map((pt: any) => pt.payment_type) || [],
+      paymentTypes:
+        location.paymentTypes?.map((pt: any) => pt.payment_type) || [],
     }));
 
     return locations;
@@ -144,7 +153,8 @@ export async function getLocationById(id: string): Promise<Location | null> {
   try {
     const { data, error } = await supabaseAdmin
       .from("locations")
-      .select(`
+      .select(
+        `
         *,
         debrisTypes:location_debris_types(
           debris_type:debris_types(*)
@@ -154,7 +164,8 @@ export async function getLocationById(id: string): Promise<Location | null> {
         ),
         operatingHours:operating_hours(*),
         reviews!reviews_location_id_fkey(*)
-      `)
+      `,
+      )
       .eq("id", id)
       .eq("is_active", true)
       .single();
