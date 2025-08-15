@@ -79,24 +79,9 @@ interface PendingLocation {
 // Use Supabase auth and user management instead
 const mockAdminUsers: AdminUser[] = [];
 
-const mockPendingLocations: PendingLocation[] = [
-  {
-    id: "1",
-    name: "Riverside Recycling Center",
-    submitter: "Lisa K.",
-    address: "456 River Road, Portland, OR 97202",
-    status: "pending",
-    submittedAt: "2024-01-20T10:30:00Z",
-  },
-  {
-    id: "2",
-    name: "Metro Waste Facility",
-    submitter: "John D.",
-    address: "789 Industrial Ave, Chicago, IL 60601",
-    status: "pending",
-    submittedAt: "2024-01-19T14:15:00Z",
-  },
-];
+// REMOVED: Pending locations moved to Supabase database
+// Use Supabase location_suggestions table instead
+const mockPendingLocations: PendingLocation[] = [];
 
 export default function AdminSettings() {
   const [activeTab, setActiveTab] = useState("profile");
