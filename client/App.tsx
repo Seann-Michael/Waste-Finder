@@ -313,7 +313,9 @@ const App = () => {
                 <div className="min-h-screen bg-background">
                   <Header />
                   <main>
-                    <AppRoutes />
+                    <Suspense fallback={<PageLoading message="Loading..." />}>
+                      <AppRoutes />
+                    </Suspense>
                   </main>
                   <Footer />
                 </div>
