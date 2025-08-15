@@ -213,7 +213,7 @@ export class APIClient {
 
         // Track failed API calls
         const statusCode = lastError instanceof APIError ? lastError.status : 0;
-        trackAPICall(endpoint, duration, statusCode);
+        trackApiCall(endpoint, 'GET', duration, statusCode);
 
         // Don't retry on the last attempt or if error is not retryable
         if (
