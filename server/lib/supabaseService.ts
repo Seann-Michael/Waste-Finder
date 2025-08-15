@@ -114,12 +114,6 @@ export interface Location {
 
 // Get all locations with related data
 export async function getAllLocations(): Promise<Location[]> {
-  // Return mock data if Supabase is not configured
-  if (isMockMode()) {
-    console.log("Using mock location data - Supabase not configured");
-    return mockLocations.filter((loc) => loc.is_active !== false);
-  }
-
   try {
     const { data, error } = await supabaseAdmin
       .from("locations")
