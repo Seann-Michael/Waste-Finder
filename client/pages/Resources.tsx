@@ -42,6 +42,15 @@ export default function Resources() {
       downloadUrl: "#",
       format: "PDF & Word Doc",
     },
+    {
+      title: "Debris Weight Calculator",
+      description:
+        "Convert between pounds and cubic yards for different types of debris and waste materials.",
+      icon: <BarChart3 className="w-8 h-8" />,
+      downloadUrl: "/debris-weight-calculator",
+      format: "Online Tool",
+      isInternalLink: true,
+    },
   ];
 
   const marketingServices = [
