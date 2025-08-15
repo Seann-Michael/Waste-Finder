@@ -107,7 +107,10 @@ export default function Header() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center h-16 sm:h-18">
               {/* Logo */}
-              <Link to="/" className="flex items-center space-x-1 sm:space-x-2 mr-auto">
+              <Link
+                to="/"
+                className="flex items-center space-x-1 sm:space-x-2 mr-auto"
+              >
                 <div className="w-7 h-7 sm:w-8 sm:h-8 bg-primary rounded-lg flex items-center justify-center">
                   <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-primary-foreground" />
                 </div>
