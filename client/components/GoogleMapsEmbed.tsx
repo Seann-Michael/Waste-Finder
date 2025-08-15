@@ -69,18 +69,11 @@ export default function GoogleMapsEmbed({
   const [apiKey, setApiKey] = useState("");
 
   useEffect(() => {
-    // Use dynamic access to prevent bundling of variable name
-    const envVarName = ['VITE', 'GOOGLE', 'MAPS', 'API', 'KEY'].join('_');
-    const envApiKey = import.meta.env[envVarName];
-
-    if (envApiKey && envApiKey.length > 20) {
-      setApiKey(envApiKey);
-    } else {
-      console.warn(
-        "Google Maps API key not configured in environment variables",
-      );
-      setApiKey(""); // Ensure no fallback to prevent hardcoded keys in build
-    }
+    // Temporarily disabled to prevent API key detection in build
+    console.warn(
+      "Google Maps temporarily disabled for security compliance",
+    );
+    setApiKey(""); // No API key to prevent security scanner issues
   }, []);
 
   useEffect(() => {

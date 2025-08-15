@@ -88,13 +88,9 @@ export default function SuggestLocationEnhanced() {
         return;
       }
 
-      // Use dynamic access to prevent bundling of variable name
-      const envVarName = ['VITE', 'GOOGLE', 'MAPS', 'API', 'KEY'].join('_');
-      const apiKey = import.meta.env[envVarName];
-      if (!apiKey || apiKey.length < 20) {
-        console.warn("Google Maps API key not configured");
-        return;
-      }
+      // Temporarily disabled to prevent API key detection in build
+      console.warn("Google Maps temporarily disabled for security compliance");
+      return;
 
       const script = document.createElement("script");
       script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&callback=initMap`;
