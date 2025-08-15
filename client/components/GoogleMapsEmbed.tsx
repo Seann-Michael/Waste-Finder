@@ -70,9 +70,7 @@ export default function GoogleMapsEmbed({
 
   useEffect(() => {
     // Temporarily disabled to prevent API key detection in build
-    console.warn(
-      "Google Maps temporarily disabled for security compliance",
-    );
+    console.warn("Google Maps temporarily disabled for security compliance");
     setApiKey(""); // No API key to prevent security scanner issues
   }, []);
 

@@ -1,6 +1,6 @@
 /**
  * SECURE Google Maps Implementation
- * 
+ *
  * This is a secure implementation that prevents API key exposure in builds.
  * To re-enable Google Maps:
  * 1. Set VITE_GOOGLE_MAPS_API_KEY in Netlify environment variables
@@ -42,10 +42,10 @@ export default function GoogleMapsEmbed({
   useEffect(() => {
     // Secure way to access environment variable without bundling variable name
     const envKeys = import.meta.env;
-    const keyName = 'VITE_GOOGLE_MAPS_API_KEY';
+    const keyName = "VITE_GOOGLE_MAPS_API_KEY";
     const envApiKey = envKeys[keyName];
 
-    if (envApiKey && typeof envApiKey === 'string' && envApiKey.length > 30) {
+    if (envApiKey && typeof envApiKey === "string" && envApiKey.length > 30) {
       setApiKey(envApiKey);
     } else {
       console.warn("Google Maps API key not properly configured");
@@ -127,7 +127,9 @@ export default function GoogleMapsEmbed({
             <div className="text-center text-muted-foreground">
               <MapPin className="w-12 h-12 mx-auto mb-4 opacity-50" />
               <p className="text-sm">Google Maps temporarily unavailable</p>
-              <p className="text-xs mt-2">Configure API key in environment variables to enable</p>
+              <p className="text-xs mt-2">
+                Configure API key in environment variables to enable
+              </p>
             </div>
           </div>
         </CardContent>

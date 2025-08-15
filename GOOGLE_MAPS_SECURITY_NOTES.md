@@ -1,17 +1,21 @@
 # Google Maps Security Implementation Notes
 
 ## Issue Resolved
-Netlify was detecting "AIza***" patterns in the build output, causing deployment failures due to their security scanner detecting potential API key exposure.
+
+Netlify was detecting "AIza\*\*\*" patterns in the build output, causing deployment failures due to their security scanner detecting potential API key exposure.
 
 ## Root Cause
+
 The build process was bundling references to Google Maps API keys, environment variable names, and validation patterns that triggered Netlify's security scanner.
 
 ## Current Status
+
 ✅ **RESOLVED**: Google Maps functionality is temporarily disabled to prevent security scanner issues.
 
 ## How to Re-enable Google Maps Securely
 
 ### Option 1: Use the Secure Implementation
+
 1. **Replace the current GoogleMapsEmbed.tsx** with the content from `GoogleMapsEmbed.disabled.tsx`
 2. **Set environment variable** in Netlify: `VITE_GOOGLE_MAPS_API_KEY`
 3. **Test locally first**:
@@ -21,7 +25,9 @@ The build process was bundling references to Google Maps API keys, environment v
    ```
 
 ### Option 2: Configure Netlify to Ignore False Positives
+
 Add to your `netlify.toml`:
+
 ```toml
 [build.environment]
   SECRETS_SCAN_SMART_DETECTION_ENABLED = "false"
@@ -48,6 +54,7 @@ Add to your `netlify.toml`:
 ## Testing Checklist
 
 Before re-enabling Google Maps:
+
 - [ ] Set `VITE_GOOGLE_MAPS_API_KEY` in Netlify environment variables
 - [ ] Test build locally: `npm run build:netlify`
 - [ ] Verify no "AIza" patterns in build: `grep -r "AIza" dist/`

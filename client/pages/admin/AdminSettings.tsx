@@ -1803,8 +1803,9 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
               <CardContent className="space-y-6">
                 <div className="space-y-4">
                   <p className="text-muted-foreground">
-                    API configuration has been moved to environment variables for security.
-                    Contact your system administrator for API key management.
+                    API configuration has been moved to environment variables
+                    for security. Contact your system administrator for API key
+                    management.
                   </p>
                 </div>
               </CardContent>
