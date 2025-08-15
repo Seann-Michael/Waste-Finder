@@ -131,27 +131,55 @@ export default function Header() {
               {/* Desktop Navigation */}
               <nav className="hidden md:flex space-x-8">
                 {navigation.map((item) => (
-                  <Tooltip key={item.name}>
-                    <TooltipTrigger asChild>
-                      <Link
-                        to={item.href}
-                        className={cn(
-                          "text-sm font-medium transition-colors hover:text-primary",
-                          item.active
-                            ? "text-primary border-b-2 border-primary"
-                            : "text-muted-foreground",
-                        )}
-                      >
-                        {item.name}
-                      </Link>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p className="text-xs">
-                        {window.location.origin}
-                        {item.href}
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
+                  item.dropdown ? (
+                    <DropdownMenu key={item.name}>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          className={cn(
+                            "text-sm font-medium transition-colors hover:text-primary p-0 h-auto",
+                            item.active
+                              ? "text-primary border-b-2 border-primary"
+                              : "text-muted-foreground",
+                          )}
+                        >
+                          {item.name}
+                          <ChevronDown className="ml-1 h-3 w-3" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="start">
+                        {item.dropdown.map((subItem) => (
+                          <DropdownMenuItem key={subItem.name} asChild>
+                            <Link to={subItem.href} className="w-full">
+                              {subItem.name}
+                            </Link>
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  ) : (
+                    <Tooltip key={item.name}>
+                      <TooltipTrigger asChild>
+                        <Link
+                          to={item.href}
+                          className={cn(
+                            "text-sm font-medium transition-colors hover:text-primary",
+                            item.active
+                              ? "text-primary border-b-2 border-primary"
+                              : "text-muted-foreground",
+                          )}
+                        >
+                          {item.name}
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="text-xs">
+                          {window.location.origin}
+                          {item.href}
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  )
                 ))}
               </nav>
 
