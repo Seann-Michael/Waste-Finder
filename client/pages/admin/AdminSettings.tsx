@@ -1830,7 +1830,10 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                       />
                     </div>
                     <p className="text-sm text-muted-foreground">
-                      <strong>Security Notice:</strong> Google Maps API key must be set in Netlify environment variables as <code>VITE_GOOGLE_MAPS_API_KEY</code> to prevent exposure in builds.
+                      <strong>Security Notice:</strong> Google Maps API key must
+                      be set in Netlify environment variables as{" "}
+                      <code>VITE_GOOGLE_MAPS_API_KEY</code> to prevent exposure
+                      in builds.
                     </p>
                   </div>
                 </div>

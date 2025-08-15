@@ -72,11 +72,13 @@ export default function GoogleMapsEmbed({
     // Only use environment variable for production builds
     const envApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
-    if (envApiKey && envApiKey !== 'your_google_maps_api_key_here') {
+    if (envApiKey && envApiKey !== "your_google_maps_api_key_here") {
       setApiKey(envApiKey);
     } else {
-      console.warn('Google Maps API key not configured in environment variables');
-      setApiKey(''); // Ensure no fallback to prevent hardcoded keys in build
+      console.warn(
+        "Google Maps API key not configured in environment variables",
+      );
+      setApiKey(""); // Ensure no fallback to prevent hardcoded keys in build
     }
   }, []);
 
