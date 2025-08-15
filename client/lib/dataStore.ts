@@ -203,8 +203,10 @@ class DataStore {
     // Only set defaults if they don't exist
     for (const [key, defaultValue] of Object.entries(defaults)) {
       const existing = await this.get(key as keyof StoredData);
-      if (existing.length === 0) {
-        await this.set(key as keyof StoredData, defaultValue);
+      if (Array.isArray(existing) && existing.length === 0) {
+        await this.set(key as keyof StoredData, defaultValue as any);
+      } else if (!Array.isArray(existing) && (!existing || Object.keys(existing).length === 0)) {
+        await this.set(key as keyof StoredData, defaultValue as any);
       }
     }
   }
