@@ -206,7 +206,7 @@ export default function DigitalMarketing() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" variant="secondary" className="text-lg px-8 py-3" asChild>
                 <a 
-                  href="https://yourmarketingagency.com/get-started" 
+                  href="/contact" // TODO: Replace with configurable get-started URL from Supabase 
                   target="_blank" 
                   rel="noopener noreferrer"
                 >
@@ -216,7 +216,7 @@ export default function DigitalMarketing() {
               </Button>
               <Button size="lg" variant="outline" className="text-lg px-8 py-3 border-white text-white hover:bg-white hover:text-purple-600" asChild>
                 <a 
-                  href="https://yourmarketingagency.com/call" 
+                  href="tel:+15551234567" // TODO: Replace with configurable phone URL from Supabase 
                   target="_blank" 
                   rel="noopener noreferrer"
                 >
