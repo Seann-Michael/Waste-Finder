@@ -37,12 +37,19 @@ const createMockSupabaseClient = () => {
         error: { message: "Supabase not configured - using mock data" }
       });
     },
-    // Return empty data for queries that expect arrays
+    // Make the query builder thenable (Promise-like) for async/await
     then: function(onFulfilled: any, onRejected?: any) {
-      return Promise.resolve({
+      // Return appropriate mock data based on the expected response
+      const mockResponse = {
         data: [],
         error: null
-      }).then(onFulfilled, onRejected);
+      };
+      return Promise.resolve(mockResponse).then(onFulfilled, onRejected);
+    },
+
+    // Add catch method for Promise compatibility
+    catch: function(onRejected: any) {
+      return Promise.resolve({ data: [], error: null }).catch(onRejected);
     }
   };
 
