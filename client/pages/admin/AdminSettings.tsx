@@ -149,7 +149,7 @@ export default function AdminSettings() {
   });
 
   const [apiSettings, setApiSettings] = useState({
-    googleMapsApiKey: "",
+    // googleMapsApiKey removed - now handled via environment variables only
   });
 
   const [contentSettings, setContentSettings] = useState({
