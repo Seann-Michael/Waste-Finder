@@ -82,7 +82,7 @@ export function useLocationSearch(
   return useQuery({
     queryKey: queryKeys.locations.search(params),
     queryFn: () => api.locations.search(params),
-    enabled: enabled && !!params.zipCode,
+    enabled: enabled && !!(params.zipCode || params.zip_code),
     staleTime: 2 * 60 * 1000, // 2 minutes for search results
     gcTime: 5 * 60 * 1000, // 5 minutes
   });
