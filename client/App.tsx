@@ -98,6 +98,28 @@ const MonitoringProvider = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
+// Optimized API initialization component
+const OptimizedApiProvider = ({ children }: { children: React.ReactNode }) => {
+  useBackgroundSync(); // Enable background sync
+
+  useEffect(() => {
+    // Initialize optimized API layer
+    initializeOptimizedApi(queryClient);
+
+    // Warm cache with popular data
+    queryUtils.warmCache().catch(console.warn);
+
+    // Clean up cache periodically
+    const cleanup = setInterval(() => {
+      queryUtils.clearCache();
+    }, 10 * 60 * 1000); // Every 10 minutes
+
+    return () => clearInterval(cleanup);
+  }, []);
+
+  return <>{children}</>;
+};
+
 const AppRoutes = () => (
   <Routes>
     <Route path="/" element={<Index />} />
