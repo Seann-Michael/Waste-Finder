@@ -30,7 +30,6 @@ const NewsArticle = lazy(() => import("./pages/NewsArticle"));
 const Learn = lazy(() => import("./pages/Learn"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 
-const Contact = lazy(() => import("./pages/Contact"));
 const GuestPost = lazy(() => import("./pages/GuestPost"));
 const LocalJunkRemoval = lazy(() => import("./pages/LocalJunkRemoval"));
 
@@ -75,10 +74,6 @@ const DebrisTypeManagement = lazy(
   () => import("./pages/admin/DebrisTypeManagement"),
 );
 const DataSeeding = lazy(() => import("./pages/admin/DataSeeding"));
-const PricingCalculator = lazy(() => import("./pages/PricingCalculator"));
-const DebrisWeightCalculator = lazy(
-  () => import("./pages/DebrisWeightCalculator"),
-);
 
 import AdminRoute from "./components/admin/AdminRoute";
 
