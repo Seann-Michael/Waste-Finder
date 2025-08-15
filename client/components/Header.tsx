@@ -156,7 +156,7 @@ export default function Header() {
                         <Link
                           to={item.href}
                           className={cn(
-                            "text-sm font-medium transition-colors hover:text-primary",
+                            "text-sm font-medium transition-colors hover:text-primary flex items-center h-auto",
                             item.active
                               ? "text-primary border-b-2 border-primary"
                               : "text-muted-foreground",
