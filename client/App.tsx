@@ -16,19 +16,19 @@ import Footer from "@/components/Footer";
 //   useMemoryMonitoring,
 // } from "@/hooks/usePerformanceMonitoring";
 
-// Import pages directly to debug lazy loading issues
-import Index from "./pages/Index";
-import Locations from "./pages/Locations";
-import AllLocations from "./pages/AllLocations";
-import LocationDetail from "./pages/LocationDetail";
-import SuggestLocation from "./pages/SuggestLocation";
-import Resources from "./pages/Resources";
-import NotFound from "./pages/NotFound";
+// Use lazy loading for better performance
+const Index = lazy(() => import("./pages/Index"));
+const Locations = lazy(() => import("./pages/Locations"));
+const AllLocations = lazy(() => import("./pages/AllLocations"));
+const LocationDetail = lazy(() => import("./pages/LocationDetail"));
+const SuggestLocation = lazy(() => import("./pages/SuggestLocation"));
+const Resources = lazy(() => import("./pages/Resources"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
-import News from "./pages/News";
-import NewsArticle from "./pages/NewsArticle";
-import Learn from "./pages/Learn";
-import BlogPost from "./pages/BlogPost";
+const News = lazy(() => import("./pages/News"));
+const NewsArticle = lazy(() => import("./pages/NewsArticle"));
+const Learn = lazy(() => import("./pages/Learn"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
 
 import GuestPost from "./pages/GuestPost";
 import LocalJunkRemoval from "./pages/LocalJunkRemoval";
