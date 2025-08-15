@@ -75,8 +75,14 @@ export default function SuggestLocationEnhanced() {
         return;
       }
 
+      const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+      if (!apiKey || apiKey === 'your_google_maps_api_key_here') {
+        console.warn('Google Maps API key not configured');
+        return;
+      }
+
       const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ''}&libraries=places&callback=initMap`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&callback=initMap`;
       script.async = true;
       script.defer = true;
 

@@ -69,24 +69,14 @@ export default function GoogleMapsEmbed({
   const [apiKey, setApiKey] = useState("");
 
   useEffect(() => {
-    // Prioritize environment variable, fallback to localStorage
+    // Only use environment variable for production builds
     const envApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
-    if (envApiKey) {
+    if (envApiKey && envApiKey !== 'your_google_maps_api_key_here') {
       setApiKey(envApiKey);
     } else {
-      // Fallback to localStorage for admin settings
-      const savedApiSettings = localStorage.getItem("apiSettings");
-      if (savedApiSettings) {
-        try {
-          const parsed = JSON.parse(savedApiSettings);
-          if (parsed.googleMapsApiKey) {
-            setApiKey(parsed.googleMapsApiKey);
-          }
-        } catch (error) {
-          console.error("Error loading API settings:", error);
-        }
-      }
+      console.warn('Google Maps API key not configured in environment variables');
+      setApiKey(''); // Ensure no fallback to prevent hardcoded keys in build
     }
   }, []);
 
