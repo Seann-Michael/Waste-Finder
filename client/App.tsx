@@ -311,13 +311,9 @@ const App = () => {
               <Sonner />
               <RouterWrapper>
                 <div className="min-h-screen bg-background">
-                  <Header />
-                  <main>
-                    <Suspense fallback={<PageLoading message="Loading..." />}>
-                      <AppRoutes />
-                    </Suspense>
-                  </main>
-                  <Footer />
+                  <Suspense fallback={<PageLoading message="Loading..." />}>
+                    <AppRoutes />
+                  </Suspense>
                 </div>
               </RouterWrapper>
             </TooltipProvider>
