@@ -281,6 +281,106 @@ export const mockLocations: MockLocation[] = [
 /**
  * Check if we're using mock data (when Supabase is not configured)
  */
+export interface MockLocationSuggestion {
+  id: string;
+  type: "new_location" | "edit_location";
+  locationName: string;
+  submitter: string;
+  email: string;
+  status: "pending" | "approved" | "rejected";
+  submittedAt: string;
+  moderatedAt?: string;
+  moderatedBy?: string;
+  details: {
+    address: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    phone?: string;
+    email?: string;
+    website?: string;
+    facilityType: "landfill" | "transfer_station" | "construction_landfill";
+    paymentTypes: string[];
+    debrisTypes: string[];
+    operatingHours: string;
+    notes?: string;
+  };
+}
+
+export const mockLocationSuggestions: MockLocationSuggestion[] = [
+  {
+    id: "suggestion_1",
+    type: "new_location",
+    locationName: "Riverside Recycling Center",
+    submitter: "Lisa K.",
+    email: "lisa.k@email.com",
+    status: "pending",
+    submittedAt: "2024-01-20T10:30:00Z",
+    details: {
+      address: "456 River Road",
+      city: "Portland",
+      state: "OR",
+      zipCode: "97202",
+      phone: "(503) 555-0123",
+      email: "info@riverside.com",
+      website: "https://riverside-recycling.com",
+      facilityType: "transfer_station",
+      paymentTypes: ["Cash", "Credit/Debit"],
+      debrisTypes: ["General Waste", "Recyclables", "Electronics"],
+      operatingHours: "Mon-Fri 7AM-6PM, Sat 8AM-4PM",
+      notes: "New eco-friendly facility with advanced recycling capabilities",
+    },
+  },
+  {
+    id: "suggestion_2",
+    type: "edit_location",
+    locationName: "Metro Waste Management Center",
+    submitter: "John D.",
+    email: "john.d@email.com",
+    status: "approved",
+    submittedAt: "2024-01-15T14:20:00Z",
+    moderatedAt: "2024-01-16T09:15:00Z",
+    moderatedBy: "Admin",
+    details: {
+      address: "1234 Industrial Blvd",
+      city: "Phoenix",
+      state: "AZ",
+      zipCode: "85001",
+      phone: "(602) 555-0123",
+      email: "info@metrowaste.com",
+      website: "https://metrowaste.com",
+      facilityType: "landfill",
+      paymentTypes: ["Cash", "Credit Card", "Check"],
+      debrisTypes: ["Construction Debris", "Household Waste", "Yard Waste"],
+      operatingHours: "Mon-Fri 7AM-5PM, Sat 8AM-4PM",
+      notes: "Updated operating hours and contact information",
+    },
+  },
+  {
+    id: "suggestion_3",
+    type: "new_location",
+    locationName: "West Valley Disposal",
+    submitter: "Sarah M.",
+    email: "sarah.m@email.com",
+    status: "rejected",
+    submittedAt: "2024-01-12T11:45:00Z",
+    moderatedAt: "2024-01-13T16:30:00Z",
+    moderatedBy: "Admin",
+    details: {
+      address: "789 West Valley Rd",
+      city: "Glendale",
+      state: "AZ",
+      zipCode: "85303",
+      phone: "(623) 555-7890",
+      facilityType: "landfill",
+      paymentTypes: ["Cash Only"],
+      debrisTypes: ["General Waste"],
+      operatingHours: "Mon-Fri 8AM-4PM",
+      notes: "Rejected due to incomplete licensing information",
+    },
+  },
+];
+
 export function isMockMode(): boolean {
   const supabaseUrl =
     process.env.VITE_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
