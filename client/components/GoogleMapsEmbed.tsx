@@ -69,9 +69,23 @@ export default function GoogleMapsEmbed({
   const [apiKey, setApiKey] = useState("");
 
   useEffect(() => {
-    // Temporarily disabled to prevent API key detection in build
-    console.warn("Google Maps temporarily disabled for security compliance");
-    setApiKey(""); // No API key to prevent security scanner issues
+    // Get API key from environment variables (secure approach)
+    const envApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+
+    if (!envApiKey || envApiKey === "YOUR_GOOGLE_MAPS_API_KEY_HERE") {
+      console.warn("Google Maps API key not configured. Please set VITE_GOOGLE_MAPS_API_KEY environment variable.");
+      setApiKey("");
+      return;
+    }
+
+    // Validate API key format (should start with AIza)
+    if (!envApiKey.startsWith('AIza') || envApiKey.length < 35) {
+      console.warn("Invalid Google Maps API key format. Please check your API key.");
+      setApiKey("");
+      return;
+    }
+
+    setApiKey(envApiKey);
   }, []);
 
   useEffect(() => {
