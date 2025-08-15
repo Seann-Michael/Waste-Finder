@@ -210,13 +210,16 @@ export async function getAllLocationsAdmin(): Promise<Location[]> {
  */
 export async function getLocationStats() {
   try {
-    const { data: locations, error } = await supabase
+    const result = await supabase
       .from("locations")
       .select("location_type, state, is_active")
       .eq("is_active", true);
 
+    // Handle both real Supabase response and mock response
+    const { data: locations, error } = result || { data: null, error: null };
+
     if (error) {
-      console.error("Error fetching location stats:", error);
+      console.warn("Supabase query returned error (may be expected with mock client):", error);
       return {
         totalLocations: 0,
         typeCount: {},
