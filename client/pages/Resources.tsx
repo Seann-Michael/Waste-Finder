@@ -188,10 +188,17 @@ export default function Resources() {
                     <div className="flex items-center justify-between">
                       <Badge variant="secondary">{resource.format}</Badge>
                       <Button asChild>
-                        <a href={resource.downloadUrl}>
-                          <Download className="w-4 h-4 mr-2" />
-                          Download
-                        </a>
+                        {resource.isInternalLink ? (
+                          <Link to={resource.downloadUrl}>
+                            <ArrowRight className="w-4 h-4 mr-2" />
+                            Open Tool
+                          </Link>
+                        ) : (
+                          <a href={resource.downloadUrl}>
+                            <Download className="w-4 h-4 mr-2" />
+                            Download
+                          </a>
+                        )}
                       </Button>
                     </div>
                   </CardContent>
