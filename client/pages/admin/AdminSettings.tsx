@@ -87,15 +87,7 @@ export default function AdminSettings() {
   const [activeTab, setActiveTab] = useState("profile");
 
   useEffect(() => {
-    // Load settings from localStorage on mount
-    const savedApiSettings = localStorage.getItem("apiSettings");
-    if (savedApiSettings) {
-      try {
-        setApiSettings(JSON.parse(savedApiSettings));
-      } catch (error) {
-        console.error("Error loading API settings:", error);
-      }
-    }
+    // API settings loading removed - now handled via environment variables only
 
     const savedContentSettings = localStorage.getItem("contentSettings");
     if (savedContentSettings) {
@@ -148,9 +140,7 @@ export default function AdminSettings() {
     confirmPassword: "",
   });
 
-  const [apiSettings, setApiSettings] = useState({
-    // googleMapsApiKey removed - now handled via environment variables only
-  });
+  // API settings removed - now handled via environment variables only
 
   const [contentSettings, setContentSettings] = useState({
     bannerText:
@@ -329,11 +319,7 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
     alert("Profile updated successfully!");
   };
 
-  const handleSaveApiSettings = () => {
-    localStorage.setItem("apiSettings", JSON.stringify(apiSettings));
-    console.log("Saving API settings:", apiSettings);
-    alert("API settings updated successfully!");
-  };
+  // handleSaveApiSettings function removed - API settings now handled via environment variables
 
   const handleSaveContentSettings = () => {
     localStorage.setItem("contentSettings", JSON.stringify(contentSettings));
