@@ -121,25 +121,8 @@ const mockSuggestedEdits: SuggestedEdit[] = [
   },
 ];
 
-// Get suggestions from centralized mock data when Supabase is not configured
-const getMockSuggestions = (): SuggestedLocation[] => {
-  if (isMockMode()) {
-    console.log("Using centralized mock suggestions data - Supabase not configured");
-    return mockLocationSuggestions.map(suggestion => ({
-      id: suggestion.id,
-      type: suggestion.type,
-      locationName: suggestion.locationName,
-      submitter: suggestion.submitter,
-      email: suggestion.email,
-      status: suggestion.status,
-      submittedAt: suggestion.submittedAt,
-      moderatedAt: suggestion.moderatedAt,
-      moderatedBy: suggestion.moderatedBy,
-      details: suggestion.details,
-    }));
-  }
-  return [];
-};
+// Suggestions now come from database
+const mockSuggestedLocations: SuggestedLocation[] = [];
 
 type SortDirection = "asc" | "desc";
 
