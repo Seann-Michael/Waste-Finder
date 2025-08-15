@@ -27,28 +27,6 @@ function calculateDistance(
   return R * c;
 }
 
-/**
- * Check if we're using mock data (when Supabase is not configured)
- */
-function isMockMode(): boolean {
-  const supabaseUrl =
-    import.meta.env.VITE_SUPABASE_URL ||
-    import.meta.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = import.meta.env.VITE_SUPABASE_PUBLIC_KEY;
-
-  const isPlaceholder = (value: string | undefined) =>
-    !value ||
-    value.startsWith("YOUR_") ||
-    value === "your_supabase_" ||
-    value.length < 10;
-
-  return (
-    !supabaseUrl ||
-    !supabaseAnonKey ||
-    isPlaceholder(supabaseUrl) ||
-    isPlaceholder(supabaseAnonKey)
-  );
-}
 
 /**
  * Search locations with full details including operating hours, payment types, etc.
