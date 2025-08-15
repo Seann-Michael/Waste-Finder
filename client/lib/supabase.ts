@@ -46,13 +46,28 @@ if (
         }),
         order: () => Promise.resolve({ data: [], error: null }),
       }),
-      insert: () => Promise.resolve({ data: null, error: { message: "Supabase not configured" } }),
-      update: () => Promise.resolve({ data: null, error: { message: "Supabase not configured" } }),
-      delete: () => Promise.resolve({ data: null, error: { message: "Supabase not configured" } }),
+      insert: () =>
+        Promise.resolve({
+          data: null,
+          error: { message: "Supabase not configured" },
+        }),
+      update: () =>
+        Promise.resolve({
+          data: null,
+          error: { message: "Supabase not configured" },
+        }),
+      delete: () =>
+        Promise.resolve({
+          data: null,
+          error: { message: "Supabase not configured" },
+        }),
     }),
     auth: {
-      getSession: () => Promise.resolve({ data: { session: null }, error: null }),
-      onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
+      getSession: () =>
+        Promise.resolve({ data: { session: null }, error: null }),
+      onAuthStateChange: () => ({
+        data: { subscription: { unsubscribe: () => {} } },
+      }),
     },
   };
 } else {

@@ -27,7 +27,6 @@ function calculateDistance(
   return R * c;
 }
 
-
 /**
  * Search locations with full details including operating hours, payment types, etc.
  */

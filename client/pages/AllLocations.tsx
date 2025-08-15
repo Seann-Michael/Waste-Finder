@@ -47,15 +47,18 @@ const fetchLocations = async (
   try {
     // Use API endpoints instead of direct Supabase calls
     const params = new URLSearchParams();
-    if (searchQuery) params.append('search', searchQuery);
-    if (zipCode) params.append('zipCode', zipCode);
-    if (latitude) params.append('latitude', latitude.toString());
-    if (longitude) params.append('longitude', longitude.toString());
-    if (radius) params.append('radius', radius.toString());
-    if (locationTypes?.[0]) params.append('locationType', locationTypes[0]);
-    if (debrisTypes?.length) params.append('debrisTypes', debrisTypes.join(','));
+    if (searchQuery) params.append("search", searchQuery);
+    if (zipCode) params.append("zipCode", zipCode);
+    if (latitude) params.append("latitude", latitude.toString());
+    if (longitude) params.append("longitude", longitude.toString());
+    if (radius) params.append("radius", radius.toString());
+    if (locationTypes?.[0]) params.append("locationType", locationTypes[0]);
+    if (debrisTypes?.length)
+      params.append("debrisTypes", debrisTypes.join(","));
 
-    const url = params.toString() ? `/api/locations?${params.toString()}` : '/api/locations/all';
+    const url = params.toString()
+      ? `/api/locations?${params.toString()}`
+      : "/api/locations/all";
     const response = await fetch(url);
 
     if (!response.ok) {
