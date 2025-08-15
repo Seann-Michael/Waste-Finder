@@ -50,6 +50,7 @@ export async function getBlogPosts(
     total: 0,
     page: params.page || 1,
     limit: params.limit || 10,
+    pages: 0,
     totalPages: 0,
   };
 }
