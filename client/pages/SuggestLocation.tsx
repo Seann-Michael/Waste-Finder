@@ -89,7 +89,7 @@ export default function SuggestLocationEnhanced() {
       }
 
       const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-      if (!apiKey || apiKey.length < 10 || !apiKey.startsWith("AIza")) {
+      if (!apiKey || apiKey.length < 20) {
         console.warn("Google Maps API key not configured");
         return;
       }
