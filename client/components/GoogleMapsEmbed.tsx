@@ -95,6 +95,13 @@ export default function GoogleMapsEmbed({
   const generateMapUrl = () => {
     setIsLoading(true);
 
+    // Check if API key is available
+    if (!apiKey) {
+      setMapUrl("");
+      setTimeout(() => setIsLoading(false), 500);
+      return;
+    }
+
     // Create a center point based on locations or search query
     let centerLat = 39.8283; // Default to center of US
     let centerLng = -98.5795;
