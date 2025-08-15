@@ -5,8 +5,45 @@ const supabaseUrl =
   process.env.VITE_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.VITE_SUPABASE_ADMIN_KEY;
 
+// Validate environment variables
+const isValidUrl = (url: string) => {
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+const isPlaceholder = (value: string | undefined) =>
+  !value ||
+  value.startsWith("YOUR_") ||
+  value === "your_supabase_" ||
+  value.length < 10;
+
 // Server-side Supabase client with admin privileges
-const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
+let supabaseAdmin: any;
+
+if (
+  !supabaseUrl ||
+  !supabaseServiceKey ||
+  isPlaceholder(supabaseUrl) ||
+  isPlaceholder(supabaseServiceKey) ||
+  !isValidUrl(supabaseUrl)
+) {
+  console.error("❌ Server-side Supabase configuration missing or invalid!");
+  console.error("📋 To connect to your database:");
+  console.error("1. Set VITE_SUPABASE_URL to your Supabase project URL");
+  console.error("2. Set VITE_SUPABASE_ADMIN_KEY to your Supabase service role key");
+
+  // Throw error instead of creating invalid client
+  throw new Error(
+    "Server-side Supabase not configured. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ADMIN_KEY environment variables."
+  );
+} else {
+  console.log("✅ Server-side Supabase admin client initialized successfully");
+  supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
+}
 
 export { supabaseAdmin };
 
