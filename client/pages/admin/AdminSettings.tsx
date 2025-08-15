@@ -124,7 +124,7 @@ export default function AdminSettings() {
 
   const [adminUsers, setAdminUsers] = useState<AdminUser[]>(mockAdminUsers);
   const [pendingLocationsList, setPendingLocationsList] =
-    useState<PendingLocation[]>(getMockPendingLocations());
+    useState<PendingLocation[]>(mockPendingLocations);
   const [showPasswords, setShowPasswords] = useState(false);
   const [newUserDialog, setNewUserDialog] = useState(false);
   const [editUserDialog, setEditUserDialog] = useState(false);
