@@ -7,8 +7,6 @@ import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { PageLoading } from "@/components/LoadingStates";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 // Performance monitoring disabled for production builds
 // import {
 //   usePerformanceMonitoring,
