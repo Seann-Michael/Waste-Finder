@@ -11,10 +11,17 @@ export const dynamicImports = {
   // Lazy load chart libraries if needed
   recharts: () => import('recharts'),
   
-  // Lazy load React Query dev tools only in development
+  // Lazy load React Query dev tools only in development (if available)
   reactQueryDevtools: () => {
     if (process.env.NODE_ENV === 'development') {
-      return import('@tanstack/react-query-devtools');
+      // Try to import devtools, but gracefully handle if not installed
+      try {
+        return import('@tanstack/react-query-devtools').catch(() =>
+          Promise.resolve({ ReactQueryDevtools: null })
+        );
+      } catch {
+        return Promise.resolve({ ReactQueryDevtools: null });
+      }
     }
     return Promise.resolve({ ReactQueryDevtools: null });
   },
