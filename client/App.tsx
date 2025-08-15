@@ -310,11 +310,9 @@ const App = () => {
               <Toaster />
               <Sonner />
               <RouterWrapper>
-                <Suspense
-                  fallback={<PageLoading message="Loading application..." />}
-                >
-                  <AppRoutes />
-                </Suspense>
+                <Header />
+                <AppRoutes />
+                <Footer />
               </RouterWrapper>
             </TooltipProvider>
           </MonitoringProvider>
