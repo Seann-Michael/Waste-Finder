@@ -33,7 +33,8 @@ function calculateDistance(
  */
 function isMockMode(): boolean {
   const supabaseUrl =
-    import.meta.env.VITE_SUPABASE_URL || import.meta.env.NEXT_PUBLIC_SUPABASE_URL;
+    import.meta.env.VITE_SUPABASE_URL ||
+    import.meta.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = import.meta.env.VITE_SUPABASE_PUBLIC_KEY;
 
   const isPlaceholder = (value: string | undefined) =>
@@ -42,10 +43,12 @@ function isMockMode(): boolean {
     value === "your_supabase_" ||
     value.length < 10;
 
-  return !supabaseUrl ||
-         !supabaseAnonKey ||
-         isPlaceholder(supabaseUrl) ||
-         isPlaceholder(supabaseAnonKey);
+  return (
+    !supabaseUrl ||
+    !supabaseAnonKey ||
+    isPlaceholder(supabaseUrl) ||
+    isPlaceholder(supabaseAnonKey)
+  );
 }
 
 /**
@@ -68,23 +71,28 @@ export async function searchLocations(
 
     // Use mock data if Supabase is not configured
     if (isMockMode()) {
-      console.log("Using mock data for location search - Supabase not configured");
-      let filteredLocations = mockLocations.filter(loc => loc.is_active !== false);
+      console.log(
+        "Using mock data for location search - Supabase not configured",
+      );
+      let filteredLocations = mockLocations.filter(
+        (loc) => loc.is_active !== false,
+      );
 
       // Apply filters
       if (locationType) {
-        filteredLocations = filteredLocations.filter(loc =>
-          loc.location_type === locationType
+        filteredLocations = filteredLocations.filter(
+          (loc) => loc.location_type === locationType,
         );
       }
 
       if (search) {
         const searchTerm = search.toLowerCase();
-        filteredLocations = filteredLocations.filter(loc =>
-          loc.name.toLowerCase().includes(searchTerm) ||
-          loc.address.toLowerCase().includes(searchTerm) ||
-          loc.city.toLowerCase().includes(searchTerm) ||
-          (loc.notes && loc.notes.toLowerCase().includes(searchTerm))
+        filteredLocations = filteredLocations.filter(
+          (loc) =>
+            loc.name.toLowerCase().includes(searchTerm) ||
+            loc.address.toLowerCase().includes(searchTerm) ||
+            loc.city.toLowerCase().includes(searchTerm) ||
+            (loc.notes && loc.notes.toLowerCase().includes(searchTerm)),
         );
       }
 
@@ -225,8 +233,12 @@ export async function getLocationDetails(id: string): Promise<Location | null> {
   try {
     // Use mock data if Supabase is not configured
     if (isMockMode()) {
-      console.log(`Using mock data for location ${id} - Supabase not configured`);
-      const location = mockLocations.find(loc => loc.id === id && loc.is_active !== false);
+      console.log(
+        `Using mock data for location ${id} - Supabase not configured`,
+      );
+      const location = mockLocations.find(
+        (loc) => loc.id === id && loc.is_active !== false,
+      );
       return location || null;
     }
 
@@ -268,7 +280,9 @@ export async function getAllLocationsAdmin(): Promise<Location[]> {
   try {
     // Use mock data if Supabase is not configured
     if (isMockMode()) {
-      console.log("Using mock data for admin locations - Supabase not configured");
+      console.log(
+        "Using mock data for admin locations - Supabase not configured",
+      );
       return mockLocations.sort((a, b) => a.name.localeCompare(b.name));
     }
 
