@@ -150,7 +150,20 @@ const AppRoutes = () => (
       path="/alllocations"
       element={<Navigate to="/all-locations" replace />}
     />
-    {/* Removed routes - pricing calculator, debris calculator, contact */}
+    {/* Redirects for debris weight calculator case variations */}
+    <Route
+      path="/DebrisWeightCalculator"
+      element={<Navigate to="/debris-weight-calculator" replace />}
+    />
+    <Route
+      path="/debrisweightcalculator"
+      element={<Navigate to="/debris-weight-calculator" replace />}
+    />
+    <Route
+      path="/debris-calculator"
+      element={<Navigate to="/debris-weight-calculator" replace />}
+    />
+    {/* Removed routes - pricing calculator, contact */}
     <Route path="/Blog" element={<Navigate to="/blog" replace />} />
     <Route path="/BlogPost" element={<Navigate to="/blog" replace />} />
     <Route path="/blogpost" element={<Navigate to="/blog" replace />} />
