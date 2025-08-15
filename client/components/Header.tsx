@@ -120,31 +120,36 @@ export default function Header() {
               <nav className="hidden md:flex items-center justify-center flex-1 space-x-8">
                 {navigation.map((item) =>
                   item.dropdown ? (
-                    <DropdownMenu key={item.name}>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          className={cn(
-                            "text-sm font-medium transition-colors hover:text-primary p-0 h-auto",
-                            item.active
-                              ? "text-primary border-b-2 border-primary"
-                              : "text-muted-foreground",
-                          )}
-                        >
+                    <div key={item.name} className="relative group">
+                      <Button
+                        variant="ghost"
+                        className={cn(
+                          "text-sm font-medium transition-colors hover:text-primary p-0 h-auto flex items-center",
+                          item.active
+                            ? "text-primary border-b-2 border-primary"
+                            : "text-muted-foreground",
+                        )}
+                        asChild
+                      >
+                        <div className="cursor-pointer">
                           {item.name}
                           <ChevronDown className="ml-1 h-3 w-3" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="start">
-                        {item.dropdown.map((subItem) => (
-                          <DropdownMenuItem key={subItem.name} asChild>
-                            <Link to={subItem.href} className="w-full">
+                        </div>
+                      </Button>
+                      <div className="absolute left-0 top-full mt-1 w-48 bg-white border border-border rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div className="py-1">
+                          {item.dropdown.map((subItem) => (
+                            <Link
+                              key={subItem.name}
+                              to={subItem.href}
+                              className="block px-4 py-2 text-sm text-muted-foreground hover:text-primary hover:bg-muted transition-colors"
+                            >
                               {subItem.name}
                             </Link>
-                          </DropdownMenuItem>
-                        ))}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
                   ) : (
                     <Tooltip key={item.name}>
                       <TooltipTrigger asChild>
