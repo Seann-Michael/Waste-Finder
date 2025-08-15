@@ -50,7 +50,9 @@ const LocalSEODumpsterRental = lazy(
 const LeadGenerationJunkRemoval = lazy(
   () => import("./pages/LeadGenerationJunkRemoval"),
 );
-const DebrisWeightCalculator = lazy(() => import("./pages/DebrisWeightCalculator"));
+const DebrisWeightCalculator = lazy(
+  () => import("./pages/DebrisWeightCalculator"),
+);
 const Sitemap = lazy(() => import("./pages/Sitemap"));
 const XMLSitemap = lazy(() => import("./pages/XMLSitemap"));
 
@@ -131,7 +133,10 @@ const AppRoutes = () => (
     <Route path="/all-locations" element={<AllLocations />} />
     <Route path="/suggest-location" element={<SuggestLocation />} />
     <Route path="/resources" element={<Resources />} />
-    <Route path="/debris-weight-calculator" element={<DebrisWeightCalculator />} />
+    <Route
+      path="/debris-weight-calculator"
+      element={<DebrisWeightCalculator />}
+    />
 
     {/* Redirect routes for common URL variations and case mismatches */}
     <Route
