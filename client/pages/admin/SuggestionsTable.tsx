@@ -173,10 +173,10 @@ export default function SuggestionsTable() {
   // Suggested Locations State
   const [suggestedLocations, setSuggestedLocations] = useState<
     SuggestedLocation[]
-  >(mockSuggestedLocations);
+  >(getMockSuggestions());
   const [filteredLocations, setFilteredLocations] = useState<
     SuggestedLocation[]
-  >(mockSuggestedLocations);
+  >(getMockSuggestions());
   const [locationsSearchQuery, setLocationsSearchQuery] = useState("");
   const [locationsStatusFilter, setLocationsStatusFilter] = useState("all");
   const [locationsCurrentPage, setLocationsCurrentPage] = useState(1);
