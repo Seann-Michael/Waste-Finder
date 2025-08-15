@@ -354,7 +354,8 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <MonitoringProvider>
-            <TooltipProvider>
+            <OptimizedApiProvider>
+              <TooltipProvider>
               <Toaster />
               <Sonner />
               <RouterWrapper>
@@ -364,7 +365,8 @@ const App = () => {
                   </Suspense>
                 </div>
               </RouterWrapper>
-            </TooltipProvider>
+              </TooltipProvider>
+            </OptimizedApiProvider>
           </MonitoringProvider>
         </AuthProvider>
       </QueryClientProvider>
