@@ -105,9 +105,9 @@ export default function Header() {
 
         <header className="bg-white border-b border-border shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16 sm:h-18">
+            <div className="flex items-center h-16 sm:h-18">
               {/* Logo */}
-              <Link to="/" className="flex items-center space-x-1 sm:space-x-2">
+              <Link to="/" className="flex items-center space-x-1 sm:space-x-2 mr-auto">
                 <div className="w-7 h-7 sm:w-8 sm:h-8 bg-primary rounded-lg flex items-center justify-center">
                   <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-primary-foreground" />
                 </div>
@@ -116,8 +116,8 @@ export default function Header() {
                 </span>
               </Link>
 
-              {/* Desktop Navigation */}
-              <nav className="hidden md:flex space-x-8">
+              {/* Desktop Navigation - Centered */}
+              <nav className="hidden md:flex items-center justify-center flex-1 space-x-8">
                 {navigation.map((item) =>
                   item.dropdown ? (
                     <DropdownMenu key={item.name}>
