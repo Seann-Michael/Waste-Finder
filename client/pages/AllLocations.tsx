@@ -46,23 +46,30 @@ const fetchLocations = async (
   debrisTypes?: string[],
 ): Promise<Location[]> => {
   try {
-    // Use Supabase search with all parameters
-    const result = await searchLocations({
-      search: searchQuery,
-      zipCode,
-      latitude,
-      longitude,
-      radius: radius || 50,
-      locationType: locationTypes?.[0], // supabaseQueries expects single type for now
-      page: 1,
-      limit: 100,
-    });
+    // Use API endpoints instead of direct Supabase calls
+    const params = new URLSearchParams();
+    if (searchQuery) params.append('search', searchQuery);
+    if (zipCode) params.append('zipCode', zipCode);
+    if (latitude) params.append('latitude', latitude.toString());
+    if (longitude) params.append('longitude', longitude.toString());
+    if (radius) params.append('radius', radius.toString());
+    if (locationTypes?.[0]) params.append('locationType', locationTypes[0]);
+    if (debrisTypes?.length) params.append('debrisTypes', debrisTypes.join(','));
+
+    const url = params.toString() ? `/api/locations?${params.toString()}` : '/api/locations/all';
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`API request failed: ${response.status}`);
+    }
+
+    const result = await response.json();
 
     if (result.success) {
-      console.log(`Found ${result.locations.length} locations via Supabase`);
-      return result.locations;
+      console.log(`Found ${result.data?.length || 0} locations via API`);
+      return result.data || [];
     } else {
-      console.error("Supabase search failed:", result);
+      console.error("API search failed:", result);
       return [];
     }
   } catch (error) {
