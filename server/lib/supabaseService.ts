@@ -5,15 +5,41 @@ const supabaseUrl =
   process.env.VITE_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.VITE_SUPABASE_ADMIN_KEY;
 
-// Validate required environment variables
-if (!supabaseUrl || !supabaseServiceKey) {
-  throw new Error(
-    "Supabase URL and service role key are required for server operations",
-  );
-}
+// Check if environment variables are set to placeholder values
+const isPlaceholder = (value: string | undefined) =>
+  !value || value.startsWith('YOUR_') || value === 'your_supabase_' || value.length < 10;
+
+// Create mock supabase admin client for development without credentials
+const createMockSupabaseAdmin = () => {
+  const mockResult = {
+    data: null,
+    error: { message: "Supabase server not configured - using mock data" }
+  };
+
+  return {
+    from: () => ({
+      select: () => Promise.resolve({ data: [], error: null }),
+      insert: () => Promise.resolve(mockResult),
+      update: () => Promise.resolve(mockResult),
+      delete: () => Promise.resolve(mockResult),
+      eq: function() { return this; },
+      order: function() { return this; },
+      single: function() { return Promise.resolve(mockResult); },
+    })
+  };
+};
 
 // Server-side Supabase client with admin privileges
-export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
+let supabaseAdmin: any;
+
+if (!supabaseUrl || !supabaseServiceKey || isPlaceholder(supabaseUrl) || isPlaceholder(supabaseServiceKey)) {
+  console.warn("Server-side Supabase environment variables not configured properly. Using mock client.");
+  supabaseAdmin = createMockSupabaseAdmin();
+} else {
+  supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
+}
+
+export { supabaseAdmin };
 
 // Location interface matching the actual database schema
 export interface Location {
