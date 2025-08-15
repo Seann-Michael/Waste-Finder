@@ -4,16 +4,10 @@ const STATIC_CACHE = "static-v1";
 const DYNAMIC_CACHE = "dynamic-v1";
 
 // Essential assets to cache immediately
-const STATIC_ASSETS = [
-  "/",
-  "/manifest.json"
-];
+const STATIC_ASSETS = ["/", "/manifest.json"];
 
 // Assets to cache on demand
-const RUNTIME_CACHE_URLS = [
-  "/icon-192x192.png",
-  "/icon-512x512.png"
-];
+const RUNTIME_CACHE_URLS = ["/icon-192x192.png", "/icon-512x512.png"];
 
 // Install event - cache static assets
 self.addEventListener("install", (event) => {
@@ -52,7 +46,7 @@ self.addEventListener("activate", (event) => {
 // Fetch event - optimized caching strategy
 self.addEventListener("fetch", (event) => {
   // Only cache GET requests
-  if (event.request.method !== 'GET') return;
+  if (event.request.method !== "GET") return;
 
   // Skip caching for external resources to reduce unused assets
   if (!event.request.url.startsWith(self.location.origin)) return;
@@ -68,7 +62,7 @@ self.addEventListener("fetch", (event) => {
 
       return fetch(fetchRequest).then((response) => {
         // Only cache successful responses
-        if (!response || response.status !== 200 || response.type !== 'basic') {
+        if (!response || response.status !== 200 || response.type !== "basic") {
           return response;
         }
 
@@ -76,11 +70,13 @@ self.addEventListener("fetch", (event) => {
         const responseToCache = response.clone();
 
         // Cache static assets and API responses
-        if (event.request.url.includes('/api/') ||
-            event.request.url.includes('.js') ||
-            event.request.url.includes('.css') ||
-            event.request.url.includes('.png') ||
-            event.request.url.includes('.svg')) {
+        if (
+          event.request.url.includes("/api/") ||
+          event.request.url.includes(".js") ||
+          event.request.url.includes(".css") ||
+          event.request.url.includes(".png") ||
+          event.request.url.includes(".svg")
+        ) {
           caches.open(DYNAMIC_CACHE).then((cache) => {
             cache.put(event.request, responseToCache);
           });
@@ -88,6 +84,6 @@ self.addEventListener("fetch", (event) => {
 
         return response;
       });
-    })
+    }),
   );
 });
