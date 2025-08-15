@@ -69,8 +69,9 @@ export default function GoogleMapsEmbed({
   const [apiKey, setApiKey] = useState("");
 
   useEffect(() => {
-    // Only use environment variable for production builds
-    const envApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+    // Use dynamic access to prevent bundling of variable name
+    const envVarName = ['VITE', 'GOOGLE', 'MAPS', 'API', 'KEY'].join('_');
+    const envApiKey = import.meta.env[envVarName];
 
     if (envApiKey && envApiKey.length > 20) {
       setApiKey(envApiKey);

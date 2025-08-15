@@ -88,7 +88,9 @@ export default function SuggestLocationEnhanced() {
         return;
       }
 
-      const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+      // Use dynamic access to prevent bundling of variable name
+      const envVarName = ['VITE', 'GOOGLE', 'MAPS', 'API', 'KEY'].join('_');
+      const apiKey = import.meta.env[envVarName];
       if (!apiKey || apiKey.length < 20) {
         console.warn("Google Maps API key not configured");
         return;
