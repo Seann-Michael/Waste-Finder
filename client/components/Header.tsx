@@ -136,8 +136,8 @@ export default function Header() {
                           <ChevronDown className="ml-1 h-3 w-3" />
                         </div>
                       </Button>
-                      <div className="absolute left-0 top-full mt-1 w-48 bg-white border border-border rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                        <div className="py-1" onMouseEnter={(e) => e.currentTarget.parentElement?.classList.add('hover')} onMouseLeave={(e) => e.currentTarget.parentElement?.classList.remove('hover')}>
+                      <div className="absolute left-0 top-full mt-1 w-48 bg-white border border-border rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible hover:opacity-100 hover:visible transition-all duration-200 z-50">
+                        <div className="py-1">
                           {item.dropdown.map((subItem) => (
                             <Link
                               key={subItem.name}
