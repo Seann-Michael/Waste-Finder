@@ -44,6 +44,7 @@ import {
   MapPin,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { mockLocationSuggestions, isMockMode, type MockLocationSuggestion } from "../../../server/lib/mockData";
 
 interface SuggestedEdit {
   id: string;
