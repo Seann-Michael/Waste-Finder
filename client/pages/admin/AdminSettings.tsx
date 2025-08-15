@@ -1823,32 +1823,14 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
                     <div className="relative">
                       <Input
                         id="googleMapsApiKey"
-                        type={showPasswords ? "text" : "password"}
-                        value={apiSettings.googleMapsApiKey}
-                        onChange={(e) =>
-                          setApiSettings({
-                            ...apiSettings,
-                            googleMapsApiKey: e.target.value,
-                          })
-                        }
-                        placeholder="Enter your Google Maps API key"
+                        type="text"
+                        value="Set in Netlify Environment Variables"
+                        disabled
+                        className="bg-muted"
                       />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                        onClick={() => setShowPasswords(!showPasswords)}
-                      >
-                        {showPasswords ? (
-                          <EyeOff className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
-                      </Button>
                     </div>
                     <p className="text-sm text-muted-foreground">
-                      Required for Google Maps integration and location services
+                      <strong>Security Notice:</strong> Google Maps API key must be set in Netlify environment variables as <code>VITE_GOOGLE_MAPS_API_KEY</code> to prevent exposure in builds.
                     </p>
                   </div>
                 </div>
