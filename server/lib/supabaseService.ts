@@ -220,17 +220,6 @@ export async function getFilteredLocations(filters: {
 
 // Get single location by ID with related data
 export async function getLocationById(id: string): Promise<Location | null> {
-  // Return mock data if Supabase is not configured
-  if (isMockMode()) {
-    console.log(
-      `Using mock location data for ID ${id} - Supabase not configured`,
-    );
-    const location = mockLocations.find(
-      (loc) => loc.id === id && loc.is_active !== false,
-    );
-    return location || null;
-  }
-
   try {
     const { data, error } = await supabaseAdmin
       .from("locations")
