@@ -226,17 +226,37 @@ export default function Header() {
               <div className="sm:hidden py-4 border-t border-border max-h-96 overflow-y-auto">
                 <nav className="flex flex-col space-y-4">
                   {navigation.map((item) => (
-                    <Link
-                      key={item.name}
-                      to={item.href}
-                      className={cn(
-                        "text-base font-medium transition-colors py-2 px-1",
-                        item.active ? "text-primary" : "text-muted-foreground",
-                      )}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      {item.name}
-                    </Link>
+                    item.dropdown ? (
+                      <div key={item.name} className="space-y-2">
+                        <span className="text-base font-medium text-primary py-2 px-1">
+                          {item.name}
+                        </span>
+                        <div className="pl-4 space-y-2">
+                          {item.dropdown.map((subItem) => (
+                            <Link
+                              key={subItem.name}
+                              to={subItem.href}
+                              className="block text-sm font-medium transition-colors py-1 px-1 text-muted-foreground hover:text-primary"
+                              onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                              {subItem.name}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <Link
+                        key={item.name}
+                        to={item.href}
+                        className={cn(
+                          "text-base font-medium transition-colors py-2 px-1",
+                          item.active ? "text-primary" : "text-muted-foreground",
+                        )}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
+                    )
                   ))}
                   <Button
                     asChild
