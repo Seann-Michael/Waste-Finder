@@ -4,9 +4,12 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { PageLoading } from "@/components/LoadingStates";
+import { initializeOptimizedApi } from "@/lib/optimizedApi";
+import { queryUtils } from "@/lib/optimizedSupabaseQueries";
+import { useBackgroundSync } from "@/hooks/useOptimizedData";
 // Performance monitoring disabled for production builds
 // import {
 //   usePerformanceMonitoring,
