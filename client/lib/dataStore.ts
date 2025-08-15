@@ -195,7 +195,7 @@ class DataStore {
       systemSettings: {},
       blogSettings: {},
       apiSettings: {
-        googleMapsApiKey: "",
+        googleMapsApiKey: "", // DEPRECATED: Use VITE_GOOGLE_MAPS_API_KEY environment variable instead
       },
       adConfigs: {},
     };
