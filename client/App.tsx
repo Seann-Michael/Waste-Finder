@@ -111,21 +111,57 @@ const OptimizedApiProvider = ({ children }: { children: React.ReactNode }) => {
   useBackgroundSync(); // Enable background sync
 
   useEffect(() => {
-    // Initialize optimized API layer
-    initializeOptimizedApi(queryClient);
+    // Initialize all performance optimizations
+    const initPerformance = async () => {
+      // Core performance optimizations
+      const cleanupPerformance = initializePerformanceOptimizations();
+      const { scheduleTask } = initializeCoreWebVitals();
 
-    // Warm cache with popular data
-    queryUtils.warmCache().catch(console.warn);
+      // CSS optimizations
+      initializeCSSOptimizations();
 
-    // Clean up cache periodically
-    const cleanup = setInterval(
-      () => {
-        queryUtils.clearCache();
-      },
-      10 * 60 * 1000,
-    ); // Every 10 minutes
+      // Bundle optimizations
+      const cleanupBundle = initializeBundleOptimizations();
 
-    return () => clearInterval(cleanup);
+      // Initialize service worker
+      await initializeServiceWorker({
+        enabled: process.env.NODE_ENV === 'production'
+      });
+
+      // Resource preloading
+      initializeResourcePreloading();
+
+      // Performance monitoring
+      const monitor = getPerformanceMonitor();
+      monitor.startTimer('appInitialization');
+
+      // Core Web Vitals measurement
+      measureCoreWebVitals();
+
+      // Initialize optimized API layer
+      initializeOptimizedApi(queryClient);
+
+      // Warm cache with popular data
+      queryUtils.warmCache().catch(console.warn);
+
+      monitor.endTimer('appInitialization');
+
+      // Clean up cache periodically
+      const cleanup = setInterval(
+        () => {
+          queryUtils.clearCache();
+        },
+        10 * 60 * 1000,
+      ); // Every 10 minutes
+
+      return () => {
+        clearInterval(cleanup);
+        cleanupPerformance();
+        cleanupBundle.cleanup();
+      };
+    };
+
+    initPerformance();
   }, []);
 
   return <>{children}</>;
