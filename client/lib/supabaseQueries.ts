@@ -178,14 +178,6 @@ export async function getLocationDetails(id: string): Promise<Location | null> {
  */
 export async function getAllLocationsAdmin(): Promise<Location[]> {
   try {
-    // Use mock data if Supabase is not configured
-    if (isMockMode()) {
-      console.log(
-        "Using mock data for admin locations - Supabase not configured",
-      );
-      return mockLocations.sort((a, b) => a.name.localeCompare(b.name));
-    }
-
     const { data: locations, error } = await supabase
       .from("locations")
       .select(
