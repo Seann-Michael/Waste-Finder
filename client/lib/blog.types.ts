@@ -59,4 +59,5 @@ export interface BlogSearchResponse {
   page: number
   limit: number
   pages: number
+  totalPages: number
 }
