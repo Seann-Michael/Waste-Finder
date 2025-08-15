@@ -137,7 +137,7 @@ export default function Header() {
                         </div>
                       </Button>
                       <div className="absolute left-0 top-full mt-1 w-48 bg-white border border-border rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                        <div className="py-1">
+                        <div className="py-1" onMouseEnter={(e) => e.currentTarget.parentElement?.classList.add('hover')} onMouseLeave={(e) => e.currentTarget.parentElement?.classList.remove('hover')}>
                           {item.dropdown.map((subItem) => (
                             <Link
                               key={subItem.name}
