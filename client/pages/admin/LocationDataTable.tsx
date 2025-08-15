@@ -83,12 +83,6 @@ const fetchLocations = async (): Promise<Location[]> => {
       console.error("Error loading from localStorage:", localStorageError);
     }
 
-    // Final fallback: use centralized mock data if Supabase is not configured
-    if (isMockMode()) {
-      console.log("Using centralized mock data as final fallback - Supabase not configured");
-      return mockLocations.filter(loc => loc.is_active !== false);
-    }
-
     return [];
   }
 };
