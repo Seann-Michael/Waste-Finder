@@ -81,16 +81,10 @@ interface JobEstimate {
   fuelPricePerGallon: number; // current fuel price
 }
 
+// REMOVED: All debris items moved to Supabase database
+// Use Supabase client to fetch debris items instead of hardcoded data
 const DEBRIS_ITEMS: DebrisItem[] = [
-  // Hot Tubs & Spas (7'x7'x3.5' = ~6.5 yd³, 8'x8'x4' = ~9.5 yd³)
-  {
-    id: "hot_tub_small",
-    name: "Hot Tub (4-6 Person)",
-    category: "Hot Tubs",
-    weightPerItem: 1.0,
-    volumePerItem: 6.5,
-    loadingTimePerItem: 60,
-  },
+  // All debris items removed - fetch from Supabase debris_items table instead
   {
     id: "hot_tub_large",
     name: "Hot Tub (7+ Person)",
