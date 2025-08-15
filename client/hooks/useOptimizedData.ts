@@ -437,7 +437,7 @@ export const useBackgroundSync = () => {
     const handleFocus = () => {
       queryClient.refetchQueries({
         predicate: (query) =>
-          query.state.status === "success" && query.state.isStale(),
+          query.state.status === "success" && query.isStale(),
       });
     };
 
