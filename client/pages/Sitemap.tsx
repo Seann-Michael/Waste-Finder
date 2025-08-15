@@ -7,8 +7,6 @@ import {
   MapPin,
   BookOpen,
   Globe,
-  Calculator,
-  Scale,
   MessageSquare,
   Edit,
   Users,
