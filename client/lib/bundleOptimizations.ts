@@ -112,20 +112,6 @@ export const monitorBundleSize = () => {
   }
 };
 
-// Lazy component wrapper
-export const createLazyComponent = <T extends React.ComponentType<any>>(
-  importFn: () => Promise<{ default: T }>,
-  fallback?: React.ComponentType
-) => {
-  const LazyComponent = React.lazy(importFn);
-  
-  return (props: React.ComponentProps<T>) => (
-    <React.Suspense fallback={fallback ? <fallback /> : <div>Loading...</div>}>
-      <LazyComponent {...props} />
-    </React.Suspense>
-  );
-};
-
 // Memory optimization
 export const optimizeMemory = () => {
   // Clean up intervals and timeouts
@@ -162,5 +148,3 @@ export const initializeBundleOptimizations = () => {
   // Return cleanup function
   return optimizeMemory();
 };
-
-import React from 'react';
