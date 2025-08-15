@@ -31,16 +31,22 @@ if (
   isPlaceholder(supabaseAnonKey) ||
   !isValidUrl(supabaseUrl)
 ) {
-  console.error("❌ Supabase configuration missing or invalid!");
-  console.error("📋 To connect to your database:");
-  console.error("1. Set VITE_SUPABASE_URL to your Supabase project URL");
-  console.error("2. Set VITE_SUPABASE_PUBLIC_KEY to your Supabase anon key");
-  console.error("3. Or connect via: [Connect to Supabase](#open-mcp-popover)");
+  console.warn("⚠️  Supabase configuration missing or invalid!");
+  console.warn("📋 To connect to your database:");
+  console.warn("1. Set VITE_SUPABASE_URL to your Supabase project URL");
+  console.warn("2. Set VITE_SUPABASE_PUBLIC_KEY to your Supabase anon key");
+  console.warn("3. Or connect via: [Connect to Supabase](#open-mcp-popover)");
 
-  // Throw error instead of creating invalid client
-  throw new Error(
-    "Supabase not configured. Please set VITE_SUPABASE_URL and VITE_SUPABASE_PUBLIC_KEY environment variables or connect to Supabase."
-  );
+  // Create a mock client that throws helpful errors when used
+  supabase = {
+    from: () => {
+      throw new Error("Supabase not configured. Please set environment variables or connect to Supabase.");
+    },
+    auth: {
+      getSession: () => Promise.resolve({ data: { session: null }, error: null }),
+      onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
+    },
+  };
 } else {
   console.log("✅ Supabase client initialized successfully");
   supabase = createClient(supabaseUrl, supabaseAnonKey);
