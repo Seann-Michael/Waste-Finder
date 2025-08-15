@@ -1816,26 +1816,10 @@ Sitemap: https://wastefinder.com/sitemap.xml`,
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="googleMapsApiKey">
-                      Google Maps API Key
-                    </Label>
-                    <div className="relative">
-                      <Input
-                        id="googleMapsApiKey"
-                        type="text"
-                        value="Set in Netlify Environment Variables"
-                        disabled
-                        className="bg-muted"
-                      />
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      <strong>Security Notice:</strong> Google Maps API key must
-                      be set in Netlify environment variables as{" "}
-                      <code>VITE_GOOGLE_MAPS_API_KEY</code> to prevent exposure
-                      in builds.
-                    </p>
-                  </div>
+                  <p className="text-muted-foreground">
+                    API configuration has been moved to environment variables for security.
+                    Contact your system administrator for API key management.
+                  </p>
                 </div>
 
                 <Button onClick={handleSaveApiSettings}>
