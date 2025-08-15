@@ -205,7 +205,7 @@ export default function AllLocations() {
               const matchesSearch =
                 (location.name || "").toLowerCase().includes(query) ||
                 (location.city || "").toLowerCase().includes(query) ||
-                (location.zip_code || location.zipCode || "")
+                (location.zip_code || "")
                   .toLowerCase()
                   .includes(query) ||
                 (location.address || "").toLowerCase().includes(query) ||
@@ -216,9 +216,7 @@ export default function AllLocations() {
 
             // Then apply type filter
             if (filterBy === "all") return true;
-            return (
-              (location.location_type || location.locationType) === filterBy
-            );
+            return location.location_type === filterBy;
           } catch (filterError) {
             console.error("Error filtering location:", location, filterError);
             return false;
