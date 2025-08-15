@@ -220,7 +220,7 @@ export default function DigitalMarketing() {
                   target="_blank" 
                   rel="noopener noreferrer"
                 >
-                  Call: (555) 123-GROW
+                  Call: (555) 123-4567 {/* TODO: Replace with configurable phone from Supabase */}
                 </a>
               </Button>
             </div>
