@@ -131,6 +131,7 @@ const AppRoutes = () => (
     <Route path="/all-locations" element={<AllLocations />} />
     <Route path="/suggest-location" element={<SuggestLocation />} />
     <Route path="/resources" element={<Resources />} />
+    <Route path="/debris-weight-calculator" element={<DebrisWeightCalculator />} />
 
     {/* Redirect routes for common URL variations and case mismatches */}
     <Route
