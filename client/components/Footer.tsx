@@ -55,9 +55,7 @@ export default function Footer() {
                 <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                   <MapPin className="w-5 h-5 text-primary-foreground" />
                 </div>
-                <span className="text-lg md:text-xl font-bold">
-                  DumpNearMe
-                </span>
+                <span className="text-lg md:text-xl font-bold">DumpNearMe</span>
               </div>
               <p className="text-muted-foreground text-sm">
                 The most comprehensive database of waste disposal locations in
@@ -68,81 +66,116 @@ export default function Footer() {
               <h4 className="font-semibold mb-3">Services</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>
-                  <Link to="/" className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center">
+                  <Link
+                    to="/"
+                    className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center"
+                  >
                     Location Search
                   </Link>
                 </li>
                 <li>
-                  <Link to="/all-locations" className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center">
+                  <Link
+                    to="/all-locations"
+                    className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center"
+                  >
                     Browse All Locations
                   </Link>
                 </li>
                 <li>
-                  <Link to="/news" className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center">
+                  <Link
+                    to="/news"
+                    className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center"
+                  >
                     Industry News
                   </Link>
                 </li>
                 <li>
-                  <Link to="/suggest-location" className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center">
+                  <Link
+                    to="/suggest-location"
+                    className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center"
+                  >
                     Suggest Location
                   </Link>
                 </li>
                 <li>
-                  <Link to="/resources" className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center">
+                  <Link
+                    to="/resources"
+                    className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center"
+                  >
                     Resources
                   </Link>
                 </li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-3">
-                For Junk Removal
-              </h4>
+              <h4 className="font-semibold mb-3">For Junk Removal</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>
-                  <Link to="/digital-marketing-junk-removal" className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center">
+                  <Link
+                    to="/digital-marketing-junk-removal"
+                    className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center"
+                  >
                     Digital Marketing
                   </Link>
                 </li>
                 <li>
-                  <Link to="/local-seo-junk-removal" className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center">
+                  <Link
+                    to="/local-seo-junk-removal"
+                    className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center"
+                  >
                     Local SEO Services
                   </Link>
                 </li>
                 <li>
-                  <Link to="/lead-generation-junk-removal" className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center">
+                  <Link
+                    to="/lead-generation-junk-removal"
+                    className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center"
+                  >
                     Lead Generation
                   </Link>
                 </li>
                 <li>
-                  <Link to="/local-junk-removal" className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center">
+                  <Link
+                    to="/local-junk-removal"
+                    className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center"
+                  >
                     Local Junk Removal Companies
                   </Link>
                 </li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-3">
-                For Dumpster Rental
-              </h4>
+              <h4 className="font-semibold mb-3">For Dumpster Rental</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>
-                  <Link to="/digital-marketing-dumpster-rental" className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center">
+                  <Link
+                    to="/digital-marketing-dumpster-rental"
+                    className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center"
+                  >
                     Digital Marketing
                   </Link>
                 </li>
                 <li>
-                  <Link to="/local-seo-dumpster-rental" className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center">
+                  <Link
+                    to="/local-seo-dumpster-rental"
+                    className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center"
+                  >
                     Local SEO Services
                   </Link>
                 </li>
                 <li>
-                  <Link to="/lead-generation" className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center">
+                  <Link
+                    to="/lead-generation"
+                    className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center"
+                  >
                     Lead Generation
                   </Link>
                 </li>
                 <li>
-                  <Link to="/local-dumpster-rental" className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center">
+                  <Link
+                    to="/local-dumpster-rental"
+                    className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center"
+                  >
                     Local Dumpster Rental Companies
                   </Link>
                 </li>
@@ -152,12 +185,18 @@ export default function Footer() {
               <h4 className="font-semibold mb-3">Admin</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>
-                  <Link to="/admin-login" className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center">
+                  <Link
+                    to="/admin-login"
+                    className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center"
+                  >
                     Admin Login
                   </Link>
                 </li>
                 <li>
-                  <Link to="/sitemap" className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center">
+                  <Link
+                    to="/sitemap"
+                    className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center"
+                  >
                     Sitemap
                   </Link>
                 </li>
