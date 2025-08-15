@@ -207,6 +207,8 @@ export default function Header() {
                   size="sm"
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                   className="p-2"
+                  aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+                  aria-expanded={isMobileMenuOpen}
                 >
                   {isMobileMenuOpen ? (
                     <X className="h-6 w-6" />
