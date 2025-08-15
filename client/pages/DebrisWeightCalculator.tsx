@@ -37,16 +37,6 @@ interface DebrisType {
 const DEBRIS_TYPES: DebrisType[] = [
   // All debris types removed - fetch from Supabase debris_types table instead
   {
-    id: "brick",
-    name: "Brick",
-    category: "Construction",
-    weightPerUnit: 3500,
-    volumePerUnit: 1.0,
-    unit: "cubic yard",
-    description: "Clay bricks, masonry",
-    icon: "🧱",
-  },
-  {
     id: "drywall",
     name: "Drywall",
     category: "Construction",
