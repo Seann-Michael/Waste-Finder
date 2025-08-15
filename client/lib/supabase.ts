@@ -37,11 +37,19 @@ if (
   console.warn("2. Set VITE_SUPABASE_PUBLIC_KEY to your Supabase anon key");
   console.warn("3. Or connect via: [Connect to Supabase](#open-mcp-popover)");
 
-  // Create a mock client that throws helpful errors when used
+  // Create a mock client that returns empty responses instead of throwing errors
   supabase = {
-    from: () => {
-      throw new Error("Supabase not configured. Please set environment variables or connect to Supabase.");
-    },
+    from: () => ({
+      select: () => ({
+        eq: () => ({
+          order: () => Promise.resolve({ data: [], error: null }),
+        }),
+        order: () => Promise.resolve({ data: [], error: null }),
+      }),
+      insert: () => Promise.resolve({ data: null, error: { message: "Supabase not configured" } }),
+      update: () => Promise.resolve({ data: null, error: { message: "Supabase not configured" } }),
+      delete: () => Promise.resolve({ data: null, error: { message: "Supabase not configured" } }),
+    }),
     auth: {
       getSession: () => Promise.resolve({ data: { session: null }, error: null }),
       onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
