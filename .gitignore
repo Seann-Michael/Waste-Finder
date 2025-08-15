@@ -23,4 +23,12 @@ dist-ssr
 *.sln
 *.sw?
 
+# Environment variables - SECURITY CRITICAL
+.env
+.env.local
+.env.production
+.env.development
+.env.*.local
+*.env
+
 .config/
