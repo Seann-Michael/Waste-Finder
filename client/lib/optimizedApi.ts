@@ -11,6 +11,7 @@
 
 import { supabase } from './supabase';
 import { QueryClient, useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState, useEffect } from 'react';
 
 // ===============================================
 // CONFIGURATION & CONSTANTS
