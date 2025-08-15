@@ -31,15 +31,18 @@ if (
   isPlaceholder(supabaseServiceKey) ||
   !isValidUrl(supabaseUrl)
 ) {
-  console.error("❌ Server-side Supabase configuration missing or invalid!");
-  console.error("📋 To connect to your database:");
-  console.error("1. Set VITE_SUPABASE_URL to your Supabase project URL");
-  console.error("2. Set VITE_SUPABASE_ADMIN_KEY to your Supabase service role key");
+  console.warn("⚠️  Server-side Supabase configuration missing or invalid!");
+  console.warn("📋 To connect to your database:");
+  console.warn("1. Set VITE_SUPABASE_URL to your Supabase project URL");
+  console.warn("2. Set VITE_SUPABASE_ADMIN_KEY to your Supabase service role key");
+  console.warn("3. Or connect via: [Connect to Supabase](#open-mcp-popover)");
 
-  // Throw error instead of creating invalid client
-  throw new Error(
-    "Server-side Supabase not configured. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ADMIN_KEY environment variables."
-  );
+  // Create a mock client that throws helpful errors when used
+  supabaseAdmin = {
+    from: () => {
+      throw new Error("Supabase not configured. Please set environment variables or connect to Supabase.");
+    },
+  };
 } else {
   console.log("✅ Server-side Supabase admin client initialized successfully");
   supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
