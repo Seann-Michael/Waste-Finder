@@ -163,43 +163,6 @@
       })();
     </script>
 
-    <!-- Service Worker registration -->
-    <script>
-      if (
-        "serviceWorker" in navigator &&
-        window.location.protocol === "https:"
-      ) {
-        window.addEventListener("load", () => {
-          navigator.serviceWorker
-            .register("/sw.js")
-            .then((registration) => console.log("SW registered"))
-            .catch((error) => console.log("SW registration failed"));
-        });
-      }
-    </script>
-
     <script type="module" src="/client/main.tsx"></script>
-
-    <!-- Performance monitoring -->
-    <script>
-      if ("PerformanceObserver" in window) {
-        const observer = new PerformanceObserver((list) => {
-          for (const entry of list.getEntries()) {
-            if (entry.entryType === "navigation") {
-              console.log(
-                "Page Load Time:",
-                entry.loadEventEnd - entry.fetchStart + "ms",
-              );
-            }
-          }
-        });
-
-        try {
-          observer.observe({ type: "navigation", buffered: true });
-        } catch (e) {
-          // Browser doesn't support this observation type
-        }
-      }
-    </script>
   </body>
 </html>
