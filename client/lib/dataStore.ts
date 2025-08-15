@@ -239,29 +239,10 @@ class DataStore {
   /**
    * Default blog categories
    */
+  // REMOVED: Default blog categories moved to Supabase database
   private getDefaultBlogCategories() {
     return [
-      {
-        id: "1",
-        name: "Tips",
-        slug: "tips",
-        description: "Helpful tips for waste management",
-        createdAt: new Date().toISOString(),
-      },
-      {
-        id: "2",
-        name: "Guides",
-        slug: "guides",
-        description: "Comprehensive guides and how-tos",
-        createdAt: new Date().toISOString(),
-      },
-      {
-        id: "3",
-        name: "News",
-        slug: "news",
-        description: "Latest news in waste management",
-        createdAt: new Date().toISOString(),
-      },
+      // All categories removed - fetch from Supabase instead
     ];
   }
 
