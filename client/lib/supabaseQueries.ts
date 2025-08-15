@@ -219,7 +219,10 @@ export async function getLocationStats() {
     const { data: locations, error } = result || { data: null, error: null };
 
     if (error) {
-      console.warn("Supabase query returned error (may be expected with mock client):", error);
+      console.warn(
+        "Supabase query returned error (may be expected with mock client):",
+        error,
+      );
       return {
         totalLocations: 0,
         typeCount: {},
