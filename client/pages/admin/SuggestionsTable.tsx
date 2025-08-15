@@ -122,54 +122,25 @@ const mockSuggestedEdits: SuggestedEdit[] = [
   },
 ];
 
-const mockSuggestedLocations: SuggestedLocation[] = [
-  {
-    id: "new_1",
-    type: "new_location",
-    locationName: "Riverside Recycling Center",
-    submitter: "Lisa K.",
-    email: "lisa.k@email.com",
-    status: "pending",
-    submittedAt: "2024-01-20T10:30:00Z",
-    details: {
-      address: "456 River Road",
-      city: "Portland",
-      state: "OR",
-      zipCode: "97202",
-      phone: "(503) 555-0123",
-      email: "info@riverside.com",
-      website: "https://riverside-recycling.com",
-      facilityType: "transfer_station",
-      paymentTypes: ["Cash", "Credit/Debit"],
-      debrisTypes: ["General Waste", "Recyclables", "Electronics"],
-      operatingHours: "Mon-Fri 7AM-6PM, Sat 8AM-4PM",
-      notes: "New eco-friendly facility with advanced recycling capabilities",
-    },
-  },
-  {
-    id: "new_2",
-    type: "new_location",
-    locationName: "Metro Waste Facility",
-    submitter: "Tom B.",
-    email: "tom.b@email.com",
-    status: "rejected",
-    submittedAt: "2024-01-18T16:15:00Z",
-    moderatedAt: "2024-01-19T09:30:00Z",
-    moderatedBy: "Admin",
-    details: {
-      address: "789 Industrial Ave",
-      city: "Chicago",
-      state: "IL",
-      zipCode: "60601",
-      phone: "(312) 555-9876",
-      facilityType: "landfill",
-      paymentTypes: ["Cash"],
-      debrisTypes: ["General Waste"],
-      operatingHours: "Mon-Fri 8AM-5PM",
-      notes: "Large capacity facility",
-    },
-  },
-];
+// Get suggestions from centralized mock data when Supabase is not configured
+const getMockSuggestions = (): SuggestedLocation[] => {
+  if (isMockMode()) {
+    console.log("Using centralized mock suggestions data - Supabase not configured");
+    return mockLocationSuggestions.map(suggestion => ({
+      id: suggestion.id,
+      type: suggestion.type,
+      locationName: suggestion.locationName,
+      submitter: suggestion.submitter,
+      email: suggestion.email,
+      status: suggestion.status,
+      submittedAt: suggestion.submittedAt,
+      moderatedAt: suggestion.moderatedAt,
+      moderatedBy: suggestion.moderatedBy,
+      details: suggestion.details,
+    }));
+  }
+  return [];
+};
 
 type SortDirection = "asc" | "desc";
 
