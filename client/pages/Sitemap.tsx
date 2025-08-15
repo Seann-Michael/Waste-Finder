@@ -42,11 +42,6 @@ export default function Sitemap() {
           url: "/resources",
           description: "Helpful waste management resources",
         },
-        {
-          name: "Contact Us",
-          url: "/contact",
-          description: "Get in touch with us",
-        },
       ],
     },
     {
@@ -62,22 +57,6 @@ export default function Sitemap() {
           name: "Guest Post",
           url: "/guest-post",
           description: "Submit a guest post",
-        },
-      ],
-    },
-    {
-      category: "Tools & Calculators",
-      icon: <Calculator className="w-5 h-5" />,
-      links: [
-        {
-          name: "Pricing Calculator",
-          url: "/pricing-calculator",
-          description: "Calculate waste disposal costs",
-        },
-        {
-          name: "Debris Weight Calculator",
-          url: "/debris-weight-calculator",
-          description: "Estimate debris weight",
         },
       ],
     },
