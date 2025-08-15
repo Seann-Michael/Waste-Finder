@@ -73,14 +73,18 @@ export default function GoogleMapsEmbed({
     const envApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
     if (!envApiKey || envApiKey === "YOUR_GOOGLE_MAPS_API_KEY_HERE") {
-      console.warn("Google Maps API key not configured. Please set VITE_GOOGLE_MAPS_API_KEY environment variable.");
+      console.warn(
+        "Google Maps API key not configured. Please set VITE_GOOGLE_MAPS_API_KEY environment variable.",
+      );
       setApiKey("");
       return;
     }
 
     // Validate API key format (should start with AIza)
-    if (!envApiKey.startsWith('AIza') || envApiKey.length < 35) {
-      console.warn("Invalid Google Maps API key format. Please check your API key.");
+    if (!envApiKey.startsWith("AIza") || envApiKey.length < 35) {
+      console.warn(
+        "Invalid Google Maps API key format. Please check your API key.",
+      );
       setApiKey("");
       return;
     }
@@ -177,10 +181,13 @@ export default function GoogleMapsEmbed({
           <div className="flex flex-col items-center justify-center h-64 text-center space-y-4">
             <MapPin className="w-12 h-12 text-muted-foreground" />
             <div className="space-y-2">
-              <h3 className="font-semibold text-lg">Google Maps Configuration Required</h3>
+              <h3 className="font-semibold text-lg">
+                Google Maps Configuration Required
+              </h3>
               <p className="text-muted-foreground max-w-md">
-                To display interactive maps, please configure your Google Maps API key.
-                Contact your administrator to set up the VITE_GOOGLE_MAPS_API_KEY environment variable.
+                To display interactive maps, please configure your Google Maps
+                API key. Contact your administrator to set up the
+                VITE_GOOGLE_MAPS_API_KEY environment variable.
               </p>
               <div className="flex items-center gap-2 text-sm font-medium mt-4 p-3 bg-muted/50 rounded-lg">
                 <MapPin className="w-4 h-4 text-primary" />

@@ -34,11 +34,19 @@ const LocalJunkRemoval = lazy(() => import("./pages/LocalJunkRemoval"));
 const DigitalMarketing = lazy(() => import("./pages/DigitalMarketing"));
 const LocalSEO = lazy(() => import("./pages/LocalSEO"));
 const LeadGeneration = lazy(() => import("./pages/LeadGeneration"));
-const DigitalMarketingJunkRemoval = lazy(() => import("./pages/DigitalMarketingJunkRemoval"));
-const DigitalMarketingDumpsterRental = lazy(() => import("./pages/DigitalMarketingDumpsterRental"));
+const DigitalMarketingJunkRemoval = lazy(
+  () => import("./pages/DigitalMarketingJunkRemoval"),
+);
+const DigitalMarketingDumpsterRental = lazy(
+  () => import("./pages/DigitalMarketingDumpsterRental"),
+);
 const LocalSEOJunkRemoval = lazy(() => import("./pages/LocalSEOJunkRemoval"));
-const LocalSEODumpsterRental = lazy(() => import("./pages/LocalSEODumpsterRental"));
-const LeadGenerationJunkRemoval = lazy(() => import("./pages/LeadGenerationJunkRemoval"));
+const LocalSEODumpsterRental = lazy(
+  () => import("./pages/LocalSEODumpsterRental"),
+);
+const LeadGenerationJunkRemoval = lazy(
+  () => import("./pages/LeadGenerationJunkRemoval"),
+);
 const Sitemap = lazy(() => import("./pages/Sitemap"));
 const XMLSitemap = lazy(() => import("./pages/XMLSitemap"));
 
