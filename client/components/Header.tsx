@@ -198,7 +198,7 @@ export default function Header() {
               </div>
 
               {/* Mobile menu button */}
-              <div className="sm:hidden">
+              <div className="sm:hidden ml-auto">
                 <Button
                   variant="ghost"
                   size="sm"
