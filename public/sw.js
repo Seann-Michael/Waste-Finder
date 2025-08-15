@@ -1,13 +1,18 @@
-// Simple Service Worker for PWA functionality
+// Optimized Service Worker for PWA functionality
 const CACHE_NAME = "dump-near-me-v1";
 const STATIC_CACHE = "static-v1";
+const DYNAMIC_CACHE = "dynamic-v1";
 
-// Basic assets to cache
+// Essential assets to cache immediately
 const STATIC_ASSETS = [
   "/",
-  "/manifest.json",
+  "/manifest.json"
+];
+
+// Assets to cache on demand
+const RUNTIME_CACHE_URLS = [
   "/icon-192x192.png",
-  "/icon-512x512.png",
+  "/icon-512x512.png"
 ];
 
 // Install event - cache static assets
@@ -44,11 +49,45 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-// Fetch event - serve from cache, fallback to network
+// Fetch event - optimized caching strategy
 self.addEventListener("fetch", (event) => {
+  // Only cache GET requests
+  if (event.request.method !== 'GET') return;
+
+  // Skip caching for external resources to reduce unused assets
+  if (!event.request.url.startsWith(self.location.origin)) return;
+
   event.respondWith(
     caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
-    }),
+      if (response) {
+        return response;
+      }
+
+      // Clone the request
+      const fetchRequest = event.request.clone();
+
+      return fetch(fetchRequest).then((response) => {
+        // Only cache successful responses
+        if (!response || response.status !== 200 || response.type !== 'basic') {
+          return response;
+        }
+
+        // Clone the response
+        const responseToCache = response.clone();
+
+        // Cache static assets and API responses
+        if (event.request.url.includes('/api/') ||
+            event.request.url.includes('.js') ||
+            event.request.url.includes('.css') ||
+            event.request.url.includes('.png') ||
+            event.request.url.includes('.svg')) {
+          caches.open(DYNAMIC_CACHE).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
+        }
+
+        return response;
+      });
+    })
   );
 });
