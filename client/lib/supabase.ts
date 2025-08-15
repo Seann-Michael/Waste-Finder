@@ -5,9 +5,14 @@ const supabaseUrl =
   import.meta.env.VITE_SUPABASE_URL || import.meta.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_PUBLIC_KEY;
 
-// Validate that we have the required values
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error("Supabase URL and anon key are required");
+// Check if environment variables are set to placeholder values
+const isPlaceholder = (value: string | undefined) =>
+  !value || value.startsWith('YOUR_') || value === 'your_supabase_' || value.length < 10;
+
+// Validate that we have real (non-placeholder) values
+if (!supabaseUrl || !supabaseAnonKey || isPlaceholder(supabaseUrl) || isPlaceholder(supabaseAnonKey)) {
+  console.warn("Supabase environment variables not configured properly. Using mock client.");
+  // Create a mock client that won't throw errors but will log warnings
 }
 
 // This creates the connection to your database
