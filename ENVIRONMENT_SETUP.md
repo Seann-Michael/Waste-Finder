@@ -11,10 +11,10 @@ Set these in your local development environment:
 ```bash
 # Supabase Configuration
 VITE_SUPABASE_URL=your_supabase_project_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_SUPABASE_PUBLIC_KEY=your_supabase_public_key
 
 # Server-side Supabase (for API functions)
-VITE_SUPABASE_SERVICE_KEY=your_supabase_service_role_key
+VITE_SUPABASE_ADMIN_KEY=your_supabase_admin_key
 
 # Google Maps API (optional)
 VITE_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
@@ -28,8 +28,8 @@ Add these environment variables in your Netlify site settings:
 2. Add the following variables:
 
 - `VITE_SUPABASE_URL`: Your Supabase project URL
-- `VITE_SUPABASE_ANON_KEY`: Your Supabase anonymous/public key
-- `VITE_SUPABASE_SERVICE_KEY`: Your Supabase service role key (for server functions)
+- `VITE_SUPABASE_PUBLIC_KEY`: Your Supabase anonymous/public key
+- `VITE_SUPABASE_ADMIN_KEY`: Your Supabase service role key (for server functions)
 - `VITE_GOOGLE_MAPS_API_KEY`: Your Google Maps API key (optional)
 
 ## Security Notes
