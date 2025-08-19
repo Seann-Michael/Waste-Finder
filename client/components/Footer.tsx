@@ -187,7 +187,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/admin-login"
-                    className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center"
+                    className="hover:text-primary py-1 px-1 block"
                   >
                     Admin Login
                   </Link>
@@ -195,7 +195,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/sitemap"
-                    className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center"
+                    className="hover:text-primary py-1 px-1 block"
                   >
                     Sitemap
                   </Link>
