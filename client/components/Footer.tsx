@@ -63,7 +63,7 @@ export default function Footer() {
               </p>
             </div>
             <div>
-              <h3 className="font-semibold mb-3">Services</h3>
+              <h3 className="font-semibold mb-2">Services</h3>
               <ul className="space-y-0.5 text-sm text-muted-foreground">
                 <li>
                   <Link
