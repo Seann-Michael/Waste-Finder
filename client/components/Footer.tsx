@@ -68,7 +68,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/"
-                    className="hover:text-primary px-1 block leading-tight"
+                    className="hover:text-primary px-1 block leading-none bg-yellow-100"
                   >
                     Location Search
                   </Link>
