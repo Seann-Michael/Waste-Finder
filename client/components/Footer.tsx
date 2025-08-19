@@ -73,10 +73,10 @@ export default function Footer() {
                     Location Search
                   </Link>
                 </li>
-                <li>
+                <li class="-mt-1">
                   <Link
                     to="/all-locations"
-                    className="hover:text-primary px-1 block leading-tight"
+                    className="hover:text-primary px-1 block leading-none"
                   >
                     Browse All Locations
                   </Link>
