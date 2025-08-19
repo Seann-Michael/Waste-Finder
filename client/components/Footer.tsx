@@ -68,7 +68,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/"
-                    className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center"
+                    className="hover:text-primary py-1 px-1 block"
                   >
                     Location Search
                   </Link>
@@ -76,7 +76,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/all-locations"
-                    className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center"
+                    className="hover:text-primary py-1 px-1 block"
                   >
                     Browse All Locations
                   </Link>
@@ -84,7 +84,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/news"
-                    className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center"
+                    className="hover:text-primary py-1 px-1 block"
                   >
                     Industry News
                   </Link>
@@ -92,7 +92,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/suggest-location"
-                    className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center"
+                    className="hover:text-primary py-1 px-1 block"
                   >
                     Suggest Location
                   </Link>
@@ -100,7 +100,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/resources"
-                    className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center"
+                    className="hover:text-primary py-1 px-1 block"
                   >
                     Resources
                   </Link>
