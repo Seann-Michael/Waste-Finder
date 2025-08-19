@@ -68,7 +68,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/"
-                    className="hover:text-primary py-1 px-1 block"
+                    className="hover:text-primary py-0.5 px-1 block"
                   >
                     Location Search
                   </Link>
@@ -76,7 +76,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/all-locations"
-                    className="hover:text-primary py-1 px-1 block"
+                    className="hover:text-primary py-0.5 px-1 block"
                   >
                     Browse All Locations
                   </Link>
@@ -84,7 +84,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/news"
-                    className="hover:text-primary py-1 px-1 block"
+                    className="hover:text-primary py-0.5 px-1 block"
                   >
                     Industry News
                   </Link>
@@ -92,7 +92,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/suggest-location"
-                    className="hover:text-primary py-1 px-1 block"
+                    className="hover:text-primary py-0.5 px-1 block"
                   >
                     Suggest Location
                   </Link>
@@ -100,7 +100,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/resources"
-                    className="hover:text-primary py-1 px-1 block"
+                    className="hover:text-primary py-0.5 px-1 block"
                   >
                     Resources
                   </Link>
@@ -113,7 +113,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/digital-marketing-junk-removal"
-                    className="hover:text-primary py-1 px-1 block"
+                    className="hover:text-primary py-0.5 px-1 block"
                   >
                     Digital Marketing
                   </Link>
@@ -121,7 +121,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/local-seo-junk-removal"
-                    className="hover:text-primary py-1 px-1 block"
+                    className="hover:text-primary py-0.5 px-1 block"
                   >
                     Local SEO Services
                   </Link>
@@ -129,7 +129,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/lead-generation-junk-removal"
-                    className="hover:text-primary py-1 px-1 block"
+                    className="hover:text-primary py-0.5 px-1 block"
                   >
                     Lead Generation
                   </Link>
@@ -137,7 +137,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/local-junk-removal"
-                    className="hover:text-primary py-1 px-1 block"
+                    className="hover:text-primary py-0.5 px-1 block"
                   >
                     Local Junk Removal Companies
                   </Link>
@@ -150,7 +150,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/digital-marketing-dumpster-rental"
-                    className="hover:text-primary py-1 px-1 block"
+                    className="hover:text-primary py-0.5 px-1 block"
                   >
                     Digital Marketing
                   </Link>
@@ -158,7 +158,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/local-seo-dumpster-rental"
-                    className="hover:text-primary py-1 px-1 block"
+                    className="hover:text-primary py-0.5 px-1 block"
                   >
                     Local SEO Services
                   </Link>
@@ -166,7 +166,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/lead-generation"
-                    className="hover:text-primary py-1 px-1 block"
+                    className="hover:text-primary py-0.5 px-1 block"
                   >
                     Lead Generation
                   </Link>
@@ -174,7 +174,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/local-dumpster-rental"
-                    className="hover:text-primary py-1 px-1 block"
+                    className="hover:text-primary py-0.5 px-1 block"
                   >
                     Local Dumpster Rental Companies
                   </Link>
@@ -187,7 +187,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/admin-login"
-                    className="hover:text-primary py-1 px-1 block"
+                    className="hover:text-primary py-0.5 px-1 block"
                   >
                     Admin Login
                   </Link>
@@ -195,7 +195,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/sitemap"
-                    className="hover:text-primary py-1 px-1 block"
+                    className="hover:text-primary py-0.5 px-1 block"
                   >
                     Sitemap
                   </Link>
