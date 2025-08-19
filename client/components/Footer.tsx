@@ -64,7 +64,7 @@ export default function Footer() {
             </div>
             <div>
               <h3 className="font-semibold mb-2">Services</h3>
-              <ul className="space-y-0.5 text-sm text-muted-foreground">
+              <ul className="space-y-0 text-sm text-muted-foreground">
                 <li>
                   <Link
                     to="/"
@@ -109,7 +109,7 @@ export default function Footer() {
             </div>
             <div>
               <h3 className="font-semibold mb-2">For Junk Removal</h3>
-              <ul className="space-y-0.5 text-sm text-muted-foreground">
+              <ul className="space-y-0 text-sm text-muted-foreground">
                 <li>
                   <Link
                     to="/digital-marketing-junk-removal"
@@ -146,7 +146,7 @@ export default function Footer() {
             </div>
             <div>
               <h3 className="font-semibold mb-2">For Dumpster Rental</h3>
-              <ul className="space-y-0.5 text-sm text-muted-foreground">
+              <ul className="space-y-0 text-sm text-muted-foreground">
                 <li>
                   <Link
                     to="/digital-marketing-dumpster-rental"
@@ -183,7 +183,7 @@ export default function Footer() {
             </div>
             <div>
               <h3 className="font-semibold mb-2">Admin</h3>
-              <ul className="space-y-0.5 text-sm text-muted-foreground">
+              <ul className="space-y-0 text-sm text-muted-foreground">
                 <li>
                   <Link
                     to="/admin-login"
