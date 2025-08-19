@@ -150,7 +150,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/digital-marketing-dumpster-rental"
-                    className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center"
+                    className="hover:text-primary py-1 px-1 block"
                   >
                     Digital Marketing
                   </Link>
@@ -158,7 +158,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/local-seo-dumpster-rental"
-                    className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center"
+                    className="hover:text-primary py-1 px-1 block"
                   >
                     Local SEO Services
                   </Link>
@@ -166,7 +166,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/lead-generation"
-                    className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center"
+                    className="hover:text-primary py-1 px-1 block"
                   >
                     Lead Generation
                   </Link>
@@ -174,7 +174,7 @@ export default function Footer() {
                 <li>
                   <Link
                     to="/local-dumpster-rental"
-                    className="hover:text-primary py-2 px-1 block min-h-[48px] flex items-center"
+                    className="hover:text-primary py-1 px-1 block"
                   >
                     Local Dumpster Rental Companies
                   </Link>
